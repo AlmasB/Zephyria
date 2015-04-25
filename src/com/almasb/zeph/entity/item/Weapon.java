@@ -1,7 +1,11 @@
-package com.almasb.zeph.entity;
+package com.almasb.zeph.entity.item;
+
+import javafx.beans.property.SimpleIntegerProperty;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.PropertyKey;
+import com.almasb.zeph.entity.Element;
+import com.almasb.zeph.entity.control.WeaponControl;
 
 public final class Weapon {
 
@@ -94,20 +98,22 @@ public final class Weapon {
         return damage;
     }
 
-    /*package-private*/ Entity toEntity() {
-        Entity weapon = new Entity(WeaponProperty.TYPE.getUniqueKey());
+    public Entity toEntity() {
+        Entity weapon = new Entity(WeaponProperty.TYPE);
         weapon.setProperty(WeaponProperty.NAME, name)
                 .setProperty(WeaponProperty.DESCRIPTION, description)
                 .setProperty(WeaponProperty.ID, id)
-                .setProperty(WeaponProperty.DAMAGE, damage)
+                .setProperty(WeaponProperty.DAMAGE, new SimpleIntegerProperty(damage))
                 .setProperty(WeaponProperty.ELEMENT, element)
-                .setProperty(WeaponProperty.REFINE_LEVEL, refineLevel);
+                .setProperty(WeaponProperty.REFINE_LEVEL, new SimpleIntegerProperty(refineLevel));
+
+        weapon.addControl(new WeaponControl());
 
         //weapon.setGraphics(texture);
         return weapon;
     }
 
-    /*package-private*/ static Weapon fromEntity(Entity entity) {
+    public static Weapon fromEntity(Entity entity) {
         Weapon weapon = null;
         return weapon;
     }

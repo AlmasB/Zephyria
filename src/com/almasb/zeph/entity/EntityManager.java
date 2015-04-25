@@ -6,6 +6,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import com.almasb.zeph.entity.item.Armor;
+import com.almasb.zeph.entity.item.IngredientItem;
+import com.almasb.zeph.entity.item.MiscItem;
+import com.almasb.zeph.entity.item.QuestItem;
+import com.almasb.zeph.entity.item.UsableItem;
+import com.almasb.zeph.entity.item.Weapon;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

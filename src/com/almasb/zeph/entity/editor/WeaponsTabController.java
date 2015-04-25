@@ -14,7 +14,7 @@ import javafx.stage.FileChooser;
 
 import com.almasb.zeph.entity.Element;
 import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.Weapon;
+import com.almasb.zeph.entity.item.Weapon;
 
 public class WeaponsTabController {
 

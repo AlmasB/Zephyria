@@ -1,11 +1,11 @@
-package com.almasb.zeph.entity;
+package com.almasb.zeph.entity.item;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.PropertyKey;
 
-public class MiscItem {
+public class IngredientItem {
 
-    public enum MiscItemProperty implements PropertyKey {
+    public enum IngredientItemProperty implements PropertyKey {
         TYPE, ID, NAME, DESCRIPTION, SELL_PRICE
     }
 
@@ -13,7 +13,6 @@ public class MiscItem {
     private String name;
     private String description;
     private String textureName;
-    private int sellPrice;
 
     public int getId() {
         return id;
@@ -47,26 +46,17 @@ public class MiscItem {
         this.textureName = textureName;
     }
 
-    public int getSellPrice() {
-        return sellPrice;
-    }
-
-    public void setSellPrice(int sellPrice) {
-        this.sellPrice = sellPrice;
-    }
-
     /*package-private*/ Entity toEntity() {
-        Entity item = new Entity(MiscItemProperty.TYPE.getUniqueKey());
-        item.setProperty(MiscItemProperty.NAME, name)
-                .setProperty(MiscItemProperty.DESCRIPTION, description)
-                .setProperty(MiscItemProperty.ID, id)
-                .setProperty(MiscItemProperty.SELL_PRICE, sellPrice);
+        Entity item = new Entity(IngredientItemProperty.TYPE.getUniqueKey());
+        item.setProperty(IngredientItemProperty.NAME, name)
+                .setProperty(IngredientItemProperty.DESCRIPTION, description)
+                .setProperty(IngredientItemProperty.ID, id);
 
         //weapon.setGraphics(texture);
         return item;
     }
 
-    /*package-private*/ static MiscItem fromEntity(Entity entity) {
+    /*package-private*/ static IngredientItem fromEntity(Entity entity) {
         return null;
     }
 

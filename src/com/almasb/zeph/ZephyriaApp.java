@@ -15,11 +15,10 @@ import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.entity.Enemy.EnemyProperty;
-import com.almasb.zeph.entity.GameCharacter;
 import com.almasb.zeph.entity.GameCharacter.GameCharacterProperty;
 import com.almasb.zeph.entity.Inventory.InventoryProperty;
+import com.almasb.zeph.entity.Player;
 import com.almasb.zeph.entity.Player.PlayerProperty;
-import com.almasb.zeph.entity.control.GameCharacterControl;
 import com.almasb.zeph.entity.item.Item;
 
 public class ZephyriaApp extends GameApplication {
@@ -92,7 +91,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initPlayer() {
-        player = new GameCharacter().toEntity();
+        player = new Player().toEntity();
         player.setPosition(100, 100);
 
         VBox vbox = new VBox();

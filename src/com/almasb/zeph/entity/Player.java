@@ -20,7 +20,7 @@ public class Player extends GameCharacter {
     private Armor body = new Armor();
     private Armor shoes = new Armor();
 
-    private Inventory inventory;
+    private Inventory inventory = new Inventory();
 
     @Override
     public Entity toEntity() {

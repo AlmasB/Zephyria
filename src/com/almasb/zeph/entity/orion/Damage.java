@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity.orion;
 
-import com.almasb.zeph.entity.Element;
 
 public final class Damage {
 

@@ -1,29 +1,8 @@
-package uk.ac.brighton.uni.ab607.mmorpg.common.object;
+package com.almasb.zeph.entity.orion;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
-
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Armor.ArmorType;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Enemy.EnemyType;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Weapon.WeaponType;
-
-import com.almasb.zeph.entity.Element;
-import com.almasb.zeph.entity.orion.Attribute;
-import com.almasb.zeph.entity.orion.Attribute.AttributeInfo;
-import com.almasb.zeph.entity.orion.EquippableItem.ItemLevel;
-import com.almasb.zeph.entity.orion.GameCharacter.Experience;
-import com.almasb.zeph.entity.orion.GameCharacter.Stat;
-import com.almasb.zeph.entity.orion.DroppableItem;
-import com.almasb.zeph.entity.orion.Effect;
-import com.almasb.zeph.entity.orion.Essence;
-import com.almasb.zeph.entity.orion.GameCharacter;
-import com.almasb.zeph.entity.orion.GameEntity;
-import com.almasb.zeph.entity.orion.GameMath;
-import com.almasb.zeph.entity.orion.Player;
-import com.almasb.zeph.entity.orion.Rune;
-import com.almasb.zeph.entity.orion.StatusEffect;
-import com.almasb.zeph.entity.orion.StatusEffect.Status;
 
 public class ObjectManager {
 
@@ -1092,17 +1071,17 @@ public class ObjectManager {
         defaultEnemies.put(enemy.id, enemy);
     }
 
-    private static void addEssence(Essence e) {
-        defaultEssences.put(e.id, e);
-    }
+//    private static void addEssence(Essence e) {
+//        defaultEssences.put(e.id, e);
+//    }
 
     public static Skill getSkillByID(int id) {
         if (defaultSkills.containsKey(id)) {
             Skill sk = defaultSkills.get(id);
             Constructor<? extends Skill> c;
             try {
-                c = sk.getClass().getDeclaredConstructor(String.class, String.class, String.class, Boolean.class, Float.class);
-                return c.newInstance(sk.id, sk.name, sk.description, sk.active, sk.skillCooldown);
+                c = sk.getClass().getDeclaredConstructor(Integer.class, String.class, String.class, String.class, String.class, Boolean.class, Float.class);
+                return c.newInstance(sk.id, sk.name, sk.description, sk.textureName, sk.active, sk.skillCooldown);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -1135,7 +1114,7 @@ public class ObjectManager {
         return null;
     }
 
-    public static Essence getEssenceByID(int id) {
-        return defaultEssences.containsKey(id) ? new Essence(defaultEssences.get(id)) : null;
-    }
+//    public static Essence getEssenceByID(int id) {
+//        return defaultEssences.containsKey(id) ? new Essence(defaultEssences.get(id)) : null;
+//    }
 }

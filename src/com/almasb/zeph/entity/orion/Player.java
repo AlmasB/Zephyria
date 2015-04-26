@@ -1,13 +1,7 @@
 package com.almasb.zeph.entity.orion;
 
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Armor;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.ID;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.ObjectManager;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Weapon;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Weapon.WeaponType;
-
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.Element;
+import com.almasb.zeph.entity.orion.Weapon.WeaponType;
 
 /**
  * Actual user

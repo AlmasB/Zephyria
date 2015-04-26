@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.almasb.zeph.entity.Element;
-
 /**
  * Represents an item that can be equipped.
  * In other words, a weapon or a type of armor

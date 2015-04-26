@@ -1,8 +1,5 @@
-package uk.ac.brighton.uni.ab607.mmorpg.common.object;
+package com.almasb.zeph.entity.orion;
 
-import com.almasb.zeph.entity.orion.GameCharacter;
-
-import uk.ac.brighton.uni.ab607.mmorpg.common.request.SkillUseResult;
 
 /**
  * Skill that can be learnt/used by game characters
@@ -13,14 +10,9 @@ import uk.ac.brighton.uni.ab607.mmorpg.common.request.SkillUseResult;
  * @version 1.0
  *
  */
-public abstract class Skill implements java.io.Serializable {
+public abstract class Skill extends GameEntity implements java.io.Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 442371944346845569L;
-
-    public final String id, name, description;
 
     /**
      * Active skills need to be cast, have mana cost and cooldown
@@ -37,12 +29,8 @@ public abstract class Skill implements java.io.Serializable {
 
     protected int level = 0;
 
-    protected SkillUseResult useResult = SkillUseResult.DEFAULT_TRUE;
-
-    public Skill(String id, String name, String description, Boolean active, Float cooldown) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    public Skill(Integer id, String name, String description, String textureName, Boolean active, Float cooldown) {
+        super(id, name, description, textureName);
         this.active = active;
         this.skillCooldown = cooldown;
     }
@@ -91,15 +79,6 @@ public abstract class Skill implements java.io.Serializable {
 
     public void putOnCooldown() {
         currentCooldown = skillCooldown;
-    }
-
-    /**
-     *
-     * @return
-     *          the result of last usage of the skill
-     */
-    public SkillUseResult getUseResult() {
-        return useResult;
     }
 
     public boolean isSelfTarget() {

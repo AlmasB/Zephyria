@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.item;
+package com.almasb.zeph.entity.orion;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.PropertyKey;

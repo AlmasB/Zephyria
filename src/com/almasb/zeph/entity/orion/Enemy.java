@@ -1,15 +1,9 @@
-package uk.ac.brighton.uni.ab607.mmorpg.common.object;
+package com.almasb.zeph.entity.orion;
 
 import java.util.ArrayList;
 
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.Element;
 import com.almasb.zeph.entity.orion.Attribute.AttributeInfo;
-import com.almasb.zeph.entity.orion.DroppableItem;
-import com.almasb.zeph.entity.orion.GameCharacter;
-import com.almasb.zeph.entity.orion.GameCharacterClass;
-import com.almasb.zeph.entity.orion.GameMath;
-import com.almasb.zeph.entity.orion.Player;
 
 public class Enemy extends GameCharacter {
 

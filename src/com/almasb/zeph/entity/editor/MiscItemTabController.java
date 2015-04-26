@@ -4,19 +4,17 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
-import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.item.MiscItem;
+import com.almasb.zeph.entity.orion.MiscItem;
 
 public class MiscItemTabController {
 
-    private EntityManager entityManager = EntityManager.INSTANCE;
+    //private EntityManager entityManager = EntityManager.INSTANCE;
     private Path file;
 
     @FXML
@@ -89,8 +87,8 @@ public class MiscItemTabController {
         if (chosenFile != null) {
             file = chosenFile.toPath();
             try (InputStream is = Files.newInputStream(chosenFile.toPath())) {
-                List<MiscItem> items = entityManager.loadMiscItems(is);
-                list.getItems().setAll(items);
+                //List<MiscItem> items = entityManager.loadMiscItems(is);
+                //list.getItems().setAll(items);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -100,7 +98,7 @@ public class MiscItemTabController {
 
     public void saveFile() {
         try {
-            entityManager.saveMiscItems(list.getItems(), file);
+            //entityManager.saveMiscItems(list.getItems(), file);
         }
         catch (Exception e) {
             e.printStackTrace();

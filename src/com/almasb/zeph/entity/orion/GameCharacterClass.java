@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity.orion;
 
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.ID;
 
 /**
  * A game character will have one of these classes

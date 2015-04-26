@@ -5,10 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.ObjectManager;
-import uk.ac.brighton.uni.ab607.mmorpg.common.object.Skill;
-
-import com.almasb.zeph.entity.Element;
 import com.almasb.zeph.entity.orion.StatusEffect.Status;
 
 /**
@@ -349,10 +345,6 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
 
     protected float regenTick = 0.0f;
 
-    /**
-     * With current server settings this update
-     * is called every 0.02 seconds
-     */
     public void update() {
         // HP/SP regen
         regenTick += 0.02f;

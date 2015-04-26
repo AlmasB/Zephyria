@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -12,13 +11,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
-import com.almasb.zeph.entity.Element;
-import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.item.Weapon;
+import com.almasb.zeph.entity.orion.Element;
+import com.almasb.zeph.entity.orion.Weapon;
 
 public class WeaponsTabController {
 
-    private EntityManager entityManager = EntityManager.INSTANCE;
+    //private EntityManager entityManager = EntityManager.INSTANCE;
     private Path file;
 
     @FXML
@@ -47,28 +45,28 @@ public class WeaponsTabController {
             if (weapon == null)
                 return;
 
-            id.setText(String.valueOf(weapon.getId()));
-            name.setText(weapon.getName());
-            description.setText(weapon.getDescription());
-            textureName.setText(weapon.getTextureName());
-            damage.setText(String.valueOf(weapon.getDamage()));
-            element.getSelectionModel().select(weapon.getElement());
-            refineLevel.setText(String.valueOf(weapon.getRefineLevel()));
+//            id.setText(String.valueOf(weapon.getId()));
+//            name.setText(weapon.getName());
+//            description.setText(weapon.getDescription());
+//            textureName.setText(weapon.getTextureName());
+//            damage.setText(String.valueOf(weapon.getDamage()));
+//            element.getSelectionModel().select(weapon.getElement());
+//            refineLevel.setText(String.valueOf(weapon.getRefineLevel()));
         });
     }
 
     public void createItem() {
         try {
-            Weapon weapon = new Weapon();
-            weapon.setName(name.getText());
-            weapon.setDamage(Integer.parseInt(damage.getText()));
-            weapon.setDescription(description.getText());
-            weapon.setElement(element.getValue());
-            weapon.setId(Integer.parseInt(id.getText()));
-            weapon.setRefineLevel(Integer.parseInt(refineLevel.getText()));
-            weapon.setTextureName(textureName.getText());
+//            Weapon weapon = new Weapon();
+//            weapon.setName(name.getText());
+//            weapon.setDamage(Integer.parseInt(damage.getText()));
+//            weapon.setDescription(description.getText());
+//            weapon.setElement(element.getValue());
+//            weapon.setId(Integer.parseInt(id.getText()));
+//            weapon.setRefineLevel(Integer.parseInt(refineLevel.getText()));
+//            weapon.setTextureName(textureName.getText());
 
-            list.getItems().add(weapon);
+            //list.getItems().add(weapon);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -77,14 +75,14 @@ public class WeaponsTabController {
 
     public void editItem() {
         try {
-            Weapon weapon = list.getSelectionModel().getSelectedItem();
-            weapon.setName(name.getText());
-            weapon.setDamage(Integer.parseInt(damage.getText()));
-            weapon.setDescription(description.getText());
-            weapon.setElement(element.getValue());
-            weapon.setId(Integer.parseInt(id.getText()));
-            weapon.setRefineLevel(Integer.parseInt(refineLevel.getText()));
-            weapon.setTextureName(textureName.getText());
+//            Weapon weapon = list.getSelectionModel().getSelectedItem();
+//            weapon.setName(name.getText());
+//            weapon.setDamage(Integer.parseInt(damage.getText()));
+//            weapon.setDescription(description.getText());
+//            weapon.setElement(element.getValue());
+//            weapon.setId(Integer.parseInt(id.getText()));
+//            weapon.setRefineLevel(Integer.parseInt(refineLevel.getText()));
+//            weapon.setTextureName(textureName.getText());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -100,8 +98,8 @@ public class WeaponsTabController {
         if (chosenFile != null) {
             file = chosenFile.toPath();
             try (InputStream is = Files.newInputStream(chosenFile.toPath())) {
-                List<Weapon> weapons = entityManager.loadWeapons(is);
-                list.getItems().setAll(weapons);
+                //List<Weapon> weapons = entityManager.loadWeapons(is);
+                //list.getItems().setAll(weapons);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -111,7 +109,7 @@ public class WeaponsTabController {
 
     public void saveFile() {
         try {
-            entityManager.saveWeapons(list.getItems(), file);
+           // entityManager.saveWeapons(list.getItems(), file);
         }
         catch (Exception e) {
             e.printStackTrace();

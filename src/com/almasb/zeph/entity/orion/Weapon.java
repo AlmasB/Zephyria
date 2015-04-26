@@ -1,10 +1,6 @@
-package uk.ac.brighton.uni.ab607.mmorpg.common.object;
+package com.almasb.zeph.entity.orion;
 
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.Element;
-import com.almasb.zeph.entity.orion.EquippableItem;
-import com.almasb.zeph.entity.orion.Player;
-import com.almasb.zeph.entity.orion.Rune;
 import com.almasb.zeph.entity.orion.GameCharacter.Stat;
 
 public class Weapon extends EquippableItem {
@@ -29,11 +25,16 @@ public class Weapon extends EquippableItem {
     public final int pureDamage;
 
     public Weapon(int id, String name, String description, String textureName,
-            ItemLevel level, Element element, WeaponType type, int damage, Rune[] defRunes) {
+            ItemLevel level, Element element, WeaponType type, int damage, Rune... defRunes) {
         super(id, name, description, textureName, level, element, defRunes);
         this.type = type;
         this.range = type.range;
         this.pureDamage = damage;
+    }
+
+    public Weapon(Weapon copy) {
+        this(copy.id, copy.name, copy.description, copy.textureName,
+                copy.level, copy.element, copy.type, copy.pureDamage, copy.defaultRunes.toArray(new Rune[0]));
     }
 
     @Override

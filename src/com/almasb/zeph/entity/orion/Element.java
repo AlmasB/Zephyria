@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity;
+package com.almasb.zeph.entity.orion;
 
 public enum Element {
     NEUTRAL(1.00f, 0.75f, 0.75f, 0.75f, 0.75f),

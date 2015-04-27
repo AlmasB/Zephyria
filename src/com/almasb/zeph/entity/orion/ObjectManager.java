@@ -30,6 +30,22 @@ public class ObjectManager {
                     .type(ArmorType.BODY);
         addArmor(armorBuilder);
 
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.SHOES)
+                    .name("Shoes")
+                    .description(Desc.Armor.SHOES)
+                    .textureName("test.png")
+                    .type(ArmorType.SHOES);
+        addArmor(armorBuilder);
+
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.HAT)
+                    .name("Hat")
+                    .description(Desc.Armor.HAT)
+                    .textureName("test.png")
+                    .type(ArmorType.HELM);
+        addArmor(armorBuilder);
+
 //        addArmor(new Armor(ID.Armor.HAT, "Hat", Desc.Armor.HAT, 10, 13, ArmorType.HELM, 0, 0));    // 5000, matches type enum for easy equip
 //        addArmor(new Armor(ID.Armor.CLOTHES, "Clothes", Desc.Armor.CLOTHES, 0, 13, ArmorType.BODY, 0, 0));  // 5001
 //        addArmor(new Armor(ID.Armor.SHOES, "Shoes", Desc.Armor.SHOES, 0, 14, ArmorType.SHOES, 0, 0));    // 5002

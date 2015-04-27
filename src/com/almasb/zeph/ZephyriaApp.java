@@ -9,6 +9,7 @@ import com.almasb.fxgl.GameSettings;
 import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.zeph.entity.orion.EquipPlace;
 import com.almasb.zeph.entity.orion.GameCharacterClass;
 import com.almasb.zeph.entity.orion.ObjectManager;
 import com.almasb.zeph.entity.orion.Player;
@@ -40,8 +41,12 @@ public class ZephyriaApp extends GameApplication {
 
         Player playerData = player.getProperty("player_data");
         System.out.println(playerData.getHP() + " " + playerData.getSP()
-                + " " + playerData.getWeaponElement() + " " + playerData.getEquip(Player.RIGHT_HAND).name
+                + " " + playerData.getWeaponElement() + " " + playerData.getEquip(EquipPlace.RIGHT_HAND).name
                 + " " + playerData.getArmorElement());
+
+        for (EquipPlace p : EquipPlace.values()) {
+            System.out.println(playerData.getEquip(p).toString());
+        }
     }
 
     @Override

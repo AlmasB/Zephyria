@@ -1,5 +1,8 @@
 package com.almasb.zeph.entity.orion;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.entity.orion.Weapon.WeaponType;
 
@@ -61,19 +64,13 @@ public class Player extends GameCharacter {
     private int money = 0;
     private Inventory inventory = new Inventory();
 
-    public static final int HELM = 0,
-            BODY = 1,
-            SHOES = 2,
-            RIGHT_HAND = 3,
-            LEFT_HAND = 4;
-
-    private EquippableItem[] equip = new EquippableItem[5];
+    private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
 
     public Player(String name, GameCharacterClass charClass) {
         super(1000, name, "Player", "player.png", charClass);
 
-        for (int i = HELM; i <= LEFT_HAND; i++) {   // helm 0, body 1, shoes 2 so we get 5000, 5001, 5002
-            equip[i] = i >= RIGHT_HAND ? ObjectManager.getWeaponByID(ID.Weapon.HANDS) : ObjectManager.getArmorByID(5000 + i);
+        for (EquipPlace p : EquipPlace.values()) {
+            equip.put(p, (EquippableItem) ObjectManager.getItemByID(p.emptyID));
         }
     }
 
@@ -144,8 +141,8 @@ public class Player extends GameCharacter {
 
     @Override
     public boolean canAttack() {
-        Weapon w1 = (Weapon) this.getEquip(RIGHT_HAND);
-        Weapon w2 = (Weapon) this.getEquip(LEFT_HAND);
+        Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
+        Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
 
         return atkTick >= 50 / (1 + getTotalStat(Stat.ASPD)
                 *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
@@ -163,24 +160,26 @@ public class Player extends GameCharacter {
         inventory.removeItem(w);    // remove item from inventory to clear space
 
         if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) {
-            if (Inventory.MAX_SIZE - inventory.getSize() == 1 && !isFree(RIGHT_HAND) && !isFree(LEFT_HAND)) {
+            if (Inventory.MAX_SIZE - inventory.getSize() == 1
+                    && !isFree(EquipPlace.RIGHT_HAND)
+                    && !isFree(EquipPlace.LEFT_HAND)) {
                 // ex case, when inventory is full and player tries to equip 2H weapon
                 // but holds two 1H weapons
                 inventory.addItem(w);
                 return;
             }
-            unEquipItem(RIGHT_HAND);
-            unEquipItem(LEFT_HAND);
-            equip[RIGHT_HAND] = w;
-            equip[LEFT_HAND] = w;
+            unEquipItem(EquipPlace.RIGHT_HAND);
+            unEquipItem(EquipPlace.LEFT_HAND);
+            equip.put(EquipPlace.RIGHT_HAND, w);
+            equip.put(EquipPlace.LEFT_HAND, w);
         }
-        else if (w.type == WeaponType.SHIELD || !isFree(RIGHT_HAND)) {
-            unEquipItem(LEFT_HAND);
-            equip[LEFT_HAND] = w;
+        else if (w.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
+            unEquipItem(EquipPlace.LEFT_HAND);
+            equip.put(EquipPlace.LEFT_HAND, w);
         }
         else {  // normal 1H weapon
-            unEquipItem(RIGHT_HAND);
-            equip[RIGHT_HAND] = w;
+            unEquipItem(EquipPlace.RIGHT_HAND);
+            equip.put(EquipPlace.RIGHT_HAND, w);
         }
 
         w.onEquip(this);            // put it on
@@ -188,37 +187,53 @@ public class Player extends GameCharacter {
 
     public void equipArmor(Armor a) {
         inventory.removeItem(a);    // remove it first, so we can unequip our armor
-        unEquipItem(a.type.ordinal());  // just because place number made to match ArmorType enum
-        equip[a.type.ordinal()] = a;
+
+        EquipPlace place;
+        switch (a.type) {
+            case BODY:
+                place = EquipPlace.BODY;
+                break;
+            case HELM:
+                place = EquipPlace.HELM;
+                break;
+            case SHOES:
+            default:
+                place = EquipPlace.SHOES;
+                break;
+        }
+
+        unEquipItem(place);
+        equip.put(place, a);
         a.onEquip(this);
     }
 
-    public void unEquipItem(int itemPlace) {
+    public void unEquipItem(EquipPlace itemPlace) {
         if (isFree(itemPlace) || inventory.isFull())
-            return; // no item at this place
+            return; // no item at this place or inventory is full
 
-        if (equip[itemPlace] instanceof Weapon) {
-            Weapon w = (Weapon) equip[itemPlace];
+        EquippableItem item = getEquip(itemPlace);
+
+        if (item instanceof Weapon) {
+            Weapon w = (Weapon) item;
             if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
-                if (itemPlace == RIGHT_HAND)
-                    equip[LEFT_HAND]  = ObjectManager.getWeaponByID(ID.Weapon.HANDS);
+                if (itemPlace == EquipPlace.RIGHT_HAND)
+                    equip.put(EquipPlace.LEFT_HAND, ObjectManager.getWeaponByID(ID.Weapon.HANDS));
                 else
-                    equip[RIGHT_HAND] = ObjectManager.getWeaponByID(ID.Weapon.HANDS);
+                    equip.put(EquipPlace.RIGHT_HAND, ObjectManager.getWeaponByID(ID.Weapon.HANDS));
             }
         }
 
-        equip[itemPlace].onUnEquip(this);   // take item off
-        inventory.addItem(equip[itemPlace]);    // put it in inventory
-        equip[itemPlace] = itemPlace >= RIGHT_HAND ? ObjectManager.getWeaponByID(ID.Weapon.HANDS) : ObjectManager.getArmorByID(5000 + itemPlace);    // replace with default
+        item.onUnEquip(this);   // take item off
+        inventory.addItem(item);    // put it in inventory
+        equip.put(itemPlace, (EquippableItem) ObjectManager.getItemByID(itemPlace.emptyID));    // replace with default
     }
 
-    public boolean isFree(int itemPlace) {
-        return equip[itemPlace].id == ID.Weapon.HANDS || equip[itemPlace].id == ID.Armor.HAT
-                || equip[itemPlace].id == ID.Armor.CLOTHES || equip[itemPlace].id == ID.Armor.SHOES;
+    public boolean isFree(EquipPlace place) {
+        return getEquip(place).id == place.emptyID;
     }
 
-    public EquippableItem getEquip(int place) {
-        return equip[place];
+    public EquippableItem getEquip(EquipPlace place) {
+        return equip.get(place);
     }
 
     public Inventory getInventory() {
@@ -227,12 +242,12 @@ public class Player extends GameCharacter {
 
     @Override
     public Element getWeaponElement() {
-        return getEquip(RIGHT_HAND).getElement();
+        return getEquip(EquipPlace.RIGHT_HAND).getElement();
     }
 
     @Override
     public Element getArmorElement() {
-        return getEquip(BODY).getElement();
+        return getEquip(EquipPlace.BODY).getElement();
     }
 
     public void onDeath() {

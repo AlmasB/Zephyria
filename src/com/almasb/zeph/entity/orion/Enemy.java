@@ -32,32 +32,34 @@ public class Enemy extends GameCharacter {
       this.baseLevel = level;
       this.xp = xp;
       this.drops = drops;
-      attributes[STR] = (byte) attrs.str;
-      attributes[VIT] = (byte) attrs.vit;
-      attributes[DEX] = (byte) attrs.dex;
-      attributes[AGI] = (byte) attrs.agi;
-      attributes[INT] = (byte) attrs.int_;
-      attributes[WIS] = (byte) attrs.wis;
-      attributes[WIL] = (byte) attrs.wil;
-      attributes[PER] = (byte) attrs.per;
-      attributes[LUC] = (byte) attrs.luc;
+
+      attributes.put(Attribute.STRENGTH, attrs.str);
+      attributes.put(Attribute.VITALITY, attrs.vit);
+      attributes.put(Attribute.DEXTERITY, attrs.dex);
+      attributes.put(Attribute.AGILITY, attrs.agi);
+      attributes.put(Attribute.INTELLECT, attrs.int_);
+      attributes.put(Attribute.WISDOM, attrs.wis);
+      attributes.put(Attribute.WILLPOWER, attrs.wil);
+      attributes.put(Attribute.PERCEPTION, attrs.per);
+      attributes.put(Attribute.LUCK, attrs.luc);
+
       calculateStats();
-      setHP((int)getTotalStat(MAX_HP));   // set current hp/sp to max
-      setSP((int)getTotalStat(MAX_SP));
+      setHP((int)getTotalStat(Stat.MAX_HP));   // set current hp/sp to max
+      setSP((int)getTotalStat(Stat.MAX_SP));
     }
 
 
     public Enemy(Enemy copy) {
         this(copy.id, copy.name, copy.description, copy.textureName, copy.type, copy.element, copy.baseLevel,
-                new AttributeInfo().str(copy.getBaseAttribute(STR))
-                .vit(copy.getBaseAttribute(VIT))
-                .dex(copy.getBaseAttribute(DEX))
-                .agi(copy.getBaseAttribute(AGI))
-                .int_(copy.getBaseAttribute(INT))
-                .wis(copy.getBaseAttribute(WIS))
-                .wil(copy.getBaseAttribute(WIL))
-                .per(copy.getBaseAttribute(PER))
-                .luc(copy.getBaseAttribute(LUC)), copy.xp, copy.drops);
+                new AttributeInfo().str(copy.getBaseAttribute(Attribute.STRENGTH))
+                .vit(copy.getBaseAttribute(Attribute.VITALITY))
+                .dex(copy.getBaseAttribute(Attribute.DEXTERITY))
+                .agi(copy.getBaseAttribute(Attribute.AGILITY))
+                .int_(copy.getBaseAttribute(Attribute.INTELLECT))
+                .wis(copy.getBaseAttribute(Attribute.WISDOM))
+                .wil(copy.getBaseAttribute(Attribute.WILLPOWER))
+                .per(copy.getBaseAttribute(Attribute.PERCEPTION))
+                .luc(copy.getBaseAttribute(Attribute.LUCK)), copy.xp, copy.drops);
     }
 
     public void addAttackerRuntimeID(int runtimeID) {

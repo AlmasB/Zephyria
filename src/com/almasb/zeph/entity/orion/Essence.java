@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity.orion;
 
-import com.almasb.zeph.entity.orion.GameCharacter.Stat;
 
 /**
  * An essence when installed into a weapon, increases a character stat

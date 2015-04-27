@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity.orion;
 
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.orion.GameCharacter.Stat;
 
 public class Armor extends EquippableItem {
 
@@ -58,9 +57,69 @@ public class Armor extends EquippableItem {
     }
 
     public static class ArmorBuilder {
+        private int id;
+        private String name;
+        private String desc;
+        private String texture;
+        private ItemLevel level = ItemLevel.NORMAL;
+        private Element element = Element.NEUTRAL;
+        private ArmorType type;
+        private int armor;
+        private int marmor;
+        private Rune[] runes = new Rune[0];
+
+        public ArmorBuilder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public ArmorBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ArmorBuilder description(String description) {
+            this.desc = description;
+            return this;
+        }
+
+        public ArmorBuilder textureName(String textureName) {
+            this.texture = textureName;
+            return this;
+        }
+
+        public ArmorBuilder itemLevel(ItemLevel level) {
+            this.level = level;
+            return this;
+        }
+
+        public ArmorBuilder element(Element element) {
+            this.element = element;
+            return this;
+        }
+
+        public ArmorBuilder type(ArmorType type) {
+            this.type = type;
+            return this;
+        }
+
+        public ArmorBuilder armor(int armor) {
+            this.armor = armor;
+            return this;
+        }
+
+        public ArmorBuilder marmor(int marmor) {
+            this.marmor = marmor;
+            return this;
+        }
+
+        public ArmorBuilder runes(Rune... runes) {
+            this.runes = runes;
+            return this;
+        }
 
         public Armor build() {
-            return null;
+            return new Armor(id, name, desc, texture, level, element, type, armor, marmor, runes);
         }
     }
 }

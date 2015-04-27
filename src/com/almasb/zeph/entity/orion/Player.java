@@ -127,9 +127,9 @@ public class Player extends GameCharacter {
         return skillPoints > 0;
     }
 
-    public void increaseAttr(int attr) {
-        if (attributes[attr] < MAX_ATTRIBUTE) {
-            attributes[attr]++;
+    public void increaseAttr(Attribute attr) {
+        if (attributes.get(attr) < MAX_ATTRIBUTE) {
+            attributes.put(attr, attributes.get(attr) + 1);
             attributePoints--;
         }
     }
@@ -147,7 +147,7 @@ public class Player extends GameCharacter {
         Weapon w1 = (Weapon) this.getEquip(RIGHT_HAND);
         Weapon w2 = (Weapon) this.getEquip(LEFT_HAND);
 
-        return atkTick >= 50 / (1 + getTotalStat(GameCharacter.ASPD)
+        return atkTick >= 50 / (1 + getTotalStat(Stat.ASPD)
                 *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     }
 
@@ -236,8 +236,8 @@ public class Player extends GameCharacter {
     }
 
     public void onDeath() {
-        hp = (int)(0.25f*getTotalStat(MAX_HP));
-        sp = (int)(0.25f*getTotalStat(MAX_SP));
+        hp = (int)(0.25f*getTotalStat(Stat.MAX_HP));
+        sp = (int)(0.25f*getTotalStat(Stat.MAX_SP));
     }
 
     public int getJobLevel() {

@@ -4,6 +4,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import com.almasb.zeph.entity.orion.Armor.ArmorBuilder;
+import com.almasb.zeph.entity.orion.Armor.ArmorType;
+import com.almasb.zeph.entity.orion.Weapon.WeaponBuilder;
+import com.almasb.zeph.entity.orion.Weapon.WeaponType;
+
 public class ObjectManager {
 
     private static HashMap<Integer, Weapon> defaultWeapons = new HashMap<Integer, Weapon>();
@@ -16,6 +21,14 @@ public class ObjectManager {
 
     public static void load() {
         // ARMOR
+
+        ArmorBuilder armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.CLOTHES)
+                    .name("Clothes")
+                    .description(Desc.Armor.CLOTHES)
+                    .textureName("test.png")
+                    .type(ArmorType.BODY);
+        addArmor(armorBuilder);
 
 //        addArmor(new Armor(ID.Armor.HAT, "Hat", Desc.Armor.HAT, 10, 13, ArmorType.HELM, 0, 0));    // 5000, matches type enum for easy equip
 //        addArmor(new Armor(ID.Armor.CLOTHES, "Clothes", Desc.Armor.CLOTHES, 0, 13, ArmorType.BODY, 0, 0));  // 5001
@@ -36,6 +49,17 @@ public class ObjectManager {
 //
 //        // WEAPON
 //
+
+        WeaponBuilder weaponBuilder = new WeaponBuilder();
+        weaponBuilder.id(ID.Weapon.HANDS)
+                    .name("Hands")
+                    .description(Desc.Weapon.HANDS)
+                    .textureName("test.png")
+                    .damage(15)
+                    .type(WeaponType.MACE);
+        addWeapon(weaponBuilder);
+
+
 //        addWeapon(new Weapon(ID.Weapon.HANDS, "Hands", Desc.Weapon.HANDS, 0, 7, WeaponType.MACE, 0));
 //        addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
 //        addWeapon(new Weapon(ID.Weapon.KNIFE, "Knife", Desc.Weapon.KNIFE, 0, 6, WeaponType.DAGGER, 5));
@@ -1055,11 +1079,13 @@ public class ObjectManager {
 //                new Experience(100, 100, 100), 0, new DroppableItem(ID.Armor.CHAINMAL, 25), new DroppableItem(ID.Weapon.SOUL_REAPER, 5)));
     }
 
-    private static void addArmor(Armor armor) {
+    private static void addArmor(ArmorBuilder ab) {
+        Armor armor = ab.build();
         defaultArmor.put(armor.id, armor);
     }
 
-    private static void addWeapon(Weapon weapon) {
+    private static void addWeapon(WeaponBuilder wb) {
+        Weapon weapon = wb.build();
         defaultWeapons.put(weapon.id, weapon);
     }
 

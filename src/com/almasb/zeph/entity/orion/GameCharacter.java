@@ -1,9 +1,10 @@
 package com.almasb.zeph.entity.orion;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.almasb.zeph.entity.orion.StatusEffect.Status;
 
@@ -17,78 +18,45 @@ import com.almasb.zeph.entity.orion.StatusEffect.Status;
 public abstract class GameCharacter extends GameEntity implements java.io.Serializable {
     private static final long serialVersionUID = -4840633591092062960L;
 
-    public static class Experience implements java.io.Serializable {
-        private static final long serialVersionUID = 2762180993708324531L;
-        public int base, stat, job;
-        public Experience(int base, int stat, int job) {
-            this.base = base;
-            this.stat = stat;
-            this.job = job;
-        }
-        public void add(Experience xp) {
-            this.base += xp.base;
-            this.stat += xp.stat;
-            this.job += xp.job;
-        }
-    }
-
-    /**
-     * Stats of a game character
-     *
-     */
-    public enum Stat {
-        MAX_HP, MAX_SP, ATK, MATK, DEF, MDEF, ARM, MARM, ASPD, MSPD, CRIT_CHANCE, MCRIT_CHANCE, CRIT_DMG, MCRIT_DMG, HP_REGEN, SP_REGEN
-    }
-
     /**
      * ID of the object in 1 instance of the game
      */
     private int runtimeID = 0;
 
     /**
-     * These allow convenient access to {@link #attributes} and {@link #stats} arrays
-     * to retrieve particular attribute value
-     * These essentially represent indexes
-     *
-     * Note: the order is based on the order of attributes in
-     * {@code Attribute} and {@code Stat} enums, so they have to match
+     * Contains native character attribute values
      */
-    public static final int STR = 0,    // ATTRIBUTES
-            VIT = 1,
-            DEX = 2,
-            AGI = 3,
-            INT = 4,
-            WIS = 5,
-            WIL = 6,
-            PER = 7,
-            LUC = 8,
-            // STATS
-            MAX_HP = 0,
-            MAX_SP = 1,
-            ATK = 2,
-            MATK = 3,
-            DEF = 4,    // flat damage reduction
-            MDEF = 5,
-            ARM = 6,    // % damage reduction
-            MARM = 7,
-            ASPD = 8,   // attack speed
-            MSPD = 9,
-            CRIT_CHANCE = 10,
-            MCRIT_CHANCE = 11,
-            CRIT_DMG = 12,
-            MCRIT_DMG = 13,
-            HP_REGEN = 14,
-            SP_REGEN = 15;
+    protected Map<Attribute, Integer> attributes = new HashMap<>();
 
-    protected byte[] attributes = new byte[9];    // we have 9 attributes
-    protected byte[] bAttributes = new byte[9];   // on top of native attributes items can give bonuses
-    protected float[] stats = new float[16];        // 16 stats
-    protected float[] bStats = new float[16];       // bonus stats given by item
+    /**
+     * Contains attribute values given by equipped items or effects
+     */
+    private Map<Attribute, Integer> bAttributes = new HashMap<>();
+
+    /**
+     * Contains native character stats calculated from both
+     * {@link #attributes} and {@link #bAttributes}
+     */
+    private Map<Stat, Float> stats = new HashMap<>();
+
+    /**
+     * Contains stats given by equipped items or effects
+     */
+    private Map<Stat, Float> bStats = new HashMap<>();
+
+    /**
+     * Statuses currently affecting this character
+     */
+    private List<StatusEffect> statuses = new ArrayList<>();
+
+    /**
+     * Effects currently placed on this character
+     */
+    private List<Effect> effects = new ArrayList<>();
+
+    // TODO: transient javafx properties bound to primitives ?
 
     protected Skill[] skills;
-
-    private List<StatusEffect> statuses = new ArrayList<>();
-    private List<Effect> effects = new ArrayList<>();
 
     protected int baseLevel = 1, atkTick = 0,
             hp = 0, sp = 0; // these are current hp/sp
@@ -109,118 +77,55 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
         for (int i = 0; i < skills.length; i++)
             skills[i] = ObjectManager.getSkillByID(charClass.skillIDs[i]);
 
-        Arrays.fill(attributes, (byte)1); // set all attributes to 1, that's the minimum
+        for (Attribute attr : Attribute.values()) {
+            attributes.put(attr, 1);
+            bAttributes.put(attr, 1);
+        }
+
+        for (Stat stat : Stat.values()) {
+            stats.put(stat, 0.0f);
+            bStats.put(stat, 0.0f);
+        }
 
         calculateStats();
-        setHP((int)getTotalStat(MAX_HP));   // set current hp/sp to max
-        setSP((int)getTotalStat(MAX_SP));
+        setHP((int)getTotalStat(Stat.MAX_HP));   // set current hp/sp to max
+        setSP((int)getTotalStat(Stat.MAX_SP));
     }
 
-    public int getBaseAttribute(int attr) {
-        return attributes[attr];
+    public int getBaseAttribute(Attribute attr) {
+        return attributes.get(attr);
     }
 
     public float getBaseStat(Stat stat) {
-        return stats[stat.ordinal()];
+        return stats.get(stat);
     }
 
-    public int getBonusAttribute(int attr) {
-        return bAttributes[attr];
+    public int getBonusAttribute(Attribute attr) {
+        return bAttributes.get(attr);
     }
 
     public float getBonusStat(Stat stat) {
-        return bStats[stat.ordinal()];
+        return bStats.get(stat);
     }
 
     /**
      *
      * @param attr
-     *              one of the constants for attr, STR = 0, LUC = 8
      * @return
      *          total value for attr, including bonuses
      */
-    public int getTotalAttribute(int attr) {
-        return attributes[attr] + bAttributes[attr];
-    }
-
     public int getTotalAttribute(Attribute attr) {
-        return attributes[attr.ordinal()] + bAttributes[attr.ordinal()];
+        return getBaseAttribute(attr) + getBonusAttribute(attr);
     }
 
     /**
      *
      * @param stat
-     *              one of the constants for stat, MAX_HP = 0, SP_REGEN = 15
      * @return
      *          total value for stat, including bonuses
      */
-    public float getTotalStat(int stat) {
-        return stats[stat] + bStats[stat];
-    }
-
     public float getTotalStat(Stat stat) {
-        return stats[stat.ordinal()] + bStats[stat.ordinal()];
-    }
-
-    /**
-     * Character stats are directly affected by his attributes
-     * Therefore any change in attributes must be followed by
-     * call to this method
-     */
-    public final void calculateStats() {
-        int strength    = getTotalAttribute(STR);   // calculate totals first
-        int vitality    = getTotalAttribute(VIT);
-        int dexterity   = getTotalAttribute(DEX);
-        int agility     = getTotalAttribute(AGI);
-        int intellect   = getTotalAttribute(INT);
-        int wisdom      = getTotalAttribute(WIS);
-        int willpower   = getTotalAttribute(WIL);
-        int perception  = getTotalAttribute(PER);
-        int luck        = getTotalAttribute(LUC);
-
-        // None of these formulae are finalised yet and need to be checked for game balance
-        // only calculate "native" base stats
-
-        float MODIFIER_VERY_LOW = 0.1f,
-                MODIFIER_LOW = 0.2f,
-                MODIFIER_MEDIUM = 0.3f,
-                MODIFIER_HIGH = 0.4f,
-                MODIFIER_VERY_HIGH = 0.5f,
-                MODIFIER_LEVEL = 0.25f;
-
-        stats[MAX_HP] = (vitality*MODIFIER_VERY_HIGH + strength*MODIFIER_MEDIUM + MODIFIER_LEVEL*baseLevel + (vitality/10))
-                * charClass.hp;
-
-        stats[MAX_SP] = (wisdom*MODIFIER_VERY_HIGH + intellect*MODIFIER_MEDIUM + willpower*MODIFIER_VERY_LOW + MODIFIER_LEVEL*baseLevel + (wisdom/10))
-                * charClass.sp;
-
-        stats[ATK] = strength*MODIFIER_VERY_HIGH + dexterity*MODIFIER_MEDIUM + perception*MODIFIER_LOW + luck*MODIFIER_VERY_LOW
-                + baseLevel + (strength/10)*( (strength/10)+1);
-
-        stats[MATK] = intellect*MODIFIER_VERY_HIGH + wisdom*MODIFIER_HIGH + willpower*MODIFIER_HIGH + dexterity*MODIFIER_MEDIUM
-                + perception*MODIFIER_LOW + luck*MODIFIER_VERY_LOW + baseLevel + (intellect/10)*( (intellect/10)+1);
-
-        stats[DEF] = vitality*MODIFIER_MEDIUM + perception*MODIFIER_LOW + strength*MODIFIER_VERY_LOW
-                + MODIFIER_LEVEL*baseLevel + (vitality/20)*(charClass.hp/10);
-
-        stats[MDEF] = willpower*MODIFIER_HIGH + wisdom*MODIFIER_MEDIUM + perception*MODIFIER_LOW + intellect*MODIFIER_VERY_LOW
-                + MODIFIER_LEVEL*baseLevel + (willpower/20)*(intellect/10);
-
-        stats[ASPD] = agility*MODIFIER_VERY_HIGH + dexterity*MODIFIER_LOW;
-
-        stats[MSPD] = dexterity*MODIFIER_MEDIUM + willpower*MODIFIER_VERY_LOW + wisdom*MODIFIER_VERY_LOW
-                + intellect*MODIFIER_VERY_LOW + perception*MODIFIER_VERY_LOW + luck*MODIFIER_VERY_LOW;
-
-        stats[CRIT_CHANCE] = luck*MODIFIER_VERY_HIGH + dexterity*MODIFIER_VERY_LOW + perception*MODIFIER_VERY_LOW
-                + wisdom*MODIFIER_VERY_LOW;
-
-        stats[MCRIT_CHANCE] = luck*MODIFIER_HIGH + willpower*MODIFIER_LOW + perception*MODIFIER_VERY_LOW;
-
-        stats[CRIT_DMG]  = 2 + luck*0.01f;
-        stats[MCRIT_DMG] = 2 + luck*0.01f;
-
-        stats[HP_REGEN] = 1 + vitality * MODIFIER_VERY_LOW;
-        stats[SP_REGEN] = 2 + wisdom * MODIFIER_VERY_LOW;
+        return getBaseStat(stat) + getBonusStat(stat);
     }
 
     /**
@@ -232,7 +137,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      *              value
      */
     public void addBonusAttribute(Attribute attr, int bonus) {
-        bAttributes[attr.ordinal()] += bonus;
+        bAttributes.put(attr, bAttributes.get(attr) + bonus);
     }
 
     /**
@@ -244,7 +149,83 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      *              value
      */
     public void addBonusStat(Stat stat, int bonus) {
-        bStats[stat.ordinal()] += bonus;
+        bStats.put(stat, bStats.get(stat) + bonus);
+    }
+
+    /**
+     * Character stats are directly affected by his attributes
+     * Therefore any change in attributes must be followed by
+     * call to this method
+     */
+    public final void calculateStats() {
+        int strength    = getTotalAttribute(Attribute.STRENGTH);   // calculate totals first
+        int vitality    = getTotalAttribute(Attribute.VITALITY);
+        int dexterity   = getTotalAttribute(Attribute.DEXTERITY);
+        int agility     = getTotalAttribute(Attribute.AGILITY);
+        int intellect   = getTotalAttribute(Attribute.INTELLECT);
+        int wisdom      = getTotalAttribute(Attribute.WISDOM);
+        int willpower   = getTotalAttribute(Attribute.WILLPOWER);
+        int perception  = getTotalAttribute(Attribute.PERCEPTION);
+        int luck        = getTotalAttribute(Attribute.LUCK);
+
+        // None of these formulae are finalised yet and need to be checked for game balance
+        // only calculate "native" base stats
+
+        float MODIFIER_VERY_LOW = 0.1f,
+                MODIFIER_LOW = 0.2f,
+                MODIFIER_MEDIUM = 0.3f,
+                MODIFIER_HIGH = 0.4f,
+                MODIFIER_VERY_HIGH = 0.5f,
+                MODIFIER_LEVEL = 0.25f;
+
+        float maxHP = (vitality*MODIFIER_VERY_HIGH + strength*MODIFIER_MEDIUM + MODIFIER_LEVEL*baseLevel + (vitality/10))
+                * charClass.hp;
+
+        float maxSP = (wisdom*MODIFIER_VERY_HIGH + intellect*MODIFIER_MEDIUM + willpower*MODIFIER_VERY_LOW + MODIFIER_LEVEL*baseLevel + (wisdom/10))
+                * charClass.sp;
+
+        float hpRegen = 1 + vitality * MODIFIER_VERY_LOW;
+        float spRegen = 2 + wisdom * MODIFIER_VERY_LOW;
+
+        float atk = strength*MODIFIER_VERY_HIGH + dexterity*MODIFIER_MEDIUM + perception*MODIFIER_LOW + luck*MODIFIER_VERY_LOW
+                + baseLevel + (strength/10)*( (strength/10)+1);
+
+        float matk = intellect*MODIFIER_VERY_HIGH + wisdom*MODIFIER_HIGH + willpower*MODIFIER_HIGH + dexterity*MODIFIER_MEDIUM
+                + perception*MODIFIER_LOW + luck*MODIFIER_VERY_LOW + baseLevel + (intellect/10)*( (intellect/10)+1);
+
+        float def = vitality*MODIFIER_MEDIUM + perception*MODIFIER_LOW + strength*MODIFIER_VERY_LOW
+                + MODIFIER_LEVEL*baseLevel + (vitality/20)*(charClass.hp/10);
+
+        float mdef = willpower*MODIFIER_HIGH + wisdom*MODIFIER_MEDIUM + perception*MODIFIER_LOW + intellect*MODIFIER_VERY_LOW
+                + MODIFIER_LEVEL*baseLevel + (willpower/20)*(intellect/10);
+
+        float aspd = agility*MODIFIER_VERY_HIGH + dexterity*MODIFIER_LOW;
+
+        float mspd = dexterity*MODIFIER_MEDIUM + willpower*MODIFIER_VERY_LOW + wisdom*MODIFIER_VERY_LOW
+                + intellect*MODIFIER_VERY_LOW + perception*MODIFIER_VERY_LOW + luck*MODIFIER_VERY_LOW;
+
+        float critChance = luck*MODIFIER_VERY_HIGH + dexterity*MODIFIER_VERY_LOW + perception*MODIFIER_VERY_LOW
+                + wisdom*MODIFIER_VERY_LOW;
+
+        float mcritChance = luck*MODIFIER_HIGH + willpower*MODIFIER_LOW + perception*MODIFIER_VERY_LOW;
+
+        float critDmg  = 2 + luck*0.01f;
+        float mcritDmg = 2 + luck*0.01f;
+
+        stats.put(Stat.MAX_HP, maxHP);
+        stats.put(Stat.MAX_SP, maxSP);
+        stats.put(Stat.HP_REGEN, hpRegen);
+        stats.put(Stat.SP_REGEN, spRegen);
+        stats.put(Stat.ATK, atk);
+        stats.put(Stat.MATK, matk);
+        stats.put(Stat.DEF, def);
+        stats.put(Stat.MDEF, mdef);
+        stats.put(Stat.ASPD, aspd);
+        stats.put(Stat.MSPD, mspd);
+        stats.put(Stat.CRIT_CHANCE, critChance);
+        stats.put(Stat.MCRIT_CHANCE, mcritChance);
+        stats.put(Stat.CRIT_DMG, critDmg);
+        stats.put(Stat.MCRIT_DMG, mcritDmg);
     }
 
     public void setHP(int hp) {
@@ -351,8 +332,8 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
 
         if (regenTick >= 2.0f) {    // 2 secs
             if (!hasStatusEffect(Status.POISONED)) {
-                hp = Math.min((int)getTotalStat(MAX_HP), (int)(hp + getTotalStat(HP_REGEN)));
-                sp = Math.min((int)getTotalStat(MAX_SP), (int)(sp + getTotalStat(SP_REGEN)));
+                hp = Math.min((int)getTotalStat(Stat.MAX_HP), (int)(hp + getTotalStat(Stat.HP_REGEN)));
+                sp = Math.min((int)getTotalStat(Stat.MAX_SP), (int)(sp + getTotalStat(Stat.SP_REGEN)));
             }
             regenTick = 0.0f;
         }
@@ -386,7 +367,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      *          based on his ASPD
      */
     public boolean canAttack() {
-        return atkTick >= 50 / (1 + getTotalStat(GameCharacter.ASPD)/100.0f);
+        return atkTick >= 50 / (1 + getTotalStat(Stat.ASPD)/100.0f);
     }
 
     /**
@@ -420,7 +401,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      */
     public int attack(GameCharacter target) {
         atkTick = 0;
-        return dealPhysicalDamage(target, this.getTotalStat(ATK) + 1.25f * GameMath.random(baseLevel), this.getWeaponElement());
+        return dealPhysicalDamage(target, getTotalStat(Stat.ATK) + 1.25f * GameMath.random(baseLevel), this.getWeaponElement());
     }
 
     /**
@@ -434,13 +415,13 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      */
     public int dealPhysicalDamage(GameCharacter target, float baseDamage, Element element) {
         boolean crit = false;
-        if (GameMath.checkChance(getTotalStat(CRIT_CHANCE))) {
-            baseDamage *= getTotalStat(CRIT_DMG);
+        if (GameMath.checkChance(getTotalStat(Stat.CRIT_CHANCE))) {
+            baseDamage *= getTotalStat(Stat.CRIT_DMG);
             crit = true;
         }
 
         float elementalDamageModifier = element.getDamageModifierAgainst(target.getArmorElement());
-        float damageAfterReduction = (100 - target.getTotalStat(ARM)) * baseDamage / 100.0f - target.getTotalStat(DEF);
+        float damageAfterReduction = (100 - target.getTotalStat(Stat.ARM)) * baseDamage / 100.0f - target.getTotalStat(Stat.DEF);
 
         int totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0);
         target.hp -= totalDamage;
@@ -476,12 +457,12 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      *          damage dealt
      */
     public int dealMagicalDamage(GameCharacter target, float baseDamage, Element element) {
-        if (GameMath.checkChance(getTotalStat(MCRIT_CHANCE))) {
-            baseDamage *= getTotalStat(MCRIT_DMG);
+        if (GameMath.checkChance(getTotalStat(Stat.MCRIT_CHANCE))) {
+            baseDamage *= getTotalStat(Stat.MCRIT_DMG);
         }
 
         float elementalDamageModifier = element.getDamageModifierAgainst(target.getArmorElement());
-        float damageAfterReduction = (100 - target.getTotalStat(MARM)) * baseDamage / 100.0f - target.getTotalStat(MDEF);
+        float damageAfterReduction = (100 - target.getTotalStat(Stat.MARM)) * baseDamage / 100.0f - target.getTotalStat(Stat.MDEF);
 
         int totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0);
         target.hp -= totalDamage;

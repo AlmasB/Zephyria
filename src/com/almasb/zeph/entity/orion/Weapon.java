@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity.orion;
 
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.orion.GameCharacter.Stat;
 
 public class Weapon extends EquippableItem {
 

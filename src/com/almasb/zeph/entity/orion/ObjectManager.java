@@ -1,11 +1,11 @@
 package com.almasb.zeph.entity.orion;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import com.almasb.zeph.entity.orion.Armor.ArmorBuilder;
 import com.almasb.zeph.entity.orion.Armor.ArmorType;
+import com.almasb.zeph.entity.orion.Enemy.EnemyBuilder;
 import com.almasb.zeph.entity.orion.Weapon.WeaponBuilder;
 import com.almasb.zeph.entity.orion.Weapon.WeaponType;
 
@@ -1081,6 +1081,18 @@ public class ObjectManager {
 //
 //
 //        // ENEMIES
+
+        EnemyBuilder enemyBuilder = new EnemyBuilder();
+        enemyBuilder.id(ID.Enemy.MINOR_EARTH_SPIRIT)
+                    .description(Desc.Enemy.MINOR_EARTH_SPIRIT)
+                    .name("Minor Earth Spirit")
+                    .textureName("test.png")
+                    .xp(new Experience(100, 100, 100))
+                    .element(Element.EARTH)
+                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50), new DroppableItem(ID.Armor.THANATOS_BODY_ARMOR, 10));
+
+        addEnemy(enemyBuilder);
+
 //
 //        addEnemy(new Enemy(ID.Enemy.MINOR_FIRE_SPIRIT, "Minor Fire Spirit", Desc.Enemy.MINOR_FIRE_SPIRIT,
 //                EnemyType.NORMAL, Element.FIRE, 1, new AttributeInfo(),
@@ -1109,7 +1121,8 @@ public class ObjectManager {
         defaultSkills.put(skill.id, skill);
     }
 
-    private static void addEnemy(Enemy enemy) {
+    private static void addEnemy(EnemyBuilder eb) {
+        Enemy enemy = eb.build();
         defaultEnemies.put(enemy.id, enemy);
     }
 

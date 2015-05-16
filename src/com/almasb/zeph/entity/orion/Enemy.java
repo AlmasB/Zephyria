@@ -1,6 +1,8 @@
 package com.almasb.zeph.entity.orion;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.entity.orion.Attribute.AttributeInfo;
@@ -13,11 +15,11 @@ public class Enemy extends GameCharacter {
         NORMAL, MINIBOSS, BOSS
     }
 
-    public transient final EnemyType type;
+    public final EnemyType type;
 
-    private transient Element element;
+    private Element element;
 
-    private transient DroppableItem[] drops;
+    private List<DroppableItem> drops = new ArrayList<>();
 
     /**
      * Runtime ID of players who attacked this monster
@@ -31,7 +33,7 @@ public class Enemy extends GameCharacter {
       this.element = element;
       this.baseLevel = level;
       this.xp = xp;
-      this.drops = drops;
+      this.drops.addAll(Arrays.asList(drops));
 
       attributes.put(Attribute.STRENGTH, attrs.str);
       attributes.put(Attribute.VITALITY, attrs.vit);
@@ -59,7 +61,7 @@ public class Enemy extends GameCharacter {
                 .wis(copy.getBaseAttribute(Attribute.WISDOM))
                 .wil(copy.getBaseAttribute(Attribute.WILLPOWER))
                 .per(copy.getBaseAttribute(Attribute.PERCEPTION))
-                .luc(copy.getBaseAttribute(Attribute.LUCK)), copy.xp, copy.drops);
+                .luc(copy.getBaseAttribute(Attribute.LUCK)), copy.xp, copy.drops.toArray(new DroppableItem[0]));
     }
 
     public void addAttackerRuntimeID(int runtimeID) {
@@ -133,8 +135,69 @@ public class Enemy extends GameCharacter {
     }
 
     public static class EnemyBuilder {
+        private int id;
+        private String name;
+        private String desc;
+        private String texture;
+        private EnemyType type = EnemyType.NORMAL;
+        private Element element = Element.NEUTRAL;
+        private int level = 1;
+        private AttributeInfo attributes = new AttributeInfo();
+        private Experience xp;
+        private DroppableItem[] items = new DroppableItem[0];
+
+        public EnemyBuilder id(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public EnemyBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public EnemyBuilder description(String description) {
+            this.desc = description;
+            return this;
+        }
+
+        public EnemyBuilder textureName(String textureName) {
+            this.texture = textureName;
+            return this;
+        }
+
+        public EnemyBuilder level(int level) {
+            this.level = level;
+            return this;
+        }
+
+        public EnemyBuilder element(Element element) {
+            this.element = element;
+            return this;
+        }
+
+        public EnemyBuilder type(EnemyType type) {
+            this.type = type;
+            return this;
+        }
+
+        public EnemyBuilder attributes(AttributeInfo attrs) {
+            this.attributes = attrs;
+            return this;
+        }
+
+        public EnemyBuilder xp(Experience xp) {
+            this.xp = xp;
+            return this;
+        }
+
+        public EnemyBuilder drops(DroppableItem... items) {
+            this.items = items;
+            return this;
+        }
+
         public Enemy build() {
-            return null;
+            return new Enemy(id, name, desc, texture, type, element, level, attributes, xp, items);
         }
     }
 }

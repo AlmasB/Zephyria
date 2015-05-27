@@ -59,7 +59,8 @@ public class ZephyriaApp extends GameApplication {
         //player.getControl(GameCharacterControl.class).damage(1);
     }
 
-    private void initInput() {
+    @Override
+    protected void initInput() {
         addKeyPressBinding(KeyCode.W, () -> {
             player.translate(0, -5);
         });

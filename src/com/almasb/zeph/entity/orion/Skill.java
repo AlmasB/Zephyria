@@ -43,10 +43,7 @@ public abstract class Skill extends GameEntity implements java.io.Serializable {
     public abstract int getManaCost();
 
     /**
-     * Do not use this method directly (it is now hidden anyway)
-     * It is needed to provide overridability to new skills
-     *
-     * use public method - {@link use()}
+     * Override to provide functionality for skill
      *
      * @param caster
      * @param target

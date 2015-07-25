@@ -129,7 +129,7 @@ public class Enemy extends GameCharacter {
 
     @Override
     public Entity toEntity() {
-        Entity e = new Entity("enemy");
+        Entity e = Entity.noType();
         e.setProperty("enemy_data", new Enemy(this));
         return e;
     }

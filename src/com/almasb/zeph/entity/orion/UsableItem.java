@@ -15,7 +15,7 @@ public abstract class UsableItem extends GameEntity {
 
     @Override
     public Entity toEntity() {
-        Entity e = new Entity("usable_item");
+        Entity e = Entity.noType();
         e.setProperty("usable_item_data", this);
         return e;
     }

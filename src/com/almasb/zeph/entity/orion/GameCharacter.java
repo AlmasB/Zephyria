@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.almasb.zeph.entity.orion.Damage.DamageCritical;
+import com.almasb.zeph.entity.orion.Damage.DamageType;
 import com.almasb.zeph.entity.orion.StatusEffect.Status;
 
 /**
@@ -258,11 +260,15 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      *
      * @param status
      * @return
-     *          true if character is under "@param status" status effect
+     *          true if character is under status effect,
      *          false otherwise
      */
     public boolean hasStatusEffect(Status status) {
         return statuses.contains(status);
+    }
+
+    public GameCharacterClass getGameCharacterClass() {
+        return charClass;
     }
 
     /**
@@ -399,7 +405,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @return
      *          damage dealt
      */
-    public int attack(GameCharacter target) {
+    public Damage attack(GameCharacter target) {
         atkTick = 0;
         return dealPhysicalDamage(target, getTotalStat(Stat.ATK) + 1.25f * GameMath.random(baseLevel), this.getWeaponElement());
     }
@@ -413,7 +419,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @param element
      * @return
      */
-    public int dealPhysicalDamage(GameCharacter target, float baseDamage, Element element) {
+    public Damage dealPhysicalDamage(GameCharacter target, float baseDamage, Element element) {
         boolean crit = false;
         if (GameMath.checkChance(getTotalStat(Stat.CRIT_CHANCE))) {
             baseDamage *= getTotalStat(Stat.CRIT_DMG);
@@ -426,10 +432,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
         int totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0);
         target.hp -= totalDamage;
 
-        // set the negative bit on to indicate crit
-        if (crit)
-            totalDamage = totalDamage | (1 << 31);
-        return totalDamage;
+        return new Damage(DamageType.PHYSICAL, element, totalDamage, crit ? DamageCritical.TRUE : DamageCritical.FALSE);
     }
 
     /**
@@ -442,7 +445,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @return
      *          damage dealt
      */
-    public int dealPhysicalDamage(GameCharacter target, float baseDamage) {
+    public Damage dealPhysicalDamage(GameCharacter target, float baseDamage) {
         return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL);
     }
 
@@ -456,9 +459,11 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @return
      *          damage dealt
      */
-    public int dealMagicalDamage(GameCharacter target, float baseDamage, Element element) {
+    public Damage dealMagicalDamage(GameCharacter target, float baseDamage, Element element) {
+        boolean crit = false;
         if (GameMath.checkChance(getTotalStat(Stat.MCRIT_CHANCE))) {
             baseDamage *= getTotalStat(Stat.MCRIT_DMG);
+            crit = true;
         }
 
         float elementalDamageModifier = element.getDamageModifierAgainst(target.getArmorElement());
@@ -467,7 +472,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
         int totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0);
         target.hp -= totalDamage;
 
-        return totalDamage;
+        return new Damage(DamageType.MAGICAL, element, totalDamage, crit ? DamageCritical.TRUE : DamageCritical.FALSE);
     }
 
     /**
@@ -480,7 +485,7 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @return
      *          damage dealt
      */
-    public int dealMagicalDamage(GameCharacter target, float baseDamage) {
+    public Damage dealMagicalDamage(GameCharacter target, float baseDamage) {
         return dealMagicalDamage(target, baseDamage, Element.NEUTRAL);
     }
 
@@ -491,8 +496,10 @@ public abstract class GameCharacter extends GameEntity implements java.io.Serial
      * @param target
      * @param dmg
      */
-    public void dealPureDamage(GameCharacter target, float dmg) {
-        target.hp -= dmg;
+    public Damage dealPureDamage(GameCharacter target, float dmg) {
+        int damage = (int)dmg;
+        target.hp -= damage;
+        return new Damage(DamageType.PURE, Element.NEUTRAL, damage, DamageCritical.FALSE);
     }
 
     /**

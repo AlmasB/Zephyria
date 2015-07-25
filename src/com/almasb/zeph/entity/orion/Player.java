@@ -261,7 +261,7 @@ public class Player extends GameCharacter {
 
     @Override
     public Entity toEntity() {
-        Entity e = new Entity("player");
+        Entity e = Entity.noType();
         e.setProperty("player_data", this);
         return e;
     }

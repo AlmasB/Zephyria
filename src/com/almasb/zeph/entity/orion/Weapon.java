@@ -54,7 +54,7 @@ public class Weapon extends EquippableItem {
 
     @Override
     public Entity toEntity() {
-        Entity e = new Entity("weapon");
+        Entity e = Entity.noType();
         e.setProperty("weapon_data", this);
         return e;
     }

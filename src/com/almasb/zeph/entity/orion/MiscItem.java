@@ -56,7 +56,7 @@ public class MiscItem {
     }
 
     /*package-private*/ Entity toEntity() {
-        Entity item = new Entity(MiscItemProperty.TYPE.getUniqueKey());
+        Entity item = Entity.noType();
         item.setProperty(MiscItemProperty.NAME, name)
                 .setProperty(MiscItemProperty.DESCRIPTION, description)
                 .setProperty(MiscItemProperty.ID, id)

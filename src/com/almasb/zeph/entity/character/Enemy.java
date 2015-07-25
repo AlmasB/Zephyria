@@ -38,19 +38,19 @@ public class Enemy extends GameCharacter {
         super(id, name, description, textureName, GameCharacterClass.MONSTER);
       this.type = type;
       this.element = element;
-      this.baseLevel = level;
+      this.setBaseLevel(level);
       this.xp = xp;
       this.drops.addAll(Arrays.asList(drops));
 
-      attributes.put(Attribute.STRENGTH, attrs.str);
-      attributes.put(Attribute.VITALITY, attrs.vit);
-      attributes.put(Attribute.DEXTERITY, attrs.dex);
-      attributes.put(Attribute.AGILITY, attrs.agi);
-      attributes.put(Attribute.INTELLECT, attrs.int_);
-      attributes.put(Attribute.WISDOM, attrs.wis);
-      attributes.put(Attribute.WILLPOWER, attrs.wil);
-      attributes.put(Attribute.PERCEPTION, attrs.per);
-      attributes.put(Attribute.LUCK, attrs.luc);
+      setAttribute(Attribute.STRENGTH, attrs.str);
+      setAttribute(Attribute.VITALITY, attrs.vit);
+      setAttribute(Attribute.DEXTERITY, attrs.dex);
+      setAttribute(Attribute.AGILITY, attrs.agi);
+      setAttribute(Attribute.INTELLECT, attrs.int_);
+      setAttribute(Attribute.WISDOM, attrs.wis);
+      setAttribute(Attribute.WILLPOWER, attrs.wil);
+      setAttribute(Attribute.PERCEPTION, attrs.per);
+      setAttribute(Attribute.LUCK, attrs.luc);
 
       calculateStats();
       setHP((int)getTotalStat(Stat.MAX_HP));   // set current hp/sp to max
@@ -59,7 +59,7 @@ public class Enemy extends GameCharacter {
 
 
     public Enemy(Enemy copy) {
-        this(copy.getID(), copy.getName(), copy.getDescription(), copy.getTextureName(), copy.type, copy.element, copy.baseLevel,
+        this(copy.getID(), copy.getName(), copy.getDescription(), copy.getTextureName(), copy.type, copy.element, copy.getBaseLevel(),
                 new AttributeInfo().str(copy.getBaseAttribute(Attribute.STRENGTH))
                 .vit(copy.getBaseAttribute(Attribute.VITALITY))
                 .dex(copy.getBaseAttribute(Attribute.DEXTERITY))
@@ -109,7 +109,7 @@ public class Enemy extends GameCharacter {
                 }
             }
 
-            attacker.incMoney(GameMath.random(this.baseLevel * 100));
+            attacker.incMoney(GameMath.random(getBaseLevel() * 100));
             attacker.gainXP(getXP());
         }
     }

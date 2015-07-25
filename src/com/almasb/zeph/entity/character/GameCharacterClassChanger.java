@@ -30,12 +30,12 @@ public class GameCharacterClassChanger {
     private GameCharacterClassChanger() {}
 
     public static boolean canChangeClass(Player ch) {
-        Ascension r = reqList.get(ch.charClass);
-        return r != null && ch.baseLevel >= r.baseLevel && ch.getJobLevel() >= r.jobLevel;
+        Ascension r = reqList.get(ch.getGameCharacterClass());
+        return r != null && ch.getBaseLevel() >= r.baseLevel && ch.getJobLevel() >= r.jobLevel;
     }
 
     public static GameCharacterClass[] getAscensionClasses(Player ch) {
-        return reqList.get(ch.charClass).classesTo;
+        return reqList.get(ch.getGameCharacterClass()).classesTo;
     }
 
     private static class Ascension {

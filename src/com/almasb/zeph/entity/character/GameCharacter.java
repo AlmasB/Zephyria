@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Damage;
+import com.almasb.zeph.combat.Damage.DamageCritical;
+import com.almasb.zeph.combat.Damage.DamageType;
 import com.almasb.zeph.combat.Effect;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Experience;
@@ -15,11 +17,11 @@ import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Skill;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.combat.StatusEffect;
-import com.almasb.zeph.combat.Damage.DamageCritical;
-import com.almasb.zeph.combat.Damage.DamageType;
 import com.almasb.zeph.combat.StatusEffect.Status;
 import com.almasb.zeph.entity.GameEntity;
-import com.almasb.zeph.entity.EntityManager;
+
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 
 /**
  * Essentially alive game object
@@ -34,7 +36,17 @@ public abstract class GameCharacter extends GameEntity {
     /**
      * Contains native character attribute values
      */
-    protected Map<Attribute, Integer> attributes = new HashMap<>();
+    private Map<Attribute, Integer> attributes = new HashMap<>();
+
+    /**
+     * Sets given attribute value
+     *
+     * @param attr
+     * @param value
+     */
+    protected final void setAttribute(Attribute attr, int value) {
+        attributes.put(attr, value);
+    }
 
     /**
      * Contains attribute values given by equipped items or effects
@@ -62,36 +74,160 @@ public abstract class GameCharacter extends GameEntity {
      */
     private List<Effect> effects = new ArrayList<>();
 
-    // TODO: transient javafx properties bound to primitives ?
-
-    protected Skill[] skills;
-
     /**
      * Current base level
      */
-    protected int baseLevel = 1;
+    private int baseLevel = 1;
+    private transient ReadOnlyIntegerWrapper baseLevelProperty = new ReadOnlyIntegerWrapper(baseLevel);
 
     /**
-     * Attack tick that decides if character can attack
+     *
+     * @return base level
      */
-    protected int atkTick = 0;
+    public final int getBaseLevel() {
+        return baseLevel;
+    }
+
+    /**
+     *
+     * @return base level property
+     */
+    public final ReadOnlyIntegerProperty baseLevelProperty() {
+        return baseLevelProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Sets base level. Also updates baseLevelProperty
+     *
+     * @param level
+     */
+    protected final void setBaseLevel(int level) {
+        baseLevel = level;
+        baseLevelProperty.set(level);
+    }
 
     /**
      * Current hp
      */
-    protected int hp = 0;
+    private int hp = 0;
+    private transient ReadOnlyIntegerWrapper hpProperty = new ReadOnlyIntegerWrapper(hp);
+
+    /**
+     *
+     * @return current hp
+     */
+    public final int getHP() {
+        return hp;
+    }
+
+    /**
+     *
+     * @return current hp property
+     */
+    public final ReadOnlyIntegerProperty hpProperty() {
+        return hpProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Sets current hp. If the value is outside
+     * [0..getTotalStat(Stat.MAX_HP)], the value will be clamped.
+     *
+     * @param value
+     */
+    public final void setHP(int value) {
+        if (value < 0)
+            value = 0;
+        if (value > getTotalStat(Stat.MAX_HP))
+            value = (int)getTotalStat(Stat.MAX_HP);
+
+        hp = value;
+        hpProperty.set(value);
+    }
+
+    /**
+     * Restores hp. HP will go outside getTotalStat(Stat.MAX_HP).
+     *
+     * @param value
+     */
+    protected final void restoreHP(float value) {
+        setHP(getHP() + (int)value);
+    }
 
     /**
      * Current sp
      */
-    protected int sp = 0;
+    private int sp = 0;
+    private transient ReadOnlyIntegerWrapper spProperty = new ReadOnlyIntegerWrapper(sp);
+
+    /**
+     *
+     * @return current sp
+     */
+    public final int getSP() {
+        return hp;
+    }
+
+    /**
+     *
+     * @return current sp property
+     */
+    public final ReadOnlyIntegerProperty spProperty() {
+        return spProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Sets current hp. If the value is outside
+     * [0..getTotalStat(Stat.MAX_SP)], the value will be clamped.
+     *
+     * @param value
+     */
+    public final void setSP(int value) {
+        if (value < 0)
+            value = 0;
+        if (value > getTotalStat(Stat.MAX_SP))
+            value = (int)getTotalStat(Stat.MAX_SP);
+
+        sp = value;
+        spProperty.set(value);
+    }
+
+    /**
+     * Restores sp. SP will go outside getTotalStat(Stat.MAX_SP).
+     *
+     * @param value
+     */
+    protected final void restoreSP(float value) {
+        setSP(getSP() + (int)value);
+    }
 
     /**
      * Class of this game character
      */
-    protected GameCharacterClass charClass;
+    private GameCharacterClass charClass;
+
+    /**
+     *
+     * @return game character class
+     */
+    public final GameCharacterClass getGameCharacterClass() {
+        return charClass;
+    }
+
+    /**
+     * Attack tick that decides if character can attack
+     */
+    private int atkTick = 0;
+
+    /**
+     *
+     * @return attack tick
+     */
+    protected final int getAtkTick() {
+        return atkTick;
+    }
 
     protected Experience xp = new Experience(0, 0, 0);
+    protected Skill[] skills;
 
     public GameCharacter(int id, String name, String description, String textureName, GameCharacterClass charClass) {
         super(id, name, description, textureName);
@@ -256,32 +392,6 @@ public abstract class GameCharacter extends GameEntity {
         stats.put(Stat.MCRIT_DMG, mcritDmg);
     }
 
-    public void setHP(int hp) {
-        this.hp = hp;
-    }
-
-    public void setSP(int sp) {
-        this.sp = sp;
-    }
-
-    /**
-     *
-     * @return
-     *          current HP
-     */
-    public int getHP() {
-        return hp;
-    }
-
-    /**
-     *
-     * @return
-     *          current SP
-     */
-    public int getSP() {
-        return sp;
-    }
-
     /**
      *
      * @param status
@@ -291,10 +401,6 @@ public abstract class GameCharacter extends GameEntity {
      */
     public boolean hasStatusEffect(Status status) {
         return statuses.contains(status);
-    }
-
-    public GameCharacterClass getGameCharacterClass() {
-        return charClass;
     }
 
     /**
@@ -425,7 +531,7 @@ public abstract class GameCharacter extends GameEntity {
      */
     public Damage attack(GameCharacter target) {
         atkTick = 0;
-        return dealPhysicalDamage(target, getTotalStat(Stat.ATK) + 1.25f * GameMath.random(baseLevel), this.getWeaponElement());
+        return dealPhysicalDamage(target, getTotalStat(Stat.ATK) + 1.25f * GameMath.random(getBaseLevel()), this.getWeaponElement());
     }
 
     /**

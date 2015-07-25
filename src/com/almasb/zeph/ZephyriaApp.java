@@ -13,14 +13,17 @@ import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.character.Enemy;
 import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.Player;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
@@ -28,7 +31,6 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -144,7 +146,7 @@ public class ZephyriaApp extends GameApplication {
         barSPUI.currentValueProperty().bind(playerSPProperty);
 
 
-        Text textPlayerName = new Text(playerData.name + "\n" + playerData.getGameCharacterClass());
+        Text textPlayerName = new Text(playerData.getName() + "\n" + playerData.getGameCharacterClass());
         textPlayerName.setTranslateX(15);
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
@@ -314,7 +316,7 @@ public class ZephyriaApp extends GameApplication {
         barSP.setHeight(10);
         barSP.setLabelVisible(false);
 
-        Text text = new Text(playerData.name + " Lv. 1");
+        Text text = new Text(playerData.getName() + " Lv. 1");
         text.setFont(Font.font(14));
         text.setFill(Color.WHITE);
         text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
@@ -357,7 +359,7 @@ public class ZephyriaApp extends GameApplication {
             Rectangle rect = new Rectangle(40, 40);
             rect.setFill(Color.RED);
 
-            Text text = new Text(enemyData.name);
+            Text text = new Text(enemyData.getName());
             text.setFont(Font.font(14));
             text.setFill(Color.WHITE);
             text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);

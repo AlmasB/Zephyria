@@ -2,12 +2,10 @@ package com.almasb.zeph.entity;
 
 import com.almasb.fxgl.entity.Entity;
 
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.StringProperty;
 
 /**
  * This is the generic class for any character / item / object in the game.
@@ -23,7 +21,7 @@ public abstract class GameEntity implements java.io.Serializable {
      * Object ID in database
      */
     private int id;
-    private transient IntegerProperty idProperty;
+    private transient ReadOnlyIntegerProperty idProperty;
 
     /**
      *
@@ -39,7 +37,7 @@ public abstract class GameEntity implements java.io.Serializable {
      */
     public final ReadOnlyIntegerProperty idProperty() {
         if (idProperty == null)
-            idProperty = new ReadOnlyIntegerWrapper(id);
+            idProperty = new ReadOnlyIntegerWrapper(id).getReadOnlyProperty();
         return idProperty;
     }
 
@@ -47,7 +45,7 @@ public abstract class GameEntity implements java.io.Serializable {
      * In game name
      */
     private String name;
-    private transient StringProperty nameProperty;
+    private transient ReadOnlyStringProperty nameProperty;
 
     /**
      *
@@ -63,7 +61,7 @@ public abstract class GameEntity implements java.io.Serializable {
      */
     public final ReadOnlyStringProperty nameProperty() {
         if (nameProperty == null)
-            nameProperty = new ReadOnlyStringWrapper(name);
+            nameProperty = new ReadOnlyStringWrapper(name).getReadOnlyProperty();
         return nameProperty;
     }
 
@@ -71,7 +69,7 @@ public abstract class GameEntity implements java.io.Serializable {
      * Entity description
      */
     private String description;
-    private transient StringProperty descriptionProperty;
+    private transient ReadOnlyStringProperty descriptionProperty;
 
     /**
     *
@@ -87,7 +85,7 @@ public abstract class GameEntity implements java.io.Serializable {
     */
    public final ReadOnlyStringProperty descriptionProperty() {
        if (descriptionProperty == null)
-           descriptionProperty = new ReadOnlyStringWrapper(description);
+           descriptionProperty = new ReadOnlyStringWrapper(description).getReadOnlyProperty();
        return descriptionProperty;
    }
 

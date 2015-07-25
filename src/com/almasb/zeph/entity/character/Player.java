@@ -21,7 +21,7 @@ import com.almasb.zeph.entity.item.Weapon.WeaponType;
  * @author Almas Baimagambetov
  *
  */
-public class Player extends GameCharacter {
+public final class Player extends GameCharacter {
 
     private static final long serialVersionUID = 7025558302171610110L;
 
@@ -109,7 +109,7 @@ public class Player extends GameCharacter {
             jobLevelUp();
             xp.job = 0;
         }
-        if (xp.base >= EXP_NEEDED_BASE[baseLevel-1]) {
+        if (xp.base >= EXP_NEEDED_BASE[getBaseLevel()-1]) {
             baseLevelUp();
             xp.base = 0;
             return true;
@@ -118,10 +118,10 @@ public class Player extends GameCharacter {
     }
 
     public void baseLevelUp() {
-        baseLevel++;
+        setBaseLevel(getBaseLevel() + 1);
         calculateStats();
-        this.hp = (int)this.getTotalStat(Stat.MAX_HP);
-        this.sp = (int)this.getTotalStat(Stat.MAX_SP);
+        restoreHP(getTotalStat(Stat.MAX_HP));
+        restoreSP(getTotalStat(Stat.MAX_SP));
     }
 
     public void statLevelUp() {
@@ -143,8 +143,9 @@ public class Player extends GameCharacter {
     }
 
     public void increaseAttr(Attribute attr) {
-        if (attributes.get(attr) < MAX_ATTRIBUTE) {
-            attributes.put(attr, attributes.get(attr) + 1);
+        int value = getBaseAttribute(attr);
+        if (value < MAX_ATTRIBUTE) {
+            setAttribute(attr, value + 1);
             attributePoints--;
         }
     }
@@ -162,7 +163,7 @@ public class Player extends GameCharacter {
         Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
         Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
 
-        return atkTick >= 50 / (1 + getTotalStat(Stat.ASPD)
+        return getAtkTick() >= 50 / (1 + getTotalStat(Stat.ASPD)
                 *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     }
 
@@ -266,11 +267,6 @@ public class Player extends GameCharacter {
     @Override
     public Element getArmorElement() {
         return getEquip(EquipPlace.BODY).getElement();
-    }
-
-    public void onDeath() {
-        hp = (int)(0.25f*getTotalStat(Stat.MAX_HP));
-        sp = (int)(0.25f*getTotalStat(Stat.MAX_SP));
     }
 
     public int getJobLevel() {

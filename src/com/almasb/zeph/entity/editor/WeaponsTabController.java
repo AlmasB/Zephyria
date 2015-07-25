@@ -11,8 +11,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
-import com.almasb.zeph.entity.orion.Element;
-import com.almasb.zeph.entity.orion.Weapon;
+import com.almasb.zeph.combat.Element;
+import com.almasb.zeph.entity.item.Weapon;
 
 public class WeaponsTabController {
 

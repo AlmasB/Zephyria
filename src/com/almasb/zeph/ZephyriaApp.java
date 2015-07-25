@@ -11,13 +11,13 @@ import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.zeph.entity.orion.Damage;
-import com.almasb.zeph.entity.orion.Enemy;
-import com.almasb.zeph.entity.orion.GameCharacterClass;
-import com.almasb.zeph.entity.orion.ID;
-import com.almasb.zeph.entity.orion.ObjectManager;
-import com.almasb.zeph.entity.orion.Player;
-import com.almasb.zeph.entity.orion.Stat;
+import com.almasb.zeph.combat.Damage;
+import com.almasb.zeph.combat.Stat;
+import com.almasb.zeph.entity.ID;
+import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.character.Enemy;
+import com.almasb.zeph.entity.character.GameCharacterClass;
+import com.almasb.zeph.entity.character.Player;
 
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.DoubleProperty;
@@ -67,7 +67,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
-        ObjectManager.load();
+        EntityManager.load();
 
         initPlayer();
         initInput();
@@ -343,7 +343,7 @@ public class ZephyriaApp extends GameApplication {
 
     private void initEnemies() {
         for (int i = 0; i < 10; i++) {
-            Entity enemy = ObjectManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
+            Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
             enemies.add(enemy);
 
             enemy.setOnMouseClicked(e -> {

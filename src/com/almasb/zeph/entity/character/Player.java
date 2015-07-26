@@ -275,6 +275,71 @@ public final class Player extends GameCharacter {
     }
 
     /**
+     * Player experience.
+     */
+    private Experience xp = new Experience(0, 0, 0);
+    private transient ReadOnlyIntegerWrapper baseXPProperty = new ReadOnlyIntegerWrapper(0);
+    private transient ReadOnlyIntegerWrapper statXPProperty = new ReadOnlyIntegerWrapper(0);
+    private transient ReadOnlyIntegerWrapper jobXPProperty = new ReadOnlyIntegerWrapper(0);
+
+    public final ReadOnlyIntegerProperty baseXPProperty() {
+        return baseXPProperty.getReadOnlyProperty();
+    }
+
+    public final ReadOnlyIntegerProperty statXPProperty() {
+        return statXPProperty.getReadOnlyProperty();
+    }
+
+    public final ReadOnlyIntegerProperty jobXPProperty() {
+        return jobXPProperty.getReadOnlyProperty();
+    }
+
+    public final int expNeededForNextBaseLevel() {
+        return EXP_NEEDED_BASE[getBaseLevel() - 1];
+    }
+
+    public final int expNeededForNextStatLevel() {
+        return EXP_NEEDED_STAT[getStatLevel() - 1];
+    }
+
+    public final int expNeededForNextJobLevel() {
+        return EXP_NEEDED_JOB[getJobLevel() - 1];
+    }
+
+    /**
+     * Increases player's experience.
+     * TODO: check against MAX LEVELS
+     *
+     * @param gainedXP
+     * @return
+     *          true if player gained new base level
+     */
+    public final boolean rewardXP(final Experience gainedXP) {
+        boolean baseLevelUp = false;
+
+        xp.add(gainedXP);
+        if (xp.stat >= EXP_NEEDED_STAT[getStatLevel()-1]) {
+            statLevelUp();
+            xp.stat = 0;
+        }
+        if (xp.job >= EXP_NEEDED_JOB[getJobLevel()-1]) {
+            jobLevelUp();
+            xp.job = 0;
+        }
+        if (xp.base >= expNeededForNextBaseLevel()) {
+            baseLevelUp();
+            xp.base = 0;
+            baseLevelUp = true;
+        }
+
+        baseXPProperty.set(xp.base);
+        statXPProperty.set(xp.stat);
+        jobXPProperty.set(xp.job);
+
+        return baseLevelUp;
+    }
+
+    /**
      * Player inventory
      */
     private Inventory inventory = new Inventory();
@@ -306,32 +371,6 @@ public final class Player extends GameCharacter {
             item.onEquip(this);
             equip.put(p, item);
         }
-    }
-
-    /**
-     * Increases player's experience.
-     * TODO: check against MAX LEVELS
-     *
-     * @param gainedXP
-     * @return
-     *          true if player gained new base level
-     */
-    public final boolean rewardXP(final Experience gainedXP) {
-        xp.add(gainedXP);
-        if (xp.stat >= EXP_NEEDED_STAT[getStatLevel()-1]) {
-            statLevelUp();
-            xp.stat = 0;
-        }
-        if (xp.job >= EXP_NEEDED_JOB[getJobLevel()-1]) {
-            jobLevelUp();
-            xp.job = 0;
-        }
-        if (xp.base >= EXP_NEEDED_BASE[getBaseLevel()-1]) {
-            baseLevelUp();
-            xp.base = 0;
-            return true;
-        }
-        return false;
     }
 
     private void baseLevelUp() {

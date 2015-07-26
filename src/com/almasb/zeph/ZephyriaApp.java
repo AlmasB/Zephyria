@@ -156,24 +156,37 @@ public class ZephyriaApp extends GameApplication {
         barXPBase.setWidth(150);
         barXPBase.setTranslateX(120);
         barXPBase.setTranslateY(90);
-        barXPBase.setCurrentValue(50);
+        barXPBase.currentValueProperty().bind(playerData.baseXPProperty());
 
         ProgressBar barXPStat = new ProgressBar();
         barXPStat.setWidth(150);
         barXPStat.setTranslateX(120);
         barXPStat.setTranslateY(110);
+        barXPStat.currentValueProperty().bind(playerData.statXPProperty());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);
         barXPJob.setTranslateX(120);
         barXPJob.setTranslateY(130);
+        barXPJob.currentValueProperty().bind(playerData.jobXPProperty());
 
         Text textMoney = new Text("Money: 1000G");
         textMoney.setTranslateX(200);
         textMoney.setTranslateY(180);
         textMoney.setFont(Font.font(14));
+        textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(playerData.moneyProperty()).concat("G"));
 
+        playerData.baseLevelProperty().addListener((obs, old, newValue) -> {
+            barXPBase.setMaxValue(playerData.expNeededForNextBaseLevel());
+        });
 
+        playerData.statLevelProperty().addListener((obs, old, newValue) -> {
+            barXPStat.setMaxValue(playerData.expNeededForNextStatLevel());
+        });
+
+        playerData.jobLevelProperty().addListener((obs, old, newValue) -> {
+            barXPJob.setMaxValue(playerData.expNeededForNextJobLevel());
+        });
 
         Pane uiPane = new Pane();
         uiPane.setPrefSize(350, 200);
@@ -357,7 +370,7 @@ public class ZephyriaApp extends GameApplication {
 //    }
 //
     private void initPlayer() {
-        player = new Player("Character Name", GameCharacterClass.NOVICE).toEntity();
+        player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
         player.setPosition(100, 100);
 
         playerData = player.getProperty("player_data");
@@ -381,9 +394,10 @@ public class ZephyriaApp extends GameApplication {
         barSP.setHeight(10);
         barSP.setLabelVisible(false);
 
-        Text text = new Text(playerData.getName() + " Lv. 1");
+        Text text = new Text();
         text.setFont(Font.font(14));
         text.setFill(Color.WHITE);
+        text.textProperty().bind(playerData.nameProperty().concat(" Lv. ").concat(playerData.baseLevelProperty()));
         text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
         text.setTranslateY(55);
 

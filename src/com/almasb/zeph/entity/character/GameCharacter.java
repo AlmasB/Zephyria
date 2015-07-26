@@ -12,7 +12,6 @@ import com.almasb.zeph.combat.Damage.DamageCritical;
 import com.almasb.zeph.combat.Damage.DamageType;
 import com.almasb.zeph.combat.Effect;
 import com.almasb.zeph.combat.Element;
-import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Skill;
 import com.almasb.zeph.combat.Stat;
@@ -435,8 +434,6 @@ public abstract class GameCharacter extends GameEntity {
     // this.skills = tmpSkills;
     // }
 
-    // TODO:
-    protected Experience xp = new Experience(0, 0, 0);
     protected Skill[] skills;
 
     /**

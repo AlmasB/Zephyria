@@ -28,6 +28,18 @@ public class Enemy extends GameCharacter {
 
     private List<DroppableItem> drops = new ArrayList<>();
 
+    private Experience xp;
+
+    /**
+    *
+    * @return
+    *          Experience object containing base/stat/job xp
+    *          for this enemy
+    */
+    public Experience getXP() {
+        return xp;
+    }
+
     public Enemy(int id, String name, String description, String textureName,
             EnemyType type, Element element, int level, AttributeInfo attrs, Experience xp, DroppableItem... drops) {
         super(id, name, description, textureName, GameCharacterClass.MONSTER);
@@ -80,16 +92,6 @@ public class Enemy extends GameCharacter {
 
         p.rewardMoney(GameMath.random(getBaseLevel() * 100));
         p.rewardXP(getXP());
-    }
-
-    /**
-     *
-     * @return
-     *          Experience object containing base/stat/job xp
-     *          for this enemy
-     */
-    public Experience getXP() {
-        return xp;
     }
 
     @Override

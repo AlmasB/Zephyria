@@ -77,7 +77,7 @@ public class EntityManager {
                     .name("Hands")
                     .description(Desc.Weapon.HANDS)
                     .textureName("hands.png")
-                    .damage(10)
+                    .damage(0)
                     .type(WeaponType.MACE);
         addWeapon(weaponBuilder);
 

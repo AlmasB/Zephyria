@@ -19,8 +19,10 @@ import com.almasb.zeph.combat.StatusEffect;
 import com.almasb.zeph.combat.StatusEffect.Status;
 import com.almasb.zeph.entity.GameEntity;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Essentially alive game object Enemies/NPCs/players
@@ -407,6 +409,8 @@ public abstract class GameCharacter extends GameEntity {
      * Class of this game character
      */
     private GameCharacterClass charClass;
+    // TODO: make read only
+    private transient ObjectProperty<GameCharacterClass> charClassProperty = new SimpleObjectProperty<>();
 
     /**
      *
@@ -414,6 +418,14 @@ public abstract class GameCharacter extends GameEntity {
      */
     public final GameCharacterClass getGameCharacterClass() {
         return charClass;
+    }
+
+    /**
+     *
+     * @return game character class property
+     */
+    public final ObjectProperty<GameCharacterClass> charClassProperty() {
+        return charClassProperty;
     }
 
     /**
@@ -450,6 +462,7 @@ public abstract class GameCharacter extends GameEntity {
             String textureName, GameCharacterClass charClass) {
         super(id, name, description, textureName);
         this.charClass = charClass;
+        charClassProperty.set(charClass);
         init();
     }
 

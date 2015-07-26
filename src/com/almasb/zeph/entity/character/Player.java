@@ -473,7 +473,6 @@ public final class Player extends GameCharacter {
         if (item instanceof Weapon) {
             Weapon w = (Weapon) item;
             if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
-                EntityManager.getWeaponByID(ID.Weapon.HANDS).onEquip(this);
                 if (itemPlace == EquipPlace.RIGHT_HAND)
                     setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
                 else
@@ -484,7 +483,6 @@ public final class Player extends GameCharacter {
         item.onUnEquip(this);   // take item off
         inventory.addItem(item);    // put it in inventory
 
-        ((EquippableItem) EntityManager.getItemByID(itemPlace.emptyID)).onEquip(this);
         setEquip(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
     }
 

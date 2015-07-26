@@ -1,5 +1,8 @@
 package com.almasb.zeph;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
@@ -17,104 +20,54 @@ import javafx.util.Duration;
 
 public final class EquipmentView extends Accordion {
 
-    private Group headGroup, bodyGroup, shoesGroup, leftHandGroup, rightHandGroup;
-//    private Tooltip headTooltip = new Tooltip(),
-//            bodyTooltip = new Tooltip(),
-//            shoesTooltip = new Tooltip(),
-//            leftHandTooltip = new Tooltip(),
-//            rightHandTooltip = new Tooltip();
+    //private Group headGroup, bodyGroup, shoesGroup, leftHandGroup, rightHandGroup;
+
+    private Map<EquipPlace, Group> groups = new HashMap<>();
+
+    private Player playerData;
 
     // TODO: why cant we set tooltip font size?
-    public EquipmentView(Player playerData) {
-        headGroup = createHeadGroup();
-        bodyGroup = createBodyGroup();
-        shoesGroup = createShoesGroup();
-        leftHandGroup = createLeftHandGroup();
-        rightHandGroup = createRightHandGroup();
+    public EquipmentView(Player playerData, double height) {
+        this.playerData = playerData;
 
-        playerData.equipProperty(EquipPlace.HELM).addListener((obs, old, newItem) -> {
-            setItem(headGroup, newItem);
-        });
+        groups.put(EquipPlace.HELM, createHeadGroup());
+        groups.put(EquipPlace.BODY, createBodyGroup());
+        groups.put(EquipPlace.SHOES, createShoesGroup());
+        groups.put(EquipPlace.LEFT_HAND, createLeftHandGroup());
+        groups.put(EquipPlace.RIGHT_HAND, createRightHandGroup());
 
-        playerData.equipProperty(EquipPlace.BODY).addListener((obs, old, newItem) -> {
-            setItem(bodyGroup, newItem);
-        });
+        for (EquipPlace place : EquipPlace.values()) {
+            setItem(place, playerData.getEquip(place));
+            playerData.equipProperty(place).addListener((obs, old, newItem) -> {
+                setItem(place, newItem);
+            });
+        }
 
-        playerData.equipProperty(EquipPlace.SHOES).addListener((obs, old, newItem) -> {
-            setItem(shoesGroup, newItem);
-        });
+        Pane pane = new Pane();
 
-        playerData.equipProperty(EquipPlace.LEFT_HAND).addListener((obs, old, newItem) -> {
-            setItem(leftHandGroup, newItem);
-        });
+        try {
+            Texture background = AssetManager.INSTANCE.loadTexture("ui/inventory_left.png");
+            pane.getChildren().add(background);
 
-        playerData.equipProperty(EquipPlace.RIGHT_HAND).addListener((obs, old, newItem) -> {
-            setItem(rightHandGroup, newItem);
-        });
+            expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+                if (newPane == null) {
+                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
+                    tt.setToY(height - 25);
+                    tt.play();
+                }
+                else {
+                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
+                    tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
+                    tt.play();
+                }
+            });
+        }
+        catch (Exception e) {}
 
+        pane.getChildren().addAll(groups.values());
+        getPanes().add(new TitledPane("Equipment", pane));
 
-
-
-        // head
-        Entity head = playerData.getEquip(EquipPlace.HELM).toEntity();
-        head.setTranslateX(88);
-        head.setTranslateY(60);
-
-        Tooltip tooltip = new Tooltip(playerData.getEquip(EquipPlace.HELM).getDescription());
-        Tooltip.install(head, tooltip);
-
-        // body
-        Entity body = playerData.getEquip(EquipPlace.BODY).toEntity();
-        body.setTranslateX(88);
-        body.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.BODY).getDescription());
-        Tooltip.install(body, tooltip);
-
-
-        // shoes
-        Entity shoes = playerData.getEquip(EquipPlace.SHOES).toEntity();
-        shoes.setTranslateX(88);
-        shoes.setTranslateY(150);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.SHOES).getDescription());
-        Tooltip.install(shoes, tooltip);
-
-        // left hand
-        Entity left = playerData.getEquip(EquipPlace.LEFT_HAND).toEntity();
-        left.setTranslateX(133);
-        left.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.LEFT_HAND).getDescription());
-        Tooltip.install(left, tooltip);
-
-        // right hand
-        Entity right = playerData.getEquip(EquipPlace.RIGHT_HAND).toEntity();
-        right.setTranslateX(43);
-        right.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.RIGHT_HAND).getDescription());
-        Tooltip.install(right, tooltip);
-
-
-        Texture background = AssetManager.INSTANCE.loadTexture("ui/inventory_left.png");
-        Pane pane = new Pane(background, head, body, shoes, left, right);
-
-        TitledPane equipPane = new TitledPane("Equipment", pane);
-        Accordion equip = new Accordion(equipPane);
-        equip.setTranslateY(getHeight() - 25);
-        equip.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            if (newPane == null) {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), equip);
-                tt.setToY(getHeight() - 25);
-                tt.play();
-            }
-            else {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), equip);
-                tt.setToY(getHeight() - background.getLayoutBounds().getHeight() - 25);
-                tt.play();
-            }
-        });
+        setTranslateY(height - 25);
     }
 
     private Group createHeadGroup() {
@@ -169,9 +122,14 @@ public final class EquipmentView extends Accordion {
         return group;
     }
 
-    private void setItem(Group group, GameEntity item) {
+    private void setItem(EquipPlace place, GameEntity item) {
+        Group group = groups.get(place);
         group.getChildren().clear();
-        group.getChildren().add(item.toEntity());
+
+        Entity e = item.toEntity();
+        e.setOnMouseClicked(event -> playerData.unEquipItem(place));
+
+        group.getChildren().add(e);
         ((Tooltip)group.getUserData()).setText(item.getDescription());
     }
 }

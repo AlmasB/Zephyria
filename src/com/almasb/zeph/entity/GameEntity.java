@@ -122,13 +122,13 @@ public abstract class GameEntity implements java.io.Serializable {
         return id;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof GameEntity) {
-            return ((GameEntity)other).id == this.id;
-        }
-        return false;
-    }
+//    @Override
+//    public boolean equals(Object other) {
+//        if (other instanceof GameEntity) {
+//            return ((GameEntity)other).id == this.id;
+//        }
+//        return false;
+//    }
 
     /**
      * Converts to format: [id] name (textureName) - description.

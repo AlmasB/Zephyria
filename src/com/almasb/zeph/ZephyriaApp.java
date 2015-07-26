@@ -19,9 +19,7 @@ import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.GameEntity;
 import com.almasb.zeph.entity.ID;
-import com.almasb.zeph.entity.ID.Item;
 import com.almasb.zeph.entity.character.Enemy;
-import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.Player;
 import com.almasb.zeph.entity.item.DroppableItem;
@@ -29,16 +27,12 @@ import com.almasb.zeph.entity.item.DroppableItem;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -104,279 +98,23 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initPhysics() {}
 
-    private ProgressBar barHP = ProgressBar.makeHPBar();
-    private ProgressBar barSP = ProgressBar.makeSkillBar();
-    ProgressBar barHPUI = ProgressBar.makeHPBar();
-    ProgressBar barSPUI = ProgressBar.makeSkillBar();
-
     private Text debug = new Text();
-
-    private Pane inv = new Pane();
 
     @Override
     protected void initUI() {
-
-        //barHP.setShowChanges(false);
-        //barSP.setShowChanges(false);
-
-
-        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
-        barHP.currentValueProperty().bind(playerData.hpProperty());
-
-
-        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
-        barSP.currentValueProperty().bind(playerData.spProperty());
-
-
         Texture hotbar = assets.getTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
         hotbar.setTranslateY(getHeight() - hotbar.getLayoutBounds().getHeight());
-
-
-
-        barHPUI.setTranslateX(160);
-        barHPUI.setTranslateY(5);
-        barHPUI.setWidth(100);
-        barHPUI.setHeight(15);
-        barHPUI.setLabelPosition(Position.RIGHT);
-
-        barHPUI.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
-        barHPUI.currentValueProperty().bind(playerData.hpProperty());
-
-
-        barSPUI.setTranslateX(160);
-        barSPUI.setTranslateY(25);
-        barSPUI.setWidth(100);
-        barSPUI.setHeight(15);
-        barSPUI.setLabelPosition(Position.RIGHT);
-
-        barSPUI.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
-        barSPUI.currentValueProperty().bind(playerData.spProperty());
-
-
-        Text textPlayerName = new Text(playerData.getName() + "\n" + playerData.getGameCharacterClass());
-        textPlayerName.setTranslateX(15);
-        textPlayerName.setTranslateY(15);
-        textPlayerName.setFont(Font.font(18));
-
-
-
-        Text textLevels = new Text();
-        textLevels.setTranslateX(15);
-        textLevels.setTranslateY(100);
-        textLevels.setFont(Font.font(16));
-        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(playerData.baseLevelProperty())
-                .concat("\nStat Lv. ").concat(playerData.statLevelProperty())
-                .concat("\nJob Lv. ").concat(playerData.jobLevelProperty()));
-
-        ProgressBar barXPBase = new ProgressBar();
-        barXPBase.setWidth(150);
-        barXPBase.setTranslateX(120);
-        barXPBase.setTranslateY(90);
-        barXPBase.currentValueProperty().bind(playerData.baseXPProperty());
-
-        ProgressBar barXPStat = new ProgressBar();
-        barXPStat.setWidth(150);
-        barXPStat.setTranslateX(120);
-        barXPStat.setTranslateY(110);
-        barXPStat.currentValueProperty().bind(playerData.statXPProperty());
-
-        ProgressBar barXPJob = new ProgressBar();
-        barXPJob.setWidth(150);
-        barXPJob.setTranslateX(120);
-        barXPJob.setTranslateY(130);
-        barXPJob.currentValueProperty().bind(playerData.jobXPProperty());
-
-        Text textMoney = new Text("Money: 1000G");
-        textMoney.setTranslateX(200);
-        textMoney.setTranslateY(180);
-        textMoney.setFont(Font.font(14));
-        textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(playerData.moneyProperty()).concat("G"));
-
-        playerData.baseLevelProperty().addListener((obs, old, newValue) -> {
-            barXPBase.setMaxValue(playerData.expNeededForNextBaseLevel());
-        });
-
-        playerData.statLevelProperty().addListener((obs, old, newValue) -> {
-            barXPStat.setMaxValue(playerData.expNeededForNextStatLevel());
-        });
-
-        playerData.jobLevelProperty().addListener((obs, old, newValue) -> {
-            barXPJob.setMaxValue(playerData.expNeededForNextJobLevel());
-        });
-
-        Pane uiPane = new Pane();
-        uiPane.setPrefSize(350, 200);
-        uiPane.setStyle("-fx-background-color: white;");
-        uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
-
-
-        TitledPane pane = new TitledPane("Basic Info", uiPane);
-
-        Accordion uiBasicInfo = new Accordion(pane);
-        uiBasicInfo.setExpandedPane(pane);
-
-
-
-
-        Texture invRight = assets.getTexture("ui/inventory_right.png");
-        inv.getChildren().add(invRight);
-
-        playerData.getInventory().itemsProperty().addListener(new ListChangeListener<GameEntity>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends GameEntity> change) {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        for (GameEntity item : change.getAddedSubList()) {
-                            int i = inv.getChildren().size() - 1;
-                            Entity e = item.toEntity();
-                            e.setTranslateX((i % 5) * 40);
-                            e.setTranslateY((i / 5) * 40);
-
-                            inv.getChildren().add(e);
-                        }
-                    }
-                    else if (change.wasRemoved()) {
-                        for (GameEntity item : change.getRemoved()) {
-                            for (Iterator<Node> it = inv.getChildren().iterator(); it.hasNext(); ) {
-                                Entity e = (Entity) it.next();
-
-                                if (e.getProperty("data") == item) {
-                                    it.remove();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        TitledPane inventoryPane = new TitledPane("Inventory", inv);
-        Accordion inventory = new Accordion(inventoryPane);
-        inventory.setTranslateX(getWidth() - invRight.getLayoutBounds().getWidth() - 2);
-        inventory.setTranslateY(getHeight() - 25);
-        inventory.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            if (newPane == null) {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), inventory);
-                tt.setToY(getHeight() - 25);
-                tt.play();
-            }
-            else {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), inventory);
-                tt.setToY(getHeight() - invRight.getLayoutBounds().getHeight() - 25);
-                tt.play();
-            }
-        });
-
-
 
         debug.setTranslateX(100);
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-
-        Font font = Font.font("Lucida Console", 14);
-
-        VBox attrBox = new VBox(5);
-        for (Attribute attr : Attribute.values()) {
-            Text text = new Text();
-            text.setFont(font);
-            text.textProperty().bind(new SimpleStringProperty(attr.toString())
-                    .concat(": ").concat(playerData.attributeProperty(attr))
-                    .concat(" + ").concat(playerData.bAttributeProperty(attr)));
-
-            attrBox.getChildren().add(text);
-        }
-
-        VBox statBox = new VBox(5);
-        for (Stat stat : Stat.values()) {
-            Text text = new Text();
-            text.setFont(font);
-            text.textProperty().bind(new SimpleStringProperty(stat.toString())
-                    .concat(": ").concat(playerData.statProperty(stat))
-                    .concat(" + ").concat(playerData.bStatProperty(stat)));
-
-            statBox.getChildren().add(text);
-        }
-
-        TitledPane charInfoPane = new TitledPane("Char Info", new HBox(50, attrBox, statBox));
-        Accordion uiCharInfo = new Accordion(charInfoPane);
-        //uiCharInfo.setTranslateX(350);
-
-        VBox infos = new VBox(uiBasicInfo, uiCharInfo);
-
-        addUINodes(hotbar, infos, createEquipPane(), inventory, debug);
-    }
-
-    private Accordion createEquipPane() {
-        Texture invLeft = assets.getTexture("ui/inventory_left.png");
-
-        // TODO: why cant we set tooltip font size?
-
-        Pane paneEquip = new Pane(invLeft);
-
-        // head
-        Entity head = playerData.getEquip(EquipPlace.HELM).toEntity();
-        head.setTranslateX(88);
-        head.setTranslateY(60);
-
-        Tooltip tooltip = new Tooltip(playerData.getEquip(EquipPlace.HELM).getDescription());
-        Tooltip.install(head, tooltip);
-
-        // body
-        Entity body = playerData.getEquip(EquipPlace.BODY).toEntity();
-        body.setTranslateX(88);
-        body.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.BODY).getDescription());
-        Tooltip.install(body, tooltip);
-
-
-        // shoes
-        Entity shoes = playerData.getEquip(EquipPlace.SHOES).toEntity();
-        shoes.setTranslateX(88);
-        shoes.setTranslateY(150);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.SHOES).getDescription());
-        Tooltip.install(shoes, tooltip);
-
-        // left hand
-        Entity left = playerData.getEquip(EquipPlace.LEFT_HAND).toEntity();
-        left.setTranslateX(133);
-        left.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.LEFT_HAND).getDescription());
-        Tooltip.install(left, tooltip);
-
-        // right hand
-        Entity right = playerData.getEquip(EquipPlace.RIGHT_HAND).toEntity();
-        right.setTranslateX(43);
-        right.setTranslateY(105);
-
-        tooltip = new Tooltip(playerData.getEquip(EquipPlace.RIGHT_HAND).getDescription());
-        Tooltip.install(right, tooltip);
-
-
-
-        paneEquip.getChildren().addAll(head, body, shoes, left, right);
-
-        TitledPane equipPane = new TitledPane("Equipment", paneEquip);
-        Accordion equip = new Accordion(equipPane);
-        equip.setTranslateY(getHeight() - 25);
-        equip.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            if (newPane == null) {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), equip);
-                tt.setToY(getHeight() - 25);
-                tt.play();
-            }
-            else {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), equip);
-                tt.setToY(getHeight() - invLeft.getLayoutBounds().getHeight() - 25);
-                tt.play();
-            }
-        });
-
-        return equip;
+        addUINodes(hotbar,
+                new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
+                new EquipmentView(playerData, getHeight()),
+                new InventoryView(playerData, getWidth(), getHeight()),
+                debug);
     }
 
     @Override
@@ -407,6 +145,7 @@ public class ZephyriaApp extends GameApplication {
                         e.setOnMouseClicked(event -> {
                             removeEntity(e);
                             playerData.getInventory().addItem(item);
+                            //playerData.equipWeapon((Weapon)item);
                         });
 
                         addEntities(e);
@@ -526,6 +265,9 @@ public class ZephyriaApp extends GameApplication {
         t.setArcWidth(15);
         t.setArcHeight(15);
 
+        ProgressBar barHP = ProgressBar.makeHPBar();
+        ProgressBar barSP = ProgressBar.makeSkillBar();
+
         barHP.setTranslateX(-20);
         barHP.setTranslateY(60);
         barHP.setWidth(80);
@@ -537,6 +279,12 @@ public class ZephyriaApp extends GameApplication {
         barSP.setWidth(80);
         barSP.setHeight(10);
         barSP.setLabelVisible(false);
+
+        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
+        barHP.currentValueProperty().bind(playerData.hpProperty());
+
+        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
+        barSP.currentValueProperty().bind(playerData.spProperty());
 
         Text text = new Text();
         text.setFont(Font.font(14));
@@ -578,6 +326,7 @@ public class ZephyriaApp extends GameApplication {
         addEntities(player);
 
 
+        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
     }
 
     private List<Entity> enemies = new ArrayList<>();
@@ -590,8 +339,6 @@ public class ZephyriaApp extends GameApplication {
             enemy.setOnMouseClicked(e -> {
                 selected = enemy;
                 selected.setEffect(selectedEffect);
-
-                //System.out.println("selected enemy");
             });
 
             Enemy enemyData = enemy.getProperty("enemy_data");

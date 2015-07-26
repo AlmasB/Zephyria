@@ -8,9 +8,11 @@ import com.almasb.fxgl.GameApplication;
 import com.almasb.fxgl.GameSettings;
 import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
+import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.EntityManager;
@@ -20,19 +22,21 @@ import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.Player;
 
 import javafx.animation.TranslateTransition;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -67,35 +71,19 @@ public class ZephyriaApp extends GameApplication {
     private Player playerData;
     private Entity selected = null;
 
+    private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
+
     @Override
     protected void initGame() {
         EntityManager.load();
+
+        selectedEffect.setInput(new Glow(0.8));
 
         initPlayer();
         initInput();
         initEnemies();
 
         bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
-
-        runAtInterval(() -> {
-            if (selected != null) {
-                Damage dmg = playerData.attack(selected.getProperty("enemy_data"));
-                Entity e = Entity.noType();
-                e.setExpireTime(SECOND);
-                Text text = new Text(dmg.toString());
-                text.setFill(Color.WHITE);
-
-                e.setGraphics(text);
-                e.setPosition(selected.getCenter().add(0, -40));
-                addEntities(e);
-
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
-                tt.setByY(-50);
-                tt.play();
-
-                debug.setText("Hp left:" + selected.<Enemy>getProperty("enemy_data").getHP());
-            }
-        }, 2 * SECOND);
     }
 
     @Override
@@ -103,38 +91,40 @@ public class ZephyriaApp extends GameApplication {
 
     private ProgressBar barHP = ProgressBar.makeHPBar();
     private ProgressBar barSP = ProgressBar.makeSkillBar();
-    private DoubleProperty playerHPProperty = new SimpleDoubleProperty();
-    private DoubleProperty playerSPProperty = new SimpleDoubleProperty();
+    ProgressBar barHPUI = ProgressBar.makeHPBar();
+    ProgressBar barSPUI = ProgressBar.makeSkillBar();
 
     private Text debug = new Text();
 
     @Override
     protected void initUI() {
-        //setUIMouseTransparent(true);
+
         //barHP.setShowChanges(false);
         //barSP.setShowChanges(false);
 
-        barHP.setMaxValue(playerData.getTotalStat(Stat.MAX_HP));
-        barHP.currentValueProperty().bind(playerHPProperty);
 
-        barSP.setMaxValue(playerData.getTotalStat(Stat.MAX_SP));
-        barSP.currentValueProperty().bind(playerSPProperty);
+        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
+        barHP.currentValueProperty().bind(playerData.hpProperty());
+
+
+        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
+        barSP.currentValueProperty().bind(playerData.spProperty());
 
 
         Texture hotbar = assets.getTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
         hotbar.setTranslateY(getHeight() - hotbar.getLayoutBounds().getHeight());
 
-        ProgressBar barHPUI = ProgressBar.makeHPBar();
-        ProgressBar barSPUI = ProgressBar.makeSkillBar();
+
 
         barHPUI.setTranslateX(160);
         barHPUI.setTranslateY(5);
         barHPUI.setWidth(100);
         barHPUI.setHeight(15);
         barHPUI.setLabelPosition(Position.RIGHT);
-        barHPUI.setMaxValue(playerData.getTotalStat(Stat.MAX_HP));
-        barHPUI.currentValueProperty().bind(playerHPProperty);
+
+        barHPUI.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
+        barHPUI.currentValueProperty().bind(playerData.hpProperty());
 
 
         barSPUI.setTranslateX(160);
@@ -142,8 +132,9 @@ public class ZephyriaApp extends GameApplication {
         barSPUI.setWidth(100);
         barSPUI.setHeight(15);
         barSPUI.setLabelPosition(Position.RIGHT);
-        barSPUI.setMaxValue(playerData.getTotalStat(Stat.MAX_SP));
-        barSPUI.currentValueProperty().bind(playerSPProperty);
+
+        barSPUI.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
+        barSPUI.currentValueProperty().bind(playerData.spProperty());
 
 
         Text textPlayerName = new Text(playerData.getName() + "\n" + playerData.getGameCharacterClass());
@@ -151,15 +142,15 @@ public class ZephyriaApp extends GameApplication {
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
 
-//        Rectangle bg = new Rectangle(300, 200);
-//        bg.setFill(Color.WHITE);
-//        bg.setArcWidth(25);
-//        bg.setArcHeight(25);
 
-        Text textLevels = new Text("Base Lv. 1\nStat Lv.1\nJob Lv.1");
+
+        Text textLevels = new Text();
         textLevels.setTranslateX(15);
         textLevels.setTranslateY(100);
         textLevels.setFont(Font.font(16));
+        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(playerData.baseLevelProperty())
+                .concat("\nStat Lv. ").concat(playerData.statLevelProperty())
+                .concat("\nJob Lv. ").concat(playerData.jobLevelProperty()));
 
         ProgressBar barXPBase = new ProgressBar();
         barXPBase.setWidth(150);
@@ -219,14 +210,43 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        addUINodes(hotbar, uiBasicInfo, inventory, debug);
+
+        Font font = Font.font("Lucida Console", 14);
+
+        VBox attrBox = new VBox(5);
+        for (Attribute attr : Attribute.values()) {
+            Text text = new Text();
+            text.setFont(font);
+            text.textProperty().bind(new SimpleStringProperty(attr.toString())
+                    .concat(": ").concat(playerData.attributeProperty(attr))
+                    .concat(" + ").concat(playerData.bAttributeProperty(attr)));
+
+            attrBox.getChildren().add(text);
+        }
+
+        VBox statBox = new VBox(5);
+        for (Stat stat : Stat.values()) {
+            Text text = new Text();
+            text.setFont(font);
+            text.textProperty().bind(new SimpleStringProperty(stat.toString())
+                    .concat(": ").concat(playerData.statProperty(stat))
+                    .concat(" + ").concat(playerData.bStatProperty(stat)));
+
+            statBox.getChildren().add(text);
+        }
+
+        TitledPane charInfoPane = new TitledPane("Char Info", new HBox(50, attrBox, statBox));
+        Accordion uiCharInfo = new Accordion(charInfoPane);
+        //uiCharInfo.setTranslateX(350);
+
+        VBox infos = new VBox(uiBasicInfo, uiCharInfo);
+
+        addUINodes(hotbar, infos, inventory, debug);
     }
 
     @Override
     protected void onUpdate() {
         playerData.update();
-        playerHPProperty.set(playerData.getHP());
-        playerSPProperty.set(playerData.getSP());
 
         for (Iterator<Entity> it = enemies.iterator(); it.hasNext(); ) {
             Entity enemy = it.next();
@@ -235,9 +255,54 @@ public class ZephyriaApp extends GameApplication {
 
             if (enemyData.getHP() <= 0) {
                 it.remove();
+                enemyData.onDeath(playerData);
                 removeEntity(enemy);
                 selected = null;
             }
+        }
+
+        if (selected != null && playerData.canAttack()) {
+            playerData.resetAtkTick();
+
+            Entity target = selected;
+
+            Entity proj = Entity.noType();
+            Circle graphics = new Circle(10);
+            graphics.setFill(Color.GRAY);
+            proj.setGraphics(graphics);
+
+            proj.setPosition(player.getPosition());
+            proj.addControl(new Control() {
+
+                Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
+
+                @Override
+                public void onUpdate(Entity entity, long now) {
+                    entity.translate(vector);
+
+                    if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
+                        removeEntity(proj);
+
+                        Damage dmg = playerData.attack(target.getProperty("enemy_data"));
+                        Entity e = Entity.noType();
+                        e.setExpireTime(SECOND);
+                        Text text = new Text(dmg.getValue() + (dmg.isCritical() ? "!" : ""));
+                        text.setFill(dmg.isCritical() ? Color.RED : Color.WHITE);
+                        text.setFont(Font.font(16));
+
+                        e.setGraphics(text);
+                        e.setPosition(target.getPosition().add(0, -40));
+                        addEntities(e);
+
+                        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
+                        tt.setByY(-30);
+                        tt.play();
+                    }
+                }
+
+            });
+
+            addEntities(proj);
         }
     }
 
@@ -329,8 +394,10 @@ public class ZephyriaApp extends GameApplication {
 
         Entity bg = Entity.noType();
         bg.setOnMouseClicked(event -> {
-            selected = null;
-            System.out.println("selected background");
+            if (selected != null) {
+                selected.setEffect(null);
+                selected = null;
+            }
         });
         bg.setGraphics(new Rectangle(getWidth(), getHeight()));
         bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
@@ -350,6 +417,8 @@ public class ZephyriaApp extends GameApplication {
 
             enemy.setOnMouseClicked(e -> {
                 selected = enemy;
+                selected.setEffect(selectedEffect);
+
                 System.out.println("selected enemy");
             });
 

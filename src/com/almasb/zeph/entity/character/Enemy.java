@@ -28,11 +28,6 @@ public class Enemy extends GameCharacter {
 
     private List<DroppableItem> drops = new ArrayList<>();
 
-    /**
-     * Runtime ID of players who attacked this monster
-     */
-    private transient ArrayList<Integer> attackers = new ArrayList<Integer>();
-
     public Enemy(int id, String name, String description, String textureName,
             EnemyType type, Element element, int level, AttributeInfo attrs, Experience xp, DroppableItem... drops) {
         super(id, name, description, textureName, GameCharacterClass.MONSTER);
@@ -57,7 +52,6 @@ public class Enemy extends GameCharacter {
       setSP((int)getTotalStat(Stat.MAX_SP));
     }
 
-
     public Enemy(Enemy copy) {
         this(copy.getID(), copy.getName(), copy.getDescription(), copy.getTextureName(), copy.type, copy.element, copy.getBaseLevel(),
                 new AttributeInfo().str(copy.getBaseAttribute(Attribute.STRENGTH))
@@ -71,47 +65,21 @@ public class Enemy extends GameCharacter {
                 .luc(copy.getBaseAttribute(Attribute.LUCK)), copy.xp, copy.drops.toArray(new DroppableItem[0]));
     }
 
-    public void addAttackerRuntimeID(int runtimeID) {
-        if (!attackers.contains(runtimeID)) {
-            attackers.add(runtimeID);
-        }
-    }
-
-    /**
-     *
-     * @return
-     *          runtime IDs of attackers
-     */
-    public ArrayList<Integer> getAttackers() {
-        return attackers;
-    }
-
     /**
      *
      * @param p
      *           The player who landed the killing blow
-     * @param players
-     *          players who attacked the monster, including the killing person
      * @return
      */
-    public void onDeath(Player p, ArrayList<Player> players) {
-        //alive = false;
-
-        for (Player attacker : players) {
-            // if the killer
-            if (p == attacker) {
-
+    public void onDeath(Player p) {
+        for (DroppableItem item : drops) {
+            if (GameMath.checkChance(item.dropChance)) {
+                p.getInventory().addItem(EntityManager.getItemByID(item.itemID));
             }
-
-            for (DroppableItem item : drops) {
-                if (GameMath.checkChance(item.dropChance)) {
-                    attacker.getInventory().addItem(EntityManager.getItemByID(item.itemID));
-                }
-            }
-
-            attacker.incMoney(GameMath.random(getBaseLevel() * 100));
-            attacker.gainXP(getXP());
         }
+
+        p.rewardMoney(GameMath.random(getBaseLevel() * 100));
+        p.rewardXP(getXP());
     }
 
     /**

@@ -15,6 +15,9 @@ import com.almasb.zeph.entity.item.EquippableItem;
 import com.almasb.zeph.entity.item.Weapon;
 import com.almasb.zeph.entity.item.Weapon.WeaponType;
 
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
+
 /**
  * Actual user
  *
@@ -70,42 +73,256 @@ public final class Player extends GameCharacter {
      * Current stat level
      */
     private int statLevel = 1;
+    private transient ReadOnlyIntegerWrapper statLevelProperty = new ReadOnlyIntegerWrapper(
+            statLevel);
+
+    /**
+     *
+     * @return stat level
+     */
+    public final int getStatLevel() {
+        return statLevel;
+    }
+
+    /**
+     *
+     * @return stat level property
+     */
+    public final ReadOnlyIntegerProperty statLevelProperty() {
+        return statLevelProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Sets stat level. Also updates statLevelProperty.
+     *
+     * @param level
+     */
+    private void setStatLevel(int level) {
+        statLevel = level;
+        statLevelProperty.set(level);
+    }
 
     /**
      * Current job level
      */
     private int jobLevel = 1;
+    private transient ReadOnlyIntegerWrapper jobLevelProperty = new ReadOnlyIntegerWrapper(
+            jobLevel);
 
-    private byte attributePoints = 0,
-            skillPoints = 0;
+    /**
+     *
+     * @return job level
+     */
+    public final int getJobLevel() {
+        return jobLevel;
+    }
 
-    private int money = 0;
-    private Inventory inventory = new Inventory();
+    /**
+     *
+     * @return job level property
+     */
+    public final ReadOnlyIntegerProperty jobLevelProperty() {
+        return statLevelProperty.getReadOnlyProperty();
+    }
 
-    private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
+    /**
+     * Sets job level. Also updates jobLevelProperty.
+     *
+     * @param level
+     */
+    private void setJobLevel(int level) {
+        jobLevel = level;
+        jobLevelProperty.set(level);
+    }
 
-    public Player(String name, GameCharacterClass charClass) {
-        super(1000, name, "Player", "player.png", charClass);
+    /**
+     * Number of points available to increase base attributes.
+     */
+    private int attributePoints = 0;
+    private transient ReadOnlyIntegerWrapper attributePointsProperty = new ReadOnlyIntegerWrapper(attributePoints);
 
-        for (EquipPlace p : EquipPlace.values()) {
-            equip.put(p, (EquippableItem) EntityManager.getItemByID(p.emptyID));
+    /**
+     *
+     * @return attribute points available
+     */
+    public final int getAttributePoints() {
+        return attributePoints;
+    }
+
+    /**
+     *
+     * @return available attr points property
+     */
+    public final ReadOnlyIntegerProperty attributePointsProperty() {
+        return attributePointsProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Set number of points available for attribute increase.
+     *
+     * @param value
+     */
+    private void setAttributePoints(int value) {
+        attributePoints = value;
+        attributePointsProperty.set(value);
+    }
+
+    /**
+     * Increases base attribute.
+     *
+     * @param attr
+     */
+    public final void increaseAttr(Attribute attr) {
+        if (getAttributePoints() == 0)
+            return;
+
+        int value = getBaseAttribute(attr);
+        if (value < MAX_ATTRIBUTE) {
+            setAttribute(attr, value + 1);
+            setAttributePoints(getAttributePoints() - 1);
         }
     }
 
     /**
-     * Increases player's experience
+     * Number of points available to increase skills.
+     */
+    private int skillPoints = 0;
+    private transient ReadOnlyIntegerWrapper skillPointsProperty = new ReadOnlyIntegerWrapper(skillPoints);
+
+    /**
+     *
+     * @return attribute points available
+     */
+    public final int getSkillPoints() {
+        return skillPoints;
+    }
+
+    /**
+     *
+     * @return available skill points property
+     */
+    public final ReadOnlyIntegerProperty skillPointsProperty() {
+        return skillPointsProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Set number of points available for skill increase.
+     *
+     * @param value
+     */
+    private void setSkillPoints(int value) {
+        skillPoints = value;
+        skillPointsProperty.set(value);
+    }
+
+//  public void increaseSkillLevel(int skillCode) {
+//  if (skillCode >= skills.length)
+//      return;
+//
+//  if (skills[skillCode].levelUp())
+//      skillPoints--;
+//}
+
+//    public boolean hasAttributePoints() {
+//        return attributePoints > 0;
+//    }
+//
+//    public boolean hasSkillPoints() {
+//        return skillPoints > 0;
+//    }
+
+    /**
+     * Gold
+     */
+    private int money = 0;
+    private transient ReadOnlyIntegerWrapper moneyProperty = new ReadOnlyIntegerWrapper(money);
+
+    /**
+     *
+     * @return player money
+     */
+    public final int getMoney() {
+        return money;
+    }
+
+    /**
+     *
+     * @return player money amount property
+     */
+    public final ReadOnlyIntegerProperty moneyProperty() {
+        return moneyProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Set money amount.
+     *
+     * @param value
+     */
+    private void setMoney(int value) {
+        money = value;
+        moneyProperty.set(value);
+    }
+
+    /**
+     * Increase money amount by given value. No effect
+     * if the value <= 0.
+     *
+     * @param value
+     */
+    public final void rewardMoney(int value) {
+        if (value <= 0) return;
+        setMoney(getMoney() + value);
+    }
+
+    /**
+     * Player inventory
+     */
+    private Inventory inventory = new Inventory();
+
+    /**
+     *
+     * @return inventory
+     */
+    public final Inventory getInventory() {
+        return inventory;
+    }
+
+    /**
+     * Equipped gear
+     */
+    private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
+
+    /**
+     * Constructs player with given in-game name and character class.
+     *
+     * @param name
+     * @param charClass
+     */
+    public Player(String name, GameCharacterClass charClass) {
+        super(1000, name, "Player", "player.png", charClass);
+
+        for (EquipPlace p : EquipPlace.values()) {
+            EquippableItem item = (EquippableItem) EntityManager.getItemByID(p.emptyID);
+            item.onEquip(this);
+            equip.put(p, item);
+        }
+    }
+
+    /**
+     * Increases player's experience.
+     * TODO: check against MAX LEVELS
      *
      * @param gainedXP
      * @return
      *          true if player gained new base level
      */
-    public boolean gainXP(final Experience gainedXP) {
+    public final boolean rewardXP(final Experience gainedXP) {
         xp.add(gainedXP);
-        if (xp.stat >= EXP_NEEDED_STAT[statLevel-1]) {
+        if (xp.stat >= EXP_NEEDED_STAT[getStatLevel()-1]) {
             statLevelUp();
             xp.stat = 0;
         }
-        if (xp.job >= EXP_NEEDED_JOB[jobLevel-1]) {
+        if (xp.job >= EXP_NEEDED_JOB[getJobLevel()-1]) {
             jobLevelUp();
             xp.job = 0;
         }
@@ -117,49 +334,25 @@ public final class Player extends GameCharacter {
         return false;
     }
 
-    public void baseLevelUp() {
+    private void baseLevelUp() {
         setBaseLevel(getBaseLevel() + 1);
         updateStats();
         restoreHP(getTotalStat(Stat.MAX_HP));
         restoreSP(getTotalStat(Stat.MAX_SP));
     }
 
-    public void statLevelUp() {
-        statLevel++;
-        attributePoints += ATTRIBUTE_POINTS_PER_LEVEL;
+    private void statLevelUp() {
+        setStatLevel(getStatLevel() + 1);
+        setAttributePoints(getAttributePoints() + ATTRIBUTE_POINTS_PER_LEVEL);
     }
 
-    public void jobLevelUp() {
-        if (++jobLevel > 1) // 10
-            skillPoints++;
-    }
-
-    public boolean hasAttributePoints() {
-        return attributePoints > 0;
-    }
-
-    public boolean hasSkillPoints() {
-        return skillPoints > 0;
-    }
-
-    public void increaseAttr(Attribute attr) {
-        int value = getBaseAttribute(attr);
-        if (value < MAX_ATTRIBUTE) {
-            setAttribute(attr, value + 1);
-            attributePoints--;
-        }
-    }
-
-    public void increaseSkillLevel(int skillCode) {
-        if (skillCode >= skills.length)
-            return;
-
-        if (skills[skillCode].levelUp())
-            skillPoints--;
+    private void jobLevelUp() {
+        setJobLevel(getJobLevel() + 1);
+        setSkillPoints(getSkillPoints() + 1);
     }
 
     @Override
-    public boolean canAttack() {
+    public final boolean canAttack() {
         Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
         Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
 
@@ -167,15 +360,7 @@ public final class Player extends GameCharacter {
                 *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     }
 
-    public int getMoney() {
-        return money;
-    }
-
-    public void incMoney(int value) {
-        money += value;
-    }
-
-    public void equipWeapon(Weapon w) {
+    public final void equipWeapon(Weapon w) {
         inventory.removeItem(w);    // remove item from inventory to clear space
 
         if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) {
@@ -204,7 +389,7 @@ public final class Player extends GameCharacter {
         w.onEquip(this);            // put it on
     }
 
-    public void equipArmor(Armor a) {
+    public final void equipArmor(Armor a) {
         inventory.removeItem(a);    // remove it first, so we can unequip our armor
 
         EquipPlace place;
@@ -226,7 +411,7 @@ public final class Player extends GameCharacter {
         a.onEquip(this);
     }
 
-    public void unEquipItem(EquipPlace itemPlace) {
+    public final void unEquipItem(EquipPlace itemPlace) {
         if (isFree(itemPlace) || inventory.isFull())
             return; // no item at this place or inventory is full
 
@@ -235,6 +420,7 @@ public final class Player extends GameCharacter {
         if (item instanceof Weapon) {
             Weapon w = (Weapon) item;
             if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
+                EntityManager.getWeaponByID(ID.Weapon.HANDS).onEquip(this);
                 if (itemPlace == EquipPlace.RIGHT_HAND)
                     equip.put(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
                 else
@@ -244,37 +430,36 @@ public final class Player extends GameCharacter {
 
         item.onUnEquip(this);   // take item off
         inventory.addItem(item);    // put it in inventory
+
+        ((EquippableItem) EntityManager.getItemByID(itemPlace.emptyID)).onEquip(this);
         equip.put(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
     }
 
-    public boolean isFree(EquipPlace place) {
+    /**
+     *
+     * @param place
+     * @return true if the slot at given place is free to put gear on
+     */
+    public final boolean isFree(EquipPlace place) {
         return getEquip(place).getID() == place.emptyID;
     }
 
-    public EquippableItem getEquip(EquipPlace place) {
+    public final EquippableItem getEquip(EquipPlace place) {
         return equip.get(place);
     }
 
-    public Inventory getInventory() {
-        return inventory;
-    }
-
     @Override
-    public Element getWeaponElement() {
+    public final Element getWeaponElement() {
         return getEquip(EquipPlace.RIGHT_HAND).getElement();
     }
 
     @Override
-    public Element getArmorElement() {
+    public final Element getArmorElement() {
         return getEquip(EquipPlace.BODY).getElement();
     }
 
-    public int getJobLevel() {
-        return jobLevel;
-    }
-
     @Override
-    public Entity toEntity() {
+    public final Entity toEntity() {
         Entity e = Entity.noType();
         e.setProperty("player_data", this);
         return e;

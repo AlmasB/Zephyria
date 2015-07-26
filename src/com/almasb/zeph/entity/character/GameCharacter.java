@@ -36,6 +36,25 @@ public abstract class GameCharacter extends GameEntity {
      * Contains native character attribute values
      */
     private Map<Attribute, Integer> attributes = new HashMap<>();
+    private transient Map<Attribute, ReadOnlyIntegerWrapper> attributeProperties = new HashMap<>();
+
+    /**
+    *
+    * @param attr
+    * @return base (native) character attribute value
+    */
+    public final int getBaseAttribute(Attribute attr) {
+        return attributes.get(attr);
+    }
+
+    /**
+     *
+     * @param attr
+     * @return base attribute value property
+     */
+    public final ReadOnlyIntegerProperty attributeProperty(Attribute attr) {
+        return attributeProperties.get(attr).getReadOnlyProperty();
+    }
 
     /**
      * Sets given attribute value
@@ -45,58 +64,119 @@ public abstract class GameCharacter extends GameEntity {
      */
     protected final void setAttribute(Attribute attr, int value) {
         attributes.put(attr, value);
+        attributeProperties.get(attr).set(value);
     }
 
     /**
      * Contains attribute values given by equipped items or effects
      */
     private Map<Attribute, Integer> bAttributes = new HashMap<>();
+    private transient Map<Attribute, ReadOnlyIntegerWrapper> bAttributeProperties = new HashMap<>();
+
+    /**
+    *
+    * @param attr
+    * @return bonus attribute value
+    */
+    public final int getBonusAttribute(Attribute attr) {
+        return bAttributes.get(attr);
+    }
+
+    /**
+     *
+     * @param attr
+     * @return bonus attr property
+     */
+    public final ReadOnlyIntegerProperty bAttributeProperty(Attribute attr) {
+        return bAttributeProperties.get(attr).getReadOnlyProperty();
+    }
+
+    /**
+     * Apply bonus attr that comes from item for example
+     *
+     * @param attr
+     *            attr
+     * @param bonus
+     *            value
+     */
+    public void addBonusAttribute(Attribute attr, int bonus) {
+        int value = getBonusAttribute(attr) + bonus;
+        bAttributes.put(attr, value);
+        bAttributeProperties.get(attr).set(value);
+    }
 
     /**
      * Contains native character stats calculated from both {@link #attributes}
      * and {@link #bAttributes}
      */
     private Map<Stat, Float> stats = new HashMap<>();
+    private transient Map<Stat, ReadOnlyIntegerWrapper> statProperties = new HashMap<>();
 
     /**
-     * Contains stats given by equipped items or effects
-     */
-    private Map<Stat, Float> bStats = new HashMap<>();
-
-    /**
-     *
-     * @param attr
-     * @return base (native) character attribute value
-     */
-    public int getBaseAttribute(Attribute attr) {
-        return attributes.get(attr);
-    }
-
-    /**
-     *
-     * @param stat
-     * @return base (native) character stat
-     */
-    public float getBaseStat(Stat stat) {
+    *
+    * @param stat
+    * @return base (native) character stat
+    */
+    public final float getBaseStat(Stat stat) {
         return stats.get(stat);
     }
 
     /**
      *
-     * @param attr
-     * @return bonus attribute value
+     * @param stat
+     * @return base stat property
      */
-    public int getBonusAttribute(Attribute attr) {
-        return bAttributes.get(attr);
+    public final ReadOnlyIntegerProperty statProperty(Stat stat) {
+        return statProperties.get(stat).getReadOnlyProperty();
     }
+
+    /**
+     * Set base stat value
+     *
+     * @param stat
+     * @param value
+     */
+    private void setBaseStat(Stat stat, float value) {
+        stats.put(stat, value);
+        statProperties.get(stat).set((int)value);
+    }
+
+    /**
+     * Contains stats given by equipped items or effects
+     */
+    private Map<Stat, Float> bStats = new HashMap<>();
+    private transient Map<Stat, ReadOnlyIntegerWrapper> bStatProperties = new HashMap<>();
 
     /**
      *
      * @param stat
      * @return bonus stat value
      */
-    public float getBonusStat(Stat stat) {
+    public final float getBonusStat(Stat stat) {
         return bStats.get(stat);
+    }
+
+    /**
+    *
+    * @param stat
+    * @return bonus stat property
+    */
+    public final ReadOnlyIntegerProperty bStatProperty(Stat stat) {
+        return bStatProperties.get(stat).getReadOnlyProperty();
+    }
+
+    /**
+     * Apply bonus stat that comes from item for example
+     *
+     * @param stat
+     *            stat
+     * @param bonus
+     *            value
+     */
+    public final void addBonusStat(Stat stat, int bonus) {
+        float value = getBonusStat(stat) + bonus;
+        bStats.put(stat, value);
+        bStatProperties.get(stat).set((int) value);
     }
 
     /**
@@ -118,30 +198,6 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     /**
-     * Apply bonus attr that comes from item for example
-     *
-     * @param attr
-     *            attr
-     * @param bonus
-     *            value
-     */
-    public void addBonusAttribute(Attribute attr, int bonus) {
-        bAttributes.put(attr, bAttributes.get(attr) + bonus);
-    }
-
-    /**
-     * Apply bonus stat that comes from item for example
-     *
-     * @param stat
-     *            stat
-     * @param bonus
-     *            value
-     */
-    public void addBonusStat(Stat stat, int bonus) {
-        bStats.put(stat, bStats.get(stat) + bonus);
-    }
-
-    /**
      * Statuses currently affecting this character
      */
     private List<StatusEffect> statuses = new ArrayList<>();
@@ -155,6 +211,11 @@ public abstract class GameCharacter extends GameEntity {
         return statuses.contains(status);
     }
 
+    /**
+     * Apply status effect
+     *
+     * @param e
+     */
     public void addStatusEffect(StatusEffect e) {
         statuses.add(e);
     }
@@ -374,19 +435,6 @@ public abstract class GameCharacter extends GameEntity {
     // this.skills = tmpSkills;
     // }
 
-    /**
-     * Attack tick that decides if character can attack
-     */
-    private int atkTick = 0;
-
-    /**
-     *
-     * @return attack tick
-     */
-    protected final int getAtkTick() {
-        return atkTick;
-    }
-
     // TODO:
     protected Experience xp = new Experience(0, 0, 0);
     protected Skill[] skills;
@@ -413,11 +461,15 @@ public abstract class GameCharacter extends GameEntity {
         // skills[i] = EntityManager.getSkillByID(charClass.skillIDs[i]);
 
         for (Attribute attr : Attribute.values()) {
-            attributes.put(attr, 1);
-            bAttributes.put(attr, 1);
+            attributeProperties.put(attr, new ReadOnlyIntegerWrapper(1));
+            bAttributeProperties.put(attr, new ReadOnlyIntegerWrapper(0));
+            setAttribute(attr, 1);
+            bAttributes.put(attr, 0);
         }
 
         for (Stat stat : Stat.values()) {
+            statProperties.put(stat, new ReadOnlyIntegerWrapper(0));
+            bStatProperties.put(stat, new ReadOnlyIntegerWrapper(0));
             stats.put(stat, 0.0f);
             bStats.put(stat, 0.0f);
         }
@@ -432,8 +484,8 @@ public abstract class GameCharacter extends GameEntity {
      * change in attributes must be followed by call to this method
      */
     public final void updateStats() {
-        int strength = getTotalAttribute(Attribute.STRENGTH); // calculate
-                                                              // totals first
+        // calculate totals first
+        int strength = getTotalAttribute(Attribute.STRENGTH);
         int vitality = getTotalAttribute(Attribute.VITALITY);
         int dexterity = getTotalAttribute(Attribute.DEXTERITY);
         int agility = getTotalAttribute(Attribute.AGILITY);
@@ -496,20 +548,20 @@ public abstract class GameCharacter extends GameEntity {
         float critDmg = 2 + luck * 0.01f;
         float mcritDmg = 2 + luck * 0.01f;
 
-        stats.put(Stat.MAX_HP, maxHP);
-        stats.put(Stat.MAX_SP, maxSP);
-        stats.put(Stat.HP_REGEN, hpRegen);
-        stats.put(Stat.SP_REGEN, spRegen);
-        stats.put(Stat.ATK, atk);
-        stats.put(Stat.MATK, matk);
-        stats.put(Stat.DEF, def);
-        stats.put(Stat.MDEF, mdef);
-        stats.put(Stat.ASPD, aspd);
-        stats.put(Stat.MSPD, mspd);
-        stats.put(Stat.CRIT_CHANCE, critChance);
-        stats.put(Stat.MCRIT_CHANCE, mcritChance);
-        stats.put(Stat.CRIT_DMG, critDmg);
-        stats.put(Stat.MCRIT_DMG, mcritDmg);
+        setBaseStat(Stat.MAX_HP, maxHP);
+        setBaseStat(Stat.MAX_SP, maxSP);
+        setBaseStat(Stat.HP_REGEN, hpRegen);
+        setBaseStat(Stat.SP_REGEN, spRegen);
+        setBaseStat(Stat.ATK, atk);
+        setBaseStat(Stat.MATK, matk);
+        setBaseStat(Stat.DEF, def);
+        setBaseStat(Stat.MDEF, mdef);
+        setBaseStat(Stat.ASPD, aspd);
+        setBaseStat(Stat.MSPD, mspd);
+        setBaseStat(Stat.CRIT_CHANCE, critChance);
+        setBaseStat(Stat.MCRIT_CHANCE, mcritChance);
+        setBaseStat(Stat.CRIT_DMG, critDmg);
+        setBaseStat(Stat.MCRIT_DMG, mcritDmg);
     }
 
     /**
@@ -582,6 +634,23 @@ public abstract class GameCharacter extends GameEntity {
     public abstract Element getArmorElement();
 
     /**
+     * Attack tick that decides if character can attack
+     */
+    private int atkTick = 0;
+
+    /**
+     *
+     * @return attack tick
+     */
+    protected final int getAtkTick() {
+        return atkTick;
+    }
+
+    public final void resetAtkTick() {
+        atkTick = 0;
+    }
+
+    /**
      * @return if character is ready to perform basic attack based on his ASPD
      */
     public boolean canAttack() {
@@ -597,10 +666,9 @@ public abstract class GameCharacter extends GameEntity {
      * @return damage dealt
      */
     public Damage attack(GameCharacter target) {
-        atkTick = 0;
         return dealPhysicalDamage(target,
-                    getTotalStat(Stat.ATK) + 1.25f * GameMath.random(getBaseLevel()),
-                    this.getWeaponElement());
+                    getTotalStat(Stat.ATK) + 2f * GameMath.random(getBaseLevel()),
+                    getWeaponElement());
     }
 
     /**

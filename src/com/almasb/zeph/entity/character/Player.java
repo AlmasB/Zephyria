@@ -119,7 +119,7 @@ public final class Player extends GameCharacter {
 
     public void baseLevelUp() {
         setBaseLevel(getBaseLevel() + 1);
-        calculateStats();
+        updateStats();
         restoreHP(getTotalStat(Stat.MAX_HP));
         restoreSP(getTotalStat(Stat.MAX_SP));
     }

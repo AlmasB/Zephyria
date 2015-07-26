@@ -52,7 +52,7 @@ public class Enemy extends GameCharacter {
       setAttribute(Attribute.PERCEPTION, attrs.per);
       setAttribute(Attribute.LUCK, attrs.luc);
 
-      calculateStats();
+      updateStats();
       setHP((int)getTotalStat(Stat.MAX_HP));   // set current hp/sp to max
       setSP((int)getTotalStat(Stat.MAX_SP));
     }

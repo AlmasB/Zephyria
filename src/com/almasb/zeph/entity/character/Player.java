@@ -8,15 +8,17 @@ import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.item.Armor;
 import com.almasb.zeph.entity.item.EquippableItem;
 import com.almasb.zeph.entity.item.Weapon;
 import com.almasb.zeph.entity.item.Weapon.WeaponType;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Actual user
@@ -356,6 +358,17 @@ public final class Player extends GameCharacter {
      * Equipped gear
      */
     private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
+    // TODO: make read only
+    private transient Map<EquipPlace, ObjectProperty<EquippableItem> > equipProperties = new HashMap<>();
+
+    public final ObjectProperty<EquippableItem> equipProperty(EquipPlace place) {
+        return equipProperties.get(place);
+    }
+
+    private void setEquip(EquipPlace place, EquippableItem item) {
+        equip.put(place, item);
+        equipProperties.get(place).set(item);
+    }
 
     /**
      * Constructs player with given in-game name and character class.
@@ -370,6 +383,7 @@ public final class Player extends GameCharacter {
             EquippableItem item = (EquippableItem) EntityManager.getItemByID(p.emptyID);
             item.onEquip(this);
             equip.put(p, item);
+            equipProperties.put(p, new SimpleObjectProperty<>(item));
         }
     }
 
@@ -403,7 +417,7 @@ public final class Player extends GameCharacter {
         inventory.removeItem(w);    // remove item from inventory to clear space
 
         if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) {
-            if (Inventory.MAX_SIZE - inventory.getSize() == 1
+            if (Inventory.MAX_SIZE - inventory.size() == 1
                     && !isFree(EquipPlace.RIGHT_HAND)
                     && !isFree(EquipPlace.LEFT_HAND)) {
                 // ex case, when inventory is full and player tries to equip 2H weapon
@@ -413,16 +427,16 @@ public final class Player extends GameCharacter {
             }
             unEquipItem(EquipPlace.RIGHT_HAND);
             unEquipItem(EquipPlace.LEFT_HAND);
-            equip.put(EquipPlace.RIGHT_HAND, w);
-            equip.put(EquipPlace.LEFT_HAND, w);
+            setEquip(EquipPlace.RIGHT_HAND, w);
+            setEquip(EquipPlace.LEFT_HAND, w);
         }
         else if (w.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
             unEquipItem(EquipPlace.LEFT_HAND);
-            equip.put(EquipPlace.LEFT_HAND, w);
+            setEquip(EquipPlace.LEFT_HAND, w);
         }
         else {  // normal 1H weapon
             unEquipItem(EquipPlace.RIGHT_HAND);
-            equip.put(EquipPlace.RIGHT_HAND, w);
+            setEquip(EquipPlace.RIGHT_HAND, w);
         }
 
         w.onEquip(this);            // put it on
@@ -446,7 +460,7 @@ public final class Player extends GameCharacter {
         }
 
         unEquipItem(place);
-        equip.put(place, a);
+        setEquip(place, a);
         a.onEquip(this);
     }
 
@@ -461,9 +475,9 @@ public final class Player extends GameCharacter {
             if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
                 EntityManager.getWeaponByID(ID.Weapon.HANDS).onEquip(this);
                 if (itemPlace == EquipPlace.RIGHT_HAND)
-                    equip.put(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
+                    setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
                 else
-                    equip.put(EquipPlace.RIGHT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
+                    setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
             }
         }
 
@@ -471,7 +485,7 @@ public final class Player extends GameCharacter {
         inventory.addItem(item);    // put it in inventory
 
         ((EquippableItem) EntityManager.getItemByID(itemPlace.emptyID)).onEquip(this);
-        equip.put(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
+        setEquip(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
     }
 
     /**

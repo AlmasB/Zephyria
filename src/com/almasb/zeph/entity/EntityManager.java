@@ -34,7 +34,7 @@ public class EntityManager {
         armorBuilder.id(ID.Armor.CLOTHES)
                     .name("Clothes")
                     .description(Desc.Armor.CLOTHES)
-                    .textureName("test.png")
+                    .textureName("clothes.png")
                     .type(ArmorType.BODY);
         addArmor(armorBuilder);
 
@@ -42,7 +42,7 @@ public class EntityManager {
         armorBuilder.id(ID.Armor.SHOES)
                     .name("Shoes")
                     .description(Desc.Armor.SHOES)
-                    .textureName("test.png")
+                    .textureName("shoes.png")
                     .type(ArmorType.SHOES);
         addArmor(armorBuilder);
 
@@ -50,13 +50,11 @@ public class EntityManager {
         armorBuilder.id(ID.Armor.HAT)
                     .name("Hat")
                     .description(Desc.Armor.HAT)
-                    .textureName("test.png")
+                    .textureName("hat.png")
                     .type(ArmorType.HELM);
         addArmor(armorBuilder);
 
-//        addArmor(new Armor(ID.Armor.HAT, "Hat", Desc.Armor.HAT, 10, 13, ArmorType.HELM, 0, 0));    // 5000, matches type enum for easy equip
-//        addArmor(new Armor(ID.Armor.CLOTHES, "Clothes", Desc.Armor.CLOTHES, 0, 13, ArmorType.BODY, 0, 0));  // 5001
-//        addArmor(new Armor(ID.Armor.SHOES, "Shoes", Desc.Armor.SHOES, 0, 14, ArmorType.SHOES, 0, 0));    // 5002
+
 //        addArmor(new Armor(ID.Armor.CHAINMAL, "Chainmail", Desc.Armor.CHAINMAL, 4, 13, ArmorType.BODY, 15, 5));
 //
 //        addArmor(new Armor(ID.Armor.SOUL_BARRIER, "Soul Barrier", Desc.Armor.SOUL_BARRIER, 3, 13,
@@ -78,15 +76,23 @@ public class EntityManager {
         weaponBuilder.id(ID.Weapon.HANDS)
                     .name("Hands")
                     .description(Desc.Weapon.HANDS)
-                    .textureName("test.png")
+                    .textureName("hands.png")
                     .damage(10)
                     .type(WeaponType.MACE);
         addWeapon(weaponBuilder);
 
+        weaponBuilder = new WeaponBuilder();
+        weaponBuilder.id(ID.Weapon.KNIFE)
+                    .name("Knife")
+                    .description(Desc.Weapon.KNIFE)
+                    .textureName("knife.png")
+                    .damage(20)
+                    .type(WeaponType.DAGGER);
+        addWeapon(weaponBuilder);
 
-//        addWeapon(new Weapon(ID.Weapon.HANDS, "Hands", Desc.Weapon.HANDS, 0, 7, WeaponType.MACE, 0));
+
 //        addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
-//        addWeapon(new Weapon(ID.Weapon.KNIFE, "Knife", Desc.Weapon.KNIFE, 0, 6, WeaponType.DAGGER, 5));
+
 //        addWeapon(new Weapon(ID.Weapon.CLAYMORE, "Claymore", Desc.Weapon.CLAYMORE, 10, 5, WeaponType.TWO_H_SWORD, 35));
 //        addWeapon(new Weapon(ID.Weapon.BROADSWORD, "Broadsword", Desc.Weapon.BROADSWORD, 11, 5, WeaponType.TWO_H_SWORD, 28));
 //
@@ -1097,7 +1103,7 @@ public class EntityManager {
                     .textureName("test.png")
                     .xp(new Experience(100, 100, 100))
                     .element(Element.EARTH)
-                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50), new DroppableItem(ID.Armor.THANATOS_BODY_ARMOR, 10));
+                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50));
 
         addEnemy(enemyBuilder);
 

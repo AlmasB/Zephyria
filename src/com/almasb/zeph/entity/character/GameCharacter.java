@@ -38,10 +38,10 @@ public abstract class GameCharacter extends GameEntity {
     private transient Map<Attribute, ReadOnlyIntegerWrapper> attributeProperties = new HashMap<>();
 
     /**
-    *
-    * @param attr
-    * @return base (native) character attribute value
-    */
+     *
+     * @param attr
+     * @return base (native) character attribute value
+     */
     public final int getBaseAttribute(Attribute attr) {
         return attributes.get(attr);
     }
@@ -73,10 +73,10 @@ public abstract class GameCharacter extends GameEntity {
     private transient Map<Attribute, ReadOnlyIntegerWrapper> bAttributeProperties = new HashMap<>();
 
     /**
-    *
-    * @param attr
-    * @return bonus attribute value
-    */
+     *
+     * @param attr
+     * @return bonus attribute value
+     */
     public final int getBonusAttribute(Attribute attr) {
         return bAttributes.get(attr);
     }
@@ -112,10 +112,10 @@ public abstract class GameCharacter extends GameEntity {
     private transient Map<Stat, ReadOnlyIntegerWrapper> statProperties = new HashMap<>();
 
     /**
-    *
-    * @param stat
-    * @return base (native) character stat
-    */
+     *
+     * @param stat
+     * @return base (native) character stat
+     */
     public final float getBaseStat(Stat stat) {
         return stats.get(stat);
     }
@@ -137,7 +137,7 @@ public abstract class GameCharacter extends GameEntity {
      */
     private void setBaseStat(Stat stat, float value) {
         stats.put(stat, value);
-        statProperties.get(stat).set((int)value);
+        statProperties.get(stat).set((int) value);
     }
 
     /**
@@ -156,10 +156,10 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     /**
-    *
-    * @param stat
-    * @return bonus stat property
-    */
+     *
+     * @param stat
+     * @return bonus stat property
+     */
     public final ReadOnlyIntegerProperty bStatProperty(Stat stat) {
         return bStatProperties.get(stat).getReadOnlyProperty();
     }
@@ -225,9 +225,8 @@ public abstract class GameCharacter extends GameEntity {
     private List<Effect> effects = new ArrayList<>();
 
     /**
-     * Applies an effect to this character. If the effect
-     * comes from the same source, e.g. skill, the effect
-     * will be re-applied (will reset its timer).
+     * Applies an effect to this character. If the effect comes from the same
+     * source, e.g. skill, the effect will be re-applied (will reset its timer).
      *
      * @param e
      */
@@ -318,24 +317,26 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     /**
-     * Restores hp. HP will not go outside getTotalStat(Stat.MAX_HP).
-     * No effect if the value is negative.
+     * Restores hp. HP will not go outside getTotalStat(Stat.MAX_HP). No effect
+     * if the value is negative.
      *
      * @param value
      */
     protected final void restoreHP(float value) {
-        if (value <= 0) return;
+        if (value <= 0)
+            return;
         setHP(getHP() + (int) value);
     }
 
     /**
-     * Takes away value from hp. HP will not drop below 0.
-     * No effect if the value is negative.
+     * Takes away value from hp. HP will not drop below 0. No effect if the
+     * value is negative.
      *
      * @param value
      */
     protected final void damageHP(float value) {
-        if (value <= 0) return;
+        if (value <= 0)
+            return;
         setHP(getHP() - (int) value);
     }
 
@@ -379,24 +380,26 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     /**
-     * Restores sp. SP will not go outside getTotalStat(Stat.MAX_SP).
-     * No effect if the value is negative.
+     * Restores sp. SP will not go outside getTotalStat(Stat.MAX_SP). No effect
+     * if the value is negative.
      *
      * @param value
      */
     protected final void restoreSP(float value) {
-        if (value <= 0) return;
+        if (value <= 0)
+            return;
         setSP(getSP() + (int) value);
     }
 
     /**
-     * Takes away value from sp. SP will not drop below 0.
-     * No effect if the value is negative.
+     * Takes away value from sp. SP will not drop below 0. No effect if the
+     * value is negative.
      *
      * @param value
      */
     protected final void damageSP(float value) {
-        if (value <= 0) return;
+        if (value <= 0)
+            return;
         setSP(getSP() - (int) value);
     }
 
@@ -414,8 +417,7 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     /**
-     * TODO:
-     * Change this characters game class to @param cl
+     * TODO: Change this characters game class to @param cl
      *
      * @param cl
      *            game character class to change to
@@ -628,6 +630,7 @@ public abstract class GameCharacter extends GameEntity {
     }
 
     public abstract Element getWeaponElement();
+
     public abstract Element getArmorElement();
 
     /**
@@ -663,8 +666,10 @@ public abstract class GameCharacter extends GameEntity {
      * @return damage dealt
      */
     public Damage attack(GameCharacter target) {
-        return dealPhysicalDamage(target,
-                    getTotalStat(Stat.ATK) + 2f * GameMath.random(getBaseLevel()),
+        return dealPhysicalDamage(
+                target,
+                    getTotalStat(Stat.ATK)
+                            + 2f * GameMath.random(getBaseLevel()),
                     getWeaponElement());
     }
 

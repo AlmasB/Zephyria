@@ -14,21 +14,31 @@ import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Damage;
+import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.GameEntity;
 import com.almasb.zeph.entity.ID;
+import com.almasb.zeph.entity.ID.Item;
 import com.almasb.zeph.entity.character.Enemy;
+import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.item.DroppableItem;
 
+import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ListChangeListener.Change;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -52,15 +62,20 @@ public class ZephyriaApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
 
-        //settings.setWidth((int)bounds.getWidth());
-        //settings.setHeight((int)bounds.getHeight());
-        settings.setWidth(1280);
-        settings.setHeight(720);
+        boolean full = false;
+        if (full) {
+            settings.setWidth((int)bounds.getWidth());
+            settings.setHeight((int)bounds.getHeight());
+        }
+        else {
+            settings.setWidth(1280);
+            settings.setHeight(720);
+        }
         settings.setTitle("Orion RPG");
         settings.setVersion("0.0.1");
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
-        //settings.setFullScreen(true);
+        settings.setFullScreen(full);
     }
 
     @Override
@@ -95,6 +110,8 @@ public class ZephyriaApp extends GameApplication {
     ProgressBar barSPUI = ProgressBar.makeSkillBar();
 
     private Text debug = new Text();
+
+    private Pane inv = new Pane();
 
     @Override
     protected void initUI() {
@@ -200,9 +217,41 @@ public class ZephyriaApp extends GameApplication {
         uiBasicInfo.setExpandedPane(pane);
 
 
-        Texture invRight = assets.getTexture("ui/inventory_right.png");
 
-        TitledPane inventoryPane = new TitledPane("Inventory", invRight);
+
+        Texture invRight = assets.getTexture("ui/inventory_right.png");
+        inv.getChildren().add(invRight);
+
+        playerData.getInventory().itemsProperty().addListener(new ListChangeListener<GameEntity>() {
+            @Override
+            public void onChanged(ListChangeListener.Change<? extends GameEntity> change) {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        for (GameEntity item : change.getAddedSubList()) {
+                            int i = inv.getChildren().size() - 1;
+                            Entity e = item.toEntity();
+                            e.setTranslateX((i % 5) * 40);
+                            e.setTranslateY((i / 5) * 40);
+
+                            inv.getChildren().add(e);
+                        }
+                    }
+                    else if (change.wasRemoved()) {
+                        for (GameEntity item : change.getRemoved()) {
+                            for (Iterator<Node> it = inv.getChildren().iterator(); it.hasNext(); ) {
+                                Entity e = (Entity) it.next();
+
+                                if (e.getProperty("data") == item) {
+                                    it.remove();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        TitledPane inventoryPane = new TitledPane("Inventory", inv);
         Accordion inventory = new Accordion(inventoryPane);
         inventory.setTranslateX(getWidth() - invRight.getLayoutBounds().getWidth() - 2);
         inventory.setTranslateY(getHeight() - 25);
@@ -218,6 +267,8 @@ public class ZephyriaApp extends GameApplication {
                 tt.play();
             }
         });
+
+
 
         debug.setTranslateX(100);
         debug.setTranslateY(300);
@@ -254,7 +305,78 @@ public class ZephyriaApp extends GameApplication {
 
         VBox infos = new VBox(uiBasicInfo, uiCharInfo);
 
-        addUINodes(hotbar, infos, inventory, debug);
+        addUINodes(hotbar, infos, createEquipPane(), inventory, debug);
+    }
+
+    private Accordion createEquipPane() {
+        Texture invLeft = assets.getTexture("ui/inventory_left.png");
+
+        // TODO: why cant we set tooltip font size?
+
+        Pane paneEquip = new Pane(invLeft);
+
+        // head
+        Entity head = playerData.getEquip(EquipPlace.HELM).toEntity();
+        head.setTranslateX(88);
+        head.setTranslateY(60);
+
+        Tooltip tooltip = new Tooltip(playerData.getEquip(EquipPlace.HELM).getDescription());
+        Tooltip.install(head, tooltip);
+
+        // body
+        Entity body = playerData.getEquip(EquipPlace.BODY).toEntity();
+        body.setTranslateX(88);
+        body.setTranslateY(105);
+
+        tooltip = new Tooltip(playerData.getEquip(EquipPlace.BODY).getDescription());
+        Tooltip.install(body, tooltip);
+
+
+        // shoes
+        Entity shoes = playerData.getEquip(EquipPlace.SHOES).toEntity();
+        shoes.setTranslateX(88);
+        shoes.setTranslateY(150);
+
+        tooltip = new Tooltip(playerData.getEquip(EquipPlace.SHOES).getDescription());
+        Tooltip.install(shoes, tooltip);
+
+        // left hand
+        Entity left = playerData.getEquip(EquipPlace.LEFT_HAND).toEntity();
+        left.setTranslateX(133);
+        left.setTranslateY(105);
+
+        tooltip = new Tooltip(playerData.getEquip(EquipPlace.LEFT_HAND).getDescription());
+        Tooltip.install(left, tooltip);
+
+        // right hand
+        Entity right = playerData.getEquip(EquipPlace.RIGHT_HAND).toEntity();
+        right.setTranslateX(43);
+        right.setTranslateY(105);
+
+        tooltip = new Tooltip(playerData.getEquip(EquipPlace.RIGHT_HAND).getDescription());
+        Tooltip.install(right, tooltip);
+
+
+
+        paneEquip.getChildren().addAll(head, body, shoes, left, right);
+
+        TitledPane equipPane = new TitledPane("Equipment", paneEquip);
+        Accordion equip = new Accordion(equipPane);
+        equip.setTranslateY(getHeight() - 25);
+        equip.expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+            if (newPane == null) {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), equip);
+                tt.setToY(getHeight() - 25);
+                tt.play();
+            }
+            else {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), equip);
+                tt.setToY(getHeight() - invLeft.getLayoutBounds().getHeight() - 25);
+                tt.play();
+            }
+        });
+
+        return equip;
     }
 
     @Override
@@ -269,6 +391,28 @@ public class ZephyriaApp extends GameApplication {
             if (enemyData.getHP() <= 0) {
                 it.remove();
                 enemyData.onDeath(playerData);
+
+                List<DroppableItem> drops = enemyData.getDrops();
+                for (DroppableItem drop : drops) {
+                    if (GameMath.checkChance(drop.dropChance)) {
+                        GameEntity item = EntityManager.getItemByID(drop.itemID);
+                        Entity e = item.toEntity();
+                        e.setPosition(enemy.getPosition());
+
+                        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e);
+                        tt.setInterpolator(Interpolator.EASE_IN);
+                        tt.setByY(15);
+                        tt.play();
+
+                        e.setOnMouseClicked(event -> {
+                            removeEntity(e);
+                            playerData.getInventory().addItem(item);
+                        });
+
+                        addEntities(e);
+                    }
+                }
+
                 removeEntity(enemy);
                 selected = null;
             }
@@ -348,7 +492,7 @@ public class ZephyriaApp extends GameApplication {
             player.translate(5, 0);
         });
 
-        inputManager.addKeyTypedBinding(KeyCode.ENTER, () -> {
+        inputManager.addKeyTypedBinding(KeyCode.L, () -> {
             exit();
         });
     }
@@ -413,11 +557,25 @@ public class ZephyriaApp extends GameApplication {
                 selected = null;
             }
         });
-        bg.setGraphics(new Rectangle(getWidth(), getHeight()));
-        bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
-        bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
 
-        addEntities(bg, player);
+        Texture back = assets.getTexture("background.png");
+        back.setFitWidth(getWidth());
+        back.setFitHeight(getHeight());
+
+        bg.setGraphics(back);
+        //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
+        //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
+        addEntities(bg);
+
+        for (int i = 0; i < 20; i++) {
+            Entity tree = Entity.noType();
+            tree.setPosition(random.nextInt(1500), random.nextInt(1000));
+            tree.setGraphics(assets.getTexture("tree.png"));
+
+            addEntities(tree);
+        }
+
+        addEntities(player);
 
 
     }
@@ -433,7 +591,7 @@ public class ZephyriaApp extends GameApplication {
                 selected = enemy;
                 selected.setEffect(selectedEffect);
 
-                System.out.println("selected enemy");
+                //System.out.println("selected enemy");
             });
 
             Enemy enemyData = enemy.getProperty("enemy_data");

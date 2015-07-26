@@ -1,9 +1,13 @@
 package com.almasb.zeph.entity.character;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.almasb.zeph.entity.GameEntity;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Represents a "bag" of items of a player
@@ -24,7 +28,21 @@ public class Inventory implements java.io.Serializable {
     /**
      * Actual data structure
      */
-    private ArrayList<GameEntity> items = new ArrayList<GameEntity>(MAX_SIZE);
+    private List<GameEntity> items = new ArrayList<>(MAX_SIZE);
+    // TODO: make read only
+    private transient ObservableList<GameEntity> itemsProperty = FXCollections.observableArrayList();
+
+//    /**
+//     *
+//     * @return a new copy of items list, retaining references to original items
+//     */
+//    public List<GameEntity> getItems() {
+//        return new ArrayList<>(items);
+//    }
+
+    public final ObservableList<GameEntity> itemsProperty() {
+        return itemsProperty;
+    }
 
     /**
      * Adds item to inventory if inventory isnt full
@@ -38,7 +56,11 @@ public class Inventory implements java.io.Serializable {
         if (isFull()) {
             return false;
         }
-        return items.add(item);
+
+        items.add(item);
+        itemsProperty.add(item);
+
+        return true;
     }
 
     /**
@@ -64,17 +86,8 @@ public class Inventory implements java.io.Serializable {
         if (!items.remove(item)) {
             return false;
         }
+        itemsProperty.remove(item);
         return true;
-    }
-
-    /**
-     *
-     * @return
-     *          a new copy of items list, retaining
-     *          references to original items
-     */
-    public ArrayList<GameEntity> getItems() {
-        return new ArrayList<GameEntity>(items);
     }
 
     /**
@@ -82,7 +95,7 @@ public class Inventory implements java.io.Serializable {
      * @return
      *          number of items in inventory
      */
-    public int getSize() {
+    public int size() {
         return items.size();
     }
 

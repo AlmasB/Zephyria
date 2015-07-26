@@ -28,6 +28,10 @@ public class Enemy extends GameCharacter {
 
     private List<DroppableItem> drops = new ArrayList<>();
 
+    public final List<DroppableItem> getDrops() {
+        return new ArrayList<>(drops);
+    }
+
     private Experience xp;
 
     /**
@@ -84,11 +88,11 @@ public class Enemy extends GameCharacter {
      * @return
      */
     public void onDeath(Player p) {
-        for (DroppableItem item : drops) {
-            if (GameMath.checkChance(item.dropChance)) {
-                p.getInventory().addItem(EntityManager.getItemByID(item.itemID));
-            }
-        }
+//        for (DroppableItem item : drops) {
+//            if (GameMath.checkChance(item.dropChance)) {
+//                p.getInventory().addItem(EntityManager.getItemByID(item.itemID));
+//            }
+//        }
 
         p.rewardMoney(GameMath.random(getBaseLevel() * 100));
         p.rewardXP(getXP());

@@ -1,5 +1,6 @@
 package com.almasb.zeph.entity.item;
 
+import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Rune;
@@ -59,7 +60,13 @@ public class Weapon extends EquippableItem {
     @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
-        e.setProperty("weapon_data", this);
+        try {
+            e.setGraphics(AssetManager.INSTANCE.loadTexture("items/weapons/" + getTextureName()));
+        }
+        catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        e.setProperty("data", this);
         return e;
     }
 

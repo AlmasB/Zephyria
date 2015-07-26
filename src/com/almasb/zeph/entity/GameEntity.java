@@ -76,7 +76,7 @@ public abstract class GameEntity implements java.io.Serializable {
     * @return description
     */
    public final String getDescription() {
-       return name;
+       return description;
    }
 
    /**

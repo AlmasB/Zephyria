@@ -10,34 +10,29 @@ import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.zeph.combat.Attribute;
+import com.almasb.zeph.Events.EnemyEvent;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
+import com.almasb.zeph.control.AgressiveControl;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.GameEntity;
 import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.character.Enemy;
+import com.almasb.zeph.entity.character.GameCharacter;
 import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.Player;
 import com.almasb.zeph.entity.item.DroppableItem;
 
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -49,14 +44,19 @@ import javafx.util.Duration;
 
 public class ZephyriaApp extends GameApplication {
 
-    private Entity player;
     private Assets assets;
+
+    private Entity player;
+    private Player playerData;
+    private Entity selected = null;
+
+    private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
     @Override
     protected void initSettings(GameSettings settings) {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
 
-        boolean full = false;
+        boolean full = true;
         if (full) {
             settings.setWidth((int)bounds.getWidth());
             settings.setHeight((int)bounds.getHeight());
@@ -76,11 +76,6 @@ public class ZephyriaApp extends GameApplication {
     protected void initAssets() throws Exception {
         assets = assetManager.cache();
     }
-
-    private Player playerData;
-    private Entity selected = null;
-
-    private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
     @Override
     protected void initGame() {
@@ -123,7 +118,7 @@ public class ZephyriaApp extends GameApplication {
 
         for (Iterator<Entity> it = enemies.iterator(); it.hasNext(); ) {
             Entity enemy = it.next();
-            Enemy enemyData = enemy.getProperty("enemy_data");
+            Enemy enemyData = enemy.getProperty("data");
             enemyData.update();
 
             if (enemyData.getHP() <= 0) {
@@ -134,21 +129,7 @@ public class ZephyriaApp extends GameApplication {
                 for (DroppableItem drop : drops) {
                     if (GameMath.checkChance(drop.dropChance)) {
                         GameEntity item = EntityManager.getItemByID(drop.itemID);
-                        Entity e = item.toEntity();
-                        e.setPosition(enemy.getPosition());
-
-                        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e);
-                        tt.setInterpolator(Interpolator.EASE_IN);
-                        tt.setByY(15);
-                        tt.play();
-
-                        e.setOnMouseClicked(event -> {
-                            removeEntity(e);
-                            playerData.getInventory().addItem(item);
-                            //playerData.equipWeapon((Weapon)item);
-                        });
-
-                        addEntities(e);
+                        dropItem(item, enemy.getPosition());
                     }
                 }
 
@@ -157,77 +138,38 @@ public class ZephyriaApp extends GameApplication {
             }
         }
 
-        if (selected != null && playerData.canAttack()) {
-            playerData.resetAtkTick();
-
-            Entity target = selected;
-
-            Entity proj = Entity.noType();
-            Circle graphics = new Circle(10);
-            graphics.setFill(Color.GRAY);
-            proj.setGraphics(graphics);
-
-            proj.setPosition(player.getPosition());
-            proj.addControl(new Control() {
-
-                Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
-
-                @Override
-                public void onUpdate(Entity entity, long now) {
-                    entity.translate(vector);
-
-                    if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
-                        removeEntity(proj);
-
-                        Damage dmg = playerData.attack(target.getProperty("enemy_data"));
-                        Entity e = Entity.noType();
-                        e.setExpireTime(SECOND);
-                        Text text = new Text(dmg.getValue() + (dmg.isCritical() ? "!" : ""));
-                        text.setFill(dmg.isCritical() ? Color.RED : Color.WHITE);
-                        text.setFont(Font.font(16));
-
-                        e.setGraphics(text);
-                        e.setPosition(target.getPosition().add(0, -40));
-                        addEntities(e);
-
-                        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
-                        tt.setByY(-30);
-                        tt.play();
-                    }
-                }
-
-            });
-
-            addEntities(proj);
+        if (selected != null) {
+            startAttack(player, selected);
         }
-    }
-
-    private void openChat() {
-        TextField field = new TextField();
-        field.setTranslateX(150);
-        field.setTranslateY(300);
-        field.setOnAction(event -> {
-            System.out.println(field.getText());
-        });
-
-        addUINodes(field);
     }
 
     @Override
     protected void initInput() {
         inputManager.addKeyPressBinding(KeyCode.W, () -> {
+            if (player.getTranslateY() <= 0)
+                return;
+
             player.translate(0, -5);
         });
 
         inputManager.addKeyPressBinding(KeyCode.S, () -> {
+            if (player.getTranslateY() >= getHeight())
+                return;
+
             player.translate(0, 5);
         });
 
         inputManager.addKeyPressBinding(KeyCode.A, () -> {
+            if (player.getTranslateX() <= 0)
+                return;
+
             player.translate(-5, 0);
         });
 
         inputManager.addKeyPressBinding(KeyCode.D, () -> {
+            if (player.getTranslateX() >= getWidth())
+                return;
+
             player.translate(5, 0);
         });
 
@@ -236,27 +178,11 @@ public class ZephyriaApp extends GameApplication {
         });
     }
 
-//    private void dropItem(Entity enemy) {
-//        List<Item> dropItems = enemy.getProperty(EnemyProperty.DROP_ITEMS);
-//        Item randomItem = dropItems.get((int)(Math.random() * dropItems.size()));
-//
-//        Entity item = randomItem.toEntity();
-//        item.setPosition(enemy.getTranslateX(), enemy.getTranslateY());
-//
-//        addEntities(item);
-//    }
-//
-//    private void addItem(Item item) {
-//        Entity inventory = player.getProperty(PlayerProperty.INVENTORY);
-//        ObservableList<Entity> list = inventory.getProperty(InventoryProperty.LIST);
-//        list.add(item.toEntity());
-//    }
-//
     private void initPlayer() {
         player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
-        player.setPosition(100, 100);
+        player.setPosition(getWidth() / 2, getHeight() / 2);
 
-        playerData = player.getProperty("player_data");
+        playerData = player.getProperty("data");
 
         Group vbox = new Group();
 
@@ -306,14 +232,29 @@ public class ZephyriaApp extends GameApplication {
             }
         });
 
-        Texture back = assets.getTexture("background.png");
-        back.setFitWidth(getWidth());
-        back.setFitHeight(getHeight());
+        Texture back = assets.getTexture("map1.png");
+        //back.setFitWidth(getWidth());
+        //back.setFitHeight(getHeight());
 
         bg.setGraphics(back);
         //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
         //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
-        addEntities(bg);
+
+
+        Entity bg0 = Entity.noType();
+        bg0.setGraphics(assets.getTexture("background.png"));
+        bg0.setTranslateX(-getWidth());
+
+        Entity bg1 = Entity.noType();
+        bg1.setGraphics(assets.getTexture("background.png"));
+        bg1.setTranslateY(-getHeight());
+
+
+
+
+
+
+        addEntities(bg0, bg1, bg);
 
         for (int i = 0; i < 20; i++) {
             Entity tree = Entity.noType();
@@ -334,30 +275,95 @@ public class ZephyriaApp extends GameApplication {
     private void initEnemies() {
         for (int i = 0; i < 10; i++) {
             Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
-            enemies.add(enemy);
-
+            enemy.setPosition(random.nextInt(1000), random.nextInt(600));
             enemy.setOnMouseClicked(e -> {
                 selected = enemy;
                 selected.setEffect(selectedEffect);
             });
+            enemy.addFXGLEventHandler(EnemyEvent.ATTACKING, event -> {
+                startAttack(enemy, event.getSource());
+            });
+            enemy.addControl(new AgressiveControl(250, player));
 
-            Enemy enemyData = enemy.getProperty("enemy_data");
-
-            Group vbox = new Group();
-            Rectangle rect = new Rectangle(40, 40);
-            rect.setFill(Color.RED);
-
-            Text text = new Text(enemyData.getName());
-            text.setFont(Font.font(14));
-            text.setFill(Color.WHITE);
-            text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
-            text.setTranslateY(55);
-
-            vbox.getChildren().addAll(rect, text);
-
-            enemy.setPosition(random.nextInt(1000), random.nextInt(600)).setGraphics(vbox);
+            enemies.add(enemy);
             addEntities(enemy);
         }
+    }
+
+    private void startAttack(Entity attacker, Entity target) {
+        if (!attacker.isActive() || !target.isActive())
+            return;
+
+        GameCharacter a = attacker.getProperty("data");
+
+        if (!a.canAttack())
+            return;
+
+        a.resetAtkTick();
+
+        // TODO: this should be specific to each char type
+        Entity proj = Entity.noType();
+        Circle graphics = new Circle(10);
+        graphics.setFill(Color.GRAY);
+
+        proj.setGraphics(graphics);
+        proj.setPosition(attacker.getPosition());
+        proj.addControl(new Control() {
+            private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
+
+            @Override
+            public void onUpdate(Entity entity, long now) {
+                entity.translate(vector);
+
+                if (entity.getPosition().distance(attacker.getPosition()) >= 600)
+                    removeEntity(proj);
+
+                if (!target.isActive())
+                    removeEntity(proj);
+
+                if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
+                    removeEntity(proj);
+
+                    Damage damage = a.attack(target.getProperty("data"));
+                    showDamage(damage, target.getPosition());
+                }
+            }
+        });
+
+        addEntities(proj);
+    }
+
+    private void dropItem(GameEntity item, Point2D position) {
+        Entity e = item.toEntity();
+        e.setPosition(position);
+        e.setOnMouseClicked(event -> {
+            removeEntity(e);
+            playerData.getInventory().addItem(item);
+        });
+
+        addEntities(e);
+
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e);
+        tt.setInterpolator(Interpolator.EASE_IN);
+        tt.setByX(random.nextInt(20) - 10);
+        tt.setByY(10 + random.nextInt(10));
+        tt.play();
+    }
+
+    private void showDamage(Damage damage, Point2D position) {
+        Entity e = Entity.noType();
+        e.setExpireTime(SECOND);
+        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
+        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
+        text.setFont(Font.font(16));
+
+        e.setGraphics(text);
+        e.setPosition(position);
+        addEntities(e);
+
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
+        tt.setByY(-30);
+        tt.play();
     }
 
     public static void main(String[] args) {

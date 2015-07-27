@@ -3,9 +3,11 @@ package com.almasb.zeph.entity;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
+import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Essence;
 import com.almasb.zeph.combat.Experience;
+import com.almasb.zeph.combat.Rune;
 import com.almasb.zeph.combat.Skill;
 import com.almasb.zeph.entity.character.Enemy;
 import com.almasb.zeph.entity.character.Enemy.EnemyBuilder;
@@ -52,6 +54,17 @@ public class EntityManager {
                     .description(Desc.Armor.HAT)
                     .textureName("hat.png")
                     .type(ArmorType.HELM);
+        addArmor(armorBuilder);
+
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.CHAINMAL)
+                    .name("Chainmail")
+                    .description(Desc.Armor.CHAINMAL)
+                    .textureName("chainmail.png")
+                    .type(ArmorType.BODY)
+                    .armor(10)
+                    .marmor(5)
+                    .runes(new Rune(Attribute.STRENGTH, 2));
         addArmor(armorBuilder);
 
 
@@ -1100,10 +1113,10 @@ public class EntityManager {
         enemyBuilder.id(ID.Enemy.MINOR_EARTH_SPIRIT)
                     .description(Desc.Enemy.MINOR_EARTH_SPIRIT)
                     .name("Minor Earth Spirit")
-                    .textureName("test.png")
+                    .textureName("enemy.png")
                     .xp(new Experience(100, 100, 100))
                     .element(Element.EARTH)
-                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50));
+                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50), new DroppableItem(ID.Armor.CHAINMAL, 35));
 
         addEnemy(enemyBuilder);
 

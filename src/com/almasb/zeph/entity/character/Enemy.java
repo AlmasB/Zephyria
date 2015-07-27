@@ -4,15 +4,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.combat.Attribute;
+import com.almasb.zeph.combat.Attribute.AttributeInfo;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.combat.Attribute.AttributeInfo;
-import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.item.DroppableItem;
+
+import javafx.scene.Group;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class Enemy extends GameCharacter {
 
@@ -88,12 +93,6 @@ public class Enemy extends GameCharacter {
      * @return
      */
     public void onDeath(Player p) {
-//        for (DroppableItem item : drops) {
-//            if (GameMath.checkChance(item.dropChance)) {
-//                p.getInventory().addItem(EntityManager.getItemByID(item.itemID));
-//            }
-//        }
-
         p.rewardMoney(GameMath.random(getBaseLevel() * 100));
         p.rewardXP(getXP());
     }
@@ -111,7 +110,24 @@ public class Enemy extends GameCharacter {
     @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
-        e.setProperty("enemy_data", new Enemy(this));
+        try {
+            Group vbox = new Group();
+
+            Text text = new Text(getName());
+            text.setFont(Font.font(14));
+            text.setFill(Color.WHITE);
+            text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
+            text.setTranslateY(40);
+
+            vbox.getChildren().addAll(AssetManager.INSTANCE.loadTexture("chars/enemies/" + getTextureName()), text);
+
+
+            e.setGraphics(vbox);
+        }
+        catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        e.setProperty("data", new Enemy(this));
         return e;
     }
 

@@ -4,7 +4,7 @@ import com.almasb.fxgl.entity.FXGLEventType;
 
 public final class Events {
 
-    public enum EnemyEvent implements FXGLEventType {
-        ATTACKING
+    public enum Event implements FXGLEventType {
+        ATTACKING, BEING_ATTACKED, DEATH
     }
 }

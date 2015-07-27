@@ -576,6 +576,8 @@ public abstract class GameCharacter extends GameEntity {
         setBaseStat(Stat.MCRIT_DMG, mcritDmg);
     }
 
+    private float regenTick = 0.0f;
+
     /**
      * Regeneration tick. HP/SP.
      */
@@ -625,8 +627,6 @@ public abstract class GameCharacter extends GameEntity {
             }
         }
     }
-
-    private float regenTick = 0.0f;
 
     public void update() {
         updateRegen();

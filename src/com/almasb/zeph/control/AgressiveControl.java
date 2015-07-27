@@ -3,7 +3,7 @@ package com.almasb.zeph.control;
 import com.almasb.fxgl.entity.AbstractControl;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.FXGLEvent;
-import com.almasb.zeph.Events.EnemyEvent;
+import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.entity.character.GameCharacter;
 
 public class AgressiveControl extends AbstractControl {
@@ -25,7 +25,7 @@ public class AgressiveControl extends AbstractControl {
     @Override
     public void onUpdate(Entity entity, long now) {
         if (target.getPosition().distance(entity.getPosition()) <= lineOfSight) {
-            entity.fireFXGLEvent(new FXGLEvent(EnemyEvent.ATTACKING, target));
+            entity.fireFXGLEvent(new FXGLEvent(Event.ATTACKING, target));
         }
     }
 }

@@ -10,12 +10,13 @@ import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.FXGLEvent;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.zeph.Events.EnemyEvent;
+import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.control.AgressiveControl;
+import com.almasb.zeph.control.PassiveControl;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.GameEntity;
 import com.almasb.zeph.entity.ID;
@@ -280,10 +281,11 @@ public class ZephyriaApp extends GameApplication {
                 selected = enemy;
                 selected.setEffect(selectedEffect);
             });
-            enemy.addFXGLEventHandler(EnemyEvent.ATTACKING, event -> {
+            enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
                 startAttack(enemy, event.getSource());
             });
-            enemy.addControl(new AgressiveControl(250, player));
+            //enemy.addControl(new AgressiveControl(250, player));
+            enemy.addControl(new PassiveControl(250));
 
             enemies.add(enemy);
             addEntities(enemy);
@@ -324,6 +326,8 @@ public class ZephyriaApp extends GameApplication {
                 if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
                     removeEntity(proj);
 
+                    target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
+
                     Damage damage = a.attack(target.getProperty("data"));
                     showDamage(damage, target.getPosition());
                 }
@@ -355,7 +359,7 @@ public class ZephyriaApp extends GameApplication {
         e.setExpireTime(SECOND);
         Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
         text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
-        text.setFont(Font.font(16));
+        text.setFont(Font.font(damage.isCritical() ? 18 : 16));
 
         e.setGraphics(text);
         e.setPosition(position);

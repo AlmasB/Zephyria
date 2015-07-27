@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.zeph.R;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Attribute.AttributeInfo;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Experience;
-import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.item.DroppableItem;
 
@@ -29,14 +28,27 @@ public class Enemy extends GameCharacter {
 
     public final EnemyType type;
 
+    /**
+     * Weapon and armor element of this enemy
+     */
     private Element element;
 
+    /**
+     * Holds items that can be dropped by this enemy
+     */
     private List<DroppableItem> drops = new ArrayList<>();
 
+    /**
+     *
+     * @return items that can be dropped
+     */
     public final List<DroppableItem> getDrops() {
         return new ArrayList<>(drops);
     }
 
+    /**
+     * Experience this enemy rewards when killed
+     */
     private Experience xp;
 
     /**
@@ -86,17 +98,6 @@ public class Enemy extends GameCharacter {
                 .luc(copy.getBaseAttribute(Attribute.LUCK)), copy.xp, copy.drops.toArray(new DroppableItem[0]));
     }
 
-    /**
-     *
-     * @param p
-     *           The player who landed the killing blow
-     * @return
-     */
-//    public void onDeath(Player p) {
-//        p.rewardMoney(GameMath.random(getBaseLevel() * 100));
-//        p.rewardXP(getXP());
-//    }
-
     @Override
     public Element getWeaponElement() {
         return element;
@@ -110,24 +111,19 @@ public class Enemy extends GameCharacter {
     @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
-        try {
-            Group vbox = new Group();
 
-            Text text = new Text(getName());
-            text.setFont(Font.font(14));
-            text.setFill(Color.WHITE);
-            text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
-            text.setTranslateY(40);
+        Group vbox = new Group();
 
-            vbox.getChildren().addAll(AssetManager.INSTANCE.loadTexture("chars/enemies/" + getTextureName()), text);
+        Text text = new Text(getName());
+        text.setFont(Font.font(14));
+        text.setFill(Color.WHITE);
+        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
+        text.setTranslateY(40);
 
+        vbox.getChildren().addAll(R.assets.getTexture("chars/enemies/" + getTextureName()), text);
 
-            e.setGraphics(vbox);
-        }
-        catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        //e.setProperty("data", new Enemy(this));
+        e.setGraphics(vbox);
+
         e.addControl(this);
         return e;
     }

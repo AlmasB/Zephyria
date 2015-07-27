@@ -74,6 +74,7 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initAssets() throws Exception {
         assets = assetManager.cache();
+        R.assets = assets;
     }
 
     @Override
@@ -153,6 +154,24 @@ public class ZephyriaApp extends GameApplication {
         });
     }
 
+    public static ProgressBar makeHPBar() {
+        ProgressBar bar = new ProgressBar(false);
+        bar.setHeight(25);
+        bar.setFill(Color.GREEN.brighter());
+        bar.setTraceFill(Color.GREEN.brighter());
+        bar.setLabelVisible(true);
+        return bar;
+    }
+
+    public static ProgressBar makeSkillBar() {
+        ProgressBar bar = new ProgressBar(false);
+        bar.setHeight(25);
+        bar.setFill(Color.BLUE.brighter().brighter());
+        bar.setTraceFill(Color.BLUE);
+        bar.setLabelVisible(true);
+        return bar;
+    }
+
     private void initPlayer() {
         player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
         player.setPosition(getWidth() / 2, getHeight() / 2);
@@ -166,8 +185,8 @@ public class ZephyriaApp extends GameApplication {
         t.setArcWidth(15);
         t.setArcHeight(15);
 
-        ProgressBar barHP = ProgressBar.makeHPBar();
-        ProgressBar barSP = ProgressBar.makeSkillBar();
+        ProgressBar barHP = makeHPBar();
+        ProgressBar barSP = makeSkillBar();
 
         barHP.setTranslateX(-20);
         barHP.setTranslateY(60);

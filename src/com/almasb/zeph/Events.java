@@ -5,6 +5,19 @@ import com.almasb.fxgl.entity.FXGLEventType;
 public final class Events {
 
     public enum Event implements FXGLEventType {
-        ATTACKING, BEING_ATTACKED, DEATH
+        /**
+         * Triggered when a unit attacks another.
+         */
+        ATTACKING,
+
+        /**
+         * Triggered when a unit is being attacked
+         */
+        BEING_ATTACKED,
+
+        /**
+         * Triggered when a unit dies
+         */
+        DEATH
     }
 }

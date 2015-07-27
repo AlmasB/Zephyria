@@ -1,7 +1,5 @@
 package com.almasb.zeph;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.almasb.fxgl.GameApplication;
@@ -115,30 +113,6 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void onUpdate() {
-        playerData.update();
-
-        for (Iterator<Entity> it = enemies.iterator(); it.hasNext(); ) {
-            Entity enemy = it.next();
-            Enemy enemyData = enemy.getProperty("data");
-            enemyData.update();
-
-            if (enemyData.getHP() <= 0) {
-                it.remove();
-                enemyData.onDeath(playerData);
-
-                List<DroppableItem> drops = enemyData.getDrops();
-                for (DroppableItem drop : drops) {
-                    if (GameMath.checkChance(drop.dropChance)) {
-                        GameEntity item = EntityManager.getItemByID(drop.itemID);
-                        dropItem(item, enemy.getPosition());
-                    }
-                }
-
-                removeEntity(enemy);
-                selected = null;
-            }
-        }
-
         if (selected != null) {
             startAttack(player, selected);
         }
@@ -183,7 +157,7 @@ public class ZephyriaApp extends GameApplication {
         player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
         player.setPosition(getWidth() / 2, getHeight() / 2);
 
-        playerData = player.getProperty("data");
+        playerData = player.getControl(Player.class);
 
         Group vbox = new Group();
 
@@ -271,8 +245,6 @@ public class ZephyriaApp extends GameApplication {
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
     }
 
-    private List<Entity> enemies = new ArrayList<>();
-
     private void initEnemies() {
         for (int i = 0; i < 10; i++) {
             Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
@@ -284,10 +256,25 @@ public class ZephyriaApp extends GameApplication {
             enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
                 startAttack(enemy, event.getSource());
             });
-            //enemy.addControl(new AgressiveControl(250, player));
+            enemy.addFXGLEventHandler(Event.DEATH, event -> {
+                Enemy enemyData = enemy.getControl(Enemy.class);
+
+                playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
+                playerData.rewardXP(enemyData.getXP());
+
+                List<DroppableItem> drops = enemyData.getDrops();
+                for (DroppableItem drop : drops) {
+                    if (GameMath.checkChance(drop.dropChance)) {
+                        GameEntity item = EntityManager.getItemByID(drop.itemID);
+                        dropItem(item, enemy.getPosition());
+                    }
+                }
+
+                removeEntity(enemy);
+                selected = null;
+            });
             enemy.addControl(new PassiveControl(250));
 
-            enemies.add(enemy);
             addEntities(enemy);
         }
     }
@@ -296,7 +283,7 @@ public class ZephyriaApp extends GameApplication {
         if (!attacker.isActive() || !target.isActive())
             return;
 
-        GameCharacter a = attacker.getProperty("data");
+        GameCharacter a = attacker.getControl(GameCharacter.class);
 
         if (!a.canAttack())
             return;
@@ -328,7 +315,7 @@ public class ZephyriaApp extends GameApplication {
 
                     target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
 
-                    Damage damage = a.attack(target.getProperty("data"));
+                    Damage damage = a.attack(target.getControl(GameCharacter.class));
                     showDamage(damage, target.getPosition());
                 }
             }

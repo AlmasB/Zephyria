@@ -512,7 +512,7 @@ public final class Player extends GameCharacter {
     @Override
     public final Entity toEntity() {
         Entity e = Entity.noType();
-        e.setProperty("data", this);
+        e.addControl(this);
         return e;
     }
 }

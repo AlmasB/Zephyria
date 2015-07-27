@@ -92,10 +92,10 @@ public class Enemy extends GameCharacter {
      *           The player who landed the killing blow
      * @return
      */
-    public void onDeath(Player p) {
-        p.rewardMoney(GameMath.random(getBaseLevel() * 100));
-        p.rewardXP(getXP());
-    }
+//    public void onDeath(Player p) {
+//        p.rewardMoney(GameMath.random(getBaseLevel() * 100));
+//        p.rewardXP(getXP());
+//    }
 
     @Override
     public Element getWeaponElement() {
@@ -127,7 +127,8 @@ public class Enemy extends GameCharacter {
         catch (Exception e1) {
             e1.printStackTrace();
         }
-        e.setProperty("data", new Enemy(this));
+        //e.setProperty("data", new Enemy(this));
+        e.addControl(this);
         return e;
     }
 

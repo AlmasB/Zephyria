@@ -6,6 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.almasb.fxgl.entity.Control;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.FXGLEvent;
+import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Damage.DamageCritical;
@@ -30,7 +34,7 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Almas Baimagambetov
  *
  */
-public abstract class GameCharacter extends GameEntity {
+public abstract class GameCharacter extends GameEntity implements Control {
     private static final long serialVersionUID = -4840633591092062960L;
 
     /**
@@ -640,6 +644,14 @@ public abstract class GameCharacter extends GameEntity {
         updateStatusEffects();
 
         updateStats();
+    }
+
+    @Override
+    public void onUpdate(Entity entity, long now) {
+        update();
+
+        if (getHP() <= 0)
+            entity.fireFXGLEvent(new FXGLEvent(Event.DEATH));
     }
 
     public abstract Element getWeaponElement();

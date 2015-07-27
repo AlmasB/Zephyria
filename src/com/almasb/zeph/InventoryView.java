@@ -14,6 +14,7 @@ import com.almasb.zeph.entity.item.Weapon;
 
 import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -123,6 +124,7 @@ public class InventoryView extends Accordion {
 
             // TODO: other usable types
         });
+        e.setCursor(Cursor.HAND);
 
         root.getChildren().add(e);
     }

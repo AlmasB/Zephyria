@@ -89,6 +89,8 @@ public abstract class GameEntity implements java.io.Serializable {
        return descriptionProperty;
    }
 
+   public abstract String getFullDescription();
+
     /**
      * File name of the texture in assets/textures/
      */

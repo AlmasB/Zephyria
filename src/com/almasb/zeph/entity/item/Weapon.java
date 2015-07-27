@@ -58,6 +58,15 @@ public class Weapon extends EquippableItem {
     }
 
     @Override
+    public String getFullDescription() {
+        StringBuilder sb = new StringBuilder(super.getDescription());
+        sb.append("\n\n");
+        sb.append("Damage: ").append(getDamage()).append("\n");
+        sb.append("Type: ").append(type);
+        return sb.toString();
+    }
+
+    @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
         e.setGraphics(R.assets.getTexture("items/weapons/" + getTextureName()));

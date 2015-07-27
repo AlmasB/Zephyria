@@ -11,30 +11,31 @@ import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.Player;
 
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public final class EquipmentView extends Accordion {
-
-    //private Group headGroup, bodyGroup, shoesGroup, leftHandGroup, rightHandGroup;
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
     private Player playerData;
 
-    // TODO: why cant we set tooltip font size?
     public EquipmentView(Player playerData, double height) {
         this.playerData = playerData;
 
-        groups.put(EquipPlace.HELM, createHeadGroup());
-        groups.put(EquipPlace.BODY, createBodyGroup());
-        groups.put(EquipPlace.SHOES, createShoesGroup());
-        groups.put(EquipPlace.LEFT_HAND, createLeftHandGroup());
-        groups.put(EquipPlace.RIGHT_HAND, createRightHandGroup());
+        groups.put(EquipPlace.HELM, createGroup(88, 60));
+        groups.put(EquipPlace.BODY, createGroup(88, 105));
+        groups.put(EquipPlace.SHOES, createGroup(88, 150));
+        groups.put(EquipPlace.LEFT_HAND, createGroup(133, 105));
+        groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
         for (EquipPlace place : EquipPlace.values()) {
             setItem(place, playerData.getEquip(place));
@@ -70,55 +71,21 @@ public final class EquipmentView extends Accordion {
         setTranslateY(height - 25);
     }
 
-    private Group createHeadGroup() {
+    private Group createGroup(int x, int y) {
         Group group = new Group();
-        group.setTranslateX(88);
-        group.setTranslateY(60);
+        group.setTranslateX(x);
+        group.setTranslateY(y);
         Tooltip tooltip = new Tooltip();
-        group.setUserData(tooltip);
-        Tooltip.install(group, tooltip);
-        return group;
-    }
 
-    private Group createBodyGroup() {
-        Group group = new Group();
-        group.setTranslateX(88);
-        group.setTranslateY(105);
+        Text text = new Text();
+        text.setFont(Font.font(20));
+        text.setFill(Color.WHITE);
+        text.setWrappingWidth(200);
 
-        Tooltip tooltip = new Tooltip();
-        group.setUserData(tooltip);
+        tooltip.setGraphic(text);
         Tooltip.install(group, tooltip);
 
-        return group;
-    }
-
-    private Group createShoesGroup() {
-        Group group = new Group();
-        group.setTranslateX(88);
-        group.setTranslateY(150);
-        Tooltip tooltip = new Tooltip();
-        group.setUserData(tooltip);
-        Tooltip.install(group, tooltip);
-        return group;
-    }
-
-    private Group createLeftHandGroup() {
-        Group group = new Group();
-        group.setTranslateX(133);
-        group.setTranslateY(105);
-        Tooltip tooltip = new Tooltip();
-        group.setUserData(tooltip);
-        Tooltip.install(group, tooltip);
-        return group;
-    }
-
-    private Group createRightHandGroup() {
-        Group group = new Group();
-        group.setTranslateX(43);
-        group.setTranslateY(105);
-        Tooltip tooltip = new Tooltip();
-        group.setUserData(tooltip);
-        Tooltip.install(group, tooltip);
+        group.setUserData(text);
         return group;
     }
 
@@ -128,8 +95,9 @@ public final class EquipmentView extends Accordion {
 
         Entity e = item.toEntity();
         e.setOnMouseClicked(event -> playerData.unEquipItem(place));
+        e.setCursor(Cursor.HAND);
 
         group.getChildren().add(e);
-        ((Tooltip)group.getUserData()).setText(item.getDescription());
+        ((Text)group.getUserData()).setText(item.getFullDescription());
     }
 }

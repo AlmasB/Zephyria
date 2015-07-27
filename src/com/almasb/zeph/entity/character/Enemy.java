@@ -109,6 +109,11 @@ public class Enemy extends GameCharacter {
     }
 
     @Override
+    public String getFullDescription() {
+        return "TODO:";
+    }
+
+    @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
 

@@ -28,6 +28,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -293,6 +294,7 @@ public class ZephyriaApp extends GameApplication {
                 selected = null;
             });
             enemy.addControl(new PassiveControl(250));
+            enemy.setCursor(Cursor.CROSSHAIR);
 
             addEntities(enemy);
         }
@@ -350,6 +352,8 @@ public class ZephyriaApp extends GameApplication {
             removeEntity(e);
             playerData.getInventory().addItem(item);
         });
+
+        e.setCursor(Cursor.CLOSED_HAND);
 
         addEntities(e);
 

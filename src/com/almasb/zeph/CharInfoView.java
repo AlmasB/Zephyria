@@ -6,6 +6,7 @@ import com.almasb.zeph.entity.character.Player;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Orientation;
+import javafx.scene.Cursor;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
@@ -30,6 +31,7 @@ public class CharInfoView extends Accordion {
                     .concat(" + ").concat(playerData.bAttributeProperty(attr)));
 
             Text btn = new Text("+");
+            btn.setCursor(Cursor.HAND);
             btn.setStroke(Color.BLUE);
             btn.setStrokeWidth(3);
             btn.setFont(font);

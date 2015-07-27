@@ -55,6 +55,16 @@ public class Armor extends EquippableItem {
     }
 
     @Override
+    public String getFullDescription() {
+        StringBuilder sb = new StringBuilder(getDescription());
+        sb.append("\n\n");
+        sb.append("Element: ").append(element).append("\n");
+        sb.append("Armor: ").append(armor).append("\n");
+        sb.append("MArmor: ").append(marmor);
+        return sb.toString();
+    }
+
+    @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
         e.setGraphics(R.assets.getTexture("items/armor/" + getTextureName()));

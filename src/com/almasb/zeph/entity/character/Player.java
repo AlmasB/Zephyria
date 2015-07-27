@@ -510,6 +510,11 @@ public final class Player extends GameCharacter {
     }
 
     @Override
+    public String getFullDescription() {
+        return "TODO:";
+    }
+
+    @Override
     public final Entity toEntity() {
         Entity e = Entity.noType();
         e.addControl(this);

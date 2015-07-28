@@ -18,7 +18,11 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class InventoryView extends Accordion {
@@ -125,6 +129,17 @@ public class InventoryView extends Accordion {
             // TODO: other usable types
         });
         e.setCursor(Cursor.HAND);
+
+        Tooltip tooltip = new Tooltip();
+
+        Text text = new Text();
+        text.setFont(Font.font(20));
+        text.setFill(Color.WHITE);
+        text.setWrappingWidth(200);
+        text.setText(item.getFullDescription());
+
+        tooltip.setGraphic(text);
+        Tooltip.install(e, tooltip);
 
         root.getChildren().add(e);
     }

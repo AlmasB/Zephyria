@@ -8,7 +8,29 @@ package com.almasb.zeph.combat;
  *
  */
 public enum Attribute {
-    STRENGTH, VITALITY, DEXTERITY, AGILITY, INTELLECT, WISDOM, WILLPOWER, PERCEPTION, LUCK;
+    STRENGTH("Increases damage dealt by physical attacks. High STR also means high endurance."),
+    VITALITY("Affects how much damage you can withstand, HP pool and regeneration."),
+    DEXTERITY("Makes you more versatile in dealing damage and handling weapons."),
+    AGILITY("Allows you to attack faster with all weapons."),
+    INTELLECT("Increases magic damage and defense. Provides greater SP pool."),
+    WISDOM("Significantly increases SP pool and regeneration. Also increases magic damage."),
+    WILLPOWER("Allows you to withstand more magic damage and find weak spots when using skills."),
+    PERCEPTION("Helps you thrive in battle and score critical hits more often with attacks and skills."),
+    LUCK("Directly affects the ability to score critical hits and deal more critical damage.");
+
+    private final String description;
+
+    private Attribute(String description) {
+        this.description = description;
+    }
+
+    /**
+     *
+     * @return attribute description
+     */
+    public String getDescription() {
+        return description;
+    }
 
     @Override
     public String toString() {

@@ -13,6 +13,7 @@ import com.almasb.zeph.entity.character.Enemy;
 import com.almasb.zeph.entity.character.Enemy.EnemyBuilder;
 import com.almasb.zeph.entity.item.Armor;
 import com.almasb.zeph.entity.item.DroppableItem;
+import com.almasb.zeph.entity.item.EquippableItem.ItemLevel;
 import com.almasb.zeph.entity.item.Weapon;
 import com.almasb.zeph.entity.item.Armor.ArmorBuilder;
 import com.almasb.zeph.entity.item.Armor.ArmorType;
@@ -103,6 +104,17 @@ public class EntityManager {
                     .type(WeaponType.DAGGER);
         addWeapon(weaponBuilder);
 
+        weaponBuilder = new WeaponBuilder();
+        weaponBuilder.id(ID.Weapon.GUT_RIPPER)
+                    .name("The Gut Ripper")
+                    .description(Desc.Weapon.GUT_RIPPER)
+                    .textureName("gut_ripper.png")
+                    .damage(100)
+                    .type(WeaponType.DAGGER)
+                    .itemLevel(ItemLevel.EPIC)
+                    .runes(new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1));
+        addWeapon(weaponBuilder);
+
 
 //        addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
 
@@ -129,10 +141,6 @@ public class EntityManager {
 //                "Sam Bowen", ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170, Element.NEUTRAL, 4,
 //                new Rune(Attribute.STRENGTH, 7), new Rune(Attribute.VITALITY, 4), new Rune(Attribute.DEXTERITY, 2)));
 //
-//        addWeapon(new Weapon(ID.Weapon.GUT_RIPPER,
-//                "The Gut Ripper", Desc.Weapon.GUT_RIPPER, 2, 6,
-//                "Tim Snow", ItemLevel.EPIC, WeaponType.DAGGER, 100, Element.NEUTRAL, 4,
-//                new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1)));
 //
 //        addWeapon(new Weapon(ID.Weapon.DRAGON_CLAW,
 //                "Dragon's Claw", Desc.Weapon.DRAGON_CLAW, 12, 11,

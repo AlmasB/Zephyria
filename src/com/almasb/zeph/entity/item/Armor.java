@@ -56,11 +56,18 @@ public class Armor extends EquippableItem {
 
     @Override
     public String getFullDescription() {
-        StringBuilder sb = new StringBuilder(getDescription());
+        StringBuilder sb = new StringBuilder(getName());
+        sb.append("\n").append(getDescription());
         sb.append("\n\n");
         sb.append("Element: ").append(element).append("\n");
-        sb.append("Armor: ").append(armor).append("\n");
-        sb.append("MArmor: ").append(marmor);
+        sb.append("Armor: ").append(getArmorRating()).append("\n");
+        sb.append("MArmor: ").append(getMArmorRating()).append("\n");
+        for (Rune rune : defaultRunes) {
+            sb.append(rune).append("\n");
+        }
+        for (Rune rune : runes) {
+            sb.append(rune).append("\n");
+        }
         return sb.toString();
     }
 

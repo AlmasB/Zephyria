@@ -30,15 +30,16 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 
@@ -98,6 +99,8 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
+        getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
+
         Texture hotbar = assets.getTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
         hotbar.setTranslateY(getHeight() - hotbar.getLayoutBounds().getHeight());
@@ -263,6 +266,7 @@ public class ZephyriaApp extends GameApplication {
 
 
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
+        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.GUT_RIPPER));
     }
 
     private void initEnemies() {
@@ -313,16 +317,16 @@ public class ZephyriaApp extends GameApplication {
 
         // TODO: this should be specific to each char type
         Entity proj = Entity.noType();
-        Circle graphics = new Circle(10);
-        graphics.setFill(Color.GRAY);
 
-        proj.setGraphics(graphics);
+        proj.setGraphics(R.assets.getTexture("projectile.png"));
         proj.setPosition(attacker.getPosition());
         proj.addControl(new Control() {
             private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
 
             @Override
             public void onUpdate(Entity entity, long now) {
+                entity.getTransforms().clear();
+                entity.getTransforms().add(new Rotate(Math.toDegrees(Math.atan2(vector.getY(), vector.getX()))));
                 entity.translate(vector);
 
                 if (entity.getPosition().distance(attacker.getPosition()) >= 600)

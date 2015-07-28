@@ -8,14 +8,14 @@ package com.almasb.zeph.combat;
  *
  */
 public enum Attribute {
-    STRENGTH("Increases damage dealt by physical attacks. High STR also means high endurance."),
-    VITALITY("Affects how much damage you can withstand, HP pool and regeneration."),
-    DEXTERITY("Makes you more versatile in dealing damage and handling weapons."),
-    AGILITY("Allows you to attack faster with all weapons."),
-    INTELLECT("Increases magic damage and defense. Provides greater SP pool."),
-    WISDOM("Significantly increases SP pool and regeneration. Also increases magic damage."),
-    WILLPOWER("Allows you to withstand more magic damage and find weak spots when using skills."),
-    PERCEPTION("Helps you thrive in battle and score critical hits more often with attacks and skills."),
+    STRENGTH("Increases damage dealt by physical attacks. Also slightly increases HP and regeneration."),
+    VITALITY("Reduces damage you take, increases maximum HP and regeneration."),
+    DEXTERITY("Increases attack speed and slightly improves all other combat stats."),
+    AGILITY("Allows you to attack a lot faster with all weapons."),
+    INTELLECT("Greatly increases magic damage and defense. Also provides greater SP pool."),
+    WISDOM("Significantly increases SP pool and regeneration. Slightly increases magic damage."),
+    WILLPOWER("Allows you to withstand more magic damage and score critical hits with skills."),
+    PERCEPTION("Slightly improves all stats, including chance of critical hits with attacks and skills."),
     LUCK("Directly affects the ability to score critical hits and deal more critical damage.");
 
     private final String description;

@@ -267,6 +267,10 @@ public class ZephyriaApp extends GameApplication {
 
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.GUT_RIPPER));
+        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.DOMOVOI));
+        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
+        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SOUL_BARRIER));
+        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
     }
 
     private void initEnemies() {

@@ -30,9 +30,7 @@ public class EntityManager {
 
     private EntityManager() {}
 
-    public static void load() {
-        // ARMOR
-
+    private static void loadArmor() {
         ArmorBuilder armorBuilder = new ArmorBuilder();
         armorBuilder.id(ID.Armor.CLOTHES)
                     .name("Clothes")
@@ -68,24 +66,57 @@ public class EntityManager {
                     .runes(new Rune(Attribute.STRENGTH, 2));
         addArmor(armorBuilder);
 
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.THANATOS_BODY_ARMOR)
+                    .name("Thanatos Body Armor")
+                    .description(Desc.Armor.THANATOS_BODY_ARMOR)
+                    .textureName("thanatos_body_armor.png")
+                    .type(ArmorType.BODY)
+                    .armor(50)
+                    .marmor(25)
+                    .itemLevel(ItemLevel.EPIC)
+                    .element(Element.EARTH)
+                    .runes(new Rune(Attribute.VITALITY, 5), new Rune(Attribute.PERCEPTION, 4));
+        addArmor(armorBuilder);
 
-//        addArmor(new Armor(ID.Armor.CHAINMAL, "Chainmail", Desc.Armor.CHAINMAL, 4, 13, ArmorType.BODY, 15, 5));
-//
-//        addArmor(new Armor(ID.Armor.SOUL_BARRIER, "Soul Barrier", Desc.Armor.SOUL_BARRIER, 3, 13,
-//                "Stefos", ItemLevel.UNIQUE, ArmorType.BODY, 10, 50, Element.NEUTRAL, 3, new Rune(Attribute.WILLPOWER, 3)));
-//
-//        addArmor(new Armor(ID.Armor.DOMOVOI, "Domovoi", Desc.Armor.DOMOVOI, 2, 13,
-//                "Joe", ItemLevel.UNIQUE, ArmorType.BODY, 15, 30, Element.NEUTRAL, 4, new Rune(Attribute.WILLPOWER, 3)));
-//
-//        addArmor(new Armor(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL, "Sapphire Legion Plate Mail", Desc.Armor.SAPPHIRE_LEGION_PLATE_MAIL, 5, 13,
-//                "Oliver", ItemLevel.UNIQUE, ArmorType.BODY, 30, 10, Element.NEUTRAL, 4, new Rune(Attribute.VITALITY, 4)));
-//
-//        addArmor(new Armor(ID.Armor.THANATOS_BODY_ARMOR, "Thanatos Body Armor", Desc.Armor.THANATOS_BODY_ARMOR, 6, 13,
-//                "Almas", ItemLevel.EPIC, ArmorType.BODY, 50, 25, Element.EARTH, 4, new Rune(Attribute.VITALITY, 5), new Rune(Attribute.PERCEPTION, 4)));
-//
-//        // WEAPON
-//
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL)
+                    .name("Sapphire Legion Plate Mail")
+                    .description(Desc.Armor.SAPPHIRE_LEGION_PLATE_MAIL)
+                    .textureName("sapphire_legion_plate.png")
+                    .type(ArmorType.BODY)
+                    .armor(30)
+                    .marmor(10)
+                    .itemLevel(ItemLevel.UNIQUE)
+                    .runes(new Rune(Attribute.VITALITY, 4));
+        addArmor(armorBuilder);
 
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.DOMOVOI)
+                    .name("Domovoi")
+                    .description(Desc.Armor.DOMOVOI)
+                    .textureName("domovoi.png")
+                    .type(ArmorType.BODY)
+                    .armor(15)
+                    .marmor(35)
+                    .itemLevel(ItemLevel.UNIQUE)
+                    .runes(new Rune(Attribute.WILLPOWER, 3));
+        addArmor(armorBuilder);
+
+        armorBuilder = new ArmorBuilder();
+        armorBuilder.id(ID.Armor.SOUL_BARRIER)
+                    .name("Soul Barrier")
+                    .description(Desc.Armor.SOUL_BARRIER)
+                    .textureName("soul_barrier.png")
+                    .type(ArmorType.BODY)
+                    .armor(10)
+                    .marmor(50)
+                    .itemLevel(ItemLevel.UNIQUE)
+                    .runes(new Rune(Attribute.WILLPOWER, 3));
+        addArmor(armorBuilder);
+    }
+
+    private static void loadWeapons() {
         WeaponBuilder weaponBuilder = new WeaponBuilder();
         weaponBuilder.id(ID.Weapon.HANDS)
                     .name("Hands")
@@ -115,42 +146,44 @@ public class EntityManager {
                     .runes(new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1));
         addWeapon(weaponBuilder);
 
+//      addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
+//      addWeapon(new Weapon(ID.Weapon.CLAYMORE, "Claymore", Desc.Weapon.CLAYMORE, 10, 5, WeaponType.TWO_H_SWORD, 35));
+//      addWeapon(new Weapon(ID.Weapon.BROADSWORD, "Broadsword", Desc.Weapon.BROADSWORD, 11, 5, WeaponType.TWO_H_SWORD, 28));
+//
+//      addWeapon(new Weapon(ID.Weapon.BATTLESWORD,
+//              "Battlesword", Desc.Weapon.BATTLESWORD, 12, 5,
+//              "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 44, Element.NEUTRAL, 2,
+//              new Rune(Attribute.STRENGTH, 2)));
+//
+//      addWeapon(new Weapon(ID.Weapon.LONGSWORD,
+//              "Longsword", Desc.Weapon.LONGSWORD, 9, 5,
+//              "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 33, Element.NEUTRAL, 2,
+//              new Rune(Attribute.DEXTERITY, 2), new Rune(Attribute.AGILITY, 1)));
+//
+//      addWeapon(new Weapon(ID.Weapon.GETSUGA_TENSHO,
+//              "Getsuga Tensho", Desc.Weapon.GETSUGA_TENSHO, 4, 6,
+//              "Matthew", ItemLevel.EPIC, WeaponType.ONE_H_SWORD, 150, Element.NEUTRAL, 4,
+//              new Rune(Attribute.STRENGTH, 5), new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1)));
+//
+//      addWeapon(new Weapon(ID.Weapon.SOUL_REAPER,
+//              "Soul Reaper", Desc.Weapon.SOUL_REAPER, 10, 10,
+//              "Sam Bowen", ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170, Element.NEUTRAL, 4,
+//              new Rune(Attribute.STRENGTH, 7), new Rune(Attribute.VITALITY, 4), new Rune(Attribute.DEXTERITY, 2)));
+//
+//
+//      addWeapon(new Weapon(ID.Weapon.DRAGON_CLAW,
+//              "Dragon's Claw", Desc.Weapon.DRAGON_CLAW, 12, 11,
+//              "Atheryos", ItemLevel.EPIC, WeaponType.BOW, 130, Element.FIRE, 4,
+//              new Rune(Attribute.VITALITY, 3), new Rune(Attribute.WISDOM, 5), new Rune(Attribute.AGILITY, 3)));
+//
+//      addWeapon(new Weapon(ID.Weapon.FROSTMOURN, "Frostmourn", Desc.Weapon.FROSTMOURN, 8, 25,
+//              "Stefos", ItemLevel.EPIC, WeaponType.TWO_H_SWORD, 130, Element.WATER, 4,
+//              new Rune(Attribute.DEXTERITY, 5), new Rune(Attribute.STRENGTH, 3)));
+    }
 
-//        addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
-
-//        addWeapon(new Weapon(ID.Weapon.CLAYMORE, "Claymore", Desc.Weapon.CLAYMORE, 10, 5, WeaponType.TWO_H_SWORD, 35));
-//        addWeapon(new Weapon(ID.Weapon.BROADSWORD, "Broadsword", Desc.Weapon.BROADSWORD, 11, 5, WeaponType.TWO_H_SWORD, 28));
-//
-//        addWeapon(new Weapon(ID.Weapon.BATTLESWORD,
-//                "Battlesword", Desc.Weapon.BATTLESWORD, 12, 5,
-//                "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 44, Element.NEUTRAL, 2,
-//                new Rune(Attribute.STRENGTH, 2)));
-//
-//        addWeapon(new Weapon(ID.Weapon.LONGSWORD,
-//                "Longsword", Desc.Weapon.LONGSWORD, 9, 5,
-//                "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 33, Element.NEUTRAL, 2,
-//                new Rune(Attribute.DEXTERITY, 2), new Rune(Attribute.AGILITY, 1)));
-//
-//        addWeapon(new Weapon(ID.Weapon.GETSUGA_TENSHO,
-//                "Getsuga Tensho", Desc.Weapon.GETSUGA_TENSHO, 4, 6,
-//                "Matthew", ItemLevel.EPIC, WeaponType.ONE_H_SWORD, 150, Element.NEUTRAL, 4,
-//                new Rune(Attribute.STRENGTH, 5), new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1)));
-//
-//        addWeapon(new Weapon(ID.Weapon.SOUL_REAPER,
-//                "Soul Reaper", Desc.Weapon.SOUL_REAPER, 10, 10,
-//                "Sam Bowen", ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170, Element.NEUTRAL, 4,
-//                new Rune(Attribute.STRENGTH, 7), new Rune(Attribute.VITALITY, 4), new Rune(Attribute.DEXTERITY, 2)));
-//
-//
-//        addWeapon(new Weapon(ID.Weapon.DRAGON_CLAW,
-//                "Dragon's Claw", Desc.Weapon.DRAGON_CLAW, 12, 11,
-//                "Atheryos", ItemLevel.EPIC, WeaponType.BOW, 130, Element.FIRE, 4,
-//                new Rune(Attribute.VITALITY, 3), new Rune(Attribute.WISDOM, 5), new Rune(Attribute.AGILITY, 3)));
-//
-//        addWeapon(new Weapon(ID.Weapon.FROSTMOURN, "Frostmourn", Desc.Weapon.FROSTMOURN, 8, 25,
-//                "Stefos", ItemLevel.EPIC, WeaponType.TWO_H_SWORD, 130, Element.WATER, 4,
-//                new Rune(Attribute.DEXTERITY, 5), new Rune(Attribute.STRENGTH, 3)));
-//
+    public static void load() {
+        loadArmor();
+        loadWeapons();
 //        // SKILLS
 //
 //        addSkill(new Skill(ID.Skill.Gladiator.BLOODLUST, "Bloodlust", Desc.Skill.Gladiator.BLOODLUST, false, 0.0f) {

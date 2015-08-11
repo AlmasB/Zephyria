@@ -9,6 +9,7 @@ import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.FXGLEvent;
+import com.almasb.fxgl.time.TimerManager;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Damage;
@@ -89,7 +90,7 @@ public class ZephyriaApp extends GameApplication {
         initInput();
         initEnemies();
 
-        bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
+        sceneManager.bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
     }
 
     @Override
@@ -99,7 +100,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
-        getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
+        //sceneManager.getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
 
         Texture hotbar = assets.getTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
@@ -109,7 +110,7 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        addUINodes(hotbar,
+        sceneManager.addUINodes(hotbar,
                 new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
                 new EquipmentView(playerData, getHeight()),
                 new InventoryView(playerData, getWidth(), getHeight()),
@@ -252,17 +253,17 @@ public class ZephyriaApp extends GameApplication {
 
 
 
-        addEntities(bg0, bg1, bg);
+        sceneManager.addEntities(bg0, bg1, bg);
 
         for (int i = 0; i < 20; i++) {
             Entity tree = Entity.noType();
             tree.setPosition(random.nextInt(1500), random.nextInt(1000));
             tree.setGraphics(assets.getTexture("tree.png"));
 
-            addEntities(tree);
+            sceneManager.addEntities(tree);
         }
 
-        addEntities(player);
+        sceneManager.addEntities(player);
 
 
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
@@ -298,13 +299,13 @@ public class ZephyriaApp extends GameApplication {
                     }
                 }
 
-                removeEntity(enemy);
+                sceneManager.removeEntity(enemy);
                 selected = null;
             });
             enemy.addControl(new PassiveControl(250));
             enemy.setCursor(Cursor.CROSSHAIR);
 
-            addEntities(enemy);
+            sceneManager.addEntities(enemy);
         }
     }
 
@@ -334,13 +335,13 @@ public class ZephyriaApp extends GameApplication {
                 entity.translate(vector);
 
                 if (entity.getPosition().distance(attacker.getPosition()) >= 600)
-                    removeEntity(proj);
+                    sceneManager.removeEntity(proj);
 
                 if (!target.isActive())
-                    removeEntity(proj);
+                    sceneManager.removeEntity(proj);
 
                 if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
-                    removeEntity(proj);
+                    sceneManager.removeEntity(proj);
 
                     target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
 
@@ -350,20 +351,20 @@ public class ZephyriaApp extends GameApplication {
             }
         });
 
-        addEntities(proj);
+        sceneManager.addEntities(proj);
     }
 
     private void dropItem(GameEntity item, Point2D position) {
         Entity e = item.toEntity();
         e.setPosition(position);
         e.setOnMouseClicked(event -> {
-            removeEntity(e);
+            sceneManager.removeEntity(e);
             playerData.getInventory().addItem(item);
         });
 
         e.setCursor(Cursor.CLOSED_HAND);
 
-        addEntities(e);
+        sceneManager.addEntities(e);
 
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e);
         tt.setInterpolator(Interpolator.EASE_IN);
@@ -374,14 +375,14 @@ public class ZephyriaApp extends GameApplication {
 
     private void showDamage(Damage damage, Point2D position) {
         Entity e = Entity.noType();
-        e.setExpireTime(SECOND);
+        e.setExpireTime(TimerManager.SECOND);
         Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
         text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
         text.setFont(Font.font(damage.isCritical() ? 18 : 16));
 
         e.setGraphics(text);
         e.setPosition(position);
-        addEntities(e);
+        sceneManager.addEntities(e);
 
         TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
         tt.setByY(-30);

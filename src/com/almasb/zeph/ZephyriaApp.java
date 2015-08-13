@@ -9,6 +9,8 @@ import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.FXGLEvent;
+import com.almasb.fxgl.event.InputManager.Mouse;
+import com.almasb.fxgl.event.UserAction;
 import com.almasb.fxgl.time.TimerManager;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.Events.Event;
@@ -31,10 +33,10 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
-import javafx.scene.ImageCursor;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -51,6 +53,7 @@ public class ZephyriaApp extends GameApplication {
     private Entity player;
     private Player playerData;
     private Entity selected = null;
+    private Point2D selectedPoint = null;
 
     private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
@@ -122,41 +125,31 @@ public class ZephyriaApp extends GameApplication {
         if (selected != null) {
             startAttack(player, selected);
         }
+
+        if (selectedPoint != null) {
+            player.translate(selectedPoint.subtract(player.getPosition()).normalize().multiply(5));
+            if (selectedPoint.distance(player.getPosition()) < 5)
+                selectedPoint = null;
+        }
     }
+
+    private Mouse mouse = inputManager.getMouse();
 
     @Override
     protected void initInput() {
-        inputManager.addKeyPressBinding(KeyCode.W, () -> {
-            if (player.getTranslateY() <= 0)
-                return;
+        inputManager.addAction(new UserAction("Exit") {
+            @Override
+            protected void onActionBegin() {
+                exit();
+            }
+        }, KeyCode.L);
 
-            player.translate(0, -5);
-        });
-
-        inputManager.addKeyPressBinding(KeyCode.S, () -> {
-            if (player.getTranslateY() >= getHeight())
-                return;
-
-            player.translate(0, 5);
-        });
-
-        inputManager.addKeyPressBinding(KeyCode.A, () -> {
-            if (player.getTranslateX() <= 0)
-                return;
-
-            player.translate(-5, 0);
-        });
-
-        inputManager.addKeyPressBinding(KeyCode.D, () -> {
-            if (player.getTranslateX() >= getWidth())
-                return;
-
-            player.translate(5, 0);
-        });
-
-        inputManager.addKeyTypedBinding(KeyCode.L, () -> {
-            exit();
-        });
+        inputManager.addAction(new UserAction("TargetSelection") {
+            @Override
+            protected void onAction() {
+                selectedPoint = new Point2D(mouse.x, mouse.y);
+            }
+        }, MouseButton.PRIMARY);
     }
 
     public static ProgressBar makeHPBar() {

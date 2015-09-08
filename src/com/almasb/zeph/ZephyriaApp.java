@@ -103,6 +103,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
+        sceneManager.setCursor("main.png", new Point2D(52, 10));
         //sceneManager.getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
 
         Texture hotbar = assets.getTexture("ui/hotbar.png");

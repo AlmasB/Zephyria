@@ -94,10 +94,10 @@ public final class EquipmentView extends Accordion {
         group.getChildren().clear();
 
         Entity e = item.toEntity();
-        e.setOnMouseClicked(event -> playerData.unEquipItem(place));
-        e.setCursor(Cursor.HAND);
-
-        group.getChildren().add(e);
+//        e.setOnMouseClicked(event -> playerData.unEquipItem(place));
+//        e.setCursor(Cursor.HAND);
+//
+//        group.getChildren().add(e);
         ((Text)group.getUserData()).setText(item.getFullDescription());
     }
 }

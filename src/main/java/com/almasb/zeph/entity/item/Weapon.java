@@ -76,8 +76,8 @@ public class Weapon extends EquippableItem {
     @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
-        e.setGraphics(R.assets.getTexture("items/weapons/" + getTextureName()));
-        e.setProperty("data", this);
+        e.setSceneView(R.assets.getTexture("items/weapons/" + getTextureName()));
+        e.addComponent(new WeaponComponent(this));
         return e;
     }
 

@@ -1,18 +1,21 @@
 package com.almasb.zeph;
 
 import java.util.List;
+import java.util.Random;
 
 import com.almasb.fxgl.GameApplication;
-import com.almasb.fxgl.GameSettings;
 import com.almasb.fxgl.asset.Assets;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Control;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.FXGLEvent;
+import com.almasb.fxgl.event.InputManager;
 import com.almasb.fxgl.event.InputManager.Mouse;
 import com.almasb.fxgl.event.UserAction;
+import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.time.TimerManager;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.fxgl.util.ApplicationMode;
 import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
@@ -61,7 +64,7 @@ public class ZephyriaApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
         Rectangle2D bounds = Screen.getPrimary().getBounds();
 
-        boolean full = true;
+        boolean full = false;
         if (full) {
             settings.setWidth((int)bounds.getWidth());
             settings.setHeight((int)bounds.getHeight());
@@ -75,11 +78,26 @@ public class ZephyriaApp extends GameApplication {
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
         settings.setFullScreen(full);
+        settings.setApplicationMode(ApplicationMode.DEBUG);
+    }
+
+    @Override
+    protected void initInput() {
+        InputManager input = getInputManager();
+
+        mouse = input.getMouse();
+
+        input.addAction(new UserAction("TargetSelection") {
+            @Override
+            protected void onAction() {
+                selectedPoint = new Point2D(mouse.getGameX(), mouse.getGameY());
+            }
+        }, MouseButton.PRIMARY);
     }
 
     @Override
     protected void initAssets() throws Exception {
-        assets = assetManager.cache();
+        assets = getAssetManager().cache();
         R.assets = assets;
     }
 
@@ -90,10 +108,9 @@ public class ZephyriaApp extends GameApplication {
         selectedEffect.setInput(new Glow(0.8));
 
         initPlayer();
-        initInput();
         initEnemies();
 
-        sceneManager.bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
+        getGameScene().bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
     }
 
     @Override
@@ -103,7 +120,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
-        sceneManager.setCursor("main.png", new Point2D(52, 10));
+        getGameScene().setCursor("main.png", new Point2D(52, 10));
         //sceneManager.getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
 
         Texture hotbar = assets.getTexture("ui/hotbar.png");
@@ -114,7 +131,7 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        sceneManager.addUINodes(hotbar,
+        getGameScene().addUINodes(hotbar,
                 new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
                 new EquipmentView(playerData, getHeight()),
                 new InventoryView(playerData, getWidth(), getHeight()),
@@ -134,24 +151,7 @@ public class ZephyriaApp extends GameApplication {
         }
     }
 
-    private Mouse mouse = inputManager.getMouse();
-
-    @Override
-    protected void initInput() {
-        inputManager.addAction(new UserAction("Exit") {
-            @Override
-            protected void onActionBegin() {
-                exit();
-            }
-        }, KeyCode.L);
-
-        inputManager.addAction(new UserAction("TargetSelection") {
-            @Override
-            protected void onAction() {
-                selectedPoint = new Point2D(mouse.x, mouse.y);
-            }
-        }, MouseButton.PRIMARY);
-    }
+    private Mouse mouse;
 
     public static ProgressBar makeHPBar() {
         ProgressBar bar = new ProgressBar(false);
@@ -175,7 +175,7 @@ public class ZephyriaApp extends GameApplication {
         player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
         player.setPosition(getWidth() / 2, getHeight() / 2);
 
-        playerData = player.getControl(Player.class);
+        playerData = player.getControl(Player.class).get();
 
         Group vbox = new Group();
 
@@ -215,49 +215,49 @@ public class ZephyriaApp extends GameApplication {
 
         vbox.getChildren().addAll(t, text, barHP, barSP);
 
-        player.setGraphics(vbox);
+        player.setSceneView(vbox);
 
         Entity bg = Entity.noType();
-        bg.setOnMouseClicked(event -> {
-            if (selected != null) {
-                selected.setEffect(null);
-                selected = null;
-            }
-        });
+//        bg.setOnMouseClicked(event -> {
+//            if (selected != null) {
+//                selected.setEffect(null);
+//                selected = null;
+//            }
+//        });
 
         Texture back = assets.getTexture("map1.png");
         //back.setFitWidth(getWidth());
         //back.setFitHeight(getHeight());
 
-        bg.setGraphics(back);
+        bg.setSceneView(back);
         //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
         //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
 
 
         Entity bg0 = Entity.noType();
-        bg0.setGraphics(assets.getTexture("background.png"));
-        bg0.setTranslateX(-getWidth());
+        bg0.setSceneView(assets.getTexture("background.png"));
+        bg0.setX(-getWidth());
 
         Entity bg1 = Entity.noType();
-        bg1.setGraphics(assets.getTexture("background.png"));
-        bg1.setTranslateY(-getHeight());
+        bg1.setSceneView(assets.getTexture("background.png"));
+        bg1.setY(-getHeight());
 
 
 
 
 
 
-        sceneManager.addEntities(bg0, bg1, bg);
+        getGameWorld().addEntities(bg0, bg1, bg);
 
         for (int i = 0; i < 20; i++) {
             Entity tree = Entity.noType();
-            tree.setPosition(random.nextInt(1500), random.nextInt(1000));
-            tree.setGraphics(assets.getTexture("tree.png"));
+            tree.setPosition(new Random().nextInt(1500), new Random().nextInt(1000));
+            tree.setSceneView(assets.getTexture("tree.png"));
 
-            sceneManager.addEntities(tree);
+            getGameWorld().addEntities(tree);
         }
 
-        sceneManager.addEntities(player);
+        getGameWorld().addEntities(player);
 
 
         playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
@@ -271,16 +271,16 @@ public class ZephyriaApp extends GameApplication {
     private void initEnemies() {
         for (int i = 0; i < 10; i++) {
             Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
-            enemy.setPosition(random.nextInt(1000), random.nextInt(600));
-            enemy.setOnMouseClicked(e -> {
-                selected = enemy;
-                selected.setEffect(selectedEffect);
-            });
+            enemy.setPosition(new Random().nextInt(1000), new Random().nextInt(600));
+//            enemy.getSceneView().ifPresent().setOnMouseClicked(e -> {
+//                selected = enemy;
+//                selected.setEffect(selectedEffect);
+//            });
             enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
                 startAttack(enemy, event.getSource());
             });
             enemy.addFXGLEventHandler(Event.DEATH, event -> {
-                Enemy enemyData = enemy.getControl(Enemy.class);
+                Enemy enemyData = enemy.getControl(Enemy.class).get();
 
                 playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
                 playerData.rewardXP(enemyData.getXP());
@@ -293,13 +293,13 @@ public class ZephyriaApp extends GameApplication {
                     }
                 }
 
-                sceneManager.removeEntity(enemy);
+                getGameWorld().removeEntity(enemy);
                 selected = null;
             });
             enemy.addControl(new PassiveControl(250));
-            enemy.setCursor(Cursor.CROSSHAIR);
+            enemy.getSceneView().get().setCursor(Cursor.CROSSHAIR);
 
-            sceneManager.addEntities(enemy);
+            getGameWorld().addEntities(enemy);
         }
     }
 
@@ -307,7 +307,7 @@ public class ZephyriaApp extends GameApplication {
         if (!attacker.isActive() || !target.isActive())
             return;
 
-        GameCharacter a = attacker.getControl(GameCharacter.class);
+        GameCharacter a = attacker.getControl(GameCharacter.class).get();
 
         if (!a.canAttack())
             return;
@@ -317,68 +317,69 @@ public class ZephyriaApp extends GameApplication {
         // TODO: this should be specific to each char type
         Entity proj = Entity.noType();
 
-        proj.setGraphics(R.assets.getTexture("projectile.png"));
+        proj.setSceneView(R.assets.getTexture("projectile.png"));
         proj.setPosition(attacker.getPosition());
-        proj.addControl(new Control() {
-            private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
+        //proj.addControl(new ProjectileControl());
 
-            @Override
-            public void onUpdate(Entity entity, long now) {
-                entity.getTransforms().clear();
-                entity.getTransforms().add(new Rotate(Math.toDegrees(Math.atan2(vector.getY(), vector.getX()))));
-                entity.translate(vector);
-
-                if (entity.getPosition().distance(attacker.getPosition()) >= 600)
-                    sceneManager.removeEntity(proj);
-
-                if (!target.isActive())
-                    sceneManager.removeEntity(proj);
-
-                if (entity.getBoundsInParent().intersects(target.getBoundsInParent())) {
-                    sceneManager.removeEntity(proj);
-
-                    target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
-
-                    Damage damage = a.attack(target.getControl(GameCharacter.class));
-                    showDamage(damage, target.getPosition());
-                }
-            }
-        });
-
-        sceneManager.addEntities(proj);
+        getGameWorld().addEntities(proj);
     }
+
+//    private class ProjectileControl implements Control {
+//        private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
+//
+//        @Override
+//        public void onUpdate(Entity entity) {
+//            entity.setRotation(Math.toDegrees(Math.atan2(vector.getY(), vector.getX())));
+//            entity.translate(vector);
+//
+//            if (entity.getPosition().distance(attacker.getPosition()) >= 600)
+//                getGameWorld().removeEntity(proj);
+//
+//            if (!target.isActive())
+//                getGameWorld().removeEntity(proj);
+//
+//            if (entity.isCollidingWith(target)) {
+//                getGameWorld().removeEntity(proj);
+//
+//                target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
+//
+//                Damage damage = a.attack(target.getControl(GameCharacter.class).get());
+//                showDamage(damage, target.getPosition());
+//            }
+//        }
+//    }
 
     private void dropItem(GameEntity item, Point2D position) {
         Entity e = item.toEntity();
         e.setPosition(position);
-        e.setOnMouseClicked(event -> {
-            sceneManager.removeEntity(e);
-            playerData.getInventory().addItem(item);
-        });
+//        e.setOnMouseClicked(event -> {
+//            sceneManager.removeEntity(e);
+//            playerData.getInventory().addItem(item);
+//        });
+//
+//        e.setCursor(Cursor.CLOSED_HAND);
 
-        e.setCursor(Cursor.CLOSED_HAND);
+        getGameWorld().addEntities(e);
 
-        sceneManager.addEntities(e);
-
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e);
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e.getSceneView().get());
         tt.setInterpolator(Interpolator.EASE_IN);
-        tt.setByX(random.nextInt(20) - 10);
-        tt.setByY(10 + random.nextInt(10));
+        tt.setByX(new Random().nextInt(20) - 10);
+        tt.setByY(10 + new Random().nextInt(10));
         tt.play();
     }
 
     private void showDamage(Damage damage, Point2D position) {
         Entity e = Entity.noType();
-        e.setExpireTime(TimerManager.SECOND);
+        e.setExpireTime(Duration.seconds(1));
         Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
         text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
         text.setFont(Font.font(damage.isCritical() ? 18 : 16));
 
-        e.setGraphics(text);
+        e.setSceneView(text);
         e.setPosition(position);
-        sceneManager.addEntities(e);
+        getGameWorld().addEntities(e);
 
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e);
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e.getSceneView().get());
         tt.setByY(-30);
         tt.play();
     }

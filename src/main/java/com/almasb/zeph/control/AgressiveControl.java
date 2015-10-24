@@ -19,11 +19,11 @@ public class AgressiveControl extends AbstractControl {
 
     @Override
     protected void initEntity(Entity entity) {
-        character = entity.getProperty("data");
+        //character = entity.getProperty("data");
     }
 
     @Override
-    public void onUpdate(Entity entity, long now) {
+    public void onUpdate(Entity entity) {
         if (target.getPosition().distance(entity.getPosition()) <= lineOfSight) {
             entity.fireFXGLEvent(new FXGLEvent(Event.ATTACKING, target));
         }

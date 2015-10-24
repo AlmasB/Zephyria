@@ -26,7 +26,7 @@ public class PassiveControl extends AbstractControl {
     }
 
     @Override
-    public void onUpdate(Entity entity, long now) {
+    public void onUpdate(Entity entity) {
         if (!passive) {
             if (target.getPosition().distance(entity.getPosition()) <= attackRange) {
                 entity.fireFXGLEvent(new FXGLEvent(Event.ATTACKING, target));

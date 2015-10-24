@@ -57,10 +57,10 @@ public class MiscItem {
 
     /*package-private*/ Entity toEntity() {
         Entity item = Entity.noType();
-        item.setProperty(MiscItemProperty.NAME, name)
-                .setProperty(MiscItemProperty.DESCRIPTION, description)
-                .setProperty(MiscItemProperty.ID, id)
-                .setProperty(MiscItemProperty.SELL_PRICE, sellPrice);
+//        item.setProperty(MiscItemProperty.NAME, name)
+//                .setProperty(MiscItemProperty.DESCRIPTION, description)
+//                .setProperty(MiscItemProperty.ID, id)
+//                .setProperty(MiscItemProperty.SELL_PRICE, sellPrice);
 
         //weapon.setGraphics(texture);
         return item;

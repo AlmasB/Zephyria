@@ -647,7 +647,7 @@ public abstract class GameCharacter extends GameEntity implements Control {
     }
 
     @Override
-    public void onUpdate(Entity entity, long now) {
+    public void onUpdate(Entity entity) {
         update();
 
         if (getHP() <= 0)

@@ -74,8 +74,8 @@ public class Armor extends EquippableItem {
     @Override
     public Entity toEntity() {
         Entity e = Entity.noType();
-        e.setGraphics(R.assets.getTexture("items/armor/" + getTextureName()));
-        e.setProperty("data", this);
+        e.setSceneView(R.assets.getTexture("items/armor/" + getTextureName()));
+        e.addComponent(new ArmorComponent(this));
         return e;
     }
 

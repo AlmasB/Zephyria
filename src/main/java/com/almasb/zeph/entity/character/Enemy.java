@@ -127,7 +127,7 @@ public class Enemy extends GameCharacter {
 
         vbox.getChildren().addAll(R.assets.getTexture("chars/enemies/" + getTextureName()), text);
 
-        e.setGraphics(vbox);
+        e.setSceneView(vbox);
 
         e.addControl(this);
         return e;

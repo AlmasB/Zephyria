@@ -40,37 +40,37 @@ public class InventoryView extends Accordion {
 
         playerData.getInventory().itemsProperty().forEach(this::addItem);
 
-        playerData.getInventory().itemsProperty().addListener(new ListChangeListener<GameEntity>() {
-            @Override
-            public void onChanged(ListChangeListener.Change<? extends GameEntity> change) {
-                while (change.next()) {
-                    if (change.wasAdded()) {
-                        for (GameEntity item : change.getAddedSubList()) {
-                            addItem(item);
-                        }
-                    }
-                    else if (change.wasRemoved()) {
-                        for (GameEntity item : change.getRemoved()) {
-
-                            for (Iterator<Node> it = root.getChildren().iterator(); it.hasNext(); ) {
-                                Node node = it.next();
-                                if (node instanceof Texture) {
-                                    continue;
-                                }
-
-                                Entity e = (Entity) node;
-
-                                if (e.getProperty("data") == item) {
-                                    slots.put(e.getProperty("slot"), true);
-                                    it.remove();
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
+//        playerData.getInventory().itemsProperty().addListener(new ListChangeListener<GameEntity>() {
+//            @Override
+//            public void onChanged(ListChangeListener.Change<? extends GameEntity> change) {
+//                while (change.next()) {
+//                    if (change.wasAdded()) {
+//                        for (GameEntity item : change.getAddedSubList()) {
+//                            addItem(item);
+//                        }
+//                    }
+//                    else if (change.wasRemoved()) {
+//                        for (GameEntity item : change.getRemoved()) {
+//
+//                            for (Iterator<Node> it = root.getChildren().iterator(); it.hasNext(); ) {
+//                                Node node = it.next();
+//                                if (node instanceof Texture) {
+//                                    continue;
+//                                }
+//
+//                                Entity e = (Entity) node;
+//
+//                                if (e.getProperty("data") == item) {
+//                                    slots.put(e.getProperty("slot"), true);
+//                                    it.remove();
+//                                    break;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        });
 
 
 
@@ -111,36 +111,36 @@ public class InventoryView extends Accordion {
     }
 
     private void addItem(GameEntity item) {
-        int index = getNextFreeSlot();
-        slots.put(index, false);
-
-        Entity e = item.toEntity();
-        e.setProperty("slot", index);
-        e.setTranslateX((index % 5) * 40);
-        e.setTranslateY((index / 5) * 40);
-        e.setOnMouseClicked(event -> {
-            if (item instanceof Weapon) {
-                playerData.equipWeapon((Weapon) item);
-            }
-            else if (item instanceof Armor) {
-                playerData.equipArmor((Armor) item);
-            }
-
-            // TODO: other usable types
-        });
-        e.setCursor(Cursor.HAND);
-
-        Tooltip tooltip = new Tooltip();
-
-        Text text = new Text();
-        text.setFont(Font.font(20));
-        text.setFill(Color.WHITE);
-        text.setWrappingWidth(200);
-        text.setText(item.getFullDescription());
-
-        tooltip.setGraphic(text);
-        Tooltip.install(e, tooltip);
-
-        root.getChildren().add(e);
+//        int index = getNextFreeSlot();
+//        slots.put(index, false);
+//
+//        Entity e = item.toEntity();
+//        e.setProperty("slot", index);
+//        e.setTranslateX((index % 5) * 40);
+//        e.setTranslateY((index / 5) * 40);
+//        e.setOnMouseClicked(event -> {
+//            if (item instanceof Weapon) {
+//                playerData.equipWeapon((Weapon) item);
+//            }
+//            else if (item instanceof Armor) {
+//                playerData.equipArmor((Armor) item);
+//            }
+//
+//            // TODO: other usable types
+//        });
+//        e.setCursor(Cursor.HAND);
+//
+//        Tooltip tooltip = new Tooltip();
+//
+//        Text text = new Text();
+//        text.setFont(Font.font(20));
+//        text.setFill(Color.WHITE);
+//        text.setWrappingWidth(200);
+//        text.setText(item.getFullDescription());
+//
+//        tooltip.setGraphic(text);
+//        Tooltip.install(e, tooltip);
+//
+//        root.getChildren().add(e);
     }
 }

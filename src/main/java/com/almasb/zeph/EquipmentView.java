@@ -6,12 +6,11 @@ import java.util.Map;
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.GameEntity;
+import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -26,9 +25,9 @@ public final class EquipmentView extends Accordion {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
-    private Player playerData;
+    private PlayerControl playerData;
 
-    public EquipmentView(Player playerData, double height) {
+    public EquipmentView(PlayerControl playerData, double height) {
         this.playerData = playerData;
 
         groups.put(EquipPlace.HELM, createGroup(88, 60));
@@ -89,7 +88,7 @@ public final class EquipmentView extends Accordion {
         return group;
     }
 
-    private void setItem(EquipPlace place, GameEntity item) {
+    private void setItem(EquipPlace place, DescriptionComponent item) {
         Group group = groups.get(place);
         group.getChildren().clear();
 

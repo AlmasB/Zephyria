@@ -1,13 +1,13 @@
 package com.almasb.zeph.combat;
 
 /**
- * 9 primary attributes of a game character
+ * 9 primary attributes of a game character.
  *
- * @author Almas Baimagambetov (ab607@uni.brighton.ac.uk)
- * @version 1.0
- *
+ * @author Almas Baimagambetov
  */
 public enum Attribute {
+    // TODO: this needs to be pulled in from external source
+
     STRENGTH("Increases damage dealt by physical attacks. Also slightly increases HP and regeneration."),
     VITALITY("Reduces damage you take, increases maximum HP and regeneration."),
     DEXTERITY("Increases attack speed and slightly improves all other combat stats."),
@@ -20,7 +20,7 @@ public enum Attribute {
 
     private final String description;
 
-    private Attribute(String description) {
+    Attribute(String description) {
         this.description = description;
     }
 

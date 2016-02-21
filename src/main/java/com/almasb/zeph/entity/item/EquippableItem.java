@@ -8,8 +8,8 @@ import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Essence;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Rune;
-import com.almasb.zeph.entity.GameEntity;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.DescriptionComponent;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 /**
  * Represents an item that can be equipped.
@@ -19,7 +19,7 @@ import com.almasb.zeph.entity.character.Player;
  * @version 1.0
  *
  */
-public abstract class EquippableItem extends GameEntity {
+public abstract class EquippableItem extends DescriptionComponent {
 
     private static final long serialVersionUID = -1091033469035972887L;
 
@@ -32,7 +32,7 @@ public abstract class EquippableItem extends GameEntity {
         public final int refineChanceReduction;
         public final int maxRunes;
 
-        private ItemLevel(int bonus, int chance, int maxRunes) {
+        ItemLevel(int bonus, int chance, int maxRunes) {
             this.bonus = bonus;
             this.refineChanceReduction = chance;
             this.maxRunes = maxRunes;
@@ -76,7 +76,7 @@ public abstract class EquippableItem extends GameEntity {
         return false;
     }
 
-    public void onEquip(Player ch) {
+    public void onEquip(PlayerControl ch) {
         for (Rune r : defaultRunes)
             ch.addBonusAttribute(r.attribute, r.bonus);
         for (Rune r : runes)
@@ -85,7 +85,7 @@ public abstract class EquippableItem extends GameEntity {
             ch.addBonusStat(essence.stat, essence.bonus);
     }
 
-    public void onUnEquip(Player ch) {
+    public void onUnEquip(PlayerControl ch) {
         for (Rune r : runes)
             ch.addBonusAttribute(r.attribute, -r.bonus);
         for (Rune r : defaultRunes)

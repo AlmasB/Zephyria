@@ -1,10 +1,11 @@
 package com.almasb.zeph.combat;
 
 /**
- * Stats of a game character
- *
+ * Stats of a game character.
  */
 public enum Stat {
+    // TODO: externalize description
+
     /**
      * Maximum HP
      */
@@ -94,7 +95,7 @@ public enum Stat {
     private final String description;
     private final String measureUnit;
 
-    private Stat(String description, String unit) {
+    Stat(String description, String unit) {
         this.description = description;
         this.measureUnit = unit;
     }

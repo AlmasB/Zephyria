@@ -3,11 +3,10 @@ package com.almasb.zeph.entity.character;
 import com.almasb.zeph.entity.ID;
 
 /**
- * A game character will have one of these classes
- * Profession/job in a nutshell
+ * A game character will have one of these classes.
+ * Profession/job in a nutshell.
  *
  * @author Almas Baimagambetov
- *
  */
 public enum GameCharacterClass {
     MONSTER  (50, 50),
@@ -35,7 +34,7 @@ public enum GameCharacterClass {
     public final int sp;
     public final int[] skillIDs;
 
-    private GameCharacterClass(int hp, int sp, int... IDs) {
+    GameCharacterClass(int hp, int sp, int... IDs) {
         this.hp = hp;
         this.sp = sp;
         this.skillIDs = IDs;

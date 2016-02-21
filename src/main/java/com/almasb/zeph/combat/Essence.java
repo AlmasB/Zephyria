@@ -1,12 +1,9 @@
 package com.almasb.zeph.combat;
 
-
 /**
- * An essence when installed into a weapon, increases a character stat
+ * An essence when installed into a weapon, increases a character stat.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- * @version 1.0
- *
  */
 public class Essence implements java.io.Serializable {
 

@@ -9,11 +9,11 @@ public enum Element {
 
     private float[] modifiers;
 
-    public float getDamageModifierAgainst(Element ele) {
-        return this.modifiers[ele.ordinal()];
+    public float getDamageModifierAgainst(Element element) {
+        return this.modifiers[element.ordinal()];
     }
 
-    private Element(float... modifiers) {
+    Element(float... modifiers) {
         this.modifiers = modifiers;
     }
 }

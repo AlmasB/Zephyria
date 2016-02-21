@@ -2,7 +2,7 @@ package com.almasb.zeph;
 
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 
 public class CharInfoView extends Accordion {
 
-    public CharInfoView(Player playerData) {
+    public CharInfoView(PlayerControl playerData) {
         Font font = Font.font("Lucida Console", 14);
         Cursor cursorQuestion = new ImageCursor(R.assets.getTexture("ui/cursors/question.png").getImage(), 52, 10);
 

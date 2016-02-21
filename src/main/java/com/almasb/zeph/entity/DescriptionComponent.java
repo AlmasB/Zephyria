@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity;
 
-import com.almasb.fxgl.entity.Entity;
-
+import com.almasb.ents.AbstractComponent;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringProperty;
@@ -12,8 +11,9 @@ import javafx.beans.property.ReadOnlyStringWrapper;
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  *
+ * TODO: shouldnt fields be final?
  */
-public abstract class GameEntity implements java.io.Serializable {
+public abstract class DescriptionComponent extends AbstractComponent implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,9 @@ public abstract class GameEntity implements java.io.Serializable {
        return descriptionProperty;
    }
 
-   public abstract String getFullDescription();
+   public String getFullDescription() {
+       return description;
+   }
 
     /**
      * File name of the texture in assets/textures/
@@ -112,7 +114,7 @@ public abstract class GameEntity implements java.io.Serializable {
      * @param description
      * @param textureName
      */
-    public GameEntity(int id, String name, String description, String textureName) {
+    public DescriptionComponent(int id, String name, String description, String textureName) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -139,11 +141,4 @@ public abstract class GameEntity implements java.io.Serializable {
     public String toString() {
         return String.format("[%d] %s (%s) - %s", id, name, textureName, description);
     }
-
-    /**
-     * Converts this game object into a scenegraph entity.
-     *
-     * @return
-     */
-    public abstract Entity toEntity();
 }

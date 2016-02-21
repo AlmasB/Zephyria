@@ -1,11 +1,9 @@
 package com.almasb.zeph.entity.item;
 
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.R;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Rune;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 public class Weapon extends EquippableItem {
 
@@ -42,13 +40,13 @@ public class Weapon extends EquippableItem {
     }
 
     @Override
-    public void onEquip(Player ch) {
+    public void onEquip(PlayerControl ch) {
         super.onEquip(ch);
         ch.addBonusStat(Stat.ATK, getDamage());
     }
 
     @Override
-    public void onUnEquip(Player ch) {
+    public void onUnEquip(PlayerControl ch) {
         super.onUnEquip(ch);
         ch.addBonusStat(Stat.ATK, -getDamage());
     }
@@ -73,13 +71,13 @@ public class Weapon extends EquippableItem {
         return sb.toString();
     }
 
-    @Override
-    public Entity toEntity() {
-        Entity e = Entity.noType();
-        e.setSceneView(R.assets.getTexture("items/weapons/" + getTextureName()));
-        e.addComponent(new WeaponComponent(this));
-        return e;
-    }
+//    @Override
+//    public Entity toEntity() {
+//        Entity e = Entity.noType();
+//        e.setSceneView(R.assets.getTexture("items/weapons/" + getTextureName()));
+//        e.addComponent(new WeaponComponent(this));
+//        return e;
+//    }
 
     public static class WeaponBuilder {
         private int id;

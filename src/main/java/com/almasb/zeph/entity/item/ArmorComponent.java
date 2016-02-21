@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.item;
 
-import com.almasb.fxgl.entity.ObjectComponent;
+import com.almasb.ents.component.ObjectComponent;
 
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)

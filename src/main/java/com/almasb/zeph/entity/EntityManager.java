@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 import com.almasb.zeph.combat.Attribute;
@@ -9,8 +8,8 @@ import com.almasb.zeph.combat.Essence;
 import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.Rune;
 import com.almasb.zeph.combat.Skill;
-import com.almasb.zeph.entity.character.Enemy;
-import com.almasb.zeph.entity.character.Enemy.EnemyBuilder;
+import com.almasb.zeph.entity.character.EnemyControl;
+import com.almasb.zeph.entity.character.EnemyControl.EnemyBuilder;
 import com.almasb.zeph.entity.item.Armor;
 import com.almasb.zeph.entity.item.DroppableItem;
 import com.almasb.zeph.entity.item.EquippableItem.ItemLevel;
@@ -22,11 +21,11 @@ import com.almasb.zeph.entity.item.Weapon.WeaponType;
 
 public class EntityManager {
 
-    private static HashMap<Integer, Weapon> defaultWeapons = new HashMap<Integer, Weapon>();
-    private static HashMap<Integer, Armor> defaultArmor = new HashMap<Integer, Armor>();
-    private static HashMap<Integer, Skill> defaultSkills = new HashMap<Integer, Skill>();
-    private static HashMap<Integer, Enemy> defaultEnemies = new HashMap<Integer, Enemy>();
-    private static HashMap<Integer, Essence> defaultEssences = new HashMap<Integer, Essence>();
+    private static HashMap<Integer, Weapon> defaultWeapons = new HashMap<>();
+    private static HashMap<Integer, Armor> defaultArmor = new HashMap<>();
+    private static HashMap<Integer, Skill> defaultSkills = new HashMap<>();
+    private static HashMap<Integer, EnemyControl> defaultEnemies = new HashMap<>();
+    private static HashMap<Integer, Essence> defaultEssences = new HashMap<>();
 
     private EntityManager() {}
 
@@ -1190,7 +1189,7 @@ public class EntityManager {
 //    }
 
     private static void addEnemy(EnemyBuilder eb) {
-        Enemy enemy = eb.build();
+        EnemyControl enemy = eb.build();
         defaultEnemies.put(enemy.getID(), enemy);
     }
 
@@ -1222,11 +1221,11 @@ public class EntityManager {
         return defaultWeapons.containsKey(id) ? new Weapon(defaultWeapons.get(id)) : null;
     }
 
-    public static Enemy getEnemyByID(int id) {
-        return defaultEnemies.containsKey(id) ? new Enemy(defaultEnemies.get(id)) : null;
+    public static EnemyControl getEnemyByID(int id) {
+        return defaultEnemies.containsKey(id) ? new EnemyControl(defaultEnemies.get(id)) : null;
     }
 
-    public static GameEntity getItemByID(int id) {
+    public static DescriptionComponent getItemByID(int id) {
         String sid = String.valueOf(id);
 
         if (sid.startsWith("5"))

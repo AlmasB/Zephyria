@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.almasb.zeph.entity.GameEntity;
+import com.almasb.zeph.entity.DescriptionComponent;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,9 +12,7 @@ import javafx.collections.ObservableList;
 /**
  * Represents a "bag" of items of a player
  *
- * @author Almas Baimagambetov (ab607@uni.brighton.ac.uk)
- * @version 1.0
- *
+ * @author Almas Baimagambetov
  */
 public class Inventory implements java.io.Serializable {
 
@@ -28,9 +26,9 @@ public class Inventory implements java.io.Serializable {
     /**
      * Actual data structure
      */
-    private List<GameEntity> items = new ArrayList<>(MAX_SIZE);
+    private List<DescriptionComponent> items = new ArrayList<>(MAX_SIZE);
     // TODO: make read only
-    private transient ObservableList<GameEntity> itemsProperty = FXCollections.observableArrayList();
+    private transient ObservableList<DescriptionComponent> itemsProperty = FXCollections.observableArrayList();
 
 //    /**
 //     *
@@ -40,7 +38,7 @@ public class Inventory implements java.io.Serializable {
 //        return new ArrayList<>(items);
 //    }
 
-    public final ObservableList<GameEntity> itemsProperty() {
+    public final ObservableList<DescriptionComponent> itemsProperty() {
         return itemsProperty;
     }
 
@@ -52,7 +50,7 @@ public class Inventory implements java.io.Serializable {
      * @return
      *          true if added, false otherwise
      */
-    public boolean addItem(GameEntity item) {
+    public boolean addItem(DescriptionComponent item) {
         if (isFull()) {
             return false;
         }
@@ -71,7 +69,7 @@ public class Inventory implements java.io.Serializable {
      *          Optional item if index less than inventory size
      *          otherwise empty Optional
      */
-    public Optional<GameEntity> getItem(int index) {
+    public Optional<DescriptionComponent> getItem(int index) {
         return index < items.size() ? Optional.of(items.get(index)) : Optional.empty();
     }
 
@@ -82,7 +80,7 @@ public class Inventory implements java.io.Serializable {
      * @return
      *          true if removed, false otherwise
      */
-    public boolean removeItem(GameEntity item) {
+    public boolean removeItem(DescriptionComponent item) {
         if (!items.remove(item)) {
             return false;
         }

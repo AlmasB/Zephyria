@@ -1,11 +1,9 @@
 package com.almasb.zeph.entity.character;
 
 /**
- * Used to show where particular equipment goes on a character
+ * Used to show where particular equipment goes on a character.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- * @version 1.0
- *
  */
 public enum EquipPlace {
     /**
@@ -35,7 +33,7 @@ public enum EquipPlace {
 
     public final int emptyID;
 
-    private EquipPlace(int emptyID) {
+    EquipPlace(int emptyID) {
         this.emptyID = emptyID;
     }
 }

@@ -1,11 +1,8 @@
 package com.almasb.zeph.entity.item;
 
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.PropertyKey;
-
 public class MiscItem {
 
-    public enum MiscItemProperty implements PropertyKey {
+    public enum MiscItemProperty {
         TYPE, ID, NAME, DESCRIPTION, SELL_PRICE
     }
 
@@ -55,20 +52,20 @@ public class MiscItem {
         this.sellPrice = sellPrice;
     }
 
-    /*package-private*/ Entity toEntity() {
-        Entity item = Entity.noType();
-//        item.setProperty(MiscItemProperty.NAME, name)
-//                .setProperty(MiscItemProperty.DESCRIPTION, description)
-//                .setProperty(MiscItemProperty.ID, id)
-//                .setProperty(MiscItemProperty.SELL_PRICE, sellPrice);
+//    /*package-private*/ Entity toEntity() {
+//        Entity item = Entity.noType();
+////        item.setProperty(MiscItemProperty.NAME, name)
+////                .setProperty(MiscItemProperty.DESCRIPTION, description)
+////                .setProperty(MiscItemProperty.ID, id)
+////                .setProperty(MiscItemProperty.SELL_PRICE, sellPrice);
+//
+//        //weapon.setGraphics(texture);
+//        return item;
+//    }
 
-        //weapon.setGraphics(texture);
-        return item;
-    }
-
-    /*package-private*/ static MiscItem fromEntity(Entity entity) {
-        return null;
-    }
+//    /*package-private*/ static MiscItem fromEntity(Entity entity) {
+//        return null;
+//    }
 
     @Override
     public String toString() {

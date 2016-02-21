@@ -3,7 +3,7 @@ package com.almasb.zeph;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Accordion;
@@ -14,7 +14,7 @@ import javafx.scene.text.Text;
 
 public class BasicInfoView extends Accordion {
 
-    public BasicInfoView(Player playerData) {
+    public BasicInfoView(PlayerControl playerData) {
         ProgressBar barHPUI = ProgressBar.makeHPBar();
         barHPUI.setTranslateX(160);
         barHPUI.setTranslateY(5);

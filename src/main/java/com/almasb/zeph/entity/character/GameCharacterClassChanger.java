@@ -4,8 +4,7 @@ import java.util.HashMap;
 
 public class GameCharacterClassChanger {
 
-    private static HashMap<GameCharacterClass, Ascension> reqList =
-            new HashMap<GameCharacterClass, Ascension>();
+    private static HashMap<GameCharacterClass, Ascension> reqList = new HashMap<>();
 
     static {
         reqList.put(GameCharacterClass.NOVICE, new Ascension(2, 2, GameCharacterClass.WARRIOR, GameCharacterClass.SCOUT, GameCharacterClass.MAGE));
@@ -29,12 +28,12 @@ public class GameCharacterClassChanger {
      */
     private GameCharacterClassChanger() {}
 
-    public static boolean canChangeClass(Player ch) {
+    public static boolean canChangeClass(PlayerControl ch) {
         Ascension r = reqList.get(ch.getGameCharacterClass());
         return r != null && ch.getBaseLevel() >= r.baseLevel && ch.getJobLevel() >= r.jobLevel;
     }
 
-    public static GameCharacterClass[] getAscensionClasses(Player ch) {
+    public static GameCharacterClass[] getAscensionClasses(PlayerControl ch) {
         return reqList.get(ch.getGameCharacterClass()).classesTo;
     }
 

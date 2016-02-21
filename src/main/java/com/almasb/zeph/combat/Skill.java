@@ -1,7 +1,7 @@
 package com.almasb.zeph.combat;
 
-import com.almasb.zeph.entity.GameEntity;
-import com.almasb.zeph.entity.character.GameCharacter;
+import com.almasb.zeph.entity.DescriptionComponent;
+import com.almasb.zeph.entity.character.CharacterControl;
 
 /**
  * Skill that can be learnt/used by game characters
@@ -11,10 +11,8 @@ import com.almasb.zeph.entity.character.GameCharacter;
  * TODO: refactor whole class + mechanics
  *
  * @author Almas Baimagambetov (ab607@uni.brighton.ac.uk)
- * @version 1.0
- *
  */
-public abstract class Skill extends GameEntity implements java.io.Serializable {
+public abstract class Skill extends DescriptionComponent implements java.io.Serializable {
 
     private static final long serialVersionUID = 442371944346845569L;
 
@@ -39,7 +37,7 @@ public abstract class Skill extends GameEntity implements java.io.Serializable {
         this.skillCooldown = cooldown;
     }
 
-    public void use(GameCharacter caster, GameCharacter target) {
+    public void use(CharacterControl caster, CharacterControl target) {
         useImpl(caster, target);
         putOnCooldown();
     }
@@ -52,7 +50,7 @@ public abstract class Skill extends GameEntity implements java.io.Serializable {
      * @param caster
      * @param target
      */
-    protected abstract void useImpl(GameCharacter caster, GameCharacter target);
+    protected abstract void useImpl(CharacterControl caster, CharacterControl target);
 
     public boolean levelUp() {
         if (level < MAX_LEVEL) {

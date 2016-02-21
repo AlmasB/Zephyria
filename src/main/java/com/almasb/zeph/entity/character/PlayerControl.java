@@ -3,7 +3,6 @@ package com.almasb.zeph.entity.character;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Experience;
@@ -26,7 +25,7 @@ import javafx.beans.property.SimpleObjectProperty;
  * @author Almas Baimagambetov
  *
  */
-public final class Player extends GameCharacter {
+public final class PlayerControl extends CharacterControl {
 
     private static final long serialVersionUID = 7025558302171610110L;
 
@@ -376,7 +375,7 @@ public final class Player extends GameCharacter {
      * @param name
      * @param charClass
      */
-    public Player(String name, GameCharacterClass charClass) {
+    public PlayerControl(String name, GameCharacterClass charClass) {
         super(1000, name, "Player", "player.png", charClass);
 
         for (EquipPlace p : EquipPlace.values()) {
@@ -509,15 +508,15 @@ public final class Player extends GameCharacter {
         return getEquip(EquipPlace.BODY).getElement();
     }
 
-    @Override
-    public String getFullDescription() {
-        return "TODO:";
-    }
-
-    @Override
-    public final Entity toEntity() {
-        Entity e = Entity.noType();
-        e.addControl(this);
-        return e;
-    }
+//    @Override
+//    public String getFullDescription() {
+//        return "TODO:";
+//    }
+//
+//    @Override
+//    public final Entity toEntity() {
+//        Entity e = Entity.noType();
+//        e.addControl(this);
+//        return e;
+//    }
 }

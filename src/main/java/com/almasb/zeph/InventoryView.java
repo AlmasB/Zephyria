@@ -1,28 +1,18 @@
 package com.almasb.zeph;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import com.almasb.fxgl.asset.AssetManager;
 import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.entity.GameEntity;
-import com.almasb.zeph.entity.character.Player;
-import com.almasb.zeph.entity.item.Armor;
-import com.almasb.zeph.entity.item.Weapon;
+import com.almasb.zeph.entity.DescriptionComponent;
+import com.almasb.zeph.entity.character.PlayerControl;
 
 import javafx.animation.TranslateTransition;
-import javafx.collections.ListChangeListener;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class InventoryView extends Accordion {
@@ -30,9 +20,9 @@ public class InventoryView extends Accordion {
     private Map<Integer, Boolean> slots = new HashMap<>();
     private Pane root = new Pane();
 
-    private Player playerData;
+    private PlayerControl playerData;
 
-    public InventoryView(Player playerData, double width, double height) {
+    public InventoryView(PlayerControl playerData, double width, double height) {
         this.playerData = playerData;
         for (int i = 0; i < 30; i++) {
             slots.put(i, true);
@@ -110,7 +100,7 @@ public class InventoryView extends Accordion {
         return -1;
     }
 
-    private void addItem(GameEntity item) {
+    private void addItem(DescriptionComponent item) {
 //        int index = getNextFreeSlot();
 //        slots.put(index, false);
 //

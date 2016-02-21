@@ -1,11 +1,9 @@
 package com.almasb.zeph.combat;
 
 /**
- * An effect that changes status of a character for the duration
+ * An effect that changes status of a character for the duration.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- * @version 1.0
- *
  */
 public class StatusEffect implements java.io.Serializable {
 

@@ -8,6 +8,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <fxgl.version>0.2.1-0.2.0-gba5970d-32</fxgl.version>
     </properties>
 
 	<build>
@@ -49,5 +51,10 @@
 			<version>2.5.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.AlmasB</groupId>
+			<artifactId>FXGL</artifactId>
+			<version>${fxgl.version}</version>
+		</dependency>
 	</dependencies>
 </project>

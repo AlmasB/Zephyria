@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.zeph.R;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Attribute.AttributeInfo;
 import com.almasb.zeph.combat.Element;
@@ -18,7 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class Enemy extends GameCharacter {
+public class EnemyControl extends CharacterControl {
 
     private static final long serialVersionUID = -4175008430166158773L;
 
@@ -52,17 +50,17 @@ public class Enemy extends GameCharacter {
     private Experience xp;
 
     /**
-    *
-    * @return
-    *          Experience object containing base/stat/job xp
-    *          for this enemy
-    */
+     *
+     * @return
+     *          Experience object containing base/stat/job xp
+     *          for this enemy
+     */
     public Experience getXP() {
         return xp;
     }
 
-    public Enemy(int id, String name, String description, String textureName,
-            EnemyType type, Element element, int level, AttributeInfo attrs, Experience xp, DroppableItem... drops) {
+    public EnemyControl(int id, String name, String description, String textureName,
+                        EnemyType type, Element element, int level, AttributeInfo attrs, Experience xp, DroppableItem... drops) {
         super(id, name, description, textureName, GameCharacterClass.MONSTER);
       this.type = type;
       this.element = element;
@@ -85,7 +83,7 @@ public class Enemy extends GameCharacter {
       setSP((int)getTotalStat(Stat.MAX_SP));
     }
 
-    public Enemy(Enemy copy) {
+    public EnemyControl(EnemyControl copy) {
         this(copy.getID(), copy.getName(), copy.getDescription(), copy.getTextureName(), copy.type, copy.element, copy.getBaseLevel(),
                 new AttributeInfo().str(copy.getBaseAttribute(Attribute.STRENGTH))
                 .vit(copy.getBaseAttribute(Attribute.VITALITY))
@@ -108,30 +106,30 @@ public class Enemy extends GameCharacter {
         return element;
     }
 
-    @Override
-    public String getFullDescription() {
-        return "TODO:";
-    }
-
-    @Override
-    public Entity toEntity() {
-        Entity e = Entity.noType();
-
-        Group vbox = new Group();
-
-        Text text = new Text(getName());
-        text.setFont(Font.font(14));
-        text.setFill(Color.WHITE);
-        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
-        text.setTranslateY(40);
-
-        vbox.getChildren().addAll(R.assets.getTexture("chars/enemies/" + getTextureName()), text);
-
-        e.setSceneView(vbox);
-
-        e.addControl(this);
-        return e;
-    }
+//    @Override
+//    public String getFullDescription() {
+//        return "TODO:";
+//    }
+//
+//    @Override
+//    public Entity toEntity() {
+//        Entity e = Entity.noType();
+//
+//        Group vbox = new Group();
+//
+//        Text text = new Text(getName());
+//        text.setFont(Font.font(14));
+//        text.setFill(Color.WHITE);
+//        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
+//        text.setTranslateY(40);
+//
+//        vbox.getChildren().addAll(R.assets.getTexture("chars/enemies/" + getTextureName()), text);
+//
+//        e.setSceneView(vbox);
+//
+//        e.addControl(this);
+//        return e;
+//    }
 
     public static class EnemyBuilder {
         private int id;
@@ -195,8 +193,8 @@ public class Enemy extends GameCharacter {
             return this;
         }
 
-        public Enemy build() {
-            return new Enemy(id, name, desc, texture, type, element, level, attributes, xp, items);
+        public EnemyControl build() {
+            return new EnemyControl(id, name, desc, texture, type, element, level, attributes, xp, items);
         }
     }
 }

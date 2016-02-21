@@ -1,35 +1,28 @@
 package com.almasb.zeph;
 
-import java.util.List;
-import java.util.Random;
 
-import com.almasb.fxgl.GameApplication;
-import com.almasb.fxgl.asset.Assets;
+import com.almasb.ents.Entity;
+import com.almasb.fxgl.app.ApplicationMode;
+import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.asset.Texture;
-import com.almasb.fxgl.entity.Control;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.FXGLEvent;
-import com.almasb.fxgl.event.InputManager;
-import com.almasb.fxgl.event.InputManager.Mouse;
-import com.almasb.fxgl.event.UserAction;
+import com.almasb.fxgl.input.Input;
+import com.almasb.fxgl.input.Mouse;
+import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
-import com.almasb.fxgl.time.TimerManager;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.fxgl.util.ApplicationMode;
 import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.control.PassiveControl;
 import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.GameEntity;
+import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.ID;
-import com.almasb.zeph.entity.character.Enemy;
-import com.almasb.zeph.entity.character.GameCharacter;
+import com.almasb.zeph.entity.character.EnemyControl;
+import com.almasb.zeph.entity.character.CharacterControl;
 import com.almasb.zeph.entity.character.GameCharacterClass;
-import com.almasb.zeph.entity.character.Player;
+import com.almasb.zeph.entity.character.PlayerControl;
 import com.almasb.zeph.entity.item.DroppableItem;
-
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
@@ -38,23 +31,22 @@ import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Screen;
 import javafx.util.Duration;
 
+import java.util.List;
+import java.util.Random;
+
 public class ZephyriaApp extends GameApplication {
 
-    private Assets assets;
-
     private Entity player;
-    private Player playerData;
+    private PlayerControl playerData;
     private Entity selected = null;
     private Point2D selectedPoint = null;
 
@@ -83,7 +75,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initInput() {
-        InputManager input = getInputManager();
+        Input input = getInput();
 
         mouse = input.getMouse();
 
@@ -96,9 +88,8 @@ public class ZephyriaApp extends GameApplication {
     }
 
     @Override
-    protected void initAssets() throws Exception {
-        assets = getAssetManager().cache();
-        R.assets = assets;
+    protected void initAssets() {
+        getAssetLoader().cache();
     }
 
     @Override
@@ -110,7 +101,7 @@ public class ZephyriaApp extends GameApplication {
         initPlayer();
         initEnemies();
 
-        getGameScene().bindViewportOrigin(player, (int)getWidth() / 2, (int)getHeight() / 2);
+        getGameScene().getViewport().bindToEntity(player, (int)getWidth() / 2, (int)getHeight() / 2);
     }
 
     @Override
@@ -123,7 +114,7 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().setCursor("main.png", new Point2D(52, 10));
         //sceneManager.getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
 
-        Texture hotbar = assets.getTexture("ui/hotbar.png");
+        Texture hotbar = getAssetLoader().loadTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
         hotbar.setTranslateY(getHeight() - hotbar.getLayoutBounds().getHeight());
 
@@ -144,11 +135,11 @@ public class ZephyriaApp extends GameApplication {
             startAttack(player, selected);
         }
 
-        if (selectedPoint != null) {
-            player.translate(selectedPoint.subtract(player.getPosition()).normalize().multiply(5));
-            if (selectedPoint.distance(player.getPosition()) < 5)
-                selectedPoint = null;
-        }
+//        if (selectedPoint != null) {
+//            player.translate(selectedPoint.subtract(player.getPosition()).normalize().multiply(5));
+//            if (selectedPoint.distance(player.getPosition()) < 5)
+//                selectedPoint = null;
+//        }
     }
 
     private Mouse mouse;
@@ -172,10 +163,10 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initPlayer() {
-        player = new Player("Debug", GameCharacterClass.NOVICE).toEntity();
+        player = new PlayerControl("Debug", GameCharacterClass.NOVICE).toEntity();
         player.setPosition(getWidth() / 2, getHeight() / 2);
 
-        playerData = player.getControl(Player.class).get();
+        playerData = player.getControl(PlayerControl.class).get();
 
         Group vbox = new Group();
 
@@ -280,7 +271,7 @@ public class ZephyriaApp extends GameApplication {
                 startAttack(enemy, event.getSource());
             });
             enemy.addFXGLEventHandler(Event.DEATH, event -> {
-                Enemy enemyData = enemy.getControl(Enemy.class).get();
+                EnemyControl enemyData = enemy.getControl(EnemyControl.class).get();
 
                 playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
                 playerData.rewardXP(enemyData.getXP());
@@ -288,7 +279,7 @@ public class ZephyriaApp extends GameApplication {
                 List<DroppableItem> drops = enemyData.getDrops();
                 for (DroppableItem drop : drops) {
                     if (GameMath.checkChance(drop.dropChance)) {
-                        GameEntity item = EntityManager.getItemByID(drop.itemID);
+                        DescriptionComponent item = EntityManager.getItemByID(drop.itemID);
                         dropItem(item, enemy.getPosition());
                     }
                 }
@@ -307,7 +298,7 @@ public class ZephyriaApp extends GameApplication {
         if (!attacker.isActive() || !target.isActive())
             return;
 
-        GameCharacter a = attacker.getControl(GameCharacter.class).get();
+        CharacterControl a = attacker.getControl(CharacterControl.class).get();
 
         if (!a.canAttack())
             return;
@@ -349,7 +340,7 @@ public class ZephyriaApp extends GameApplication {
 //        }
 //    }
 
-    private void dropItem(GameEntity item, Point2D position) {
+    private void dropItem(DescriptionComponent item, Point2D position) {
         Entity e = item.toEntity();
         e.setPosition(position);
 //        e.setOnMouseClicked(event -> {

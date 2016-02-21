@@ -2,11 +2,9 @@ package com.almasb.zeph.combat;
 
 
 /**
- * A rune when installed into a weapon, increases a character attribute
+ * A rune when installed into a weapon, increases a character attribute.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- * @version 1.0
- *
  */
 public class Rune implements java.io.Serializable {
 

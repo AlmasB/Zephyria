@@ -1,5 +1,6 @@
-package com.almasb.zeph
+package com.almasb.zeph.entity.item.component
 
+import com.almasb.zeph.entity.item.component.EquippableComponent
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.ItemLevel
 

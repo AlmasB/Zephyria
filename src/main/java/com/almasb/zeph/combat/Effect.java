@@ -1,6 +1,6 @@
 package com.almasb.zeph.combat;
 
-import com.almasb.zeph.entity.character.CharacterControl;
+import com.almasb.zeph.entity.character.control.CharacterControl;
 
 import java.util.ArrayList;
 import java.util.Arrays;

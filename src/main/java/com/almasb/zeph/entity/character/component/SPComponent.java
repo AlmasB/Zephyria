@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.component;
+package com.almasb.zeph.entity.character.component;
 
 import com.almasb.ents.component.DoubleComponent;
 import javafx.beans.property.DoubleProperty;

@@ -4,7 +4,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.ServiceType;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.zeph.entity.DescriptionComponent;
-import com.almasb.zeph.entity.character.PlayerControl;
+import com.almasb.zeph.entity.character.control.PlayerControl;
 import javafx.animation.TranslateTransition;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -27,7 +27,7 @@ public class InventoryView extends Accordion {
             slots.put(i, true);
         }
 
-        playerData.getInventory().itemsProperty().forEach(this::addItem);
+        //playerData.getInventory().itemsProperty().forEach(this::addItem);
 
 //        playerData.getInventory().itemsProperty().addListener(new ListChangeListener<GameEntity>() {
 //            @Override

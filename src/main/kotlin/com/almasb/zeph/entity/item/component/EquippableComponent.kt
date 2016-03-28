@@ -1,11 +1,11 @@
-package com.almasb.zeph
+package com.almasb.zeph.entity.item.component
 
 import com.almasb.ents.AbstractComponent
 import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.GameMath
 import com.almasb.zeph.combat.Rune
-import com.almasb.zeph.entity.character.AttributesComponent
+import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.item.ItemLevel
 import java.util.*
 

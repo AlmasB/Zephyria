@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.character;
+package com.almasb.zeph.entity.character.control;
 
 import com.almasb.ents.AbstractControl;
 import com.almasb.ents.Entity;
@@ -8,8 +8,7 @@ import com.almasb.zeph.combat.Effect;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.combat.StatusEffect;
 import com.almasb.zeph.combat.StatusEffect.Status;
-import com.almasb.zeph.entity.component.HPComponent;
-import com.almasb.zeph.entity.component.SPComponent;
+import com.almasb.zeph.entity.character.component.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;

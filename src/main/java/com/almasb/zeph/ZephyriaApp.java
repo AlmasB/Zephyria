@@ -12,12 +12,16 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.character.PlayerControl;
+import com.almasb.zeph.entity.character.PlayerEntity;
+import com.almasb.zeph.entity.character.control.PlayerControl;
+import com.almasb.zeph.ui.BasicInfoView;
+import com.almasb.zeph.ui.CharInfoView;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -98,11 +102,9 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-//        getGameScene().addUINodes(hotbar,
-//                new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
-//                new EquipmentView(playerData, getHeight()),
-//                new InventoryView(playerData, getWidth(), getHeight()),
-//                debug);
+        PlayerEntity playerEntity = new PlayerEntity();
+
+        getGameScene().addUINodes(hotbar, new VBox(new BasicInfoView(playerEntity),new CharInfoView(playerEntity)));
     }
 
     @Override

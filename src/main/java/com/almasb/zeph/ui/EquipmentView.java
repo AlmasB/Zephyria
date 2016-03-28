@@ -5,7 +5,7 @@ import com.almasb.fxgl.app.ServiceType;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
-import com.almasb.zeph.entity.character.PlayerControl;
+import com.almasb.zeph.entity.character.control.PlayerControl;
 import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;

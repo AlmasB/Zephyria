@@ -1,6 +1,7 @@
-package com.almasb.zeph.entity.character;
+package com.almasb.zeph.entity.character.component;
 
 import com.almasb.ents.AbstractComponent;
+import com.almasb.zeph.entity.character.GameCharacterClass;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 

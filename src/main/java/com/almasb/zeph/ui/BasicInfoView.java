@@ -1,11 +1,15 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.ents.Entity;
+import com.almasb.zeph.entity.character.PlayerEntity;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Accordion;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class BasicInfoView extends Accordion {
 
-    public BasicInfoView(Entity player) {
+    public BasicInfoView(PlayerEntity player) {
 //        ProgressBar barHPUI = ProgressBar.makeHPBar();
 //        barHPUI.setTranslateX(160);
 //        barHPUI.setTranslateY(5);
@@ -56,11 +60,11 @@ public class BasicInfoView extends Accordion {
 //        barXPJob.setTranslateY(130);
 //        barXPJob.currentValueProperty().bind(player.jobXPProperty());
 //
-//        Text textMoney = new Text("");
-//        textMoney.setTranslateX(200);
-//        textMoney.setTranslateY(180);
-//        textMoney.setFont(Font.font(14));
-//        textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.moneyProperty()).concat("G"));
+        Text textMoney = new Text("");
+        textMoney.setTranslateX(200);
+        textMoney.setTranslateY(180);
+        textMoney.setFont(Font.font(14));
+        textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getMoney().valueProperty()).concat("G"));
 //
 //        player.baseLevelProperty().addListener((obs, old, newValue) -> {
 //            barXPBase.setMaxValue(player.expNeededForNextBaseLevel());

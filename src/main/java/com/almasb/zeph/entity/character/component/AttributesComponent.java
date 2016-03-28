@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.character;
+package com.almasb.zeph.entity.character.component;
 
 import com.almasb.ents.AbstractComponent;
 import com.almasb.zeph.combat.Attribute;

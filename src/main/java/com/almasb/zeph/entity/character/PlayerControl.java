@@ -12,8 +12,8 @@ import com.almasb.zeph.entity.ID;
 import com.almasb.zeph.entity.item.Armor;
 import com.almasb.zeph.entity.item.EquippableItem;
 import com.almasb.zeph.entity.item.Weapon;
-import com.almasb.zeph.entity.item.Weapon.WeaponType;
 
+import com.almasb.zeph.entity.item.WeaponType;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -70,71 +70,7 @@ public final class PlayerControl extends CharacterControl {
         }
     }
 
-    /**
-     * Current stat level
-     */
-    private int statLevel = 1;
-    private transient ReadOnlyIntegerWrapper statLevelProperty = new ReadOnlyIntegerWrapper(
-            statLevel);
-
-    /**
-     *
-     * @return stat level
-     */
-    public final int getStatLevel() {
-        return statLevel;
-    }
-
-    /**
-     *
-     * @return stat level property
-     */
-    public final ReadOnlyIntegerProperty statLevelProperty() {
-        return statLevelProperty.getReadOnlyProperty();
-    }
-
-    /**
-     * Sets stat level. Also updates statLevelProperty.
-     *
-     * @param level
-     */
-    private void setStatLevel(int level) {
-        statLevel = level;
-        statLevelProperty.set(level);
-    }
-
-    /**
-     * Current job level
-     */
-    private int jobLevel = 1;
-    private transient ReadOnlyIntegerWrapper jobLevelProperty = new ReadOnlyIntegerWrapper(
-            jobLevel);
-
-    /**
-     *
-     * @return job level
-     */
-    public final int getJobLevel() {
-        return jobLevel;
-    }
-
-    /**
-     *
-     * @return job level property
-     */
-    public final ReadOnlyIntegerProperty jobLevelProperty() {
-        return statLevelProperty.getReadOnlyProperty();
-    }
-
-    /**
-     * Sets job level. Also updates jobLevelProperty.
-     *
-     * @param level
-     */
-    private void setJobLevel(int level) {
-        jobLevel = level;
-        jobLevelProperty.set(level);
-    }
+    private LevelComponent statLevel, jobLevel;
 
     /**
      * Number of points available to increase base attributes.
@@ -177,9 +113,9 @@ public final class PlayerControl extends CharacterControl {
         if (getAttributePoints() == 0)
             return;
 
-        int value = getBaseAttribute(attr);
+        int value = attributes.getBaseAttribute(attr);
         if (value < MAX_ATTRIBUTE) {
-            setAttribute(attr, value + 1);
+            attributes.setAttribute(attr, value + 1);
             setAttributePoints(getAttributePoints() - 1);
         }
     }
@@ -296,15 +232,15 @@ public final class PlayerControl extends CharacterControl {
     }
 
     public final int expNeededForNextBaseLevel() {
-        return EXP_NEEDED_BASE[getBaseLevel() - 1];
+        return EXP_NEEDED_BASE[baseLevel.getLevel() - 1];
     }
 
     public final int expNeededForNextStatLevel() {
-        return EXP_NEEDED_STAT[getStatLevel() - 1];
+        return EXP_NEEDED_STAT[statLevel.getLevel() - 1];
     }
 
     public final int expNeededForNextJobLevel() {
-        return EXP_NEEDED_JOB[getJobLevel() - 1];
+        return EXP_NEEDED_JOB[jobLevel.getLevel() - 1];
     }
 
     /**
@@ -319,11 +255,11 @@ public final class PlayerControl extends CharacterControl {
         boolean baseLevelUp = false;
 
         xp.add(gainedXP);
-        if (xp.stat >= EXP_NEEDED_STAT[getStatLevel()-1]) {
+        if (xp.stat >= EXP_NEEDED_STAT[statLevel.getLevel()-1]) {
             statLevelUp();
             xp.stat = 0;
         }
-        if (xp.job >= EXP_NEEDED_JOB[getJobLevel()-1]) {
+        if (xp.job >= EXP_NEEDED_JOB[jobLevel.getLevel()-1]) {
             jobLevelUp();
             xp.job = 0;
         }
@@ -376,7 +312,7 @@ public final class PlayerControl extends CharacterControl {
      * @param charClass
      */
     public PlayerControl(String name, GameCharacterClass charClass) {
-        super(1000, name, "Player", "player.png", charClass);
+        //super(1000, name, "Player", "player.png", charClass);
 
         for (EquipPlace p : EquipPlace.values()) {
             EquippableItem item = (EquippableItem) EntityManager.getItemByID(p.emptyID);
@@ -387,19 +323,19 @@ public final class PlayerControl extends CharacterControl {
     }
 
     private void baseLevelUp() {
-        setBaseLevel(getBaseLevel() + 1);
-        updateStats();
-        restoreHP(getTotalStat(Stat.MAX_HP));
-        restoreSP(getTotalStat(Stat.MAX_SP));
+        baseLevel.incLevel();
+
+        hp.restorePercentageMax(100);
+        sp.restorePercentageMax(100);
     }
 
     private void statLevelUp() {
-        setStatLevel(getStatLevel() + 1);
+        statLevel.incLevel();
         setAttributePoints(getAttributePoints() + ATTRIBUTE_POINTS_PER_LEVEL);
     }
 
     private void jobLevelUp() {
-        setJobLevel(getJobLevel() + 1);
+        jobLevel.incLevel();
         setSkillPoints(getSkillPoints() + 1);
     }
 
@@ -408,8 +344,7 @@ public final class PlayerControl extends CharacterControl {
         Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
         Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
 
-        return getAtkTick() >= 50 / (1 + getTotalStat(Stat.ASPD)
-                *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
+        return getAtkTick() >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     }
 
     public final void equipWeapon(Weapon w) {

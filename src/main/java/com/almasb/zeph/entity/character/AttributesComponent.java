@@ -97,4 +97,13 @@ public class AttributesComponent extends AbstractComponent {
     public NumberBinding totalAttributeProperty(Attribute attribute) {
         return attributeProperty(attribute).add(bAttributeProperty(attribute));
     }
+
+    public AttributesComponent() {
+        for (Attribute attribute : Attribute.values()) {
+            attributes.put(attribute, 0);
+            attributeProperties.put(attribute, new ReadOnlyIntegerWrapper(0));
+            bAttributes.put(attribute, 0);
+            bAttributeProperties.put(attribute, new ReadOnlyIntegerWrapper(0));
+        }
+    }
 }

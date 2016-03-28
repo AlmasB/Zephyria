@@ -102,4 +102,8 @@ public class StatsComponent extends AbstractComponent {
     public float getTotalStat(Stat stat) {
         return getBaseStat(stat) + getBonusStat(stat);
     }
+
+    public StatsComponent() {
+        // TODO: for stat in stats
+    }
 }

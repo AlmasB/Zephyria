@@ -9,7 +9,7 @@ import javafx.beans.property.SimpleObjectProperty;
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public class CharacterComponent extends AbstractComponent {
+public class CharacterClassComponent extends AbstractComponent {
 
     /**
      * Class of this game character.

@@ -8,13 +8,8 @@ import com.almasb.ents.AbstractControl;
 import com.almasb.ents.Entity;
 import com.almasb.ents.component.Required;
 import com.almasb.zeph.combat.Attribute;
-import com.almasb.zeph.combat.Damage;
-import com.almasb.zeph.combat.Damage.DamageCritical;
-import com.almasb.zeph.combat.Damage.DamageType;
 import com.almasb.zeph.combat.Effect;
 import com.almasb.zeph.combat.Element;
-import com.almasb.zeph.combat.GameMath;
-import com.almasb.zeph.combat.Skill;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.combat.StatusEffect;
 import com.almasb.zeph.combat.StatusEffect.Status;
@@ -23,14 +18,10 @@ import com.almasb.zeph.entity.component.HPComponent;
 import com.almasb.zeph.entity.component.SPComponent;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
-import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 
-/**
- * Essentially alive game object Enemies/NPCs/players.
- *
- * @author Almas Baimagambetov
- */
 @Required(HPComponent.class)
+@Required(SPComponent.class)
 public abstract class CharacterControl extends AbstractControl {
 
     /**
@@ -80,30 +71,13 @@ public abstract class CharacterControl extends AbstractControl {
         effects.add(e);
     }
 
-//    /**
-//     * TODO: Change this characters game class to @param cl
-//     *
-//     * @param cl
-//     *            game character class to change to
-//     */
-    // public void changeClass(GameCharacterClass cl) {
-    // this.charClass = cl;
-    // Skill[] tmpSkills = new Skill[skills.length + charClass.skillIDs.length];
-    //
-    // int j = 0;
-    // for (j = 0; j < skills.length; j++)
-    // tmpSkills[j] = skills[j];
-    //
-    // for (int i = 0; i < charClass.skillIDs.length; i++)
-    // tmpSkills[j++] = EntityManager.getSkillByID(charClass.skillIDs[i]);
-    //
-    // this.skills = tmpSkills;
-    // }
+    protected CharacterClassComponent characterClass;
 
-    private AttributesComponent attributes;
-    private StatsComponent stats;
-    private HPComponent hp;
-    private SPComponent sp;
+    protected AttributesComponent attributes;
+    protected StatsComponent stats;
+    protected HPComponent hp;
+    protected SPComponent sp;
+    protected LevelComponent baseLevel;
 
     @Override
     public void onAdded(Entity entity) {
@@ -113,39 +87,19 @@ public abstract class CharacterControl extends AbstractControl {
         attributes = entity.getComponentUnsafe(AttributesComponent.class);
         stats = entity.getComponentUnsafe(StatsComponent.class);
 
+        baseLevel = entity.getComponentUnsafe(LevelComponent.class);
+
         init();
     }
 
     private void init() {
-        //this.skills = new Skill[charClass.skillIDs.length];
-
-        // for (int i = 0; i < skills.length; i++)
-        // skills[i] = EntityManager.getSkillByID(charClass.skillIDs[i]);
-
-//        for (Attribute attr : Attribute.values()) {
-//            attributeProperties.put(attr, new ReadOnlyIntegerWrapper(1));
-//            bAttributeProperties.put(attr, new ReadOnlyIntegerWrapper(0));
-//            setAttribute(attr, 1);
-//            bAttributes.put(attr, 0);
-//        }
-//
-//        for (Stat stat : Stat.values()) {
-//            statProperties.put(stat, new ReadOnlyIntegerWrapper(0));
-//            bStatProperties.put(stat, new ReadOnlyIntegerWrapper(0));
-//            stats.put(stat, 0.0f);
-//            bStats.put(stat, 0.0f);
-//        }
-
-        updateStats();
+        bindStats();
 
         hp.maxValueProperty().bind(stats.totalStatProperty(Stat.MAX_HP));
         hp.restorePercentageMax(100);
 
         sp.maxValueProperty().bind(stats.totalStatProperty(Stat.MAX_SP));
         sp.restorePercentageMax(100);
-
-//        setHP((int) getTotalStat(Stat.MAX_HP)); // set current hp/sp to max
-//        setSP((int) getTotalStat(Stat.MAX_SP));
     }
 
     private int str() {
@@ -184,11 +138,11 @@ public abstract class CharacterControl extends AbstractControl {
         return attributes.getTotalAttribute(Attribute.LUCK);
     }
 
-    /**
-     * Character stats are directly affected by his attributes. Therefore any
-     * change in attributes must be followed by call to this method
-     */
-    public final void updateStats() {
+    private int level() {
+        return baseLevel.getLevel();
+    }
+
+    private void bindStats() {
 
         // bind base stats to attributes
 
@@ -202,12 +156,29 @@ public abstract class CharacterControl extends AbstractControl {
         NumberBinding per = attributes.totalAttributeProperty(Attribute.PERCEPTION);
         NumberBinding luc = attributes.totalAttributeProperty(Attribute.LUCK);
 
+        ReadOnlyIntegerProperty level = baseLevel.levelProperty();
+
         stats.statProperty(Stat.ATK).bind(Bindings.createDoubleBinding(() ->
-                str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1,
-                str, dex, per, luc));
+                str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + level() + str() / 10 * ((str() / 10) + 1),
+                str, dex, per, luc, level
+        ));
 
+        stats.statProperty(Stat.MATK).bind(Bindings.createDoubleBinding(() ->
+                int_() * 0.5 + wis() * 0.4 + wil() * 0.4 + dex() * 0.3 + per() * 0.2 + luc() * 0.1,
+                int_, dex, per, luc
+        ));
 
+        // ...
 
+        stats.statProperty(Stat.CRIT_DMG).bind(Bindings.createDoubleBinding(() ->
+                2 + luc() * 0.01,
+                luc
+        ));
+
+        stats.statProperty(Stat.MCRIT_DMG).bind(Bindings.createDoubleBinding(() ->
+                        2 + luc() * 0.01,
+                luc
+        ));
 
 
 //        // calculate totals first
@@ -295,33 +266,33 @@ public abstract class CharacterControl extends AbstractControl {
     /**
      * Regeneration tick. HP/SP.
      */
-    private void updateRegen() {
-        regenTick += 0.016f;
+    private void updateRegen(double tpf) {
+        regenTick += tpf;
 
         if (regenTick >= 2.0f) { // 2 secs
             if (!hasStatus(Status.POISONED)) {
                 hp.restore(stats.getTotalStat(Stat.HP_REGEN));
-                restoreSP(stats.getTotalStat(Stat.SP_REGEN));
+                sp.restore(stats.getTotalStat(Stat.SP_REGEN));
             }
             regenTick = 0.0f;
         }
     }
 
     private void updateSkills() {
-        for (Skill sk : skills) {
-            if (sk.active) {
-                if (sk.getCurrentCooldown() > 0) {
-                    sk.reduceCurrentCooldown(0.016f);
-                }
-            }
-            else { // reapply passive skills
-                if (sk.getLevel() > 0)
-                    sk.use(this, null);
-            }
-        }
+//        for (Skill sk : skills) {
+//            if (sk.active) {
+//                if (sk.getCurrentCooldown() > 0) {
+//                    sk.reduceCurrentCooldown(0.016f);
+//                }
+//            }
+//            else { // reapply passive skills
+//                if (sk.getLevel() > 0)
+//                    sk.use(this, null);
+//            }
+//        }
     }
 
-    private void updateEffects() {
+    private void updateEffects(double tpf) {
         for (Iterator<Effect> it = effects.iterator(); it.hasNext();) {
             Effect e = it.next();
             e.reduceDuration(0.016f);
@@ -332,7 +303,7 @@ public abstract class CharacterControl extends AbstractControl {
         }
     }
 
-    private void updateStatusEffects() {
+    private void updateStatusEffects(double tpf) {
         for (Iterator<StatusEffect> it = statuses.iterator(); it.hasNext();) {
             StatusEffect e = it.next();
             e.reduceDuration(0.016f);
@@ -342,26 +313,17 @@ public abstract class CharacterControl extends AbstractControl {
         }
     }
 
-    public void update() {
-        updateRegen();
+    @Override
+    public void onUpdate(Entity entity, double tpf) {
+        updateRegen(tpf);
 
         if (!canAttack())
             atkTick++;
 
         updateSkills();
         // check buffs
-        updateEffects();
-        updateStatusEffects();
-
-        updateStats();
-    }
-
-    @Override
-    public void onUpdate(Entity entity, double tpf) {
-        update();
-
-//        if (getHP() <= 0)
-//            entity.fireFXGLEvent(new FXGLEvent(Event.DEATH));
+        updateEffects(tpf);
+        updateStatusEffects(tpf);
     }
 
     public abstract Element getWeaponElement();
@@ -400,114 +362,112 @@ public abstract class CharacterControl extends AbstractControl {
      *            target being attacked
      * @return damage dealt
      */
-    public Damage attack(CharacterControl target) {
-        return dealPhysicalDamage(
-                target,
-                    getTotalStat(Stat.ATK)
-                            + 2f * GameMath.random(getBaseLevel()),
-                    getWeaponElement());
-    }
-
-    /**
-     * Deals physical damage to target. The damage is reduced by armor and
-     * defense The damage is affected by attacker's weapon element and by
-     * target's armor element
-     *
-     * @param target
-     * @param baseDamage
-     * @param element
-     * @return
-     */
-    public Damage dealPhysicalDamage(CharacterControl target, float baseDamage, Element element) {
-        boolean crit = false;
-        if (GameMath.checkChance(getTotalStat(Stat.CRIT_CHANCE))) {
-            baseDamage *= getTotalStat(Stat.CRIT_DMG);
-            crit = true;
-        }
-
-        float elementalDamageModifier = element
-                .getDamageModifierAgainst(target.getArmorElement());
-        float damageAfterReduction = (100 - target.getTotalStat(Stat.ARM))
-                * baseDamage / 100.0f - target.getTotalStat(Stat.DEF);
-
-        int totalDamage = Math.max(
-                Math.round(elementalDamageModifier * damageAfterReduction),
-                    0);
-        target.damageHP(totalDamage);
-
-        return new Damage(DamageType.PHYSICAL, element, totalDamage,
-                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
-    }
-
-    /**
-     * Deals physical damage of type NEUTRAL to target. The damage is reduced by
-     * target's armor and DEF
-     *
-     * @param target
-     * @param baseDamage
-     *
-     * @return damage dealt
-     */
-    public Damage dealPhysicalDamage(CharacterControl target, float baseDamage) {
-        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL);
-    }
-
-    /**
-     * Deal magical damage of type param element to target. The damage is
-     * reduced by target's magical armor and MDEF
-     *
-     * @param target
-     * @param baseDamage
-     *
-     * @return damage dealt
-     */
-    public Damage dealMagicalDamage(CharacterControl target, float baseDamage,
-                                    Element element) {
-        boolean crit = false;
-        if (GameMath.checkChance(getTotalStat(Stat.MCRIT_CHANCE))) {
-            baseDamage *= getTotalStat(Stat.MCRIT_DMG);
-            crit = true;
-        }
-
-        float elementalDamageModifier = element
-                .getDamageModifierAgainst(target.getArmorElement());
-        float damageAfterReduction = (100 - target.getTotalStat(Stat.MARM))
-                * baseDamage / 100.0f - target.getTotalStat(Stat.MDEF);
-
-        int totalDamage = Math.max(
-                Math.round(elementalDamageModifier * damageAfterReduction),
-                    0);
-        target.damageHP(totalDamage);
-
-        return new Damage(DamageType.MAGICAL, element, totalDamage,
-                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
-    }
-
-    /**
-     * Deal magical damage of type NEUTRAL to target. The damage is reduced by
-     * target's magical armor and MDEF
-     *
-     * @param target
-     * @param baseDamage
-     *
-     * @return damage dealt
-     */
-    public Damage dealMagicalDamage(CharacterControl target, float baseDamage) {
-        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL);
-    }
-
-    /**
-     * Deals the exact amount of damage to target as specified by param dmg
-     *
-     * @param target
-     * @param dmg
-     */
-    public Damage dealPureDamage(CharacterControl target, float dmg) {
-        int damage = (int) dmg;
-        target.damageHP(damage);
-        return new Damage(DamageType.PURE, Element.NEUTRAL, damage,
-                DamageCritical.FALSE);
-    }
+//    public Damage attack(Entity target) {
+//        CharacterControl other = target.getControlUnsafe(CharacterControl.class);
+//
+//        return dealPhysicalDamage(target, other.stats.getTotalStat(Stat.ATK) + 2f * GameMath.random(other.baseLevel.getLevel()), getWeaponElement());
+//    }
+//
+//    /**
+//     * Deals physical damage to target. The damage is reduced by armor and
+//     * defense The damage is affected by attacker's weapon element and by
+//     * target's armor element
+//     *
+//     * @param target
+//     * @param baseDamage
+//     * @param element
+//     * @return
+//     */
+//    public Damage dealPhysicalDamage(Entity target, float baseDamage, Element element) {
+//        boolean crit = false;
+//        if (GameMath.checkChance(getTotalStat(Stat.CRIT_CHANCE))) {
+//            baseDamage *= getTotalStat(Stat.CRIT_DMG);
+//            crit = true;
+//        }
+//
+//        float elementalDamageModifier = element
+//                .getDamageModifierAgainst(target.getArmorElement());
+//        float damageAfterReduction = (100 - target.getTotalStat(Stat.ARM))
+//                * baseDamage / 100.0f - target.getTotalStat(Stat.DEF);
+//
+//        int totalDamage = Math.max(
+//                Math.round(elementalDamageModifier * damageAfterReduction),
+//                    0);
+//        target.damageHP(totalDamage);
+//
+//        return new Damage(DamageType.PHYSICAL, element, totalDamage,
+//                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
+//    }
+//
+//    /**
+//     * Deals physical damage of type NEUTRAL to target. The damage is reduced by
+//     * target's armor and DEF
+//     *
+//     * @param target
+//     * @param baseDamage
+//     *
+//     * @return damage dealt
+//     */
+//    public Damage dealPhysicalDamage(CharacterControl target, float baseDamage) {
+//        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL);
+//    }
+//
+//    /**
+//     * Deal magical damage of type param element to target. The damage is
+//     * reduced by target's magical armor and MDEF
+//     *
+//     * @param target
+//     * @param baseDamage
+//     *
+//     * @return damage dealt
+//     */
+//    public Damage dealMagicalDamage(CharacterControl target, float baseDamage,
+//                                    Element element) {
+//        boolean crit = false;
+//        if (GameMath.checkChance(getTotalStat(Stat.MCRIT_CHANCE))) {
+//            baseDamage *= getTotalStat(Stat.MCRIT_DMG);
+//            crit = true;
+//        }
+//
+//        float elementalDamageModifier = element
+//                .getDamageModifierAgainst(target.getArmorElement());
+//        float damageAfterReduction = (100 - target.getTotalStat(Stat.MARM))
+//                * baseDamage / 100.0f - target.getTotalStat(Stat.MDEF);
+//
+//        int totalDamage = Math.max(
+//                Math.round(elementalDamageModifier * damageAfterReduction),
+//                    0);
+//        target.damageHP(totalDamage);
+//
+//        return new Damage(DamageType.MAGICAL, element, totalDamage,
+//                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
+//    }
+//
+//    /**
+//     * Deal magical damage of type NEUTRAL to target. The damage is reduced by
+//     * target's magical armor and MDEF
+//     *
+//     * @param target
+//     * @param baseDamage
+//     *
+//     * @return damage dealt
+//     */
+//    public Damage dealMagicalDamage(CharacterControl target, float baseDamage) {
+//        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL);
+//    }
+//
+//    /**
+//     * Deals the exact amount of damage to target as specified by param dmg
+//     *
+//     * @param target
+//     * @param dmg
+//     */
+//    public Damage dealPureDamage(CharacterControl target, float dmg) {
+//        int damage = (int) dmg;
+//        target.damageHP(damage);
+//        return new Damage(DamageType.PURE, Element.NEUTRAL, damage,
+//                DamageCritical.FALSE);
+//    }
 
     // public SkillUseResult useSkill(int skillCode, GameCharacter target) {
     // if (skillCode >= skills.length || hasStatusEffect(Status.SILENCED))

@@ -11,11 +11,6 @@ import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.item.DroppableItem;
 
-import javafx.scene.Group;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-
 public class EnemyControl extends CharacterControl {
 
     private static final long serialVersionUID = -4175008430166158773L;
@@ -78,7 +73,7 @@ public class EnemyControl extends CharacterControl {
       setAttribute(Attribute.PERCEPTION, attrs.per);
       setAttribute(Attribute.LUCK, attrs.luc);
 
-      updateStats();
+      bindStats();
       setHP((int)getTotalStat(Stat.MAX_HP));   // set current hp/sp to max
       setSP((int)getTotalStat(Stat.MAX_SP));
     }

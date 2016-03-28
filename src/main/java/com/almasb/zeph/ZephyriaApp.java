@@ -4,22 +4,21 @@ package com.almasb.zeph;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.asset.Texture;
 import com.almasb.fxgl.input.Input;
-import com.almasb.fxgl.input.Mouse;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.Events.Event;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.control.PassiveControl;
-import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.DescriptionComponent;
+import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.ID;
-import com.almasb.zeph.entity.character.EnemyControl;
 import com.almasb.zeph.entity.character.CharacterControl;
+import com.almasb.zeph.entity.character.EnemyControl;
 import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.PlayerControl;
 import com.almasb.zeph.entity.item.DroppableItem;
@@ -77,12 +76,10 @@ public class ZephyriaApp extends GameApplication {
     protected void initInput() {
         Input input = getInput();
 
-        mouse = input.getMouse();
-
         input.addAction(new UserAction("TargetSelection") {
             @Override
             protected void onAction() {
-                selectedPoint = new Point2D(mouse.getGameX(), mouse.getGameY());
+                selectedPoint = input.getMousePositionWorld();
             }
         }, MouseButton.PRIMARY);
     }
@@ -130,7 +127,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     @Override
-    protected void onUpdate() {
+    protected void onUpdate(double tpf) {
         if (selected != null) {
             startAttack(player, selected);
         }
@@ -141,8 +138,6 @@ public class ZephyriaApp extends GameApplication {
 //                selectedPoint = null;
 //        }
     }
-
-    private Mouse mouse;
 
     public static ProgressBar makeHPBar() {
         ProgressBar bar = new ProgressBar(false);

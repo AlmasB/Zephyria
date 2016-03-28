@@ -1,13 +1,12 @@
 package com.almasb.zeph.entity.character;
 
+import com.almasb.zeph.entity.DescriptionComponent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.almasb.zeph.entity.DescriptionComponent;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Represents a "bag" of items of a player

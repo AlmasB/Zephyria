@@ -1,28 +1,26 @@
 package com.almasb.zeph.entity.character;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import com.almasb.ents.AbstractControl;
 import com.almasb.ents.Entity;
 import com.almasb.ents.component.Required;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Effect;
-import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.combat.StatusEffect;
 import com.almasb.zeph.combat.StatusEffect.Status;
-
 import com.almasb.zeph.entity.component.HPComponent;
 import com.almasb.zeph.entity.component.SPComponent;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 @Required(HPComponent.class)
 @Required(SPComponent.class)
-public abstract class CharacterControl extends AbstractControl {
+public class CharacterControl extends AbstractControl {
 
     /**
      * Statuses currently affecting this character.
@@ -326,9 +324,9 @@ public abstract class CharacterControl extends AbstractControl {
         updateStatusEffects(tpf);
     }
 
-    public abstract Element getWeaponElement();
-
-    public abstract Element getArmorElement();
+//    public abstract Element getWeaponElement();
+//
+//    public abstract Element getArmorElement();
 
     /**
      * Attack tick that decides if character can attack

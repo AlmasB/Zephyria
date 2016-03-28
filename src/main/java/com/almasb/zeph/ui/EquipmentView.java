@@ -1,15 +1,11 @@
-package com.almasb.zeph;
+package com.almasb.zeph.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.almasb.fxgl.asset.AssetManager;
-import com.almasb.fxgl.asset.Texture;
-import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.app.ServiceType;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerControl;
-
 import javafx.animation.TranslateTransition;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
@@ -20,6 +16,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class EquipmentView extends Accordion {
 
@@ -36,33 +35,30 @@ public final class EquipmentView extends Accordion {
         groups.put(EquipPlace.LEFT_HAND, createGroup(133, 105));
         groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
-        for (EquipPlace place : EquipPlace.values()) {
-            setItem(place, playerData.getEquip(place));
-            playerData.equipProperty(place).addListener((obs, old, newItem) -> {
-                setItem(place, newItem);
-            });
-        }
+//        for (EquipPlace place : EquipPlace.values()) {
+//            setItem(place, playerData.getEquip(place));
+//            playerData.equipProperty(place).addListener((obs, old, newItem) -> {
+//                setItem(place, newItem);
+//            });
+//        }
 
         Pane pane = new Pane();
 
-        try {
-            Texture background = AssetManager.INSTANCE.loadTexture("ui/inventory_left.png");
-            pane.getChildren().add(background);
+        Texture background = GameApplication.getService(ServiceType.ASSET_LOADER).loadTexture("ui/inventory_left.png");
+        pane.getChildren().add(background);
 
-            expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-                if (newPane == null) {
-                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-                    tt.setToY(height - 25);
-                    tt.play();
-                }
-                else {
-                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-                    tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-                    tt.play();
-                }
-            });
-        }
-        catch (Exception e) {}
+        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+            if (newPane == null) {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
+                tt.setToY(height - 25);
+                tt.play();
+            }
+            else {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
+                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
+                tt.play();
+            }
+        });
 
         pane.getChildren().addAll(groups.values());
         getPanes().add(new TitledPane("Equipment", pane));
@@ -92,11 +88,11 @@ public final class EquipmentView extends Accordion {
         Group group = groups.get(place);
         group.getChildren().clear();
 
-        Entity e = item.toEntity();
+        //Entity e = item.toEntity();
 //        e.setOnMouseClicked(event -> playerData.unEquipItem(place));
 //        e.setCursor(Cursor.HAND);
 //
 //        group.getChildren().add(e);
-        ((Text)group.getUserData()).setText(item.getFullDescription());
+        //((Text)group.getUserData()).setText(item.getFullDescription());
     }
 }

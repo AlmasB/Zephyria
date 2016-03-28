@@ -1,10 +1,8 @@
 package com.almasb.zeph.entity.character;
 
 import com.almasb.ents.AbstractComponent;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)

@@ -1,9 +1,8 @@
 package com.almasb.zeph.entity.component;
 
 import com.almasb.ents.component.DoubleComponent;
-import com.almasb.fxgl.entity.component.RechargeableComponent;
-import com.almasb.zeph.combat.Stat;
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleWrapper;
 
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)

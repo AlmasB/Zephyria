@@ -28,14 +28,14 @@ public class GameCharacterClassChanger {
      */
     private GameCharacterClassChanger() {}
 
-    public static boolean canChangeClass(PlayerControl ch) {
-        Ascension r = reqList.get(ch.getGameCharacterClass());
-        return r != null && ch.getBaseLevel() >= r.baseLevel && ch.getJobLevel() >= r.jobLevel;
-    }
-
-    public static GameCharacterClass[] getAscensionClasses(PlayerControl ch) {
-        return reqList.get(ch.getGameCharacterClass()).classesTo;
-    }
+//    public static boolean canChangeClass(PlayerControl ch) {
+//        Ascension r = reqList.get(ch.getGameCharacterClass());
+//        return r != null && ch.getBaseLevel() >= r.baseLevel && ch.getJobLevel() >= r.jobLevel;
+//    }
+//
+//    public static GameCharacterClass[] getAscensionClasses(PlayerControl ch) {
+//        return reqList.get(ch.getGameCharacterClass()).classesTo;
+//    }
 
     private static class Ascension {
 

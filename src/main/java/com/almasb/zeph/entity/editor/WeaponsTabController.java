@@ -1,18 +1,16 @@
 package com.almasb.zeph.entity.editor;
 
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
+import com.almasb.zeph.combat.Element;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
-import com.almasb.zeph.combat.Element;
-import com.almasb.zeph.entity.item.Weapon;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WeaponsTabController {
 
@@ -20,7 +18,7 @@ public class WeaponsTabController {
     private Path file;
 
     @FXML
-    private ListView<Weapon> list;
+    private ListView<String> list;
 
     @FXML
     private TextField id;

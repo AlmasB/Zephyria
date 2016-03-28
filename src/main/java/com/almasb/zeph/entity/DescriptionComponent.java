@@ -7,13 +7,10 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
 /**
- * This is the generic class for any character / item / object in the game.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
- *
- * TODO: shouldnt fields be final?
  */
-public abstract class DescriptionComponent extends AbstractComponent implements java.io.Serializable {
+public final class DescriptionComponent extends AbstractComponent implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +21,6 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     private transient ReadOnlyIntegerProperty idProperty;
 
     /**
-     *
      * @return id
      */
     public final int getID() {
@@ -32,7 +28,6 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     }
 
     /**
-     *
      * @return id property
      */
     public final ReadOnlyIntegerProperty idProperty() {
@@ -48,7 +43,6 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     private transient ReadOnlyStringProperty nameProperty;
 
     /**
-     *
      * @return name
      */
     public final String getName() {
@@ -56,7 +50,6 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     }
 
     /**
-     *
      * @return name property
      */
     public final ReadOnlyStringProperty nameProperty() {
@@ -72,26 +65,20 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     private transient ReadOnlyStringProperty descriptionProperty;
 
     /**
-    *
-    * @return description
-    */
-   public final String getDescription() {
-       return description;
-   }
+     * @return description
+     */
+    public final String getDescription() {
+        return description;
+    }
 
-   /**
-    *
-    * @return description property
-    */
-   public final ReadOnlyStringProperty descriptionProperty() {
-       if (descriptionProperty == null)
-           descriptionProperty = new ReadOnlyStringWrapper(description).getReadOnlyProperty();
-       return descriptionProperty;
-   }
-
-   public String getFullDescription() {
-       return description;
-   }
+    /**
+     * @return description property
+     */
+    public final ReadOnlyStringProperty descriptionProperty() {
+        if (descriptionProperty == null)
+            descriptionProperty = new ReadOnlyStringWrapper(description).getReadOnlyProperty();
+        return descriptionProperty;
+    }
 
     /**
      * File name of the texture in assets/textures/
@@ -99,40 +86,18 @@ public abstract class DescriptionComponent extends AbstractComponent implements 
     private String textureName;
 
     /**
-     *
      * @return texture name
      */
     public final String getTextureName() {
         return textureName;
     }
 
-    /**
-     * GameEntity ctor.
-     *
-     * @param id
-     * @param name
-     * @param description
-     * @param textureName
-     */
     public DescriptionComponent(int id, String name, String description, String textureName) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.textureName = textureName;
     }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-//    @Override
-//    public boolean equals(Object other) {
-//        if (other instanceof GameEntity) {
-//            return ((GameEntity)other).id == this.id;
-//        }
-//        return false;
-//    }
 
     /**
      * Converts to format: [id] name (textureName) - description.

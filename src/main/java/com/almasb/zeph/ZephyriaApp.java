@@ -1,46 +1,27 @@
 package com.almasb.zeph;
 
-
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.entity.Entities;
+import com.almasb.fxgl.entity.GameEntity;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.zeph.Events.Event;
-import com.almasb.zeph.combat.Damage;
-import com.almasb.zeph.combat.GameMath;
-import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.control.PassiveControl;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.ID;
-import com.almasb.zeph.entity.character.CharacterControl;
-import com.almasb.zeph.entity.character.EnemyControl;
-import com.almasb.zeph.entity.character.GameCharacterClass;
 import com.almasb.zeph.entity.character.PlayerControl;
-import com.almasb.zeph.entity.item.DroppableItem;
-import javafx.animation.Interpolator;
-import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
-import javafx.util.Duration;
-
-import java.util.List;
-import java.util.Random;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -85,9 +66,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     @Override
-    protected void initAssets() {
-        getAssetLoader().cache();
-    }
+    protected void initAssets() {}
 
     @Override
     protected void initGame() {
@@ -96,9 +75,9 @@ public class ZephyriaApp extends GameApplication {
         selectedEffect.setInput(new Glow(0.8));
 
         initPlayer();
-        initEnemies();
+        //initEnemies();
 
-        getGameScene().getViewport().bindToEntity(player, (int)getWidth() / 2, (int)getHeight() / 2);
+//        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
     }
 
     @Override
@@ -119,17 +98,17 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        getGameScene().addUINodes(hotbar,
-                new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
-                new EquipmentView(playerData, getHeight()),
-                new InventoryView(playerData, getWidth(), getHeight()),
-                debug);
+//        getGameScene().addUINodes(hotbar,
+//                new VBox(new BasicInfoView(playerData),new CharInfoView(playerData)),
+//                new EquipmentView(playerData, getHeight()),
+//                new InventoryView(playerData, getWidth(), getHeight()),
+//                debug);
     }
 
     @Override
     protected void onUpdate(double tpf) {
         if (selected != null) {
-            startAttack(player, selected);
+            //startAttack(player, selected);
         }
 
 //        if (selectedPoint != null) {
@@ -157,158 +136,158 @@ public class ZephyriaApp extends GameApplication {
         return bar;
     }
 
-    private void initPlayer() {
-        player = new PlayerControl("Debug", GameCharacterClass.NOVICE).toEntity();
-        player.setPosition(getWidth() / 2, getHeight() / 2);
+//    private void initPlayerOld() {
+//        player = new PlayerControl("Debug", GameCharacterClass.NOVICE).toEntity();
+//        player.setPosition(getWidth() / 2, getHeight() / 2);
+//
+//        playerData = player.getControl(PlayerControl.class).get();
+//
+//        Group vbox = new Group();
+//
+//        Rectangle t = new Rectangle(40, 40);
+//        t.setFill(Color.BLUE);
+//        t.setArcWidth(15);
+//        t.setArcHeight(15);
+//
+//        ProgressBar barHP = makeHPBar();
+//        ProgressBar barSP = makeSkillBar();
+//
+//        barHP.setTranslateX(-20);
+//        barHP.setTranslateY(60);
+//        barHP.setWidth(80);
+//        barHP.setHeight(10);
+//        barHP.setLabelVisible(false);
+//
+//        barSP.setTranslateX(-20);
+//        barSP.setTranslateY(70);
+//        barSP.setWidth(80);
+//        barSP.setHeight(10);
+//        barSP.setLabelVisible(false);
+//
+//        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
+//        barHP.currentValueProperty().bind(playerData.hpProperty());
+//
+//        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
+//        barSP.currentValueProperty().bind(playerData.spProperty());
+//
+//        Text text = new Text();
+//        text.setFont(Font.font(14));
+//        text.setFill(Color.WHITE);
+//        text.textProperty().bind(playerData.nameProperty().concat(" Lv. ").concat(playerData.baseLevelProperty()));
+//        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
+//        text.setTranslateY(55);
+//
+//
+//        vbox.getChildren().addAll(t, text, barHP, barSP);
+//
+//        player.setSceneView(vbox);
+//
+//        Entity bg = Entity.noType();
+////        bg.setOnMouseClicked(event -> {
+////            if (selected != null) {
+////                selected.setEffect(null);
+////                selected = null;
+////            }
+////        });
+//
+//        Texture back = assets.getTexture("map1.png");
+//        //back.setFitWidth(getWidth());
+//        //back.setFitHeight(getHeight());
+//
+//        bg.setSceneView(back);
+//        //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
+//        //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
+//
+//
+//        Entity bg0 = Entity.noType();
+//        bg0.setSceneView(assets.getTexture("background.png"));
+//        bg0.setX(-getWidth());
+//
+//        Entity bg1 = Entity.noType();
+//        bg1.setSceneView(assets.getTexture("background.png"));
+//        bg1.setY(-getHeight());
+//
+//
+//
+//
+//
+//
+//        getGameWorld().addEntities(bg0, bg1, bg);
+//
+//        for (int i = 0; i < 20; i++) {
+//            Entity tree = Entity.noType();
+//            tree.setPosition(new Random().nextInt(1500), new Random().nextInt(1000));
+//            tree.setSceneView(assets.getTexture("tree.png"));
+//
+//            getGameWorld().addEntities(tree);
+//        }
+//
+//        getGameWorld().addEntities(player);
+//
+//
+//        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
+//        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.GUT_RIPPER));
+//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.DOMOVOI));
+//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
+//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SOUL_BARRIER));
+//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
+//    }
 
-        playerData = player.getControl(PlayerControl.class).get();
-
-        Group vbox = new Group();
-
-        Rectangle t = new Rectangle(40, 40);
-        t.setFill(Color.BLUE);
-        t.setArcWidth(15);
-        t.setArcHeight(15);
-
-        ProgressBar barHP = makeHPBar();
-        ProgressBar barSP = makeSkillBar();
-
-        barHP.setTranslateX(-20);
-        barHP.setTranslateY(60);
-        barHP.setWidth(80);
-        barHP.setHeight(10);
-        barHP.setLabelVisible(false);
-
-        barSP.setTranslateX(-20);
-        barSP.setTranslateY(70);
-        barSP.setWidth(80);
-        barSP.setHeight(10);
-        barSP.setLabelVisible(false);
-
-        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
-        barHP.currentValueProperty().bind(playerData.hpProperty());
-
-        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
-        barSP.currentValueProperty().bind(playerData.spProperty());
-
-        Text text = new Text();
-        text.setFont(Font.font(14));
-        text.setFill(Color.WHITE);
-        text.textProperty().bind(playerData.nameProperty().concat(" Lv. ").concat(playerData.baseLevelProperty()));
-        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
-        text.setTranslateY(55);
-
-
-        vbox.getChildren().addAll(t, text, barHP, barSP);
-
-        player.setSceneView(vbox);
-
-        Entity bg = Entity.noType();
-//        bg.setOnMouseClicked(event -> {
-//            if (selected != null) {
-//                selected.setEffect(null);
-//                selected = null;
-//            }
-//        });
-
-        Texture back = assets.getTexture("map1.png");
-        //back.setFitWidth(getWidth());
-        //back.setFitHeight(getHeight());
-
-        bg.setSceneView(back);
-        //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
-        //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
-
-
-        Entity bg0 = Entity.noType();
-        bg0.setSceneView(assets.getTexture("background.png"));
-        bg0.setX(-getWidth());
-
-        Entity bg1 = Entity.noType();
-        bg1.setSceneView(assets.getTexture("background.png"));
-        bg1.setY(-getHeight());
-
-
-
-
-
-
-        getGameWorld().addEntities(bg0, bg1, bg);
-
-        for (int i = 0; i < 20; i++) {
-            Entity tree = Entity.noType();
-            tree.setPosition(new Random().nextInt(1500), new Random().nextInt(1000));
-            tree.setSceneView(assets.getTexture("tree.png"));
-
-            getGameWorld().addEntities(tree);
-        }
-
-        getGameWorld().addEntities(player);
-
-
-        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
-        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.GUT_RIPPER));
-        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.DOMOVOI));
-        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
-        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SOUL_BARRIER));
-        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
-    }
-
-    private void initEnemies() {
-        for (int i = 0; i < 10; i++) {
-            Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
-            enemy.setPosition(new Random().nextInt(1000), new Random().nextInt(600));
-//            enemy.getSceneView().ifPresent().setOnMouseClicked(e -> {
-//                selected = enemy;
-//                selected.setEffect(selectedEffect);
+//    private void initEnemies() {
+//        for (int i = 0; i < 10; i++) {
+//            Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
+//            enemy.setPosition(new Random().nextInt(1000), new Random().nextInt(600));
+////            enemy.getSceneView().ifPresent().setOnMouseClicked(e -> {
+////                selected = enemy;
+////                selected.setEffect(selectedEffect);
+////            });
+//            enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
+//                startAttack(enemy, event.getSource());
 //            });
-            enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
-                startAttack(enemy, event.getSource());
-            });
-            enemy.addFXGLEventHandler(Event.DEATH, event -> {
-                EnemyControl enemyData = enemy.getControl(EnemyControl.class).get();
+//            enemy.addFXGLEventHandler(Event.DEATH, event -> {
+//                EnemyControl enemyData = enemy.getControl(EnemyControl.class).get();
+//
+//                playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
+//                playerData.rewardXP(enemyData.getXP());
+//
+//                List<DroppableItem> drops = enemyData.getDrops();
+//                for (DroppableItem drop : drops) {
+//                    if (GameMath.checkChance(drop.dropChance)) {
+//                        DescriptionComponent item = EntityManager.getItemByID(drop.itemID);
+//                        dropItem(item, enemy.getPosition());
+//                    }
+//                }
+//
+//                getGameWorld().removeEntity(enemy);
+//                selected = null;
+//            });
+//            enemy.addControl(new PassiveControl(250));
+//            enemy.getSceneView().get().setCursor(Cursor.CROSSHAIR);
+//
+//            getGameWorld().addEntities(enemy);
+//        }
+//    }
 
-                playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
-                playerData.rewardXP(enemyData.getXP());
-
-                List<DroppableItem> drops = enemyData.getDrops();
-                for (DroppableItem drop : drops) {
-                    if (GameMath.checkChance(drop.dropChance)) {
-                        DescriptionComponent item = EntityManager.getItemByID(drop.itemID);
-                        dropItem(item, enemy.getPosition());
-                    }
-                }
-
-                getGameWorld().removeEntity(enemy);
-                selected = null;
-            });
-            enemy.addControl(new PassiveControl(250));
-            enemy.getSceneView().get().setCursor(Cursor.CROSSHAIR);
-
-            getGameWorld().addEntities(enemy);
-        }
-    }
-
-    private void startAttack(Entity attacker, Entity target) {
-        if (!attacker.isActive() || !target.isActive())
-            return;
-
-        CharacterControl a = attacker.getControl(CharacterControl.class).get();
-
-        if (!a.canAttack())
-            return;
-
-        a.resetAtkTick();
-
-        // TODO: this should be specific to each char type
-        Entity proj = Entity.noType();
-
-        proj.setSceneView(R.assets.getTexture("projectile.png"));
-        proj.setPosition(attacker.getPosition());
-        //proj.addControl(new ProjectileControl());
-
-        getGameWorld().addEntities(proj);
-    }
+//    private void startAttack(Entity attacker, Entity target) {
+//        if (!attacker.isActive() || !target.isActive())
+//            return;
+//
+//        CharacterControl a = attacker.getControl(CharacterControl.class).get();
+//
+//        if (!a.canAttack())
+//            return;
+//
+//        a.resetAtkTick();
+//
+//        // TODO: this should be specific to each char type
+//        Entity proj = Entity.noType();
+//
+//        proj.setSceneView(R.assets.getTexture("projectile.png"));
+//        proj.setPosition(attacker.getPosition());
+//        //proj.addControl(new ProjectileControl());
+//
+//        getGameWorld().addEntities(proj);
+//    }
 
 //    private class ProjectileControl implements Control {
 //        private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
@@ -335,39 +314,50 @@ public class ZephyriaApp extends GameApplication {
 //        }
 //    }
 
-    private void dropItem(DescriptionComponent item, Point2D position) {
-        Entity e = item.toEntity();
-        e.setPosition(position);
-//        e.setOnMouseClicked(event -> {
-//            sceneManager.removeEntity(e);
-//            playerData.getInventory().addItem(item);
-//        });
+//    private void dropItem(DescriptionComponent item, Point2D position) {
+//        Entity e = item.toEntity();
+//        e.setPosition(position);
+////        e.setOnMouseClicked(event -> {
+////            sceneManager.removeEntity(e);
+////            playerData.getInventory().addItem(item);
+////        });
+////
+////        e.setCursor(Cursor.CLOSED_HAND);
 //
-//        e.setCursor(Cursor.CLOSED_HAND);
+//        getGameWorld().addEntities(e);
+//
+//        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e.getSceneView().get());
+//        tt.setInterpolator(Interpolator.EASE_IN);
+//        tt.setByX(new Random().nextInt(20) - 10);
+//        tt.setByY(10 + new Random().nextInt(10));
+//        tt.play();
+//    }
+//
+//    private void showDamage(Damage damage, Point2D position) {
+//        Entity e = Entity.noType();
+//        e.setExpireTime(Duration.seconds(1));
+//        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
+//        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
+//        text.setFont(Font.font(damage.isCritical() ? 18 : 16));
+//
+//        e.setSceneView(text);
+//        e.setPosition(position);
+//        getGameWorld().addEntities(e);
+//
+//        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e.getSceneView().get());
+//        tt.setByY(-30);
+//        tt.play();
+//    }
 
-        getGameWorld().addEntities(e);
+    private Entity initPlayer() {
+        GameEntity player = Entities.builder()
+                .at(0, 0)
+                .viewFromNode(new Rectangle(100, 100))
+                .with(new DescriptionComponent(1, "Player", "Player Description", "enemy.png"))
+                //.with(new PlayerControl("PLAYER_NAME", GameCharacterClass.NOVICE))
+                .build();
 
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e.getSceneView().get());
-        tt.setInterpolator(Interpolator.EASE_IN);
-        tt.setByX(new Random().nextInt(20) - 10);
-        tt.setByY(10 + new Random().nextInt(10));
-        tt.play();
-    }
-
-    private void showDamage(Damage damage, Point2D position) {
-        Entity e = Entity.noType();
-        e.setExpireTime(Duration.seconds(1));
-        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
-        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
-        text.setFont(Font.font(damage.isCritical() ? 18 : 16));
-
-        e.setSceneView(text);
-        e.setPosition(position);
-        getGameWorld().addEntities(e);
-
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e.getSceneView().get());
-        tt.setByY(-30);
-        tt.play();
+        return player;
     }
 
     public static void main(String[] args) {

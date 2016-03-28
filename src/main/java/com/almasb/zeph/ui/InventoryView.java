@@ -1,19 +1,18 @@
-package com.almasb.zeph;
+package com.almasb.zeph.ui;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.almasb.fxgl.asset.AssetManager;
-import com.almasb.fxgl.asset.Texture;
-import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.app.GameApplication;
+import com.almasb.fxgl.app.ServiceType;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerControl;
-
 import javafx.animation.TranslateTransition;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class InventoryView extends Accordion {
 
@@ -64,27 +63,23 @@ public class InventoryView extends Accordion {
 
 
 
+        Texture background = GameApplication.getService(ServiceType.ASSET_LOADER).loadTexture("ui/inventory_right.png");
+        root.getChildren().add(background);
 
-        try {
-            Texture background = AssetManager.INSTANCE.loadTexture("ui/inventory_right.png");
-            root.getChildren().add(background);
+        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+            if (newPane == null) {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
+                tt.setToY(height - 25);
+                tt.play();
+            }
+            else {
+                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
+                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
+                tt.play();
+            }
+        });
 
-            expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-                if (newPane == null) {
-                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-                    tt.setToY(height - 25);
-                    tt.play();
-                }
-                else {
-                    TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-                    tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-                    tt.play();
-                }
-            });
-
-            setTranslateX(width - background.getLayoutBounds().getWidth() - 2);
-        }
-        catch (Exception e) {}
+        setTranslateX(width - background.getLayoutBounds().getWidth() - 2);
 
         getPanes().add(new TitledPane("Inventory", root));
 

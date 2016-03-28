@@ -3,7 +3,6 @@ package com.almasb.zeph.control;
 
 import com.almasb.ents.AbstractControl;
 import com.almasb.ents.Entity;
-import com.almasb.zeph.Events.Event;
 
 public class PassiveControl extends AbstractControl {
 

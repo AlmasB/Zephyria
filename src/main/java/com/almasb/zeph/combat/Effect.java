@@ -1,10 +1,10 @@
 package com.almasb.zeph.combat;
 
+import com.almasb.zeph.entity.character.CharacterControl;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.almasb.zeph.entity.character.CharacterControl;
 
 /**
  * Buff that lasts for a period of time, can be negative
@@ -56,16 +56,16 @@ public class Effect implements java.io.Serializable {
     }
 
     public void onBegin(CharacterControl ch) {
-        for (Rune r : runes)
-            ch.addBonusAttribute(r.attribute, r.bonus);
-        for (Essence e : essences)
-            ch.addBonusStat(e.stat, e.bonus);
+//        for (Rune r : runes)
+//            ch.addBonusAttribute(r.attribute, r.bonus);
+//        for (Essence e : essences)
+//            ch.addBonusStat(e.stat, e.bonus);
     }
 
     public void onEnd(CharacterControl ch) {
-        for (Rune r : runes)
-            ch.addBonusAttribute(r.attribute, -r.bonus);
-        for (Essence e : essences)
-            ch.addBonusStat(e.stat, -e.bonus);
+//        for (Rune r : runes)
+//            ch.addBonusAttribute(r.attribute, -r.bonus);
+//        for (Essence e : essences)
+//            ch.addBonusStat(e.stat, -e.bonus);
     }
 }

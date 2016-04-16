@@ -7,6 +7,7 @@ import com.almasb.zeph.entity.character.control.PlayerControl;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -15,6 +16,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,11 +29,12 @@ public class CharInfoView extends Accordion {
         //Cursor cursorQuestion = new ImageCursor(R.assets.getTexture("ui/cursors/question.png").getImage(), 52, 10);
 
         VBox attrBox = new VBox(5);
+        attrBox.setTranslateY(10);
         for (Attribute attr : Attribute.values()) {
             Text text = new Text();
             text.setFont(font);
             //text.setCursor(cursorQuestion);
-            text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %d"));
+            text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
 
             Text tooltipText = new Text(attr.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -60,7 +63,15 @@ public class CharInfoView extends Accordion {
                 player.getControlUnsafe(PlayerControl.class).increaseAttr(attr);
             });
 
-            attrBox.getChildren().add(new HBox(5, text, bText, btn));
+            Pane box = new Pane();
+            box.setPrefSize(160, 15);
+            box.getChildren().addAll(text, bText, btn);
+
+            bText.setTranslateX(70);
+            btn.setTranslateX(155);
+
+            //attrBox.getChildren().add(new HBox(5, text, bText, btn));
+            attrBox.getChildren().add(box);
         }
 
         Text info = new Text();

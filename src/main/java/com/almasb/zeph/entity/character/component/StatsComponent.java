@@ -76,8 +76,10 @@ public class StatsComponent extends AbstractComponent {
         return bStatProperties.get(stat).getReadOnlyProperty();
     }
 
+    private Map<Stat, NumberBinding> bindings = new HashMap<>();
+
     public final NumberBinding totalStatProperty(Stat stat) {
-        return statProperty(stat).add(bStatProperty(stat));
+        return bindings.get(stat);
     }
 
     /**
@@ -100,7 +102,8 @@ public class StatsComponent extends AbstractComponent {
      * @return total value for stat, including bonuses
      */
     public float getTotalStat(Stat stat) {
-        return getBaseStat(stat) + getBonusStat(stat);
+        //return getBaseStat(stat) + getBonusStat(stat);
+        return bindings.get(stat).floatValue();
     }
 
     public StatsComponent() {
@@ -109,6 +112,8 @@ public class StatsComponent extends AbstractComponent {
             statProperties.put(stat, new ReadOnlyIntegerWrapper(0));
             bStats.put(stat, 0f);
             bStatProperties.put(stat, new ReadOnlyIntegerWrapper(0));
+
+            bindings.put(stat, statProperty(stat).add(bStatProperty(stat)));
         }
     }
 }

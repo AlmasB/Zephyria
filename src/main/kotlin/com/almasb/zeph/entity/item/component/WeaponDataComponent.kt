@@ -24,7 +24,7 @@ class WeaponDataComponent(itemLevel: ItemLevel, val type: WeaponType, val pureDa
     }
 
     override fun onUnEquip(entity: Entity) {
-        super.onEquip(entity)
+        super.onUnEquip(entity)
         entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ATK, -fullDamage())
     }
 }

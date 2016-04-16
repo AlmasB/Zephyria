@@ -14,12 +14,14 @@ import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
+import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -68,6 +70,20 @@ public class ZephyriaApp extends GameApplication {
                 selectedPoint = input.getMousePositionWorld();
             }
         }, MouseButton.PRIMARY);
+
+        input.addAction(new UserAction("Test Wear1") {
+            WeaponEntity weapon = new WeaponEntity();
+
+            @Override
+            protected void onActionBegin() {
+                weapon.getData().onEquip(player);
+            }
+
+            @Override
+            protected void onActionEnd() {
+                weapon.getData().onUnEquip(player);
+            }
+        }, KeyCode.F);
     }
 
     @Override
@@ -353,6 +369,11 @@ public class ZephyriaApp extends GameApplication {
         PlayerEntity player = new PlayerEntity();
         player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "enemy.png"));
         player.addControl(new PlayerControl());
+
+        player.getPositionComponent().setValue(400, 400);
+        player.getMainViewComponent().setView(new Rectangle(40, 40));
+
+        getGameWorld().addEntity(player);
 
         return player;
     }

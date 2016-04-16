@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity.character.component;
 
 import com.almasb.ents.AbstractComponent;
+import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;
@@ -103,6 +104,11 @@ public class StatsComponent extends AbstractComponent {
     }
 
     public StatsComponent() {
-        // TODO: for stat in stats
+        for (Stat stat : Stat.values()) {
+            stats.put(stat, 0f);
+            statProperties.put(stat, new ReadOnlyIntegerWrapper(0));
+            bStats.put(stat, 0f);
+            bStatProperties.put(stat, new ReadOnlyIntegerWrapper(0));
+        }
     }
 }

@@ -9,7 +9,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <fxgl.version>0.2.1</fxgl.version>
+        <fxgl.version>0.2.2</fxgl.version>
     </properties>
 
 	<build>

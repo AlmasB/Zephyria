@@ -5,6 +5,7 @@ import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.entity.character.Inventory
+import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.PlayerDataComponent
 import javafx.beans.property.ReadOnlyIntegerProperty
 import javafx.beans.property.ReadOnlyIntegerWrapper
@@ -80,6 +81,12 @@ class PlayerControl : CharacterControl() {
      * @param attr
      */
     fun increaseAttr(attr: Attribute) {
+
+
+        getEntity().getComponentUnsafe(AttributesComponent::class.java)
+            .setAttribute(attr, getEntity().getComponentUnsafe(AttributesComponent::class.java).getBaseAttribute(attr) + 1)
+
+
         //        if (getAttributePoints() == 0)
         //            return;
         //

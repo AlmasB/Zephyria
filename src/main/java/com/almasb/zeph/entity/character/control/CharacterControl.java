@@ -155,6 +155,26 @@ public class CharacterControl extends AbstractControl {
 
         ReadOnlyIntegerProperty level = baseLevel.levelProperty();
 
+        stats.statProperty(Stat.MAX_HP).bind(Bindings.createDoubleBinding(() ->
+                1 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + vit() / 10,
+                vit, str, level
+        ));
+
+        stats.statProperty(Stat.MAX_SP).bind(Bindings.createDoubleBinding(() ->
+                1 + wis() * 0.4 + wil() * 0.3 + level() * 0.25 + wis() / 10 + int_() * 0.3,
+                wis, wil, level, int_
+        ));
+
+        stats.statProperty(Stat.HP_REGEN).bind(Bindings.createDoubleBinding(() ->
+                1 + vit() * 0.1,
+                vit
+        ));
+
+        stats.statProperty(Stat.SP_REGEN).bind(Bindings.createDoubleBinding(() ->
+                2 + wis() * 0.1,
+                wis
+        ));
+
         stats.statProperty(Stat.ATK).bind(Bindings.createDoubleBinding(() ->
                 str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + level() + str() / 10 * ((str() / 10) + 1),
                 str, dex, per, luc, level
@@ -165,7 +185,35 @@ public class CharacterControl extends AbstractControl {
                 int_, dex, per, luc
         ));
 
-        // ...
+        stats.statProperty(Stat.DEF).bind(Bindings.createDoubleBinding(() ->
+                vit() * 0.5 + per() * 0.2 + str() * 0.1 + level() * 0.25 + vit() / 20,
+                vit, per, str, level
+        ));
+
+        stats.statProperty(Stat.MDEF).bind(Bindings.createDoubleBinding(() ->
+                wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int_() * 0.1 + level() * 0.25 + wil() / 20 * int_() / 10,
+                wil, wis, per, int_, level
+        ));
+
+        stats.statProperty(Stat.ASPD).bind(Bindings.createDoubleBinding(() ->
+                agi() * 0.5 + dex() * 0.2,
+                agi, dex
+        ));
+
+        stats.statProperty(Stat.MSPD).bind(Bindings.createDoubleBinding(() ->
+                dex() * 0.3 + wil() * 0.1 + wis() * 0.1 + int_() * 0.1 + per() * 0.1 + luc() * 0.1,
+                dex, wil, wis, int_, per, luc
+        ));
+
+        stats.statProperty(Stat.CRIT_CHANCE).bind(Bindings.createDoubleBinding(() ->
+                luc() * 0.5 + per() * 0.1 + wis() * 0.1,
+                luc, per, wis
+        ));
+
+        stats.statProperty(Stat.MCRIT_CHANCE).bind(Bindings.createDoubleBinding(() ->
+                luc() * 0.5 + wil() * 0.2 + per() * 0.1,
+                luc, wil, per
+        ));
 
         stats.statProperty(Stat.CRIT_DMG).bind(Bindings.createDoubleBinding(() ->
                 2 + luc() * 0.01,
@@ -173,89 +221,9 @@ public class CharacterControl extends AbstractControl {
         ));
 
         stats.statProperty(Stat.MCRIT_DMG).bind(Bindings.createDoubleBinding(() ->
-                        2 + luc() * 0.01,
+                2 + luc() * 0.01,
                 luc
         ));
-
-
-//        // calculate totals first
-//        int strength = getTotalAttribute(Attribute.STRENGTH);
-//        int vitality = getTotalAttribute(Attribute.VITALITY);
-//        int dexterity = getTotalAttribute(Attribute.DEXTERITY);
-//        int agility = getTotalAttribute(Attribute.AGILITY);
-//        int intellect = getTotalAttribute(Attribute.INTELLECT);
-//        int wisdom = getTotalAttribute(Attribute.WISDOM);
-//        int willpower = getTotalAttribute(Attribute.WILLPOWER);
-//        int perception = getTotalAttribute(Attribute.PERCEPTION);
-//        int luck = getTotalAttribute(Attribute.LUCK);
-//
-//        // None of these formulae are finalised yet and need to be checked for
-//        // game balance
-//        // only calculate "native" base stats
-//
-//        float MODIFIER_VERY_LOW = 0.1f, MODIFIER_LOW = 0.2f,
-//                MODIFIER_MEDIUM = 0.3f, MODIFIER_HIGH = 0.4f,
-//                MODIFIER_VERY_HIGH = 0.5f, MODIFIER_LEVEL = 0.25f;
-//
-//        float maxHP = (vitality * MODIFIER_VERY_HIGH
-//                + strength * MODIFIER_MEDIUM + MODIFIER_LEVEL * baseLevel
-//                + (vitality / 10)) * charClass.hp;
-//
-//        float maxSP = (wisdom * MODIFIER_VERY_HIGH + intellect * MODIFIER_MEDIUM
-//                + willpower * MODIFIER_VERY_LOW + MODIFIER_LEVEL * baseLevel
-//                + (wisdom / 10)) * charClass.sp;
-//
-//        float hpRegen = 1 + vitality * MODIFIER_VERY_LOW;
-//        float spRegen = 2 + wisdom * MODIFIER_VERY_LOW;
-//
-//        float atk = strength * MODIFIER_VERY_HIGH + dexterity * MODIFIER_MEDIUM
-//                + perception * MODIFIER_LOW + luck * MODIFIER_VERY_LOW
-//                + baseLevel + (strength / 10) * ((strength / 10) + 1);
-//
-//        float matk = intellect * MODIFIER_VERY_HIGH + wisdom * MODIFIER_HIGH
-//                + willpower * MODIFIER_HIGH + dexterity * MODIFIER_MEDIUM
-//                + perception * MODIFIER_LOW + luck * MODIFIER_VERY_LOW
-//                + baseLevel + (intellect / 10) * ((intellect / 10) + 1);
-//
-//        float def = vitality * MODIFIER_MEDIUM + perception * MODIFIER_LOW
-//                + strength * MODIFIER_VERY_LOW + MODIFIER_LEVEL * baseLevel
-//                + (vitality / 20) * (charClass.hp / 10);
-//
-//        float mdef = willpower * MODIFIER_HIGH + wisdom * MODIFIER_MEDIUM
-//                + perception * MODIFIER_LOW + intellect * MODIFIER_VERY_LOW
-//                + MODIFIER_LEVEL * baseLevel
-//                + (willpower / 20) * (intellect / 10);
-//
-//        float aspd = agility * MODIFIER_VERY_HIGH + dexterity * MODIFIER_LOW;
-//
-//        float mspd = dexterity * MODIFIER_MEDIUM + willpower * MODIFIER_VERY_LOW
-//                + wisdom * MODIFIER_VERY_LOW + intellect * MODIFIER_VERY_LOW
-//                + perception * MODIFIER_VERY_LOW + luck * MODIFIER_VERY_LOW;
-//
-//        float critChance = luck * MODIFIER_VERY_HIGH
-//                + dexterity * MODIFIER_VERY_LOW + perception * MODIFIER_VERY_LOW
-//                + wisdom * MODIFIER_VERY_LOW;
-//
-//        float mcritChance = luck * MODIFIER_HIGH + willpower * MODIFIER_LOW
-//                + perception * MODIFIER_VERY_LOW;
-//
-//        float critDmg = 2 + luck * 0.01f;
-//        float mcritDmg = 2 + luck * 0.01f;
-//
-//        setBaseStat(Stat.MAX_HP, maxHP);
-//        setBaseStat(Stat.MAX_SP, maxSP);
-//        setBaseStat(Stat.HP_REGEN, hpRegen);
-//        setBaseStat(Stat.SP_REGEN, spRegen);
-//        setBaseStat(Stat.ATK, atk);
-//        setBaseStat(Stat.MATK, matk);
-//        setBaseStat(Stat.DEF, def);
-//        setBaseStat(Stat.MDEF, mdef);
-//        setBaseStat(Stat.ASPD, aspd);
-//        setBaseStat(Stat.MSPD, mspd);
-//        setBaseStat(Stat.CRIT_CHANCE, critChance);
-//        setBaseStat(Stat.MCRIT_CHANCE, mcritChance);
-//        setBaseStat(Stat.CRIT_DMG, critDmg);
-//        setBaseStat(Stat.MCRIT_DMG, mcritDmg);
     }
 
     private double regenTick = 0.0f;

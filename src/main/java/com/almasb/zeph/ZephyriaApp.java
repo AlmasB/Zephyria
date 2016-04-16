@@ -29,7 +29,7 @@ import javafx.stage.Screen;
 
 public class ZephyriaApp extends GameApplication {
 
-    private Entity player;
+    private PlayerEntity player;
     private PlayerControl playerData;
     private Entity selected = null;
     private Point2D selectedPoint = null;
@@ -54,6 +54,7 @@ public class ZephyriaApp extends GameApplication {
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
         settings.setFullScreen(full);
+        settings.setShowFPS(false);
         settings.setApplicationMode(ApplicationMode.DEBUG);
     }
 
@@ -78,7 +79,7 @@ public class ZephyriaApp extends GameApplication {
 
         selectedEffect.setInput(new Glow(0.8));
 
-        initPlayer();
+        player = initPlayer();
         //initEnemies();
 
 //        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
@@ -92,7 +93,6 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initUI() {
         getGameScene().setCursor("main.png", new Point2D(52, 10));
-        //sceneManager.getMainScene().setCursor(new ImageCursor(R.assets.getTexture("ui/cursors/main.png").getImage(), 52, 10));
 
         Texture hotbar = getAssetLoader().loadTexture("ui/hotbar.png");
         hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
@@ -102,9 +102,7 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        PlayerEntity playerEntity = new PlayerEntity();
-
-        getGameScene().addUINodes(hotbar, new VBox(new BasicInfoView(playerEntity),new CharInfoView(playerEntity)));
+        getGameScene().addUINodes(hotbar, new VBox(new BasicInfoView(player),new CharInfoView(player)));
     }
 
     @Override
@@ -351,13 +349,10 @@ public class ZephyriaApp extends GameApplication {
 //        tt.play();
 //    }
 
-    private Entity initPlayer() {
-        GameEntity player = Entities.builder()
-                .at(0, 0)
-                .viewFromNode(new Rectangle(100, 100))
-                .with(new DescriptionComponent(1, "Player", "Player Description", "enemy.png"))
-                //.with(new PlayerControl("PLAYER_NAME", GameCharacterClass.NOVICE))
-                .build();
+    private PlayerEntity initPlayer() {
+        PlayerEntity player = new PlayerEntity();
+        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "enemy.png"));
+        player.addControl(new PlayerControl());
 
         return player;
     }

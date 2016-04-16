@@ -44,7 +44,7 @@ public class AttributesComponent extends AbstractComponent {
      * @param attr
      * @param value
      */
-    protected final void setAttribute(Attribute attr, int value) {
+    public final void setAttribute(Attribute attr, int value) {
         attributes.put(attr, value);
         attributeProperties.get(attr).set(value);
     }
@@ -94,8 +94,11 @@ public class AttributesComponent extends AbstractComponent {
         return getBaseAttribute(attr) + getBonusAttribute(attr);
     }
 
+    private Map<Attribute, NumberBinding> bindings = new HashMap<>();
+
     public NumberBinding totalAttributeProperty(Attribute attribute) {
-        return attributeProperty(attribute).add(bAttributeProperty(attribute));
+        //return attributeProperty(attribute).add(bAttributeProperty(attribute));
+        return bindings.get(attribute);
     }
 
     public AttributesComponent() {
@@ -104,6 +107,8 @@ public class AttributesComponent extends AbstractComponent {
             attributeProperties.put(attribute, new ReadOnlyIntegerWrapper(0));
             bAttributes.put(attribute, 0);
             bAttributeProperties.put(attribute, new ReadOnlyIntegerWrapper(0));
+
+            bindings.put(attribute, attributeProperty(attribute).add(bAttributeProperty(attribute)));
         }
     }
 }

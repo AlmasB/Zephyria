@@ -57,7 +57,7 @@ public class CharInfoView extends Accordion {
             btn.setFont(font);
             //btn.visibleProperty().bind(player.attributePointsProperty().greaterThan(0).and(player.attributeProperty(attr).lessThan(100)));
             btn.setOnMouseClicked(event -> {
-                //player.increaseAttr(attr);
+                player.getControlUnsafe(PlayerControl.class).increaseAttr(attr);
             });
 
             attrBox.getChildren().add(new HBox(5, text, bText, btn));
@@ -71,36 +71,36 @@ public class CharInfoView extends Accordion {
         attrBox.getChildren().addAll(new Separator(), info);
 
         VBox statBox = new VBox(5);
-//        for (Stat stat : Stat.values()) {
-//            Text text = new Text();
-//            text.setFont(font);
-//            //text.setCursor(cursorQuestion);
-//            text.textProperty().bind(player.statProperty(stat).asString(stat.toString() + ": %d"));
-//
-//            Text tooltipText = new Text(stat.getDescription());
-//            tooltipText.setFill(Color.WHITE);
-//            tooltipText.setFont(Font.font(16));
-//            tooltipText.setWrappingWidth(200);
-//
-//            Tooltip tooltip = new Tooltip();
-//            tooltip.setGraphic(tooltipText);
-//
-//            Tooltip.install(text, tooltip);
-//
-//            Text bText = new Text();
-//            bText.setFont(font);
-//            bText.setFill(Color.DARKGREEN);
-//
-//            StringBinding textBinding = Bindings.when(player.bStatProperty(stat).greaterThan(0))
-//                .then(player.bStatProperty(stat).asString("+%d ")
-//                        .concat(player.statProperty(stat).add(player.bStatProperty(stat)).asString("(%d)"))
-//                        .concat(stat.getMeasureUnit()))
-//                .otherwise(stat.getMeasureUnit());
-//
-//            bText.textProperty().bind(textBinding);
-//
-//            statBox.getChildren().add(new HBox(5, text, bText));
-//        }
+        for (Stat stat : Stat.values()) {
+            Text text = new Text();
+            text.setFont(font);
+            //text.setCursor(cursorQuestion);
+            text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
+
+            Text tooltipText = new Text(stat.getDescription());
+            tooltipText.setFill(Color.WHITE);
+            tooltipText.setFont(Font.font(16));
+            tooltipText.setWrappingWidth(200);
+
+            Tooltip tooltip = new Tooltip();
+            tooltip.setGraphic(tooltipText);
+
+            Tooltip.install(text, tooltip);
+
+            Text bText = new Text();
+            bText.setFont(font);
+            bText.setFill(Color.DARKGREEN);
+
+            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
+                .then(player.getStats().bStatProperty(stat).asString("+%d ")
+                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
+                        .concat(stat.getMeasureUnit()))
+                .otherwise(stat.getMeasureUnit());
+
+            bText.textProperty().bind(textBinding);
+
+            statBox.getChildren().add(new HBox(5, text, bText));
+        }
 
         getPanes().add(new TitledPane("Char Info", new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
     }

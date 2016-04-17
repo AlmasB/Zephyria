@@ -1,5 +1,6 @@
 package com.almasb.zeph.entity.item.component
 
+import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.entity.item.component.EquippableComponent
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.ItemLevel
@@ -17,5 +18,10 @@ class ArmorDataComponent(itemLevel: ItemLevel, val armorType: ArmorType, val arm
 
     fun marmorRating(): Int {
         return marmor + refineLevel * if (refineLevel > 2) itemLevel.bonus + 1 else itemLevel.bonus
+    }
+
+    fun withRune(rune: Rune): ArmorDataComponent {
+        addRune(rune)
+        return this
     }
 }

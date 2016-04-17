@@ -7,15 +7,22 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
+import com.almasb.fxgl.entity.EntityView;
 import com.almasb.fxgl.entity.GameEntity;
+import com.almasb.fxgl.entity.component.CollidableComponent;
+import com.almasb.fxgl.entity.component.PositionComponent;
+import com.almasb.fxgl.entity.control.OffscreenCleanControl;
 import com.almasb.fxgl.entity.control.ProjectileControl;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.DynamicAnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
@@ -29,6 +36,7 @@ import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
 import com.almasb.zeph.ui.EquipmentView;
 import com.almasb.zeph.ui.InventoryView;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
@@ -38,6 +46,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
@@ -154,8 +163,8 @@ public class ZephyriaApp extends GameApplication {
         initPlayer();
         initEnemies();
 
-        showGrid();
-//        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+        //showGrid();
+        //getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
     }
 
     private void showGrid() {
@@ -172,7 +181,19 @@ public class ZephyriaApp extends GameApplication {
     }
 
     @Override
-    protected void initPhysics() {}
+    protected void initPhysics() {
+        PhysicsWorld physicsWorld = getPhysicsWorld();
+
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
+            @Override
+            protected void onCollisionBegin(Entity proj, Entity character) {
+                proj.removeFromWorld();
+
+                Damage damage = player.getControl().attack(character);
+                showDamage(damage, character.getComponentUnsafe(PositionComponent.class).getValue());
+            }
+        });
+    }
 
     private Text debug = new Text();
 
@@ -454,21 +475,27 @@ public class ZephyriaApp extends GameApplication {
 //        tt.play();
 //    }
 //
-//    private void showDamage(Damage damage, Point2D position) {
-//        Entity e = Entity.noType();
-//        e.setExpireTime(Duration.seconds(1));
-//        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
-//        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
-//        text.setFont(Font.font(damage.isCritical() ? 18 : 16));
-//
-//        e.setSceneView(text);
-//        e.setPosition(position);
-//        getGameWorld().addEntities(e);
-//
-//        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), e.getSceneView().get());
-//        tt.setByY(-30);
-//        tt.play();
-//    }
+    private void showDamage(Damage damage, Point2D position) {
+        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
+        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
+        text.setFont(Font.font(damage.isCritical() ? 22 : 16));
+
+        EntityView view = new EntityView();
+        view.addNode(text);
+        view.setTranslateX(position.getX());
+        view.setTranslateY(position.getY());
+
+        getGameScene().addGameView(view);
+
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), view);
+        tt.setByY(-30);
+        tt.setOnFinished(e -> getGameScene().removeGameView(view));
+        tt.play();
+    }
+
+    private enum EntityType {
+        PLAYER, CHARACTER, PROJECTILE
+    }
 
     private enum PlayerAnimation implements AnimationChannel {
         WALK_RIGHT(11, 9),
@@ -511,6 +538,9 @@ public class ZephyriaApp extends GameApplication {
         player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/players/player_full.png"));
         player.addControl(new PlayerControl());
 
+        player.getTypeComponent().setValue(EntityType.PLAYER);
+        player.addComponent(new CollidableComponent(true));
+
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
         playerAnimation = FXGL.getAssetLoader().loadTexture("chars/players/player_full.png")
@@ -529,6 +559,9 @@ public class ZephyriaApp extends GameApplication {
         CharacterEntity enemy = new CharacterEntity();
         enemy.addComponent(new DescriptionComponent(2, "Skeleton-Archer", "Description", "chars/enemies/enemy.png"));
         enemy.addControl(new CharacterControl());
+
+        enemy.getTypeComponent().setValue(EntityType.CHARACTER);
+        enemy.addComponent(new CollidableComponent(true));
 
         spawnEntity(2, 4, enemy);
 
@@ -557,9 +590,12 @@ public class ZephyriaApp extends GameApplication {
 
             getMasterTimer().runOnceAfter(() -> {
                 Entities.builder()
+                        .type(EntityType.PROJECTILE)
                         .at(player.getBoundingBoxComponent().getCenterWorld())
-                        .viewFromTexture("projectiles/arrow2.png")
+                        .viewFromTextureWithBBox("projectiles/arrow2.png")
                         .with(new ProjectileControl(enemy.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 5))
+                        .with(new OffscreenCleanControl())
+                        .with(new CollidableComponent(true))
                         .buildAndAttach(getGameWorld());
             }, Duration.seconds(0.8));
         });

@@ -46,6 +46,12 @@ object Data {
                 DescriptionComponent(5002, "Shoes", "Average size shoes", "items/armor/shoes.png"),
                 ArmorDataComponent(ItemLevel.NORMAL, ArmorType.SHOES, 0, 0)
         )
+
+        fun DOMOVOI() = listOf<Component>(
+                DescriptionComponent(5005, "Domovoi", "Generations of guardians have bled in this armour, imbuing it with spirits of protection. Spirits that awaken when the wearers need is greatest.", "items/armor/domovoi.png"),
+                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 15, 35)
+                        .withRune(Rune(Attribute.WILLPOWER, 3))
+        )
     }
 
     object Character {

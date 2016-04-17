@@ -3,10 +3,7 @@ package com.almasb.zeph.entity.character.control;
 import com.almasb.ents.AbstractControl;
 import com.almasb.ents.Entity;
 import com.almasb.ents.component.Required;
-import com.almasb.zeph.combat.Attribute;
-import com.almasb.zeph.combat.Effect;
-import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.combat.StatusEffect;
+import com.almasb.zeph.combat.*;
 import com.almasb.zeph.combat.StatusEffect.Status;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.component.*;
@@ -329,42 +326,45 @@ public class CharacterControl extends AbstractControl {
      *            target being attacked
      * @return damage dealt
      */
-//    public Damage attack(Entity target) {
-//        CharacterControl other = target.getControlUnsafe(CharacterControl.class);
-//
-//        return dealPhysicalDamage(target, other.stats.getTotalStat(Stat.ATK) + 2f * GameMath.random(other.baseLevel.getLevel()), getWeaponElement());
-//    }
-//
-//    /**
-//     * Deals physical damage to target. The damage is reduced by armor and
-//     * defense The damage is affected by attacker's weapon element and by
-//     * target's armor element
-//     *
-//     * @param target
-//     * @param baseDamage
-//     * @param element
-//     * @return
-//     */
-//    public Damage dealPhysicalDamage(Entity target, float baseDamage, Element element) {
-//        boolean crit = false;
-//        if (GameMath.checkChance(getTotalStat(Stat.CRIT_CHANCE))) {
-//            baseDamage *= getTotalStat(Stat.CRIT_DMG);
-//            crit = true;
-//        }
-//
-//        float elementalDamageModifier = element
-//                .getDamageModifierAgainst(target.getArmorElement());
-//        float damageAfterReduction = (100 - target.getTotalStat(Stat.ARM))
-//                * baseDamage / 100.0f - target.getTotalStat(Stat.DEF);
-//
-//        int totalDamage = Math.max(
-//                Math.round(elementalDamageModifier * damageAfterReduction),
-//                    0);
-//        target.damageHP(totalDamage);
-//
-//        return new Damage(DamageType.PHYSICAL, element, totalDamage,
-//                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
-//    }
+    public Damage attack(Entity target) {
+        //CharacterControl other = target.getControlUnsafe(CharacterControl.class);
+
+        CharacterEntity other = (CharacterEntity) target;
+
+        return dealPhysicalDamage(other, other.getStats().getTotalStat(Stat.ATK) + 2f * GameMath.random(other.getBaseLevel().get()), Element.NEUTRAL);
+    }
+
+    /**
+     * Deals physical damage to target. The damage is reduced by armor and
+     * defense The damage is affected by attacker's weapon element and by
+     * target's armor element
+     *
+     * @param target
+     * @param baseDamage
+     * @param element
+     * @return
+     */
+    public Damage dealPhysicalDamage(Entity target, float baseDamage, Element element) {
+        CharacterEntity otherEntity = (CharacterEntity) target;
+        CharacterControl other = target.getControlUnsafe(CharacterControl.class);
+
+        boolean crit = false;
+
+        if (GameMath.checkChance(stats.getTotalStat(Stat.CRIT_CHANCE))) {
+            baseDamage *= stats.getTotalStat(Stat.CRIT_DMG);
+            crit = true;
+        }
+
+        float elementalDamageModifier = 1.0f;
+                //element.getDamageModifierAgainst(target.getArmorElement());
+        float damageAfterReduction = (100 - other.stats.getTotalStat(Stat.ARM)) * baseDamage / 100.0f - other.stats.getTotalStat(Stat.DEF);
+
+        int totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0);
+        otherEntity.getHp().damage(totalDamage);
+
+        return new Damage(Damage.DamageType.PHYSICAL, element, totalDamage,
+                crit ? Damage.DamageCritical.TRUE : Damage.DamageCritical.FALSE);
+    }
 //
 //    /**
 //     * Deals physical damage of type NEUTRAL to target. The damage is reduced by

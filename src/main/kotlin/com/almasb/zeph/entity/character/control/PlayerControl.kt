@@ -4,10 +4,18 @@ import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.entity.Data
+import com.almasb.zeph.entity.character.EquipPlace
+import com.almasb.zeph.entity.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.PlayerDataComponent
+import com.almasb.zeph.entity.item.ArmorEntity
+import com.almasb.zeph.entity.item.WeaponEntity
+import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyIntegerProperty
 import javafx.beans.property.ReadOnlyIntegerWrapper
+import javafx.beans.property.SimpleObjectProperty
+import java.util.*
 
 /**
  *
@@ -17,10 +25,12 @@ import javafx.beans.property.ReadOnlyIntegerWrapper
 class PlayerControl : CharacterControl() {
 
     private lateinit var data: PlayerDataComponent
+    private lateinit var player: PlayerEntity
 
     override fun onAdded(entity: Entity) {
         super.onAdded(entity)
 
+        player = entity as PlayerEntity
         data = entity.getComponentUnsafe(PlayerDataComponent::class.java)
     }
 
@@ -178,46 +188,28 @@ class PlayerControl : CharacterControl() {
 //
 //        return baseLevelUp
 //    }
+
+
+
+
+
+
+
+
+
+
+
+
+//        /**
+//         * Equipped gear
+//         */
+//        private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
+//        // TODO: make read only
+//        private transient Map<EquipPlace, ObjectProperty<EquippableItem> > equipProperties = new HashMap<>();
 //
-//    /**
-//     * Player inventory
-//     */
-//    private val inventory = Inventory()
-//
-//    /**
-//
-//     * @return inventory
-//     */
-//    fun getInventory(): Inventory {
-//        return inventory
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //    /**
-    //     * Equipped gear
-    //     */
-    //    private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
-    //    // TODO: make read only
-    //    private transient Map<EquipPlace, ObjectProperty<EquippableItem> > equipProperties = new HashMap<>();
-    //
-    //    public final ObjectProperty<EquippableItem> equipProperty(EquipPlace place) {
-    //        return equipProperties.get(place);
-    //    }
+//        public final ObjectProperty<EquippableItem> equipProperty(EquipPlace place) {
+//            return equipProperties.get(place);
+//        }
     //
     //    private void setEquip(EquipPlace place, EquippableItem item) {
     //        equip.put(place, item);
@@ -266,6 +258,51 @@ class PlayerControl : CharacterControl() {
     //        return getAtkTick() >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     //    }
     //
+
+    val equip = HashMap<EquipPlace, Entity>()
+    val equipProperties = HashMap<EquipPlace, ObjectProperty<Entity> >()
+
+    fun getEquip(place: EquipPlace) = equip[place]
+    fun equipProperty(place: EquipPlace) = equipProperties[place]
+
+    init {
+        EquipPlace.values().forEach {
+            val item = WeaponEntity(Data.Weapon.HANDS())
+            equip.put(it, item)
+            equipProperties.put(it, SimpleObjectProperty(item))
+        }
+    }
+
+
+    fun equipWeapon(weapon: WeaponEntity) {
+        // remove item from inventory to clear space
+        player.inventory.removeItem(weapon)
+
+
+
+        weapon.data.onEquip(player)
+    }
+
+    fun equipArmor(armor: ArmorEntity) {
+
+    }
+
+    fun unEquipItem(place: EquipPlace) {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     //    public final void equipWeapon(Weapon w) {
     //        inventory.removeItem(w);    // remove item from inventory to clear space
     //

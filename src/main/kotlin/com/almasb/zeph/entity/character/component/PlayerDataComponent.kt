@@ -4,7 +4,7 @@ import com.almasb.ents.AbstractComponent
 import javafx.beans.property.SimpleIntegerProperty
 
 /**
- *
+ * TODO: probably move to PlayerEntity?
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

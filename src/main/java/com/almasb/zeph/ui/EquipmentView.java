@@ -1,12 +1,14 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.app.ServiceType;
+import com.almasb.ents.Entity;
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
+import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import javafx.animation.TranslateTransition;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -24,10 +26,10 @@ public final class EquipmentView extends Accordion {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
-    private PlayerControl playerData;
+    private PlayerEntity player;
 
-    public EquipmentView(PlayerControl playerData, double height) {
-        this.playerData = playerData;
+    public EquipmentView(PlayerEntity player, double height) {
+        this.player = player;
 
         groups.put(EquipPlace.HELM, createGroup(88, 60));
         groups.put(EquipPlace.BODY, createGroup(88, 105));
@@ -35,16 +37,16 @@ public final class EquipmentView extends Accordion {
         groups.put(EquipPlace.LEFT_HAND, createGroup(133, 105));
         groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
-//        for (EquipPlace place : EquipPlace.values()) {
-//            setItem(place, playerData.getEquip(place));
-//            playerData.equipProperty(place).addListener((obs, old, newItem) -> {
-//                setItem(place, newItem);
-//            });
-//        }
+        for (EquipPlace place : EquipPlace.values()) {
+            setItem(place, player.getControl().getEquip(place));
+            player.getControl().equipProperty(place).addListener((obs, old, newItem) -> {
+                setItem(place, newItem);
+            });
+        }
 
         Pane pane = new Pane();
 
-        Texture background = GameApplication.getService(ServiceType.ASSET_LOADER).loadTexture("ui/inventory_left.png");
+        Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_left.png");
         pane.getChildren().add(background);
 
         expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
@@ -84,15 +86,18 @@ public final class EquipmentView extends Accordion {
         return group;
     }
 
-    private void setItem(EquipPlace place, DescriptionComponent item) {
+    private void setItem(EquipPlace place, Entity item) {
         Group group = groups.get(place);
         group.getChildren().clear();
 
-        //Entity e = item.toEntity();
-//        e.setOnMouseClicked(event -> playerData.unEquipItem(place));
-//        e.setCursor(Cursor.HAND);
-//
-//        group.getChildren().add(e);
-        //((Text)group.getUserData()).setText(item.getFullDescription());
+        DescriptionComponent data = item.getComponentUnsafe(DescriptionComponent.class);
+
+        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName());
+
+        view.setOnMouseClicked(event -> player.getControl().unEquipItem(place));
+        view.setCursor(Cursor.HAND);
+
+        group.getChildren().add(view);
+        ((Text)group.getUserData()).setText(data.getDescription());
     }
 }

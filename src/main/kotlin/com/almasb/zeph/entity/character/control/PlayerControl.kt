@@ -234,9 +234,9 @@ class PlayerControl : CharacterControl() {
         if (item is WeaponEntity) {
             if (item.data.type.isTwoHanded()) {
                 if (place == EquipPlace.RIGHT_HAND)
-                    setEquip(EquipPlace.LEFT_HAND, WeaponEntity(Data.Weapon.HANDS()))
+                    setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeapon(place.emptyID))
                 else
-                    setEquip(EquipPlace.RIGHT_HAND, WeaponEntity(Data.Weapon.HANDS()))
+                    setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeapon(place.emptyID))
             }
 
             item.data.onUnEquip(player)

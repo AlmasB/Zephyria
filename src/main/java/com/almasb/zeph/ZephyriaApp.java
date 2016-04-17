@@ -1,22 +1,29 @@
 package com.almasb.zeph;
 
+import com.almasb.astar.AStarGrid;
+import com.almasb.astar.AStarNode;
 import com.almasb.ents.Component;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
+import com.almasb.fxgl.entity.GameEntity;
+import com.almasb.fxgl.entity.control.ProjectileControl;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
+import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.EntityManagerOld;
+import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
+import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.ui.BasicInfoView;
@@ -31,12 +38,17 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ZephyriaApp extends GameApplication {
+
+    private static final int TILE_SIZE = 64;
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -56,9 +68,9 @@ public class ZephyriaApp extends GameApplication {
         }
         else {
             settings.setWidth(1280);
-            settings.setHeight(720);
+            settings.setHeight(768);
         }
-        settings.setTitle("Orion RPG");
+        settings.setTitle("Zephyria RPG");
         settings.setVersion("0.0.1");
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
@@ -67,14 +79,29 @@ public class ZephyriaApp extends GameApplication {
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
+    private List<AStarNode> path = new ArrayList<>();
+
     @Override
     protected void initInput() {
         Input input = getInput();
 
         input.addAction(new UserAction("TargetSelection") {
             @Override
-            protected void onAction() {
-                selectedPoint = input.getMousePositionWorld();
+            protected void onActionBegin() {
+                int targetX = (int) (input.getMouseXWorld() / TILE_SIZE);
+                int targetY = (int) (input.getMouseYWorld() / TILE_SIZE);
+
+                int startX = getTileX(player);
+                int startY = getTileY(player);
+
+                System.out.println(startX + " " + startY + " " + targetX +" " + targetY);
+
+                path = grid.getPath(startX, startY, targetX, targetY);
+
+                Entities.builder()
+                        .at(input.getMousePositionWorld())
+                        .viewFromNode(new Rectangle(5, 5))
+                        .buildAndAttach(getGameWorld());
             }
         }, MouseButton.PRIMARY);
 
@@ -103,21 +130,36 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initAssets() {}
 
+    private AStarGrid grid;
+
     @Override
     protected void initGame() {
         Entity bg = Entities.builder()
                 .viewFromTexture("background.png")
                 .buildAndAttach(getGameWorld());
 
-
-        EntityManagerOld.load();
+        grid = new AStarGrid(1280 / TILE_SIZE, 768 / TILE_SIZE);
 
         selectedEffect.setInput(new Glow(0.8));
 
-        player = initPlayer();
-        //initEnemies();
+        initPlayer();
+        initEnemies();
 
+        showGrid();
 //        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+    }
+
+    private void showGrid() {
+        for (int y = 0; y < grid.getHeight(); y++) {
+            for (int x = 0; x < grid.getWidth(); x++) {
+                Rectangle r = new Rectangle(TILE_SIZE - 1, TILE_SIZE - 1, null);
+                r.setTranslateX(x * TILE_SIZE);
+                r.setTranslateY(y * TILE_SIZE);
+                r.setStroke(Color.RED);
+
+                getGameScene().addUINode(r);
+            }
+        }
     }
 
     @Override
@@ -127,6 +169,9 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
+        // TODO: why does it not work?
+        getGameScene().setUIMouseTransparent(false);
+
         getGameScene().setCursor("main.png", new Point2D(52, 10));
 
         Texture hotbar = getAssetLoader().loadTexture("ui/hotbar.png");
@@ -149,11 +194,32 @@ public class ZephyriaApp extends GameApplication {
             //startAttack(player, selected);
         }
 
-//        if (selectedPoint != null) {
-//            player.translate(selectedPoint.subtract(player.getPosition()).normalize().multiply(5));
-//            if (selectedPoint.distance(player.getPosition()) < 5)
-//                selectedPoint = null;
-//        }
+        if (!path.isEmpty()) {
+            AStarNode node = path.get(0);
+
+            double dx = node.getX() * TILE_SIZE - (player).getPositionComponent().getX();
+            double dy = node.getY() * TILE_SIZE - (player).getPositionComponent().getY();
+
+            dx = Math.signum(dx);
+            dy = Math.signum(dy);
+
+            if (dx == 0 && dy == 0) {
+                path.remove(0);
+            }
+
+            dx *= 2;
+            dy *= 2;
+
+            player.getPositionComponent().translate(dx, dy);
+        }
+    }
+
+    private int getTileX(GameEntity entity) {
+        return (int) (entity.getPositionComponent().getX()) / TILE_SIZE;
+    }
+
+    private int getTileY(GameEntity entity) {
+        return (int) (entity.getPositionComponent().getY()) / TILE_SIZE;
     }
 
     public static ProgressBar makeHPBar() {
@@ -387,19 +453,63 @@ public class ZephyriaApp extends GameApplication {
 //        tt.play();
 //    }
 
+    private enum PlayerAnimation implements AnimationChannel {
+        WALK;
+
+        @Override
+        public Rectangle2D area() {
+            return new Rectangle2D(0, 64*11, 64*9, 64);
+        }
+
+        @Override
+        public int frames() {
+            return 9;
+        }
+
+        @Override
+        public Duration duration() {
+            return Duration.seconds(1.2);
+        }
+    }
+
     private PlayerEntity initPlayer() {
-        PlayerEntity player = new PlayerEntity();
-        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/enemies/enemy.png"));
+        player = new PlayerEntity();
+        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/players/player.png"));
         player.addControl(new PlayerControl());
 
         player.getPositionComponent().setValue(400, 400);
-        player.getMainViewComponent().setTexture("chars/enemies/enemy.png");
+        //player.getMainViewComponent().setTexture("chars/players/player.png");
+
+        player.getMainViewComponent().setView(FXGL.getAssetLoader().loadTexture("chars/players/player_full.png")
+            .toDynamicAnimatedTexture(PlayerAnimation.WALK, PlayerAnimation.WALK));
 
         playerControl = player.getControl();
 
         getGameWorld().addEntity(player);
 
         return player;
+    }
+
+    private void initEnemies() {
+        CharacterEntity enemy = new CharacterEntity();
+        enemy.addComponent(new DescriptionComponent(2, "Skeleton-Archer", "Description", "chars/enemies/enemy.png"));
+        enemy.addControl(new CharacterControl());
+
+        enemy.getPositionComponent().setValue(200, 400);
+        enemy.getMainViewComponent().setTexture("chars/enemies/enemy.png");
+
+        enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
+            Entities.builder()
+                    .at(player.getPositionComponent().getValue())
+                    .viewFromTexture("projectiles/arrow2.png")
+                    .with(new ProjectileControl(enemy.getPositionComponent().getValue().subtract(player.getPositionComponent().getValue()), 3))
+                    .buildAndAttach(getGameWorld());
+
+            selectedPoint = null;
+            e.consume();
+        });
+
+        getGameWorld().addEntity(enemy);
     }
 
     public static void main(String[] args) {

@@ -111,4 +111,9 @@ public class AttributesComponent extends AbstractComponent {
             bindings.put(attribute, attributeProperty(attribute).add(bAttributeProperty(attribute)));
         }
     }
+
+    @Override
+    public String toString() {
+        return attributes.toString() + "\n" + bAttributes.toString();
+    }
 }

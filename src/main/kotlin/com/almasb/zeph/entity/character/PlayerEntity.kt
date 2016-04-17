@@ -1,5 +1,6 @@
 package com.almasb.zeph.entity.character
 
+import com.almasb.ents.Component
 import com.almasb.ents.Entity
 import com.almasb.fxgl.entity.GameEntity
 import com.almasb.zeph.entity.Data
@@ -15,7 +16,10 @@ import javafx.beans.property.SimpleIntegerProperty
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class PlayerEntity : CharacterEntity() {
+class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<Component>(
+        DescriptionComponent(1, name, "It's you! $name", textureName),
+        CharacterDataComponent(CharacterType.NORMAL)
+)) {
 
     val money = MoneyComponent(9999)
 
@@ -27,6 +31,7 @@ class PlayerEntity : CharacterEntity() {
 
     init {
         addComponent(money)
+        addControl(PlayerControl())
     }
 
     fun getControl() = getControlUnsafe(PlayerControl::class.java)

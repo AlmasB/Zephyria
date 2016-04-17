@@ -1,8 +1,10 @@
-package com.almasb.zeph.entity.character;
+package com.almasb.zeph.entity.character
 
 /**
+ *
+ *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-public enum EnemyType {
+enum class CharacterType {
     NORMAL, MINIBOSS, BOSS
 }

@@ -3,6 +3,8 @@ package com.almasb.zeph.entity
 import com.almasb.ents.Component
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.entity.character.CharacterType
+import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.ItemLevel
 import com.almasb.zeph.entity.item.WeaponType
@@ -55,7 +57,13 @@ object Data {
     }
 
     object Character {
-
+        fun SKELETON_ARCHER() = listOf<Component>(
+                DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description", "chars/enemies/enemy.png"),
+                CharacterDataComponent(CharacterType.NORMAL)
+                        .withLevel(2)
+                        .withAttribute(Attribute.DEXTERITY, 3)
+                        .withAttribute(Attribute.AGILITY, 2)
+        )
     }
 
     // ID

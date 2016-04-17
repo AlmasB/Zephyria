@@ -4,7 +4,6 @@ import com.almasb.astar.AStarGrid;
 import com.almasb.astar.AStarNode;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
-import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.EntityView;
@@ -24,12 +23,13 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Experience;
+import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
-import com.almasb.zeph.entity.character.control.CharacterControl;
+import com.almasb.zeph.entity.character.component.HPComponent;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.ui.BasicInfoView;
@@ -53,6 +53,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -186,11 +187,26 @@ public class ZephyriaApp extends GameApplication {
 
         physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
             @Override
-            protected void onCollisionBegin(Entity proj, Entity character) {
+            protected void onCollisionBegin(Entity proj, Entity target) {
                 proj.removeFromWorld();
+
+                CharacterEntity character = (CharacterEntity) target;
+
 
                 Damage damage = player.getControl().attack(character);
                 showDamage(damage, character.getComponentUnsafe(PositionComponent.class).getValue());
+
+                if (character.getComponentUnsafe(HPComponent.class).getValue() <= 0) {
+                    playerControl.rewardMoney(character.getBaseLevel().get());
+                    playerControl.rewardXP(new Experience(
+                            character.getBaseLevel().get() * 5,
+                            character.getBaseLevel().get() * 3,
+                            character.getBaseLevel().get() * 2
+                            ));
+
+                    character.removeFromWorld();
+                    initEnemies();
+                }
             }
         });
     }
@@ -199,7 +215,6 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initUI() {
-        // TODO: why does it not work?
         getGameScene().setUIMouseTransparent(false);
 
         getGameScene().setCursor("main.png", new Point2D(52, 10));
@@ -375,41 +390,6 @@ public class ZephyriaApp extends GameApplication {
 //        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
 //    }
 
-//    private void initEnemies() {
-//        for (int i = 0; i < 10; i++) {
-//            Entity enemy = EntityManagerOld.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
-//            enemy.setPosition(new Random().nextInt(1000), new Random().nextInt(600));
-////            enemy.getSceneView().ifPresent().setOnMouseClicked(e -> {
-////                selected = enemy;
-////                selected.setEffect(selectedEffect);
-////            });
-//            enemy.addFXGLEventHandler(Event.ATTACKING, event -> {
-//                startAttack(enemy, event.getSource());
-//            });
-//            enemy.addFXGLEventHandler(Event.DEATH, event -> {
-//                EnemyControl enemyData = enemy.getControl(EnemyControl.class).get();
-//
-//                playerData.rewardMoney(GameMath.random(enemyData.getBaseLevel() * 100));
-//                playerData.rewardXP(enemyData.getXP());
-//
-//                List<DroppableItem> drops = enemyData.getDrops();
-//                for (DroppableItem drop : drops) {
-//                    if (GameMath.checkChance(drop.dropChance)) {
-//                        DescriptionComponent item = EntityManagerOld.getItemByID(drop.itemID);
-//                        dropItem(item, enemy.getPosition());
-//                    }
-//                }
-//
-//                getGameWorld().removeEntity(enemy);
-//                selected = null;
-//            });
-//            enemy.addControl(new PassiveControl(250));
-//            enemy.getSceneView().get().setCursor(Cursor.CROSSHAIR);
-//
-//            getGameWorld().addEntities(enemy);
-//        }
-//    }
-
 //    private void startAttack(Entity attacker, Entity target) {
 //        if (!attacker.isActive() || !target.isActive())
 //            return;
@@ -429,31 +409,6 @@ public class ZephyriaApp extends GameApplication {
 //        //proj.addControl(new ProjectileControl());
 //
 //        getGameWorld().addEntities(proj);
-//    }
-
-//    private class ProjectileControl implements Control {
-//        private Point2D vector = target.getCenter().subtract(proj.getCenter()).multiply(0.016);
-//
-//        @Override
-//        public void onUpdate(Entity entity) {
-//            entity.setRotation(Math.toDegrees(Math.atan2(vector.getY(), vector.getX())));
-//            entity.translate(vector);
-//
-//            if (entity.getPosition().distance(attacker.getPosition()) >= 600)
-//                getGameWorld().removeEntity(proj);
-//
-//            if (!target.isActive())
-//                getGameWorld().removeEntity(proj);
-//
-//            if (entity.isCollidingWith(target)) {
-//                getGameWorld().removeEntity(proj);
-//
-//                target.fireFXGLEvent(new FXGLEvent(Event.BEING_ATTACKED, attacker));
-//
-//                Damage damage = a.attack(target.getControl(GameCharacter.class).get());
-//                showDamage(damage, target.getPosition());
-//            }
-//        }
 //    }
 
 //    private void dropItem(DescriptionComponent item, Point2D position) {
@@ -533,37 +488,32 @@ public class ZephyriaApp extends GameApplication {
 
     private DynamicAnimatedTexture playerAnimation;
 
-    private PlayerEntity initPlayer() {
-        player = new PlayerEntity();
-        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/players/player_full.png"));
-        player.addControl(new PlayerControl());
+    private void initPlayer() {
+        player = new PlayerEntity("Developer", "chars/players/player_full.png");
+        playerControl = player.getControl();
 
         player.getTypeComponent().setValue(EntityType.PLAYER);
         player.addComponent(new CollidableComponent(true));
 
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
-        playerAnimation = FXGL.getAssetLoader().loadTexture("chars/players/player_full.png")
+        playerAnimation = getAssetLoader().loadTexture(player.getDescription().getTextureName())
                 .toDynamicAnimatedTexture(PlayerAnimation.WALK_RIGHT, PlayerAnimation.values());
 
         player.getMainViewComponent().setView(playerAnimation, true);
 
-        playerControl = player.getControl();
-
         getGameWorld().addEntity(player);
-
-        return player;
     }
 
     private void initEnemies() {
-        CharacterEntity enemy = new CharacterEntity();
-        enemy.addComponent(new DescriptionComponent(2, "Skeleton-Archer", "Description", "chars/enemies/enemy.png"));
-        enemy.addControl(new CharacterControl());
+        CharacterEntity enemy = new CharacterEntity(Data.Character.INSTANCE.SKELETON_ARCHER());
 
         enemy.getTypeComponent().setValue(EntityType.CHARACTER);
         enemy.addComponent(new CollidableComponent(true));
 
-        spawnEntity(2, 4, enemy);
+        Random random = new Random();
+
+        spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
 
         enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
 

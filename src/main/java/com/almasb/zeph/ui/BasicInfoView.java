@@ -37,6 +37,7 @@ public class BasicInfoView extends Accordion {
         textPlayerName.setTranslateX(15);
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
+        textPlayerName.setText(player.getDescription().getName());
         //textPlayerName.textProperty().bind(player.nameProperty().concat("\n").concat(player.charClassProperty()));
 
         Text textLevels = new Text();

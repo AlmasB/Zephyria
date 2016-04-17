@@ -1,8 +1,10 @@
 package com.almasb.zeph.entity.item
 
+import com.almasb.ents.Component
 import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.entity.Data
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
 
@@ -11,15 +13,15 @@ import com.almasb.zeph.entity.item.component.WeaponDataComponent
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class WeaponEntity : Entity() {
+class WeaponEntity(dataComponents: List<Component>) : Entity() {
 
-    val data = WeaponDataComponent(ItemLevel.NORMAL, WeaponType.MACE, 10)
+    val desc: DescriptionComponent
+    val data: WeaponDataComponent
 
     init {
-        addComponent(DescriptionComponent(99, "Test", "TestDescription", "items/weapons/hands.png"))
-        addComponent(data)
+        dataComponents.forEach { addComponent(it) }
 
-        data.addRune(Rune(Attribute.STRENGTH, 5))
-        data.addRune(Rune(Attribute.VITALITY, 15))
+        desc = getComponentUnsafe(DescriptionComponent::class.java)
+        data = getComponentUnsafe(WeaponDataComponent::class.java)
     }
 }

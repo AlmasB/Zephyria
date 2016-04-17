@@ -10,6 +10,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.PlayerEntity;
@@ -17,6 +18,7 @@ import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
+import com.almasb.zeph.ui.InventoryView;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
@@ -32,7 +34,7 @@ import javafx.stage.Screen;
 public class ZephyriaApp extends GameApplication {
 
     private PlayerEntity player;
-    private PlayerControl playerData;
+    private PlayerControl playerControl;
     private Entity selected = null;
     private Point2D selectedPoint = null;
 
@@ -57,7 +59,7 @@ public class ZephyriaApp extends GameApplication {
         settings.setMenuEnabled(false);
         settings.setFullScreen(full);
         settings.setShowFPS(false);
-        settings.setApplicationMode(ApplicationMode.DEBUG);
+        settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class ZephyriaApp extends GameApplication {
         }, MouseButton.PRIMARY);
 
         input.addAction(new UserAction("Test Wear1") {
-            WeaponEntity weapon = new WeaponEntity();
+            WeaponEntity weapon = new WeaponEntity(Data.Weapon.INSTANCE.HANDS());
 
             @Override
             protected void onActionBegin() {
@@ -91,6 +93,11 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        Entity bg = Entities.builder()
+                .viewFromTexture("background.png")
+                .buildAndAttach(getGameWorld());
+
+
         EntityManager.load();
 
         selectedEffect.setInput(new Glow(0.8));
@@ -118,7 +125,9 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        getGameScene().addUINodes(hotbar, new VBox(new BasicInfoView(player),new CharInfoView(player)));
+        getGameScene().addUINodes(hotbar,
+                new VBox(new BasicInfoView(player), new CharInfoView(player)),
+                new InventoryView(null, getWidth(), getHeight()));
     }
 
     @Override
@@ -367,11 +376,13 @@ public class ZephyriaApp extends GameApplication {
 
     private PlayerEntity initPlayer() {
         PlayerEntity player = new PlayerEntity();
-        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "enemy.png"));
+        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/enemies/enemy.png"));
         player.addControl(new PlayerControl());
 
         player.getPositionComponent().setValue(400, 400);
         player.getMainViewComponent().setView(new Rectangle(40, 40));
+
+        playerControl = player.getControl();
 
         getGameWorld().addEntity(player);
 

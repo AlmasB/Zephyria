@@ -1,5 +1,6 @@
 package com.almasb.zeph.ui;
 
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.ServiceType;
 import com.almasb.fxgl.texture.Texture;
@@ -19,10 +20,10 @@ public class InventoryView extends Accordion {
     private Map<Integer, Boolean> slots = new HashMap<>();
     private Pane root = new Pane();
 
-    private PlayerControl playerData;
+    //private PlayerControl playerData;
 
     public InventoryView(PlayerControl playerData, double width, double height) {
-        this.playerData = playerData;
+        //this.playerData = playerData;
         for (int i = 0; i < 30; i++) {
             slots.put(i, true);
         }
@@ -63,7 +64,7 @@ public class InventoryView extends Accordion {
 
 
 
-        Texture background = GameApplication.getService(ServiceType.ASSET_LOADER).loadTexture("ui/inventory_right.png");
+        Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_right.png");
         root.getChildren().add(background);
 
         expandedPaneProperty().addListener((obs, oldPane, newPane) -> {

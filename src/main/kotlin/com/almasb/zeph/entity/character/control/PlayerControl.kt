@@ -4,7 +4,6 @@ import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
-import com.almasb.zeph.entity.character.Inventory
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.PlayerDataComponent
 import javafx.beans.property.ReadOnlyIntegerProperty
@@ -28,7 +27,6 @@ class PlayerControl : CharacterControl() {
     fun rewardMoney(amount: Int) {
         data.money.value += amount
     }
-
 
     /**
      * Gameplay constants

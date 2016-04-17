@@ -2,6 +2,7 @@ package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Entity
 import com.almasb.fxgl.entity.GameEntity
+import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.character.component.*
 import com.almasb.zeph.entity.character.control.PlayerControl
 
@@ -34,4 +35,6 @@ class PlayerEntity : GameEntity() {
     }
 
     fun getControl() = getControlUnsafe(PlayerControl::class.java)
+
+    fun getDescription() = getComponentUnsafe(DescriptionComponent::class.java)
 }

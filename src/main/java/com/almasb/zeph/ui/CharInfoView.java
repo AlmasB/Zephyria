@@ -56,9 +56,11 @@ public class CharInfoView extends Accordion {
             btn.setStroke(Color.BLUE);
             btn.setStrokeWidth(3);
             btn.setFont(font);
-            //btn.visibleProperty().bind(player.attributePointsProperty().greaterThan(0).and(player.attributeProperty(attr).lessThan(100)));
+            btn.visibleProperty().bind(player.getAttributePoints().greaterThan(0)
+                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
+
             btn.setOnMouseClicked(event -> {
-                player.getControlUnsafe(PlayerControl.class).increaseAttr(attr);
+                player.getControlUnsafe(PlayerControl.class).increaseAttribute(attr);
             });
 
             Pane box = new Pane();
@@ -68,14 +70,13 @@ public class CharInfoView extends Accordion {
             bText.setTranslateX(70);
             btn.setTranslateX(155);
 
-            //attrBox.getChildren().add(new HBox(5, text, bText, btn));
             attrBox.getChildren().add(box);
         }
 
         Text info = new Text();
         info.setFont(font);
-        info.visibleProperty().bind(player.getData().getAttributePoints().greaterThan(0));
-        info.textProperty().bind(new SimpleStringProperty("Points: ").concat(player.getData().getAttributePoints()));
+        info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
+        info.textProperty().bind(new SimpleStringProperty("Points: ").concat(player.getAttributePoints()));
 
         attrBox.getChildren().addAll(new Separator(), info);
 

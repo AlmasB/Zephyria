@@ -22,5 +22,5 @@ class Inventory {
         _items.remove(item)
     }
 
-    //fun getItem(index: Int) = _items.get(index)
+    fun isFull() = _items.size >= 30
 }

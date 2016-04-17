@@ -8,6 +8,7 @@ import com.almasb.zeph.entity.Inventory
 import com.almasb.zeph.entity.character.component.*
 import com.almasb.zeph.entity.character.control.PlayerControl
 import com.almasb.zeph.entity.item.WeaponEntity
+import javafx.beans.property.SimpleIntegerProperty
 
 /**
  *
@@ -16,7 +17,7 @@ import com.almasb.zeph.entity.item.WeaponEntity
  */
 class PlayerEntity : GameEntity() {
 
-    val money = MoneyComponent(1000)
+    val money = MoneyComponent(9999)
 
     val hp = HPComponent()
     val sp = SPComponent()
@@ -24,16 +25,20 @@ class PlayerEntity : GameEntity() {
     val baseLevel = LevelComponent()
     val attributes = AttributesComponent()
     val stats = StatsComponent()
-    val data = PlayerDataComponent()
 
     val inventory = Inventory()
+
+    val attributePoints = SimpleIntegerProperty(90)
+    val skillPoints = SimpleIntegerProperty(90)
+
+    val statLevel = SimpleIntegerProperty()
+    val jobLevel = SimpleIntegerProperty()
 
     init {
         addComponent(money)
         addComponent(baseLevel)
         addComponent(attributes)
         addComponent(stats)
-        addComponent(data)
 
         addComponent(hp)
         addComponent(sp)

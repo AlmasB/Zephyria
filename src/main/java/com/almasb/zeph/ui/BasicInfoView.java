@@ -45,8 +45,8 @@ public class BasicInfoView extends Accordion {
         textLevels.setTranslateY(100);
         textLevels.setFont(Font.font(16));
         textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel().levelProperty())
-                .concat("\nStat Lv. ").concat(player.getData().getStatLevel())
-                .concat("\nJob Lv. ").concat(player.getData().getJobLevel()));
+                .concat("\nStat Lv. ").concat(player.getStatLevel())
+                .concat("\nJob Lv. ").concat(player.getJobLevel()));
 
         ProgressBar barXPBase = new ProgressBar();
         barXPBase.setWidth(150);

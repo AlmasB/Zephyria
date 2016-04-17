@@ -5,12 +5,13 @@ import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.entity.Data
+import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.character.EquipPlace
 import com.almasb.zeph.entity.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.AttributesComponent
-import com.almasb.zeph.entity.character.component.PlayerDataComponent
 import com.almasb.zeph.entity.item.ArmorEntity
 import com.almasb.zeph.entity.item.WeaponEntity
+import com.almasb.zeph.entity.item.WeaponType
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyIntegerProperty
 import javafx.beans.property.ReadOnlyIntegerWrapper
@@ -24,18 +25,23 @@ import java.util.*
  */
 class PlayerControl : CharacterControl() {
 
-    private lateinit var data: PlayerDataComponent
     private lateinit var player: PlayerEntity
 
     override fun onAdded(entity: Entity) {
         super.onAdded(entity)
 
         player = entity as PlayerEntity
-        data = entity.getComponentUnsafe(PlayerDataComponent::class.java)
+
+        EquipPlace.values().forEach {
+            val item = WeaponEntity(Data.Weapon.HANDS())
+            item.data.onEquip(player)
+            equip.put(it, item)
+            equipProperties.put(it, SimpleObjectProperty(item))
+        }
     }
 
     fun rewardMoney(amount: Int) {
-        data.money.value += amount
+        player.money.value += amount
     }
 
     /**
@@ -80,31 +86,19 @@ class PlayerControl : CharacterControl() {
 //    }
 //    }
 
-
-
-
     /**
-     * Increases base attribute.
-
-     * @param attr
+     * Increases base [attribute].
      */
-    fun increaseAttr(attr: Attribute) {
+    fun increaseAttribute(attribute: Attribute) {
+        if (player.attributePoints.value == 0)
+            return;
 
-
-        getEntity().getComponentUnsafe(AttributesComponent::class.java)
-            .setAttribute(attr, getEntity().getComponentUnsafe(AttributesComponent::class.java).getBaseAttribute(attr) + 1)
-
-
-        //        if (getAttributePoints() == 0)
-        //            return;
-        //
-        //        int value = attributes.getBaseAttribute(attr);
-        //        if (value < MAX_ATTRIBUTE) {
-        //            //attributes.setAttribute(attr, value + 1);
-        //            setAttributePoints(getAttributePoints() - 1);
-        //        }
+        val value = player.attributes.getBaseAttribute(attribute)
+        if (value < MAX_ATTRIBUTE) {
+            player.attributes.setAttribute(attribute, value + 1)
+            player.attributePoints.value--
+        }
     }
-
 
     //  public void increaseSkillLevel(int skillCode) {
     //  if (skillCode >= skills.length)
@@ -188,50 +182,6 @@ class PlayerControl : CharacterControl() {
 //
 //        return baseLevelUp
 //    }
-
-
-
-
-
-
-
-
-
-
-
-
-//        /**
-//         * Equipped gear
-//         */
-//        private Map<EquipPlace, EquippableItem> equip = new HashMap<>();
-//        // TODO: make read only
-//        private transient Map<EquipPlace, ObjectProperty<EquippableItem> > equipProperties = new HashMap<>();
-//
-//        public final ObjectProperty<EquippableItem> equipProperty(EquipPlace place) {
-//            return equipProperties.get(place);
-//        }
-    //
-    //    private void setEquip(EquipPlace place, EquippableItem item) {
-    //        equip.put(place, item);
-    //        equipProperties.get(place).set(item);
-    //    }
-    //
-    //    /**
-    //     * Constructs player with given in-game name and character class.
-    //     *
-    //     * @param name
-    //     * @param charClass
-    //     */
-    //    public PlayerControl(String name, GameCharacterClass charClass) {
-    //        //super(1000, name, "Player", "player.png", charClass);
-    //
-    //        for (EquipPlace p : EquipPlace.values()) {
-    //            EquippableItem item = (EquippableItem) EntityManager.getItemByID(p.emptyID);
-    //            item.onEquip(this);
-    //            equip.put(p, item);
-    //            equipProperties.put(p, new SimpleObjectProperty<>(item));
-    //        }
-    //    }
     //
     //    private void baseLevelUp() {
     //        baseLevel.incLevel();
@@ -262,15 +212,12 @@ class PlayerControl : CharacterControl() {
     val equip = HashMap<EquipPlace, Entity>()
     val equipProperties = HashMap<EquipPlace, ObjectProperty<Entity> >()
 
-    fun getEquip(place: EquipPlace) = equip[place]
-    fun equipProperty(place: EquipPlace) = equipProperties[place]
+    fun getEquip(place: EquipPlace) = equip[place]!!
+    fun equipProperty(place: EquipPlace) = equipProperties[place]!!
 
-    init {
-        EquipPlace.values().forEach {
-            val item = WeaponEntity(Data.Weapon.HANDS())
-            equip.put(it, item)
-            equipProperties.put(it, SimpleObjectProperty(item))
-        }
+    fun setEquip(place: EquipPlace, item: Entity) {
+        equip.put(place, item)
+        equipProperties[place]!!.set(item)
     }
 
 
@@ -288,12 +235,50 @@ class PlayerControl : CharacterControl() {
     }
 
     fun unEquipItem(place: EquipPlace) {
+        if (isFree(place) || player.inventory.isFull())
+            return
 
+        val item = getEquip(place)
+
+        if (item is WeaponEntity) {
+            if (item.data.type.isTwoHanded()) {
+                if (place == EquipPlace.RIGHT_HAND)
+                    setEquip(EquipPlace.LEFT_HAND, WeaponEntity(Data.Weapon.HANDS()))
+                else
+                    setEquip(EquipPlace.RIGHT_HAND, WeaponEntity(Data.Weapon.HANDS()))
+            }
+        }
+
+        // TODO: unequip
+        player.inventory.addItem(item)
+
+        // TODO: replace with default
     }
 
+    fun isFree(place: EquipPlace) = getEquip(place)
+            .getComponentUnsafe(DescriptionComponent::class.java).id == place.emptyID
 
-
-
+    //    public final void unEquipItem(EquipPlace itemPlace) {
+    //        if (isFree(itemPlace) || inventory.isFull())
+    //            return; // no item at this place or inventory is full
+    //
+    //        EquippableItem item = getEquip(itemPlace);
+    //
+    //        if (item instanceof Weapon) {
+    //            Weapon w = (Weapon) item;
+    //            if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
+    //                if (itemPlace == EquipPlace.RIGHT_HAND)
+    //                    setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
+    //                else
+    //                    setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
+    //            }
+    //        }
+    //
+    //        item.onUnEquip(this);   // take item off
+    //        inventory.addItem(item);    // put it in inventory
+    //
+    //        setEquip(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
+    //    }
 
 
 
@@ -354,36 +339,9 @@ class PlayerControl : CharacterControl() {
     //        a.onEquip(this);
     //    }
     //
-    //    public final void unEquipItem(EquipPlace itemPlace) {
-    //        if (isFree(itemPlace) || inventory.isFull())
-    //            return; // no item at this place or inventory is full
+
     //
-    //        EquippableItem item = getEquip(itemPlace);
-    //
-    //        if (item instanceof Weapon) {
-    //            Weapon w = (Weapon) item;
-    //            if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
-    //                if (itemPlace == EquipPlace.RIGHT_HAND)
-    //                    setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
-    //                else
-    //                    setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
-    //            }
-    //        }
-    //
-    //        item.onUnEquip(this);   // take item off
-    //        inventory.addItem(item);    // put it in inventory
-    //
-    //        setEquip(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
-    //    }
-    //
-    //    /**
-    //     *
-    //     * @param place
-    //     * @return true if the slot at given place is free to put gear on
-    //     */
-    //    public final boolean isFree(EquipPlace place) {
-    //        return getEquip(place).getID() == place.emptyID;
-    //    }
+
     //
     //    public final EquippableItem getEquip(EquipPlace place) {
     //        return equip.get(place);

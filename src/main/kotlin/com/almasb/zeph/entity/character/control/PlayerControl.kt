@@ -60,31 +60,31 @@ class PlayerControl : CharacterControl() {
     private val EXP_NEEDED_STAT = IntArray(MAX_LEVEL_STAT)
     private val EXP_NEEDED_JOB = IntArray(MAX_LEVEL_JOB)
 
-//    static
-//    {
-//        /**
-//         * By what value should experience needed for next level
-//         * increase per level
-//         */
-//        float EXP_NEEDED_INC_BASE = 1.75f;
-//        float EXP_NEEDED_INC_STAT = 1.5f;
-//        float EXP_NEEDED_INC_JOB  = 2.25f;
-//
-//        int EXP_NEEDED_FOR_LEVEL2 = 10;
-//
-//        EXP_NEEDED_BASE[0] = EXP_NEEDED_FOR_LEVEL2;
-//        EXP_NEEDED_STAT[0] = EXP_NEEDED_FOR_LEVEL2;
-//        EXP_NEEDED_JOB[0] = EXP_NEEDED_FOR_LEVEL2;
-//        for (int i = 1; i < EXP_NEEDED_BASE.length; i++) {
-//        EXP_NEEDED_BASE[i] = int (EXP_NEEDED_BASE[i - 1] * EXP_NEEDED_INC_BASE) + 2 * i;
-//
-//        if (i < EXP_NEEDED_STAT.length)
-//            EXP_NEEDED_STAT[i] = int (EXP_NEEDED_STAT[i - 1] * EXP_NEEDED_INC_STAT) + i;
-//
-//        if (i < EXP_NEEDED_JOB.length)
-//            EXP_NEEDED_JOB[i] = int (EXP_NEEDED_JOB[i - 1] * EXP_NEEDED_INC_JOB) + 3 * i;
-//    }
-//    }
+    init {
+        /**
+         * By what value should experience needed for next level
+         * increase per level
+         */
+        val EXP_NEEDED_INC_BASE = 1.75f;
+        val EXP_NEEDED_INC_STAT = 1.5f;
+        val EXP_NEEDED_INC_JOB  = 2.25f;
+
+        val EXP_NEEDED_FOR_LEVEL2 = 10;
+
+        EXP_NEEDED_BASE[0] = EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_STAT[0] = EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_JOB[0] = EXP_NEEDED_FOR_LEVEL2;
+
+        for (i in 1..EXP_NEEDED_BASE.size - 1) {
+            EXP_NEEDED_BASE[i] = (EXP_NEEDED_BASE[i - 1] * EXP_NEEDED_INC_BASE + 2 * i).toInt();
+
+            if (i < EXP_NEEDED_STAT.size)
+                EXP_NEEDED_STAT[i] = (EXP_NEEDED_STAT[i - 1] * EXP_NEEDED_INC_STAT + i).toInt();
+
+            if (i < EXP_NEEDED_JOB.size)
+                EXP_NEEDED_JOB[i] = (EXP_NEEDED_JOB[i - 1] * EXP_NEEDED_INC_JOB + 3 * i).toInt();
+        }
+    }
 
     /**
      * Increases base [attribute].
@@ -100,114 +100,68 @@ class PlayerControl : CharacterControl() {
         }
     }
 
-    //  public void increaseSkillLevel(int skillCode) {
-    //  if (skillCode >= skills.length)
-    //      return;
-    //
-    //  if (skills[skillCode].levelUp())
-    //      skillPoints--;
-    //}
+    fun expNeededForNextBaseLevel(): Int {
+        return EXP_NEEDED_BASE[player.baseLevel.value - 1]
+    }
 
-    //    public boolean hasAttributePoints() {
-    //        return attributePoints > 0;
-    //    }
-    //
-    //    public boolean hasSkillPoints() {
-    //        return skillPoints > 0;
-    //    }
+    fun expNeededForNextStatLevel(): Int {
+        return EXP_NEEDED_STAT[player.statLevel.value - 1]
+    }
 
+    fun expNeededForNextJobLevel(): Int {
+        return EXP_NEEDED_JOB[player.jobLevel.value - 1]
+    }
 
-//    /**
-//     * Player experience.
-//     */
-//    private val xp = Experience(0, 0, 0)
-//    @Transient private val baseXPProperty = ReadOnlyIntegerWrapper(0)
-//    @Transient private val statXPProperty = ReadOnlyIntegerWrapper(0)
-//    @Transient private val jobXPProperty = ReadOnlyIntegerWrapper(0)
-//
-//    fun baseXPProperty(): ReadOnlyIntegerProperty {
-//        return baseXPProperty.readOnlyProperty
-//    }
-//
-//    fun statXPProperty(): ReadOnlyIntegerProperty {
-//        return statXPProperty.readOnlyProperty
-//    }
-//
-//    fun jobXPProperty(): ReadOnlyIntegerProperty {
-//        return jobXPProperty.readOnlyProperty
-//    }
-//
-//    fun expNeededForNextBaseLevel(): Int {
-//        return EXP_NEEDED_BASE[baseLevel.level - 1]
-//    }
-//
-//    fun expNeededForNextStatLevel(): Int {
-//        return EXP_NEEDED_STAT[statLevel.getLevel() - 1]
-//    }
-//
-//    fun expNeededForNextJobLevel(): Int {
-//        return EXP_NEEDED_JOB[jobLevel.getLevel() - 1]
-//    }
-//
-//    /**
-//     * Increases player's experience.
-//     * TODO: check against MAX LEVELS
-//
-//     * @param gainedXP
-//     * *
-//     * @return
-//     * *          true if player gained new base level
-//     */
-//    fun rewardXP(gainedXP: Experience): Boolean {
-//        var baseLevelUp = false
-//
-//        xp.add(gainedXP)
-//        if (xp.stat >= EXP_NEEDED_STAT[statLevel.getLevel() - 1]) {
-//            //statLevelUp();
-//            xp.stat = 0
-//        }
-//        if (xp.job >= EXP_NEEDED_JOB[jobLevel.getLevel() - 1]) {
-//            //jobLevelUp();
-//            xp.job = 0
-//        }
-//        if (xp.base >= expNeededForNextBaseLevel()) {
-//            //baseLevelUp();
-//            xp.base = 0
-//            baseLevelUp = true
-//        }
-//
-//        baseXPProperty.set(xp.base)
-//        statXPProperty.set(xp.stat)
-//        jobXPProperty.set(xp.job)
-//
-//        return baseLevelUp
-//    }
-    //
-    //    private void baseLevelUp() {
-    //        baseLevel.incLevel();
-    //
-    //        hp.restorePercentageMax(100);
-    //        sp.restorePercentageMax(100);
-    //    }
-    //
-    //    private void statLevelUp() {
-    //        statLevel.incLevel();
-    //        setAttributePoints(getAttributePoints() + ATTRIBUTE_POINTS_PER_LEVEL);
-    //    }
-    //
-    //    private void jobLevelUp() {
-    //        jobLevel.incLevel();
-    //        setSkillPoints(getSkillPoints() + 1);
-    //    }
-    //
-    //    @Override
-    //    public final boolean canAttack() {
-    //        Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
-    //        Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
-    //
-    //        return getAtkTick() >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
-    //    }
-    //
+    /**
+     * Increases player's experience.
+     * TODO: check against MAX LEVELS
+     * @param gainedXP
+     * *
+     * @return
+     * *          true if player gained new base level
+     */
+    fun rewardXP(gainedXP: Experience): Boolean {
+        var baseLevelUp = false
+
+        player.baseXP.value += gainedXP.base
+        player.statXP.value += gainedXP.stat
+        player.jobXP.value += gainedXP.job
+
+        if (player.statXP.value >= expNeededForNextStatLevel()) {
+            player.statXP.value = 0
+            statLevelUp();
+        }
+
+        if (player.jobXP.value >= expNeededForNextJobLevel()) {
+            player.jobXP.value = 0
+            jobLevelUp();
+        }
+
+        if (player.baseXP.value >= expNeededForNextBaseLevel()) {
+            player.baseXP.value = 0
+            baseLevelUp();
+            baseLevelUp = true
+        }
+
+        return baseLevelUp
+    }
+
+    private fun baseLevelUp() {
+        player.baseLevel.value++
+
+        player.hp.restorePercentageMax(100.0)
+        player.sp.restorePercentageMax(100.0)
+    }
+
+    private fun statLevelUp() {
+        player.statLevel.value++
+        player.attributePoints.value += ATTRIBUTE_POINTS_PER_LEVEL
+    }
+
+    private fun jobLevelUp() {
+        player.jobLevel.value++
+        player.skillPoints.value++
+    }
 
     val equip = HashMap<EquipPlace, Entity>()
     val equipProperties = HashMap<EquipPlace, ObjectProperty<Entity> >()
@@ -220,18 +174,17 @@ class PlayerControl : CharacterControl() {
         equipProperties[place]!!.set(item)
     }
 
-
     fun equipWeapon(weapon: WeaponEntity) {
         // remove item from inventory to clear space
         player.inventory.removeItem(weapon)
 
-
+        // TODO:
 
         weapon.data.onEquip(player)
     }
 
     fun equipArmor(armor: ArmorEntity) {
-
+        //TODO:
     }
 
     fun unEquipItem(place: EquipPlace) {
@@ -247,9 +200,12 @@ class PlayerControl : CharacterControl() {
                 else
                     setEquip(EquipPlace.RIGHT_HAND, WeaponEntity(Data.Weapon.HANDS()))
             }
+
+            item.data.onUnEquip(player)
+        } else if (item is ArmorEntity) {
+            item.data.onUnEquip(player)
         }
 
-        // TODO: unequip
         player.inventory.addItem(item)
 
         // TODO: replace with default
@@ -340,11 +296,13 @@ class PlayerControl : CharacterControl() {
     //    }
     //
 
-    //
 
+    //    @Override
+    //    public final boolean canAttack() {
+    //        Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
+    //        Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
     //
-    //    public final EquippableItem getEquip(EquipPlace place) {
-    //        return equip.get(place);
+    //        return getAtkTick() >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
     //    }
     //
     //    @Override

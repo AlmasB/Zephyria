@@ -15,43 +15,19 @@ import javafx.beans.property.SimpleIntegerProperty
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class PlayerEntity : GameEntity() {
+class PlayerEntity : CharacterEntity() {
 
     val money = MoneyComponent(9999)
-
-    val hp = HPComponent()
-    val sp = SPComponent()
-
-    val baseLevel = LevelComponent()
-    val attributes = AttributesComponent()
-    val stats = StatsComponent()
-
-    val inventory = Inventory()
 
     val attributePoints = SimpleIntegerProperty(90)
     val skillPoints = SimpleIntegerProperty(90)
 
-    val statLevel = SimpleIntegerProperty()
-    val jobLevel = SimpleIntegerProperty()
+    val statLevel = SimpleIntegerProperty(1)
+    val jobLevel = SimpleIntegerProperty(1)
 
     init {
         addComponent(money)
-        addComponent(baseLevel)
-        addComponent(attributes)
-        addComponent(stats)
-
-        addComponent(hp)
-        addComponent(sp)
-
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
-        inventory.addItem(WeaponEntity(Data.Weapon.HANDS()))
     }
 
     fun getControl() = getControlUnsafe(PlayerControl::class.java)
-
-    fun getDescription() = getComponentUnsafe(DescriptionComponent::class.java)
 }

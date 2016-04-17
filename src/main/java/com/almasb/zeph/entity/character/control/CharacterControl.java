@@ -8,6 +8,7 @@ import com.almasb.zeph.combat.Effect;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.combat.StatusEffect;
 import com.almasb.zeph.combat.StatusEffect.Status;
+import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.component.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberBinding;
@@ -74,17 +75,18 @@ public class CharacterControl extends AbstractControl {
     protected StatsComponent stats;
     protected HPComponent hp;
     protected SPComponent sp;
-    protected LevelComponent baseLevel;
+
+    protected CharacterEntity character;
 
     @Override
     public void onAdded(Entity entity) {
+        character = (CharacterEntity) entity;
+
         hp = entity.getComponentUnsafe(HPComponent.class);
         sp = entity.getComponentUnsafe(SPComponent.class);
 
         attributes = entity.getComponentUnsafe(AttributesComponent.class);
         stats = entity.getComponentUnsafe(StatsComponent.class);
-
-        baseLevel = entity.getComponentUnsafe(LevelComponent.class);
 
         init();
     }
@@ -136,13 +138,13 @@ public class CharacterControl extends AbstractControl {
     }
 
     private int level() {
-        return baseLevel.getLevel();
+        return character.getBaseLevel().intValue();
     }
 
+    /**
+     * Bind base stats to attributes.
+     */
     private void bindStats() {
-
-        // bind base stats to attributes
-
         NumberBinding str = attributes.totalAttributeProperty(Attribute.STRENGTH);
         NumberBinding vit = attributes.totalAttributeProperty(Attribute.VITALITY);
         NumberBinding dex = attributes.totalAttributeProperty(Attribute.DEXTERITY);
@@ -153,7 +155,7 @@ public class CharacterControl extends AbstractControl {
         NumberBinding per = attributes.totalAttributeProperty(Attribute.PERCEPTION);
         NumberBinding luc = attributes.totalAttributeProperty(Attribute.LUCK);
 
-        ReadOnlyIntegerProperty level = baseLevel.levelProperty();
+        ReadOnlyIntegerProperty level = character.getBaseLevel();
 
         stats.statProperty(Stat.MAX_HP).bind(Bindings.createDoubleBinding(() ->
                 1 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + vit() / 10,

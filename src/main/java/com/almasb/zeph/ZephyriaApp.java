@@ -9,6 +9,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
@@ -72,6 +73,13 @@ public class ZephyriaApp extends GameApplication {
                 selectedPoint = input.getMousePositionWorld();
             }
         }, MouseButton.PRIMARY);
+
+        input.addAction(new UserAction("Reward XP") {
+            @Override
+            protected void onActionBegin() {
+                playerControl.rewardXP(new Experience(30, 3, 5));
+            }
+        }, MouseButton.SECONDARY);
 
         input.addAction(new UserAction("Test Wear1") {
             WeaponEntity weapon = new WeaponEntity(Data.Weapon.INSTANCE.HANDS());

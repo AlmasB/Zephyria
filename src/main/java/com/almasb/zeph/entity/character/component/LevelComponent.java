@@ -36,12 +36,12 @@ public class LevelComponent extends AbstractComponent {
      *
      * @param level
      */
-    protected final void setLevel(int level) {
+    public final void setLevel(int level) {
         this.level = level;
         levelProperty.set(level);
     }
 
-    protected final void incLevel() {
+    public final void incLevel() {
         setLevel(getLevel() + 1);
     }
 }

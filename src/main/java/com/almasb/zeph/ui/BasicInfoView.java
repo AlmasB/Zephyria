@@ -44,7 +44,7 @@ public class BasicInfoView extends Accordion {
         textLevels.setTranslateX(15);
         textLevels.setTranslateY(100);
         textLevels.setFont(Font.font(16));
-        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel().levelProperty())
+        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
                 .concat("\nStat Lv. ").concat(player.getStatLevel())
                 .concat("\nJob Lv. ").concat(player.getJobLevel()));
 
@@ -52,37 +52,37 @@ public class BasicInfoView extends Accordion {
         barXPBase.setWidth(150);
         barXPBase.setTranslateX(120);
         barXPBase.setTranslateY(90);
-        //barXPBase.currentValueProperty().bind(player.baseXPProperty());
+        barXPBase.currentValueProperty().bind(player.getBaseXP());
 
         ProgressBar barXPStat = new ProgressBar();
         barXPStat.setWidth(150);
         barXPStat.setTranslateX(120);
         barXPStat.setTranslateY(110);
-        //barXPStat.currentValueProperty().bind(player.statXPProperty());
+        barXPStat.currentValueProperty().bind(player.getStatXP());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);
         barXPJob.setTranslateX(120);
         barXPJob.setTranslateY(130);
-        //barXPJob.currentValueProperty().bind(player.jobXPProperty());
-//
+        barXPJob.currentValueProperty().bind(player.getJobXP());
+
         Text textMoney = new Text("");
         textMoney.setTranslateX(200);
         textMoney.setTranslateY(180);
         textMoney.setFont(Font.font(14));
         textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getMoney().valueProperty()).concat("G"));
 
-//        player.baseLevelProperty().addListener((obs, old, newValue) -> {
-//            barXPBase.setMaxValue(player.expNeededForNextBaseLevel());
-//        });
-//
-//        player.statLevelProperty().addListener((obs, old, newValue) -> {
-//            barXPStat.setMaxValue(player.expNeededForNextStatLevel());
-//        });
-//
-//        player.jobLevelProperty().addListener((obs, old, newValue) -> {
-//            barXPJob.setMaxValue(player.expNeededForNextJobLevel());
-//        });
+        player.getBaseLevel().addListener((obs, old, newValue) -> {
+            barXPBase.setMaxValue(player.getControl().expNeededForNextBaseLevel());
+        });
+
+        player.getStatLevel().addListener((obs, old, newValue) -> {
+            barXPStat.setMaxValue(player.getControl().expNeededForNextStatLevel());
+        });
+
+        player.getJobLevel().addListener((obs, old, newValue) -> {
+            barXPJob.setMaxValue(player.getControl().expNeededForNextJobLevel());
+        });
 
         Pane uiPane = new Pane();
         uiPane.setPrefSize(350, 200);

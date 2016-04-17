@@ -6,10 +6,12 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.entity.Data
 import com.almasb.zeph.entity.DescriptionComponent
+import com.almasb.zeph.entity.EntityManager
 import com.almasb.zeph.entity.character.EquipPlace
 import com.almasb.zeph.entity.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.item.ArmorEntity
+import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.WeaponEntity
 import com.almasb.zeph.entity.item.WeaponType
 import javafx.beans.property.ObjectProperty
@@ -33,8 +35,13 @@ class PlayerControl : CharacterControl() {
         player = entity as PlayerEntity
 
         EquipPlace.values().forEach {
-            val item = WeaponEntity(Data.Weapon.HANDS())
-            item.data.onEquip(player)
+            val item: Entity = if (it.isWeapon) EntityManager.getWeapon(it.emptyID) else EntityManager.getArmor(it.emptyID)
+
+            if (item is WeaponEntity)
+                item.data.onEquip(player)
+            else if (item is ArmorEntity)
+                item.data.onEquip(player)
+
             equip.put(it, item)
             equipProperties.put(it, SimpleObjectProperty(item))
         }
@@ -175,16 +182,47 @@ class PlayerControl : CharacterControl() {
     }
 
     fun equipWeapon(weapon: WeaponEntity) {
-        // remove item from inventory to clear space
         player.inventory.removeItem(weapon)
 
-        // TODO:
+        if (weapon.data.type.isTwoHanded()) {
+
+            if (30 - player.inventory.getItems().size == 1
+                && !isFree(EquipPlace.RIGHT_HAND)
+                && !isFree(EquipPlace.LEFT_HAND)) {
+                // ex case, when inventory is full and player tries to equip 2H weapon
+                // but holds two 1H weapons
+                player.inventory.addItem(weapon)
+                return
+            }
+
+            unEquipItem(EquipPlace.RIGHT_HAND)
+            unEquipItem(EquipPlace.LEFT_HAND)
+            setEquip(EquipPlace.RIGHT_HAND, weapon)
+            setEquip(EquipPlace.RIGHT_HAND, weapon)
+
+        } else if (weapon.data.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
+            unEquipItem(EquipPlace.LEFT_HAND)
+            setEquip(EquipPlace.LEFT_HAND, weapon)
+        } else {    // normal 1H weapon
+            unEquipItem(EquipPlace.RIGHT_HAND)
+            setEquip(EquipPlace.RIGHT_HAND, weapon)
+        }
 
         weapon.data.onEquip(player)
     }
 
     fun equipArmor(armor: ArmorEntity) {
-        //TODO:
+        player.inventory.removeItem(armor)
+
+        val place = when (armor.data.armorType) {
+            ArmorType.BODY -> EquipPlace.BODY
+            ArmorType.HELM -> EquipPlace.HELM
+            ArmorType.SHOES -> EquipPlace.SHOES
+        }
+
+        unEquipItem(place)
+        setEquip(place, armor)
+        armor.data.onEquip(player)
     }
 
     fun unEquipItem(place: EquipPlace) {
@@ -208,93 +246,16 @@ class PlayerControl : CharacterControl() {
 
         player.inventory.addItem(item)
 
-        // TODO: replace with default
+        // replace with default
+        if (place.isWeapon) {
+            setEquip(place, EntityManager.getWeapon(place.emptyID))
+        } else {
+            setEquip(place, EntityManager.getArmor(place.emptyID))
+        }
     }
 
     fun isFree(place: EquipPlace) = getEquip(place)
             .getComponentUnsafe(DescriptionComponent::class.java).id == place.emptyID
-
-    //    public final void unEquipItem(EquipPlace itemPlace) {
-    //        if (isFree(itemPlace) || inventory.isFull())
-    //            return; // no item at this place or inventory is full
-    //
-    //        EquippableItem item = getEquip(itemPlace);
-    //
-    //        if (item instanceof Weapon) {
-    //            Weapon w = (Weapon) item;
-    //            if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) { // if 2 handed
-    //                if (itemPlace == EquipPlace.RIGHT_HAND)
-    //                    setEquip(EquipPlace.LEFT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
-    //                else
-    //                    setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeaponByID(ID.Weapon.HANDS));
-    //            }
-    //        }
-    //
-    //        item.onUnEquip(this);   // take item off
-    //        inventory.addItem(item);    // put it in inventory
-    //
-    //        setEquip(itemPlace, (EquippableItem) EntityManager.getItemByID(itemPlace.emptyID));    // replace with default
-    //    }
-
-
-
-
-
-
-
-
-
-    //    public final void equipWeapon(Weapon w) {
-    //        inventory.removeItem(w);    // remove item from inventory to clear space
-    //
-    //        if (w.type.ordinal() >= WeaponType.TWO_H_SWORD.ordinal()) {
-    //            if (Inventory.MAX_SIZE - inventory.size() == 1
-    //                    && !isFree(EquipPlace.RIGHT_HAND)
-    //                    && !isFree(EquipPlace.LEFT_HAND)) {
-    //                // ex case, when inventory is full and player tries to equip 2H weapon
-    //                // but holds two 1H weapons
-    //                inventory.addItem(w);
-    //                return;
-    //            }
-    //            unEquipItem(EquipPlace.RIGHT_HAND);
-    //            unEquipItem(EquipPlace.LEFT_HAND);
-    //            setEquip(EquipPlace.RIGHT_HAND, w);
-    //            setEquip(EquipPlace.LEFT_HAND, w);
-    //        }
-    //        else if (w.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
-    //            unEquipItem(EquipPlace.LEFT_HAND);
-    //            setEquip(EquipPlace.LEFT_HAND, w);
-    //        }
-    //        else {  // normal 1H weapon
-    //            unEquipItem(EquipPlace.RIGHT_HAND);
-    //            setEquip(EquipPlace.RIGHT_HAND, w);
-    //        }
-    //
-    //        w.onEquip(this);            // put it on
-    //    }
-    //
-    //    public final void equipArmor(Armor a) {
-    //        inventory.removeItem(a);    // remove it first, so we can unequip our armor
-    //
-    //        EquipPlace place;
-    //        switch (a.type) {
-    //            case BODY:
-    //                place = EquipPlace.BODY;
-    //                break;
-    //            case HELM:
-    //                place = EquipPlace.HELM;
-    //                break;
-    //            case SHOES:
-    //            default:
-    //                place = EquipPlace.SHOES;
-    //                break;
-    //        }
-    //
-    //        unEquipItem(place);
-    //        setEquip(place, a);
-    //        a.onEquip(this);
-    //    }
-    //
 
 
     //    @Override

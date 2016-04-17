@@ -1,5 +1,6 @@
 package com.almasb.zeph;
 
+import com.almasb.ents.Component;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
@@ -13,6 +14,8 @@ import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.EntityManagerOld;
+import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
@@ -28,9 +31,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
+
+import java.util.ArrayList;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -82,16 +86,16 @@ public class ZephyriaApp extends GameApplication {
         }, MouseButton.SECONDARY);
 
         input.addAction(new UserAction("Test Wear1") {
-            WeaponEntity weapon = new WeaponEntity(Data.Weapon.INSTANCE.HANDS());
+            WeaponEntity weapon = EntityManager.INSTANCE.getWeapon(4003);
 
             @Override
             protected void onActionBegin() {
-                weapon.getData().onEquip(player);
+                playerControl.equipWeapon(weapon);
             }
 
             @Override
             protected void onActionEnd() {
-                weapon.getData().onUnEquip(player);
+                playerControl.unEquipItem(EquipPlace.RIGHT_HAND);
             }
         }, KeyCode.F);
     }
@@ -106,7 +110,7 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndAttach(getGameWorld());
 
 
-        EntityManager.load();
+        EntityManagerOld.load();
 
         selectedEffect.setInput(new Glow(0.8));
 
@@ -259,17 +263,17 @@ public class ZephyriaApp extends GameApplication {
 //        getGameWorld().addEntities(player);
 //
 //
-//        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.KNIFE));
-//        playerData.getInventory().addItem(EntityManager.getWeaponByID(ID.Weapon.GUT_RIPPER));
-//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.DOMOVOI));
-//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
-//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.SOUL_BARRIER));
-//        playerData.getInventory().addItem(EntityManager.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
+//        playerData.getInventory().addItem(EntityManagerOld.getWeaponByID(ID.Weapon.KNIFE));
+//        playerData.getInventory().addItem(EntityManagerOld.getWeaponByID(ID.Weapon.GUT_RIPPER));
+//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.DOMOVOI));
+//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
+//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.SOUL_BARRIER));
+//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
 //    }
 
 //    private void initEnemies() {
 //        for (int i = 0; i < 10; i++) {
-//            Entity enemy = EntityManager.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
+//            Entity enemy = EntityManagerOld.getEnemyByID(ID.Enemy.MINOR_EARTH_SPIRIT).toEntity();
 //            enemy.setPosition(new Random().nextInt(1000), new Random().nextInt(600));
 ////            enemy.getSceneView().ifPresent().setOnMouseClicked(e -> {
 ////                selected = enemy;
@@ -287,7 +291,7 @@ public class ZephyriaApp extends GameApplication {
 //                List<DroppableItem> drops = enemyData.getDrops();
 //                for (DroppableItem drop : drops) {
 //                    if (GameMath.checkChance(drop.dropChance)) {
-//                        DescriptionComponent item = EntityManager.getItemByID(drop.itemID);
+//                        DescriptionComponent item = EntityManagerOld.getItemByID(drop.itemID);
 //                        dropItem(item, enemy.getPosition());
 //                    }
 //                }

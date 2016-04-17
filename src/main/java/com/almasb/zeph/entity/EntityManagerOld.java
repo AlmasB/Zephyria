@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity;
 
-public class EntityManager {
+public class EntityManagerOld {
 
     public static void load() {}
 //
@@ -10,7 +10,7 @@ public class EntityManager {
 //    private static HashMap<Integer, EnemyControl> defaultEnemies = new HashMap<>();
 //    private static HashMap<Integer, Essence> defaultEssences = new HashMap<>();
 //
-//    private EntityManager() {}
+//    private EntityManagerOld() {}
 //
 //    private static void loadArmor() {
 //        ArmorBuilder armorBuilder = new ArmorBuilder();

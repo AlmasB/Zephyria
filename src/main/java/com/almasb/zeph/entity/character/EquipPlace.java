@@ -36,4 +36,8 @@ public enum EquipPlace {
     EquipPlace(int emptyID) {
         this.emptyID = emptyID;
     }
+
+    public boolean isWeapon() {
+        return ordinal() >= RIGHT_HAND.ordinal();
+    }
 }

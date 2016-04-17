@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity.item.component
 
 import com.almasb.ents.Entity
+import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.entity.item.component.EquippableComponent
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.character.component.StatsComponent
@@ -26,5 +27,10 @@ class WeaponDataComponent(itemLevel: ItemLevel, val type: WeaponType, val pureDa
     override fun onUnEquip(entity: Entity) {
         super.onUnEquip(entity)
         entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ATK, -fullDamage())
+    }
+
+    fun withRune(rune: Rune): WeaponDataComponent {
+        addRune(rune)
+        return this
     }
 }

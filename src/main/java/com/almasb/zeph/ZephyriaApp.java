@@ -2,7 +2,6 @@ package com.almasb.zeph;
 
 import com.almasb.astar.AStarGrid;
 import com.almasb.astar.AStarNode;
-import com.almasb.ents.Component;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.FXGL;
@@ -14,10 +13,10 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimationChannel;
+import com.almasb.fxgl.texture.DynamicAnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Experience;
-import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.CharacterEntity;
@@ -85,25 +84,25 @@ public class ZephyriaApp extends GameApplication {
     protected void initInput() {
         Input input = getInput();
 
-        input.addAction(new UserAction("TargetSelection") {
-            @Override
-            protected void onActionBegin() {
-                int targetX = (int) (input.getMouseXWorld() / TILE_SIZE);
-                int targetY = (int) (input.getMouseYWorld() / TILE_SIZE);
-
-                int startX = getTileX(player);
-                int startY = getTileY(player);
-
-                System.out.println(startX + " " + startY + " " + targetX +" " + targetY);
-
-                path = grid.getPath(startX, startY, targetX, targetY);
-
-                Entities.builder()
-                        .at(input.getMousePositionWorld())
-                        .viewFromNode(new Rectangle(5, 5))
-                        .buildAndAttach(getGameWorld());
-            }
-        }, MouseButton.PRIMARY);
+//        input.addAction(new UserAction("TargetSelection") {
+//            @Override
+//            protected void onActionBegin() {
+//                int targetX = (int) (input.getMouseXWorld() / TILE_SIZE);
+//                int targetY = (int) (input.getMouseYWorld() / TILE_SIZE);
+//
+//                int startX = getTileX(player);
+//                int startY = getTileY(player);
+//
+//                //System.out.println(startX + " " + startY + " " + targetX +" " + targetY);
+//
+//                path = grid.getPath(startX, startY, targetX, targetY);
+//
+////                Entities.builder()
+////                        .at(input.getMousePositionWorld())
+////                        .viewFromNode(new Rectangle(5, 5))
+////                        .buildAndAttach(getGameWorld());
+//            }
+//        }, MouseButton.PRIMARY);
 
         input.addAction(new UserAction("Reward XP") {
             @Override
@@ -134,9 +133,19 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
-        Entity bg = Entities.builder()
+        GameEntity bg = Entities.builder()
                 .viewFromTexture("background.png")
                 .buildAndAttach(getGameWorld());
+
+        bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
+            int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
+            int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
+
+            int startX = getTileX(player);
+            int startY = getTileY(player);
+
+            path = grid.getPath(startX, startY, targetX, targetY);
+        });
 
         grid = new AStarGrid(1280 / TILE_SIZE, 768 / TILE_SIZE);
 
@@ -205,6 +214,14 @@ public class ZephyriaApp extends GameApplication {
 
             if (dx == 0 && dy == 0) {
                 path.remove(0);
+            } else if (dx > 0) {
+                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_RIGHT);
+            } else if (dx < 0) {
+                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_LEFT);
+            } else if (dy > 0) {
+                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_DOWN);
+            } else if (dy < 0) {
+                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_UP);
             }
 
             dx *= 2;
@@ -454,16 +471,31 @@ public class ZephyriaApp extends GameApplication {
 //    }
 
     private enum PlayerAnimation implements AnimationChannel {
-        WALK;
+        WALK_RIGHT(11, 9),
+        WALK_LEFT(9, 9),
+        WALK_UP(8, 9),
+        WALK_DOWN(10, 9),
+        ATTACK_RIGHT(19, 13),
+        ATTACK_LEFT(17, 13),
+        ATTACK_UP(16, 13),
+        ATTACK_DOWN(18, 13);
+
+        int row;
+        int cycle;
+
+        PlayerAnimation(int row, int cycle) {
+            this.row = row;
+            this.cycle = cycle;
+        }
 
         @Override
         public Rectangle2D area() {
-            return new Rectangle2D(0, 64*11, 64*9, 64);
+            return new Rectangle2D(0, 64*row, 64*cycle, 64);
         }
 
         @Override
         public int frames() {
-            return 9;
+            return cycle;
         }
 
         @Override
@@ -472,16 +504,19 @@ public class ZephyriaApp extends GameApplication {
         }
     }
 
+    private DynamicAnimatedTexture playerAnimation;
+
     private PlayerEntity initPlayer() {
         player = new PlayerEntity();
-        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/players/player.png"));
+        player.addComponent(new DescriptionComponent(1, "Player", "Player Description", "chars/players/player_full.png"));
         player.addControl(new PlayerControl());
 
-        player.getPositionComponent().setValue(400, 400);
-        //player.getMainViewComponent().setTexture("chars/players/player.png");
+        player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
-        player.getMainViewComponent().setView(FXGL.getAssetLoader().loadTexture("chars/players/player_full.png")
-            .toDynamicAnimatedTexture(PlayerAnimation.WALK, PlayerAnimation.WALK));
+        playerAnimation = FXGL.getAssetLoader().loadTexture("chars/players/player_full.png")
+                .toDynamicAnimatedTexture(PlayerAnimation.WALK_RIGHT, PlayerAnimation.values());
+
+        player.getMainViewComponent().setView(playerAnimation, true);
 
         playerControl = player.getControl();
 
@@ -495,21 +530,46 @@ public class ZephyriaApp extends GameApplication {
         enemy.addComponent(new DescriptionComponent(2, "Skeleton-Archer", "Description", "chars/enemies/enemy.png"));
         enemy.addControl(new CharacterControl());
 
-        enemy.getPositionComponent().setValue(200, 400);
-        enemy.getMainViewComponent().setTexture("chars/enemies/enemy.png");
+        spawnEntity(2, 4, enemy);
 
         enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
-            Entities.builder()
-                    .at(player.getPositionComponent().getValue())
-                    .viewFromTexture("projectiles/arrow2.png")
-                    .with(new ProjectileControl(enemy.getPositionComponent().getValue().subtract(player.getPositionComponent().getValue()), 3))
-                    .buildAndAttach(getGameWorld());
 
             selectedPoint = null;
             e.consume();
-        });
 
-        getGameWorld().addEntity(enemy);
+            path = new ArrayList<>();
+
+            Point2D vector = enemy.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
+
+            if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
+                if (vector.getX() >= 0) {
+                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_RIGHT);
+                } else {
+                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_LEFT);
+                }
+            } else {
+                if (vector.getY() >= 0) {
+                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_DOWN);
+                } else {
+                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_UP);
+                }
+            }
+
+            getMasterTimer().runOnceAfter(() -> {
+                Entities.builder()
+                        .at(player.getBoundingBoxComponent().getCenterWorld())
+                        .viewFromTexture("projectiles/arrow2.png")
+                        .with(new ProjectileControl(enemy.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 5))
+                        .buildAndAttach(getGameWorld());
+            }, Duration.seconds(0.8));
+        });
+    }
+
+    private void spawnEntity(int x, int y, GameEntity entity) {
+        entity.getPositionComponent().setValue(x * TILE_SIZE, y * TILE_SIZE);
+        entity.getMainViewComponent().setTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName(), true);
+
+        getGameWorld().addEntity(entity);
     }
 
     public static void main(String[] args) {

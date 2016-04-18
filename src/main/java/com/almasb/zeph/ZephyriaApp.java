@@ -48,7 +48,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -63,6 +63,8 @@ import java.util.Random;
 public class ZephyriaApp extends GameApplication {
 
     private static final int TILE_SIZE = 64;
+    private static final int MAP_WIDTH = 100;
+    private static final int MAP_HEIGHT = 100;
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -156,9 +158,33 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        initBackground();
+
+        grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
+
+        selectedEffect.setInput(new Glow(0.8));
+
+        initPlayer();
+        initEnemies();
+
+        //showGrid();
+        getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
+        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+    }
+
+    private void initBackground() {
         GameEntity bg = Entities.builder()
-                .viewFromTexture("background.png")
                 .buildAndAttach(getGameWorld());
+
+        Region region = new Region();
+        region.setPrefSize(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
+
+        BackgroundImage bgImg = new BackgroundImage(getAssetLoader().loadTexture("tile.png").getImage(),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+
+        region.setBackground(new Background(bgImg));
+
+        bg.getMainViewComponent().setView(region);
 
         bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
             selected = null;
@@ -184,15 +210,17 @@ public class ZephyriaApp extends GameApplication {
             }
         });
 
-        grid = new AStarGrid(1280 / TILE_SIZE, 768 / TILE_SIZE);
+        spawnTree(0, 0);
+        spawnTree(0, MAP_HEIGHT - 1);
+        spawnTree(MAP_WIDTH - 1, 0);
+        spawnTree(MAP_WIDTH - 1, MAP_HEIGHT - 1);
+    }
 
-        selectedEffect.setInput(new Glow(0.8));
-
-        initPlayer();
-        initEnemies();
-
-        //showGrid();
-        //getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+    private void spawnTree(int x, int y) {
+        GameEntity tree = Entities.builder()
+                .at(x * TILE_SIZE, y * TILE_SIZE - 85 + 64)
+                .viewFromTexture("tree2.png")
+                .buildAndAttach(getGameWorld());
     }
 
     private void showGrid() {

@@ -4,6 +4,7 @@ import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.Data
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.EntityManager
@@ -21,7 +22,8 @@ import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 
 /**
- *
+ * TODO: we actually have PlayerControl and CharacterControl
+ * on player entity, good / bad ? maybe leave both and separate responsibilities
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -257,14 +259,13 @@ class PlayerControl : CharacterControl() {
     fun isFree(place: EquipPlace) = getEquip(place)
             .getComponentUnsafe(DescriptionComponent::class.java).id == place.emptyID
 
-
-    //    @Override
-    //    public final boolean canAttack() {
-    //        Weapon w1 = (Weapon) getEquip(EquipPlace.RIGHT_HAND);
-    //        Weapon w2 = (Weapon) getEquip(EquipPlace.LEFT_HAND);
-    //
-    //        return getAtkTick() >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.type.aspdFactor*w2.type.aspdFactor/100.0f);
-    //    }
+//    override fun canAttack(): Boolean {
+//        val w1 = getEquip(EquipPlace.RIGHT_HAND) as WeaponEntity;
+//        val w2 = getEquip(EquipPlace.LEFT_HAND) as WeaponEntity;
+//
+//        return atkTick >= 2.0
+//        //return atkTick >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.data.type.aspdFactor*w2.data.type.aspdFactor/1000.0);
+//    }
     //
     //    @Override
     //    public final Element getWeaponElement() {

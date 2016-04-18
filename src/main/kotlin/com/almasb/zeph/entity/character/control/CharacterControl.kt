@@ -248,7 +248,7 @@ open class CharacterControl : AbstractControl() {
         updateRegen(tpf)
 
         if (!canAttack())
-            atkTick++
+            atkTick += tpf
 
         updateSkills()
         // check buffs
@@ -267,18 +267,18 @@ open class CharacterControl : AbstractControl() {
 
      * @return attack tick
      */
-    protected var atkTick = 0
+    protected var atkTick = 0.0
         private set
 
     fun resetAtkTick() {
-        atkTick = 0
+        atkTick = 0.0
     }
 
     /**
      * @return if character is ready to perform basic attack based on his ASPD
      */
-    fun canAttack(): Boolean {
-        return atkTick >= 50 / (1 + stats.getTotalStat(Stat.ASPD) / 100.0f)
+    open fun canAttack(): Boolean {
+        return atkTick >= 3.0 - stats.getTotalStat(Stat.ASPD) / 100.0
     }
 
     /**

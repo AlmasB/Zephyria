@@ -58,7 +58,7 @@ object Data {
 
     object Character {
         fun SKELETON_ARCHER() = listOf<Component>(
-                DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description", "chars/enemies/enemy.png"),
+                DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description", "chars/enemies/skeleton_archer.png"),
                 CharacterDataComponent(CharacterType.NORMAL)
                         .withLevel(2)
                         .withAttribute(Attribute.DEXTERITY, 3)

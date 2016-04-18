@@ -8,6 +8,7 @@ import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.EntityView;
 import com.almasb.fxgl.entity.GameEntity;
+import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.component.CollidableComponent;
 import com.almasb.fxgl.entity.component.PositionComponent;
 import com.almasb.fxgl.entity.control.OffscreenCleanControl;
@@ -23,6 +24,7 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Experience;
+import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
@@ -39,6 +41,7 @@ import com.almasb.zeph.ui.InventoryView;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -157,6 +160,18 @@ public class ZephyriaApp extends GameApplication {
             path = grid.getPath(startX, startY, targetX, targetY);
         });
 
+        bg.getMainViewComponent().setRenderLayer(new RenderLayer() {
+            @Override
+            public String name() {
+                return "BACKGROUND";
+            }
+
+            @Override
+            public int index() {
+                return 0;
+            }
+        });
+
         grid = new AStarGrid(1280 / TILE_SIZE, 768 / TILE_SIZE);
 
         selectedEffect.setInput(new Glow(0.8));
@@ -251,13 +266,13 @@ public class ZephyriaApp extends GameApplication {
             if (dx == 0 && dy == 0) {
                 path.remove(0);
             } else if (dx > 0) {
-                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_RIGHT);
+                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_RIGHT);
             } else if (dx < 0) {
-                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_LEFT);
+                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_LEFT);
             } else if (dy > 0) {
-                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_DOWN);
+                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_DOWN);
             } else if (dy < 0) {
-                playerAnimation.setAnimationChannel(PlayerAnimation.WALK_UP);
+                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_UP);
             }
 
             dx *= 2;
@@ -274,121 +289,6 @@ public class ZephyriaApp extends GameApplication {
     private int getTileY(GameEntity entity) {
         return (int) (entity.getPositionComponent().getY()) / TILE_SIZE;
     }
-
-    public static ProgressBar makeHPBar() {
-        ProgressBar bar = new ProgressBar(false);
-        bar.setHeight(25);
-        bar.setFill(Color.GREEN.brighter());
-        bar.setTraceFill(Color.GREEN.brighter());
-        bar.setLabelVisible(true);
-        return bar;
-    }
-
-    public static ProgressBar makeSkillBar() {
-        ProgressBar bar = new ProgressBar(false);
-        bar.setHeight(25);
-        bar.setFill(Color.BLUE.brighter().brighter());
-        bar.setTraceFill(Color.BLUE);
-        bar.setLabelVisible(true);
-        return bar;
-    }
-
-//    private void initPlayerOld() {
-//        player = new PlayerControl("Debug", GameCharacterClass.NOVICE).toEntity();
-//        player.setPosition(getWidth() / 2, getHeight() / 2);
-//
-//        playerData = player.getControl(PlayerControl.class).get();
-//
-//        Group vbox = new Group();
-//
-//        Rectangle t = new Rectangle(40, 40);
-//        t.setFill(Color.BLUE);
-//        t.setArcWidth(15);
-//        t.setArcHeight(15);
-//
-//        ProgressBar barHP = makeHPBar();
-//        ProgressBar barSP = makeSkillBar();
-//
-//        barHP.setTranslateX(-20);
-//        barHP.setTranslateY(60);
-//        barHP.setWidth(80);
-//        barHP.setHeight(10);
-//        barHP.setLabelVisible(false);
-//
-//        barSP.setTranslateX(-20);
-//        barSP.setTranslateY(70);
-//        barSP.setWidth(80);
-//        barSP.setHeight(10);
-//        barSP.setLabelVisible(false);
-//
-//        barHP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_HP));
-//        barHP.currentValueProperty().bind(playerData.hpProperty());
-//
-//        barSP.maxValueProperty().bind(playerData.statProperty(Stat.MAX_SP));
-//        barSP.currentValueProperty().bind(playerData.spProperty());
-//
-//        Text text = new Text();
-//        text.setFont(Font.font(14));
-//        text.setFill(Color.WHITE);
-//        text.textProperty().bind(playerData.nameProperty().concat(" Lv. ").concat(playerData.baseLevelProperty()));
-//        text.setTranslateX(20 - text.getLayoutBounds().getWidth() / 2);
-//        text.setTranslateY(55);
-//
-//
-//        vbox.getChildren().addAll(t, text, barHP, barSP);
-//
-//        player.setSceneView(vbox);
-//
-//        Entity bg = Entity.noType();
-////        bg.setOnMouseClicked(event -> {
-////            if (selected != null) {
-////                selected.setEffect(null);
-////                selected = null;
-////            }
-////        });
-//
-//        Texture back = assets.getTexture("map1.png");
-//        //back.setFitWidth(getWidth());
-//        //back.setFitHeight(getHeight());
-//
-//        bg.setSceneView(back);
-//        //bg.translateXProperty().bind(player.translateXProperty().subtract(getWidth() / 2));
-//        //bg.translateYProperty().bind(player.translateYProperty().subtract(getHeight() / 2));
-//
-//
-//        Entity bg0 = Entity.noType();
-//        bg0.setSceneView(assets.getTexture("background.png"));
-//        bg0.setX(-getWidth());
-//
-//        Entity bg1 = Entity.noType();
-//        bg1.setSceneView(assets.getTexture("background.png"));
-//        bg1.setY(-getHeight());
-//
-//
-//
-//
-//
-//
-//        getGameWorld().addEntities(bg0, bg1, bg);
-//
-//        for (int i = 0; i < 20; i++) {
-//            Entity tree = Entity.noType();
-//            tree.setPosition(new Random().nextInt(1500), new Random().nextInt(1000));
-//            tree.setSceneView(assets.getTexture("tree.png"));
-//
-//            getGameWorld().addEntities(tree);
-//        }
-//
-//        getGameWorld().addEntities(player);
-//
-//
-//        playerData.getInventory().addItem(EntityManagerOld.getWeaponByID(ID.Weapon.KNIFE));
-//        playerData.getInventory().addItem(EntityManagerOld.getWeaponByID(ID.Weapon.GUT_RIPPER));
-//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.DOMOVOI));
-//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL));
-//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.SOUL_BARRIER));
-//        playerData.getInventory().addItem(EntityManagerOld.getArmorByID(ID.Armor.THANATOS_BODY_ARMOR));
-//    }
 
 //    private void startAttack(Entity attacker, Entity target) {
 //        if (!attacker.isActive() || !target.isActive())
@@ -452,7 +352,7 @@ public class ZephyriaApp extends GameApplication {
         PLAYER, CHARACTER, PROJECTILE
     }
 
-    private enum PlayerAnimation implements AnimationChannel {
+    private enum CharacterAnimation implements AnimationChannel {
         WALK_RIGHT(11, 9),
         WALK_LEFT(9, 9),
         WALK_UP(8, 9),
@@ -465,14 +365,14 @@ public class ZephyriaApp extends GameApplication {
         int row;
         int cycle;
 
-        PlayerAnimation(int row, int cycle) {
+        CharacterAnimation(int row, int cycle) {
             this.row = row;
             this.cycle = cycle;
         }
 
         @Override
         public Rectangle2D area() {
-            return new Rectangle2D(0, 64*row, 64*cycle, 64);
+            return new Rectangle2D(0, TILE_SIZE*row, TILE_SIZE*cycle, TILE_SIZE);
         }
 
         @Override
@@ -498,11 +398,13 @@ public class ZephyriaApp extends GameApplication {
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
         playerAnimation = getAssetLoader().loadTexture(player.getDescription().getTextureName())
-                .toDynamicAnimatedTexture(PlayerAnimation.WALK_RIGHT, PlayerAnimation.values());
+                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         player.getMainViewComponent().setView(playerAnimation, true);
 
         getGameWorld().addEntity(player);
+
+        addCharacterSubView(player);
     }
 
     private void initEnemies() {
@@ -526,15 +428,15 @@ public class ZephyriaApp extends GameApplication {
 
             if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
                 if (vector.getX() >= 0) {
-                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_RIGHT);
+                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_RIGHT);
                 } else {
-                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_LEFT);
+                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_LEFT);
                 }
             } else {
                 if (vector.getY() >= 0) {
-                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_DOWN);
+                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_DOWN);
                 } else {
-                    playerAnimation.setAnimationChannel(PlayerAnimation.ATTACK_UP);
+                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_UP);
                 }
             }
 
@@ -551,11 +453,81 @@ public class ZephyriaApp extends GameApplication {
         });
     }
 
+    public static ProgressBar makeHPBar() {
+        ProgressBar bar = new ProgressBar(false);
+        bar.setHeight(25);
+        bar.setFill(Color.GREEN.brighter());
+        bar.setTraceFill(Color.GREEN.brighter());
+        bar.setLabelVisible(true);
+        return bar;
+    }
+
+    public static ProgressBar makeSkillBar() {
+        ProgressBar bar = new ProgressBar(false);
+        bar.setHeight(25);
+        bar.setFill(Color.BLUE.brighter().brighter());
+        bar.setTraceFill(Color.BLUE);
+        bar.setLabelVisible(true);
+        return bar;
+    }
+
+    private void addCharacterSubView(CharacterEntity entity) {
+        ProgressBar barHP = makeHPBar();
+        ProgressBar barSP = makeSkillBar();
+
+        barHP.setTranslateX(0);
+        barHP.setTranslateY(80);
+        barHP.setWidth(TILE_SIZE);
+        barHP.setHeight(10);
+        barHP.setLabelVisible(false);
+
+        barSP.setTranslateX(0);
+        barSP.setTranslateY(90);
+        barSP.setWidth(TILE_SIZE);
+        barSP.setHeight(10);
+        barSP.setLabelVisible(false);
+
+        barHP.maxValueProperty().bind(entity.getHp().maxValueProperty());
+        barHP.currentValueProperty().bind(entity.getHp().valueProperty());
+
+        barSP.maxValueProperty().bind(entity.getSp().maxValueProperty());
+        barSP.currentValueProperty().bind(entity.getSp().valueProperty());
+
+        Text text = new Text();
+        text.setFont(Font.font(14));
+        text.setFill(Color.WHITE);
+        text.textProperty().bind(entity.getDescription().nameProperty().concat(" Lv. ").concat(entity.getBaseLevel()));
+        text.setTranslateX(TILE_SIZE / 2 - text.getLayoutBounds().getWidth() / 2);
+        text.setTranslateY(75);
+
+        Group vbox = new Group(barHP, barSP, text);
+
+        EntityView subView = new EntityView();
+        subView.addNode(vbox);
+
+        subView.translateXProperty().bind(entity.getPositionComponent().xProperty());
+        subView.translateYProperty().bind(entity.getPositionComponent().yProperty());
+
+        getGameScene().addGameView(subView);
+
+        entity.activeProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                getGameScene().removeGameView(subView);
+            }
+        });
+    }
+
     private void spawnEntity(int x, int y, GameEntity entity) {
         entity.getPositionComponent().setValue(x * TILE_SIZE, y * TILE_SIZE);
-        entity.getMainViewComponent().setTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName(), true);
+
+        DynamicAnimatedTexture texture = getAssetLoader().loadTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName())
+                .toDynamicAnimatedTexture(CharacterAnimation.ATTACK_RIGHT, CharacterAnimation.values());
+
+        entity.getMainViewComponent().setView(texture, true);
 
         getGameWorld().addEntity(entity);
+
+        addCharacterSubView((CharacterEntity) entity);
     }
 
     public static void main(String[] args) {

@@ -31,6 +31,14 @@ object Data {
                         .withRune(Rune(Attribute.DEXTERITY, 4))
                         .withRune(Rune(Attribute.LUCK, 1))
         )
+
+        fun DRAGON_CLAW() = listOf<Component>(
+                DescriptionComponent(4004, "Dragon's Claw", "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master", "items/weapons/dragon_claw.png"),
+                WeaponDataComponent(ItemLevel.EPIC, WeaponType.BOW, 100)
+                        .withRune(Rune(Attribute.WISDOM, 3))
+                        .withRune(Rune(Attribute.DEXTERITY, 4))
+                        .withRune(Rune(Attribute.LUCK, 1))
+        )
     }
 
     object Armor {
@@ -168,8 +176,7 @@ object Data {
     //        public static final int HANDS = 4000;
     //        public static final int GETSUGA_TENSHO = 4001;
     //        public static final int SOUL_REAPER = 4002;
-    //        public static final int GUT_RIPPER = 4003;
-    //        public static final int DRAGON_CLAW = 4004;
+
     //        public static final int FROSTMOURN = 4005;
     //
     //
@@ -313,18 +320,6 @@ object Data {
         //    }
 
 
-
-    // MISC DATA
-
-    //
-    //    private static HashMap<Integer, Weapon> defaultWeapons = new HashMap<>();
-    //    private static HashMap<Integer, Armor> defaultArmor = new HashMap<>();
-    //    private static HashMap<Integer, Skill> defaultSkills = new HashMap<>();
-    //    private static HashMap<Integer, EnemyControl> defaultEnemies = new HashMap<>();
-    //    private static HashMap<Integer, Essence> defaultEssences = new HashMap<>();
-    //
-    //    private EntityManagerOld() {}
-    //
     //    private static void loadArmor() {
     //        ArmorBuilder armorBuilder = new ArmorBuilder();
     //        armorBuilder.id(ID.Armor.CLOTHES)

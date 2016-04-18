@@ -183,6 +183,9 @@ class PlayerControl : CharacterControl() {
         equipProperties[place]!!.set(item)
     }
 
+    fun getRightWeapon() = getEquip(EquipPlace.RIGHT_HAND) as WeaponEntity
+    fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as WeaponEntity
+
     fun equipWeapon(weapon: WeaponEntity) {
         player.inventory.removeItem(weapon)
 

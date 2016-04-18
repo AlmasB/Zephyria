@@ -24,7 +24,6 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Experience;
-import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
@@ -32,10 +31,10 @@ import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
-import com.almasb.zeph.entity.character.component.HPComponent;
 import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
+import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
@@ -327,17 +326,37 @@ public class ZephyriaApp extends GameApplication {
 
         if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
             if (vector.getX() >= 0) {
-                animation.setAnimationChannel(CharacterAnimation.ATTACK_RIGHT);
+                animation.setAnimationChannel(CharacterAnimation.SLASH_RIGHT);
             } else {
-                animation.setAnimationChannel(CharacterAnimation.ATTACK_LEFT);
+                animation.setAnimationChannel(CharacterAnimation.SLASH_LEFT);
             }
         } else {
             if (vector.getY() >= 0) {
-                animation.setAnimationChannel(CharacterAnimation.ATTACK_DOWN);
+                animation.setAnimationChannel(CharacterAnimation.SLASH_DOWN);
             } else {
-                animation.setAnimationChannel(CharacterAnimation.ATTACK_UP);
+                animation.setAnimationChannel(CharacterAnimation.SLASH_UP);
             }
         }
+
+        // TODO: generalize
+
+        attacker.getControl(PlayerControl.class).ifPresent(c -> {
+            if (playerControl.getRightWeapon().getData().getType() == WeaponType.BOW) {
+                if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
+                    if (vector.getX() >= 0) {
+                        animation.setAnimationChannel(CharacterAnimation.SHOOT_RIGHT);
+                    } else {
+                        animation.setAnimationChannel(CharacterAnimation.SHOOT_LEFT);
+                    }
+                } else {
+                    if (vector.getY() >= 0) {
+                        animation.setAnimationChannel(CharacterAnimation.SHOOT_DOWN);
+                    } else {
+                        animation.setAnimationChannel(CharacterAnimation.SHOOT_UP);
+                    }
+                }
+            }
+        });
 
         getMasterTimer().runOnceAfter(() -> {
             if (!attacker.isActive() || !target.isActive())
@@ -401,10 +420,16 @@ public class ZephyriaApp extends GameApplication {
         WALK_LEFT(9, 9),
         WALK_UP(8, 9),
         WALK_DOWN(10, 9),
-        ATTACK_RIGHT(19, 13),
-        ATTACK_LEFT(17, 13),
-        ATTACK_UP(16, 13),
-        ATTACK_DOWN(18, 13);
+
+        SLASH_UP(12, 6),
+        SLASH_LEFT(13, 6),
+        SLASH_DOWN(14, 6),
+        SLASH_RIGHT(15, 6),
+
+        SHOOT_RIGHT(19, 13),
+        SHOOT_LEFT(17, 13),
+        SHOOT_UP(16, 13),
+        SHOOT_DOWN(18, 13);
 
         int row;
         int cycle;
@@ -446,6 +471,8 @@ public class ZephyriaApp extends GameApplication {
 
         player.getMainViewComponent().setView(playerAnimation, true);
         player.getData().setAnimation(playerAnimation);
+
+        player.getInventory().addItem(EntityManager.INSTANCE.getWeapon(4004));
 
         getGameWorld().addEntity(player);
 

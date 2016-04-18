@@ -3,6 +3,7 @@ package com.almasb.zeph.ui;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
@@ -22,13 +23,21 @@ import javafx.util.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class EquipmentView extends Accordion {
+public final class EquipmentView extends InGameWindow {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
     private PlayerEntity player;
 
     public EquipmentView(PlayerEntity player, double height) {
+        super("Equipment", WindowDecor.MINIMIZE);
+
+        relocate(100, 400);
+
+        setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
+        setPrefSize(202, 300);
+        setResizableWindow(false);
+
         this.player = player;
 
         groups.put(EquipPlace.HELM, createGroup(88, 60));
@@ -49,23 +58,23 @@ public final class EquipmentView extends Accordion {
         Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_left.png");
         pane.getChildren().add(background);
 
-        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            if (newPane == null) {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-                tt.setToY(height - 25);
-                tt.play();
-            }
-            else {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-                tt.play();
-            }
-        });
+//        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+//            if (newPane == null) {
+//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
+//                tt.setToY(height - 25);
+//                tt.play();
+//            }
+//            else {
+//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
+//                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
+//                tt.play();
+//            }
+//        });
 
         pane.getChildren().addAll(groups.values());
-        getPanes().add(new TitledPane("Equipment", pane));
-
-        setTranslateY(height - 25);
+        //getPanes().add(new TitledPane("Equipment", pane));
+        setContentPane(pane);
+        //setTranslateY(height - 25);
     }
 
     private Group createGroup(int x, int y) {

@@ -286,7 +286,8 @@ public class ZephyriaApp extends GameApplication {
         debug.setFill(Color.WHITE);
 
         getGameScene().addUINodes(hotbar,
-                new VBox(new BasicInfoView(player), new CharInfoView(player)),
+                new BasicInfoView(player),
+                new CharInfoView(player),
                 new InventoryView(player, getWidth(), getHeight()),
                 new EquipmentView(player, getHeight()));
     }

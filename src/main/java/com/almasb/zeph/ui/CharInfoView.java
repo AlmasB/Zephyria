@@ -1,5 +1,7 @@
 package com.almasb.zeph.ui;
 
+import com.almasb.fxgl.app.FXGL;
+import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.character.PlayerEntity;
@@ -9,6 +11,7 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TitledPane;
@@ -20,18 +23,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class CharInfoView extends Accordion {
+public class CharInfoView extends InGameWindow {
 
     public CharInfoView(PlayerEntity player) {
+        super("Char Info", WindowDecor.MINIMIZE);
+
+        relocate(0, 240);
+
+        setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
+        setPrefSize(340, 340);
+        setResizableWindow(false);
+
         Font font = Font.font("Lucida Console", 14);
-        //Cursor cursorQuestion = new ImageCursor(R.assets.getTexture("ui/cursors/question.png").getImage(), 52, 10);
+        Cursor cursorQuestion = new ImageCursor(FXGL.getAssetLoader().loadCursorImage("question.png"), 52, 10);
 
         VBox attrBox = new VBox(5);
         attrBox.setTranslateY(10);
         for (Attribute attr : Attribute.values()) {
             Text text = new Text();
             text.setFont(font);
-            //text.setCursor(cursorQuestion);
+            text.setFill(Color.WHITE);
+            text.setCursor(cursorQuestion);
             text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
 
             Text tooltipText = new Text(attr.getDescription());
@@ -46,14 +58,14 @@ public class CharInfoView extends Accordion {
 
             Text bText = new Text();
             bText.setFont(font);
-            bText.setFill(Color.DARKGREEN);
+            bText.setFill(Color.YELLOW);
             bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
             bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
                     .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
 
             Text btn = new Text("+");
             btn.setCursor(Cursor.HAND);
-            btn.setStroke(Color.BLUE);
+            btn.setStroke(Color.YELLOWGREEN.brighter());
             btn.setStrokeWidth(3);
             btn.setFont(font);
             btn.visibleProperty().bind(player.getAttributePoints().greaterThan(0)
@@ -75,6 +87,7 @@ public class CharInfoView extends Accordion {
 
         Text info = new Text();
         info.setFont(font);
+        info.setFill(Color.WHITE);
         info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
         info.textProperty().bind(new SimpleStringProperty("Points: ").concat(player.getAttributePoints()));
 
@@ -84,7 +97,8 @@ public class CharInfoView extends Accordion {
         for (Stat stat : Stat.values()) {
             Text text = new Text();
             text.setFont(font);
-            //text.setCursor(cursorQuestion);
+            text.setFill(Color.WHITE);
+            text.setCursor(cursorQuestion);
             text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
 
             Text tooltipText = new Text(stat.getDescription());
@@ -99,7 +113,7 @@ public class CharInfoView extends Accordion {
 
             Text bText = new Text();
             bText.setFont(font);
-            bText.setFill(Color.DARKGREEN);
+            bText.setFill(Color.YELLOW);
 
             StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
                 .then(player.getStats().bStatProperty(stat).asString("+%d ")
@@ -112,6 +126,8 @@ public class CharInfoView extends Accordion {
             statBox.getChildren().add(new HBox(5, text, bText));
         }
 
-        getPanes().add(new TitledPane("Char Info", new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
+        //getPanes().add(new TitledPane("Char Info", new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
+
+        setContentPane(new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
     }
 }

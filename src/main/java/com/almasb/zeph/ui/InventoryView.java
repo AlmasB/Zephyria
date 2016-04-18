@@ -3,6 +3,7 @@ package com.almasb.zeph.ui;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.item.ArmorEntity;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class InventoryView extends Accordion {
+public class InventoryView extends InGameWindow {
 
     private Map<Integer, Boolean> slots = new HashMap<>();
     private Pane root = new Pane();
@@ -33,6 +34,14 @@ public class InventoryView extends Accordion {
     private PlayerEntity player;
 
     public InventoryView(PlayerEntity player, double width, double height) {
+        super("Inventory", WindowDecor.MINIMIZE);
+
+        relocate(400, 400);
+
+        setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
+        setPrefSize(202, 300);
+        setResizableWindow(false);
+
         this.player = player;
 
         for (int i = 0; i < 30; i++) {
@@ -41,6 +50,7 @@ public class InventoryView extends Accordion {
 
         player.getInventory().getItems().forEach(this::addItem);
 
+        // TODO: keep strong reference to listener
         player.getInventory().getItems().addListener(new ListChangeListener<Entity>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Entity> change) {
@@ -75,24 +85,26 @@ public class InventoryView extends Accordion {
         Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_right.png");
         root.getChildren().add(background);
 
-        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-            if (newPane == null) {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-                tt.setToY(height - 25);
-                tt.play();
-            }
-            else {
-                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-                tt.play();
-            }
-        });
+        setContentPane(root);
 
-        setTranslateX(width - background.getLayoutBounds().getWidth() - 2);
+//        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
+//            if (newPane == null) {
+//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
+//                tt.setToY(height - 25);
+//                tt.play();
+//            }
+//            else {
+//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
+//                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
+//                tt.play();
+//            }
+//        });
 
-        getPanes().add(new TitledPane("Inventory", root));
+        //setTranslateX(width - background.getLayoutBounds().getWidth() - 2);
 
-        setTranslateY(height - 25);
+        //getPanes().add(new TitledPane("Inventory", root));
+
+        //setTranslateY(height - 25);
     }
 
     private int getNextFreeSlot() {

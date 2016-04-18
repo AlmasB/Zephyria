@@ -1,6 +1,7 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.ents.Entity;
+import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Stat;
@@ -9,12 +10,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class BasicInfoView extends Accordion {
+public class BasicInfoView extends InGameWindow {
 
     public BasicInfoView(PlayerEntity player) {
+        super("Basic Info", WindowDecor.MINIMIZE);
+
+        setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
+        setPrefSize(340, 240);
+        setResizableWindow(false);
+
         ProgressBar barHPUI = ProgressBar.makeHPBar();
         barHPUI.setTranslateX(160);
         barHPUI.setTranslateY(5);
@@ -37,6 +45,7 @@ public class BasicInfoView extends Accordion {
         textPlayerName.setTranslateX(15);
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
+        textPlayerName.setFill(Color.WHITESMOKE);
         textPlayerName.setText(player.getDescription().getName());
         //textPlayerName.textProperty().bind(player.nameProperty().concat("\n").concat(player.charClassProperty()));
 
@@ -44,6 +53,7 @@ public class BasicInfoView extends Accordion {
         textLevels.setTranslateX(15);
         textLevels.setTranslateY(100);
         textLevels.setFont(Font.font(16));
+        textLevels.setFill(Color.WHITESMOKE);
         textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
                 .concat("\nStat Lv. ").concat(player.getStatLevel())
                 .concat("\nJob Lv. ").concat(player.getJobLevel()));
@@ -70,6 +80,7 @@ public class BasicInfoView extends Accordion {
         textMoney.setTranslateX(200);
         textMoney.setTranslateY(180);
         textMoney.setFont(Font.font(14));
+        textMoney.setFill(Color.WHITESMOKE);
         textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getMoney().valueProperty()).concat("G"));
 
         player.getBaseLevel().addListener((obs, old, newValue) -> {
@@ -88,7 +99,8 @@ public class BasicInfoView extends Accordion {
         uiPane.setPrefSize(350, 200);
         uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
 
-        getPanes().add(new TitledPane("Basic Info", uiPane));
-        setExpandedPane(getPanes().get(0));
+        //getPanes().add(new TitledPane("Basic Info", uiPane));
+        //setExpandedPane(getPanes().get(0));
+        setContentPane(uiPane);
     }
 }

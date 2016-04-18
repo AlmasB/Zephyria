@@ -69,6 +69,7 @@ object Data {
                 DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description", "chars/enemies/skeleton_archer.png"),
                 CharacterDataComponent(CharacterType.NORMAL)
                         .withLevel(2)
+                        .withXP(10, 3, 3)
                         .withAttribute(Attribute.VITALITY, 30)
                         .withAttribute(Attribute.DEXTERITY, 3)
                         .withAttribute(Attribute.AGILITY, 2)

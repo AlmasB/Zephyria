@@ -254,12 +254,9 @@ public class ZephyriaApp extends GameApplication {
                 showDamage(damage, character.getComponentUnsafe(PositionComponent.class).getValue());
 
                 if (character.getHp().getValue() <= 0) {
-                    playerControl.rewardMoney(character.getBaseLevel().get());
-                    playerControl.rewardXP(new Experience(
-                            character.getBaseLevel().get() * 5,
-                            character.getBaseLevel().get() * 3,
-                            character.getBaseLevel().get() * 2
-                            ));
+                    // TODO: reward based on level differences
+                    playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
+                    playerControl.rewardXP(character.getData().getRewardXP());
 
                     selected = null;
                     character.removeFromWorld();

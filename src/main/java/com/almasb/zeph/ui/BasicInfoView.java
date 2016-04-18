@@ -62,18 +62,21 @@ public class BasicInfoView extends InGameWindow {
         barXPBase.setWidth(150);
         barXPBase.setTranslateX(120);
         barXPBase.setTranslateY(90);
+        barXPBase.setMaxValue(player.getControl().expNeededForNextBaseLevel());
         barXPBase.currentValueProperty().bind(player.getBaseXP());
 
         ProgressBar barXPStat = new ProgressBar();
         barXPStat.setWidth(150);
         barXPStat.setTranslateX(120);
         barXPStat.setTranslateY(110);
+        barXPStat.setMaxValue(player.getControl().expNeededForNextStatLevel());
         barXPStat.currentValueProperty().bind(player.getStatXP());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);
         barXPJob.setTranslateX(120);
         barXPJob.setTranslateY(130);
+        barXPJob.setMaxValue(player.getControl().expNeededForNextJobLevel());
         barXPJob.currentValueProperty().bind(player.getJobXP());
 
         Text textMoney = new Text("");

@@ -31,9 +31,12 @@ import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
+import com.almasb.zeph.entity.character.component.CharacterDataComponent;
 import com.almasb.zeph.entity.character.component.HPComponent;
+import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.WeaponEntity;
+import com.almasb.zeph.entity.item.component.OwnerComponent;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
 import com.almasb.zeph.ui.EquipmentView;
@@ -124,6 +127,14 @@ public class ZephyriaApp extends GameApplication {
             }
         }, MouseButton.SECONDARY);
 
+        input.addAction(new UserAction("Test Attack") {
+            @Override
+            protected void onActionBegin() {
+                getGameWorld().getEntitiesByType(EntityType.CHARACTER)
+                        .forEach(ch -> startAttack(ch, player));
+            }
+        }, KeyCode.O);
+
         input.addAction(new UserAction("Test Wear1") {
             WeaponEntity weapon = EntityManager.INSTANCE.getWeapon(4003);
 
@@ -151,6 +162,8 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndAttach(getGameWorld());
 
         bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
+            selected = null;
+
             int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
             int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
@@ -203,15 +216,17 @@ public class ZephyriaApp extends GameApplication {
         physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
             @Override
             protected void onCollisionBegin(Entity proj, Entity target) {
+                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+                    return;
+
                 proj.removeFromWorld();
 
                 CharacterEntity character = (CharacterEntity) target;
 
-
                 Damage damage = player.getControl().attack(character);
                 showDamage(damage, character.getComponentUnsafe(PositionComponent.class).getValue());
 
-                if (character.getComponentUnsafe(HPComponent.class).getValue() <= 0) {
+                if (character.getHp().getValue() <= 0) {
                     playerControl.rewardMoney(character.getBaseLevel().get());
                     playerControl.rewardXP(new Experience(
                             character.getBaseLevel().get() * 5,
@@ -219,6 +234,7 @@ public class ZephyriaApp extends GameApplication {
                             character.getBaseLevel().get() * 2
                             ));
 
+                    selected = null;
                     character.removeFromWorld();
                     initEnemies();
                 }
@@ -251,10 +267,10 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void onUpdate(double tpf) {
         if (selected != null) {
-            //startAttack(player, selected);
+            startAttack(player, selected);
         }
 
-        if (!path.isEmpty()) {
+        if (selected == null && !path.isEmpty()) {
             AStarNode node = path.get(0);
 
             double dx = node.getX() * TILE_SIZE - (player).getPositionComponent().getX();
@@ -290,26 +306,54 @@ public class ZephyriaApp extends GameApplication {
         return (int) (entity.getPositionComponent().getY()) / TILE_SIZE;
     }
 
-//    private void startAttack(Entity attacker, Entity target) {
-//        if (!attacker.isActive() || !target.isActive())
-//            return;
-//
-//        CharacterControl a = attacker.getControl(CharacterControl.class).get();
-//
-//        if (!a.canAttack())
-//            return;
-//
-//        a.resetAtkTick();
-//
-//        // TODO: this should be specific to each char type
-//        Entity proj = Entity.noType();
-//
-//        proj.setSceneView(R.assets.getTexture("projectile.png"));
-//        proj.setPosition(attacker.getPosition());
-//        //proj.addControl(new ProjectileControl());
-//
-//        getGameWorld().addEntities(proj);
-//    }
+    private void startAttack(Entity attacker, Entity target) {
+        if (!attacker.isActive() || !target.isActive())
+            return;
+
+        CharacterControl a = attacker.getControlUnsafe(CharacterControl.class);
+
+        if (!a.canAttack())
+            return;
+
+        a.resetAtkTick();
+
+        attack((CharacterEntity) attacker, (CharacterEntity) target);
+    }
+
+    private void attack(CharacterEntity attacker, GameEntity target) {
+        Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(attacker.getBoundingBoxComponent().getCenterWorld());
+
+        DynamicAnimatedTexture animation = attacker.getData().getAnimation();
+
+        if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
+            if (vector.getX() >= 0) {
+                animation.setAnimationChannel(CharacterAnimation.ATTACK_RIGHT);
+            } else {
+                animation.setAnimationChannel(CharacterAnimation.ATTACK_LEFT);
+            }
+        } else {
+            if (vector.getY() >= 0) {
+                animation.setAnimationChannel(CharacterAnimation.ATTACK_DOWN);
+            } else {
+                animation.setAnimationChannel(CharacterAnimation.ATTACK_UP);
+            }
+        }
+
+        getMasterTimer().runOnceAfter(() -> {
+            if (!attacker.isActive() || !target.isActive())
+                return;
+
+            Entities.builder()
+                    .type(EntityType.PROJECTILE)
+                    .at(attacker.getBoundingBoxComponent().getCenterWorld())
+                    .viewFromTextureWithBBox("projectiles/arrow2.png")
+                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(attacker.getBoundingBoxComponent().getCenterWorld()), 5))
+                    .with(new OffscreenCleanControl())
+                    .with(new OwnerComponent(attacker))
+                    .with(new CollidableComponent(true))
+                    .buildAndAttach(getGameWorld());
+        }, Duration.seconds(0.8));
+    }
 
 //    private void dropItem(DescriptionComponent item, Point2D position) {
 //        Entity e = item.toEntity();
@@ -401,6 +445,7 @@ public class ZephyriaApp extends GameApplication {
                 .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         player.getMainViewComponent().setView(playerAnimation, true);
+        player.getData().setAnimation(playerAnimation);
 
         getGameWorld().addEntity(player);
 
@@ -418,38 +463,7 @@ public class ZephyriaApp extends GameApplication {
         spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
 
         enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
-
-            selectedPoint = null;
-            e.consume();
-
-            path = new ArrayList<>();
-
-            Point2D vector = enemy.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
-
-            if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
-                if (vector.getX() >= 0) {
-                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_RIGHT);
-                } else {
-                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_LEFT);
-                }
-            } else {
-                if (vector.getY() >= 0) {
-                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_DOWN);
-                } else {
-                    playerAnimation.setAnimationChannel(CharacterAnimation.ATTACK_UP);
-                }
-            }
-
-            getMasterTimer().runOnceAfter(() -> {
-                Entities.builder()
-                        .type(EntityType.PROJECTILE)
-                        .at(player.getBoundingBoxComponent().getCenterWorld())
-                        .viewFromTextureWithBBox("projectiles/arrow2.png")
-                        .with(new ProjectileControl(enemy.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 5))
-                        .with(new OffscreenCleanControl())
-                        .with(new CollidableComponent(true))
-                        .buildAndAttach(getGameWorld());
-            }, Duration.seconds(0.8));
+            selected = enemy;
         });
     }
 
@@ -521,9 +535,10 @@ public class ZephyriaApp extends GameApplication {
         entity.getPositionComponent().setValue(x * TILE_SIZE, y * TILE_SIZE);
 
         DynamicAnimatedTexture texture = getAssetLoader().loadTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName())
-                .toDynamicAnimatedTexture(CharacterAnimation.ATTACK_RIGHT, CharacterAnimation.values());
+                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         entity.getMainViewComponent().setView(texture, true);
+        entity.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
 
         getGameWorld().addEntity(entity);
 

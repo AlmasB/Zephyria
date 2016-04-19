@@ -121,13 +121,6 @@ public class ZephyriaApp extends GameApplication {
 //            }
 //        }, MouseButton.PRIMARY);
 
-        input.addAction(new UserAction("Reward XP") {
-            @Override
-            protected void onActionBegin() {
-                playerControl.rewardXP(new Experience(30, 3, 5));
-            }
-        }, MouseButton.SECONDARY);
-
         input.addAction(new UserAction("Test Attack") {
             @Override
             protected void onActionBegin() {
@@ -135,20 +128,6 @@ public class ZephyriaApp extends GameApplication {
                         .forEach(ch -> startAttack(ch, player));
             }
         }, KeyCode.O);
-
-        input.addAction(new UserAction("Test Wear1") {
-            WeaponEntity weapon = EntityManager.INSTANCE.getWeapon(4003);
-
-            @Override
-            protected void onActionBegin() {
-                playerControl.equipWeapon(weapon);
-            }
-
-            @Override
-            protected void onActionEnd() {
-                playerControl.unEquipItem(EquipPlace.RIGHT_HAND);
-            }
-        }, KeyCode.F);
     }
 
     @Override
@@ -498,7 +477,7 @@ public class ZephyriaApp extends GameApplication {
         player.getMainViewComponent().setView(playerAnimation, true);
         player.getData().setAnimation(playerAnimation);
 
-        player.getInventory().addItem(EntityManager.INSTANCE.getWeapon(4004));
+        player.getInventory().addItem(EntityManager.INSTANCE.getWeapon(4800));
 
         getGameWorld().addEntity(player);
 

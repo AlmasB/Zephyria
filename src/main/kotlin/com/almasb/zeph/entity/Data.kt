@@ -20,41 +20,141 @@ object Data {
 
     object Weapon {
         fun HANDS() = listOf<Component>(
-                DescriptionComponent(4000, "Hands", "That's right, go kill everyone with your bare hands", "items/weapons/hands.png"),
+                DescriptionComponent(4000, "Hands", "That's right, go kill everyone with your bare hands.", "items/weapons/hands.png"),
                 WeaponDataComponent(ItemLevel.NORMAL, WeaponType.MACE, 0)
         )
 
+        // DAGGERS 4000+
+
+        fun KNIFE() = listOf<Component>(
+                DescriptionComponent(4001, "Knife", "A simple knife with poor blade.", "items/weapons/knife.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.DAGGER, 15)
+        )
+
         fun GUT_RIPPER() = listOf<Component>(
-                DescriptionComponent(4003, "The Gut Ripper", "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows", "items/weapons/gut_ripper.png"),
+                DescriptionComponent(4003, "The Gut Ripper", "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows.", "items/weapons/gut_ripper.png"),
                 WeaponDataComponent(ItemLevel.EPIC, WeaponType.DAGGER, 100)
                         .withRune(Rune(Attribute.AGILITY, 4))
                         .withRune(Rune(Attribute.DEXTERITY, 4))
                         .withRune(Rune(Attribute.LUCK, 1))
         )
 
+        //        public static final String PRACTICE_SWORD = "A basic one-handed sword";
+        //        public static final String HALLSTATT_SWORD = "A sword favored by gladiators, it is especially designed for battles against armored enemies";
+        //        public static final String KAMPILAN_SWORD = "A thin sword designed to be easily bent, light, and very elastic";
+        //        public static final String MACHETE = "A strong cleaver-like sword";
+        //        public static final String TEGA_SWORD = "A ceremonial sword used by gravekeeper's to lead the dead to the great beyond";
+        //        public static final String SCHIAVONA_SWORD = "A popular sword among mercenary soldiers";
+        //        public static final String COLICHERMARDE_SWORD = "Small sword with good parrying characteristics";
+
+        // 1H SWORDS 4100
+
+        fun IRON_SWORD() = listOf<Component>(
+                DescriptionComponent(4100, "Iron Sword", "A standard warrior's sword with decent attack damage.", "items/weapons/iron_sword.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.ONE_H_SWORD, 25)
+        )
+
+        fun GETSUGA_TENSHO() = listOf<Component>(
+                DescriptionComponent(4101, "Getsuga Tensho", "A powerful sword that is carved from the fangs of the moon itself and pierced through heaven.", "items/weapons/getsuga_tensho.png"),
+                WeaponDataComponent(ItemLevel.EPIC, WeaponType.ONE_H_SWORD, 150)
+                        .withRune(Rune(Attribute.STRENGTH, 5))
+                        .withRune(Rune(Attribute.AGILITY, 4))
+                        .withRune(Rune(Attribute.DEXTERITY, 4))
+                        .withRune(Rune(Attribute.LUCK, 1))
+        )
+
+        // 2H SWORDS 4200
+
+        fun CLAYMORE() = listOf<Component>(
+                DescriptionComponent(4200, "Claymore", "Large, double-edged broad sword that was used by the Scottish highlanders.", "items/weapons/claymore.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 35)
+                        .withRune(Rune(Attribute.STRENGTH, 1))
+        )
+
+        fun BROADSWORD() = listOf<Component>(
+                DescriptionComponent(4201, "Broadsword", "A sword with a wide, double sided blade.", "items/weapons/broadsword.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 28)
+                        .withRune(Rune(Attribute.LUCK, 1))
+        )
+
+        fun FROSTMOURN() = listOf<Component>(
+                DescriptionComponent(4202, "Frostmourn", "The legendary sword of the Ice Dungeon's King.", "items/weapons/frostmourn.png"),
+                WeaponDataComponent(ItemLevel.EPIC, WeaponType.TWO_H_SWORD, 130)
+                        .withRune(Rune(Attribute.DEXTERITY, 5))
+                        .withRune(Rune(Attribute.STRENGTH, 3))
+        )
+
+        fun BATTLESWORD() = listOf<Component>(
+                DescriptionComponent(4203, "Battlesword", "A terrifying two-handed sword that is said to stimulate the nerves in order to kill, once it's in the wearer's hands.", "items/weapons/battlesword.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 44)
+                        .withRune(Rune(Attribute.STRENGTH, 2))
+        )
+
+        fun LONGSWORD() = listOf<Component>(
+                DescriptionComponent(4204, "Longsword", "A two-handed sword with straight double-edged blade.", "items/weapons/longsword.png"),
+                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 33)
+                        .withRune(Rune(Attribute.AGILITY, 1))
+                        .withRune(Rune(Attribute.DEXTERITY, 2))
+        )
+
+        // 1H AXES 4300
+
+        // 2H AXES 4400
+        fun SOUL_REAPER() = listOf<Component>(
+                DescriptionComponent(4300, "Soul Reaper", "Forged in the dephts of Aesmir, it is said the weilder can feel the weapon crave the souls of its enemies.", "items/weapons/soul_reaper.png"),
+                WeaponDataComponent(ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170)
+                        .withRune(Rune(Attribute.STRENGTH, 7))
+                        .withRune(Rune(Attribute.VITALITY, 4))
+                        .withRune(Rune(Attribute.DEXTERITY, 2))
+        )
+
+        // MACES 4500
+
+        // KATARS 4600
+
+        // SPEARS 4700
+
+        // BOWS 4800
+
         fun DRAGON_CLAW() = listOf<Component>(
-                DescriptionComponent(4004, "Dragon's Claw", "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master", "items/weapons/dragon_claw.png"),
-                WeaponDataComponent(ItemLevel.EPIC, WeaponType.BOW, 100)
+                DescriptionComponent(4800, "Dragon's Claw", "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master.", "items/weapons/dragon_claw.png"),
+                WeaponDataComponent(ItemLevel.EPIC, WeaponType.BOW, 130)
                         .withRune(Rune(Attribute.WISDOM, 3))
                         .withRune(Rune(Attribute.DEXTERITY, 4))
                         .withRune(Rune(Attribute.LUCK, 1))
         )
+
+        // RODS 4900
     }
 
     object Armor {
         fun HAT() = listOf<Component>(
-                DescriptionComponent(5000, "Hat", "Ordinary hat, already out of fashion", "items/armor/hat.png"),
+                DescriptionComponent(5000, "Hat", "Ordinary hat, already out of fashion.", "items/armor/hat.png"),
                 ArmorDataComponent(ItemLevel.NORMAL, ArmorType.HELM, 0, 0)
         )
 
         fun CLOTHES() = listOf<Component>(
-                DescriptionComponent(5001, "Clothes", "Just normal clothes, don't count on any defense", "items/armor/clothes.png"),
+                DescriptionComponent(5001, "Clothes", "Just normal clothes, don't count on any defense.", "items/armor/clothes.png"),
                 ArmorDataComponent(ItemLevel.NORMAL, ArmorType.BODY, 0, 0)
         )
 
         fun SHOES() = listOf<Component>(
-                DescriptionComponent(5002, "Shoes", "Average size shoes", "items/armor/shoes.png"),
+                DescriptionComponent(5002, "Shoes", "Average size shoes.", "items/armor/shoes.png"),
                 ArmorDataComponent(ItemLevel.NORMAL, ArmorType.SHOES, 0, 0)
+        )
+
+        // BODY ARMOR
+
+        fun CHAINMAIL() = listOf<Component>(
+                DescriptionComponent(5003, "Chainmail", "Armour consisting of small metal rings linked together in a pattern to form a mesh.", "items/armor/chainmail.png"),
+                ArmorDataComponent(ItemLevel.NORMAL, ArmorType.BODY, 10, 5)
+                        .withRune(Rune(Attribute.STRENGTH, 2))
+        )
+
+        fun SOUL_BARRIER() = listOf<Component>(
+                DescriptionComponent(5004, "Soul Barrier", "Protects its wearer from magic attacks.", "items/armor/soul_barrier.png"),
+                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 10, 50)
+                        .withRune(Rune(Attribute.WILLPOWER, 2))
         )
 
         fun DOMOVOI() = listOf<Component>(
@@ -62,6 +162,23 @@ object Data {
                 ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 15, 35)
                         .withRune(Rune(Attribute.WILLPOWER, 3))
         )
+
+        fun SAPPHIRE_LEGION_PLATE_ARMOR() = listOf<Component>(
+                DescriptionComponent(5006, "Sapphire Legion Plate Armor", "Produced in the Jaded Forges of the Jewelled King, strictly for use by warriors who have proved their mastery of combat through decades of service.", "items/armor/sapphire_legion_plate_armor.png"),
+                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 30, 10)
+                        .withRune(Rune(Attribute.VITALITY, 4))
+        )
+
+        fun THANATOS_BODY_ARMOR() = listOf<Component>(
+                DescriptionComponent(5007, "Thanatos Body Armor", "A shattered piece of Thanatos' legendary armor. Grants its user great constitution.", "items/armor/thanatos_body_armor.png"),
+                ArmorDataComponent(ItemLevel.EPIC, ArmorType.BODY, 50, 25)
+                        .withRune(Rune(Attribute.VITALITY, 5))
+                        .withRune(Rune(Attribute.PERCEPTION, 3))
+        )
+
+        // HELMETS
+
+        // SHOES
     }
 
     object Character {
@@ -76,16 +193,7 @@ object Data {
         )
     }
 
-    // ID
-    //        public static final int HAT = 5000;
-    //        public static final int CLOTHES = 5001;
-    //        public static final int SHOES = 5002;
-    //        public static final int CHAINMAL = 5003;
-    //        public static final int SOUL_BARRIER = 5004;
-    //        public static final int DOMOVOI = 5005;
-    //        public static final int SAPPHIRE_LEGION_PLATE_MAIL = 5006;
-    //        public static final int THANATOS_BODY_ARMOR = 5007;
-    //
+
     //    public class Enemy {
     //        public static final int MINOR_FIRE_SPIRIT = 2000;
     //        public static final int MINOR_EARTH_SPIRIT = 2001;
@@ -93,15 +201,7 @@ object Data {
     //        public static final int MINOR_WIND_SPIRIT = 2003;
     //    }
     //
-    //    public class Essence {
-    //
-    //    }
-    //
     //    public class Skill {
-    //
-    //        public class Novice {
-    //
-    //        }
     //
     //        public class Warrior {
     //            public static final int MIGHTY_SWING = 7010;
@@ -172,56 +272,10 @@ object Data {
     //            public static final int EAGLE_EYE = 7234;
     //        }
     //    }
-    //
-    //    public class Weapon {
-    //        public static final int HANDS = 4000;
-    //        public static final int GETSUGA_TENSHO = 4001;
-    //        public static final int SOUL_REAPER = 4002;
-
-    //        public static final int FROSTMOURN = 4005;
-    //
-    //
-    //        public static final int IRON_SWORD = 4006;
-    //        public static final int KNIFE = 4007;
-    //
-    //        public static final int PRACTICE_SWORD = 4010;
-    //        public static final int CLAYMORE = 4011;
-    //        public static final int BROADSWORD = 4012;
-    //        public static final int HALLSTATT_SWORD = 4013;
-    //        public static final int KAMPILAN_SWORD = 4014;
-    //        public static final int MACHETE = 4015;
-    //        public static final int TEGA_SWORD = 4016;
-    //        public static final int BATTLESWORD = 4017;
-    //        public static final int LONGSWORD = 4018;
-    //        public static final int SCHIAVONA_SWORD = 4019;
-    //        public static final int COLICHERMARDE_SWORD = 4020;
-    //
-    //    }
 
 
     // DESC
 
-    //  public class Armor {
-        //        public static final String HAT = "Ordinary hat, already out of fashion";
-        //        public static final String CLOTHES = "Just normal clothes, don't count on any defense";
-        //        public static final String SHOES = "Average size shoes";
-        //        public static final String CHAINMAL = "Armour consisting of small metal rings linked together in a pattern to form a mesh.";
-        //        public static final String SOUL_BARRIER = "Protects its wearer from magic attacks";
-        //        public static final String DOMOVOI = "Generations of guardians have bled in this armour, imbuing it with spirits of protection. Spirits that awaken when the wearers need is greatest.";
-        //        public static final String SAPPHIRE_LEGION_PLATE_MAIL = "Produced in the Jaded Forges of the Jewelled King, strictly for use by warriors who have proved their mastery of combat through decades of service.";
-        //        public static final String THANATOS_BODY_ARMOR = "A shattered piece of Thanatos' legendary armor. Grants its user great constitution";
-        //    }
-        //
-        //    public class Enemy {
-        //        public static final String MINOR_FIRE_SPIRIT = "Fire Spirit desc";
-        //        public static final String MINOR_EARTH_SPIRIT = "Earth Spirit desc";
-        //        public static final String MINOR_WATER_SPIRIT = "Water Spirit desc";
-        //        public static final String MINOR_WIND_SPIRIT = "Wind Spirit desc";
-        //    }
-        //
-        //    public class Essence {
-        //
-        //    }
         //
         //    public class Skill {
         //
@@ -297,184 +351,9 @@ object Data {
         //        }
         //    }
         //
-        //    public class Weapon {
-        //        public static final String HANDS = "That's right, go kill everyone with your bare hands";
-        //        public static final String GETSUGA_TENSHO = "A powerful sword that is carved from the fangs of the moon itself and pierced through heaven";
-        //        public static final String SOUL_REAPER = "Forged in the dephts of Aesmir, it is said the weilder can feel the weapon crave the souls of its enemies";
-        //        public static final String GUT_RIPPER = "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows";
-        //        public static final String DRAGON_CLAW = "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master";
-        //        public static final String FROSTMOURN = "The legendary sword of the Ice Dungeon's King. Can turn enemies into frozen rocks with 5% chance. Has water element";
-        //        public static final String IRON_SWORD = "A standard warrior's sword with decent attack damage";
-        //        public static final String KNIFE = "A simple knife with poor blade";
-        //
-        //        public static final String PRACTICE_SWORD = "A basic one-handed sword";
-        //        public static final String CLAYMORE = "Large, double-edged broad sword that was used by the Scottish highlanders";
-        //        public static final String BROADSWORD = "A sword with a wide, double sided blade";
-        //        public static final String HALLSTATT_SWORD = "A sword favored by gladiators, it is especially designed for battles against armored enemies";
-        //        public static final String KAMPILAN_SWORD = "A thin sword designed to be easily bent, light, and very elastic";
-        //        public static final String MACHETE = "A strong cleaver-like sword";
-        //        public static final String TEGA_SWORD = "A ceremonial sword used by gravekeeper's to lead the dead to the great beyond";
-        //        public static final String BATTLESWORD = "A terrifying two-handed sword that is said to stimulate the nerves in order to kill, once it's in the wearer's hands";
-        //        public static final String LONGSWORD = "A two-handed sword with straight double-edged blade";
-        //        public static final String SCHIAVONA_SWORD = "A popular sword among mercenary soldiers";
-        //        public static final String COLICHERMARDE_SWORD = "Small sword with good parrying characteristics";
-        //    }
 
 
-    //    private static void loadArmor() {
-    //        ArmorBuilder armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.CLOTHES)
-    //                    .name("Clothes")
-    //                    .description(Desc.Armor.CLOTHES)
-    //                    .textureName("clothes.png")
-    //                    .type(ArmorType.BODY);
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.SHOES)
-    //                    .name("Shoes")
-    //                    .description(Desc.Armor.SHOES)
-    //                    .textureName("shoes.png")
-    //                    .type(ArmorType.SHOES);
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.HAT)
-    //                    .name("Hat")
-    //                    .description(Desc.Armor.HAT)
-    //                    .textureName("hat.png")
-    //                    .type(ArmorType.HELM);
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.CHAINMAL)
-    //                    .name("Chainmail")
-    //                    .description(Desc.Armor.CHAINMAL)
-    //                    .textureName("chainmail.png")
-    //                    .type(ArmorType.BODY)
-    //                    .armor(10)
-    //                    .marmor(5)
-    //                    .runes(new Rune(Attribute.STRENGTH, 2));
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.THANATOS_BODY_ARMOR)
-    //                    .name("Thanatos Body Armor")
-    //                    .description(Desc.Armor.THANATOS_BODY_ARMOR)
-    //                    .textureName("thanatos_body_armor.png")
-    //                    .type(ArmorType.BODY)
-    //                    .armor(50)
-    //                    .marmor(25)
-    //                    .itemLevel(ItemLevel.EPIC)
-    //                    .element(Element.EARTH)
-    //                    .runes(new Rune(Attribute.VITALITY, 5), new Rune(Attribute.PERCEPTION, 4));
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.SAPPHIRE_LEGION_PLATE_MAIL)
-    //                    .name("Sapphire Legion Plate Mail")
-    //                    .description(Desc.Armor.SAPPHIRE_LEGION_PLATE_MAIL)
-    //                    .textureName("sapphire_legion_plate.png")
-    //                    .type(ArmorType.BODY)
-    //                    .armor(30)
-    //                    .marmor(10)
-    //                    .itemLevel(ItemLevel.UNIQUE)
-    //                    .runes(new Rune(Attribute.VITALITY, 4));
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.DOMOVOI)
-    //                    .name("Domovoi")
-    //                    .description(Desc.Armor.DOMOVOI)
-    //                    .textureName("domovoi.png")
-    //                    .type(ArmorType.BODY)
-    //                    .armor(15)
-    //                    .marmor(35)
-    //                    .itemLevel(ItemLevel.UNIQUE)
-    //                    .runes(new Rune(Attribute.WILLPOWER, 3));
-    //        addArmor(armorBuilder);
-    //
-    //        armorBuilder = new ArmorBuilder();
-    //        armorBuilder.id(ID.Armor.SOUL_BARRIER)
-    //                    .name("Soul Barrier")
-    //                    .description(Desc.Armor.SOUL_BARRIER)
-    //                    .textureName("soul_barrier.png")
-    //                    .type(ArmorType.BODY)
-    //                    .armor(10)
-    //                    .marmor(50)
-    //                    .itemLevel(ItemLevel.UNIQUE)
-    //                    .runes(new Rune(Attribute.WILLPOWER, 3));
-    //        addArmor(armorBuilder);
-    //    }
-    //
-    //    private static void loadWeapons() {
-    //        WeaponBuilder weaponBuilder = new WeaponBuilder();
-    //        weaponBuilder.id(ID.Weapon.HANDS)
-    //                    .name("Hands")
-    //                    .description(Desc.Weapon.HANDS)
-    //                    .textureName("hands.png")
-    //                    .damage(0)
-    //                    .type(WeaponType.MACE);
-    //        addWeapon(weaponBuilder);
-    //
-    //        weaponBuilder = new WeaponBuilder();
-    //        weaponBuilder.id(ID.Weapon.KNIFE)
-    //                    .name("Knife")
-    //                    .description(Desc.Weapon.KNIFE)
-    //                    .textureName("knife.png")
-    //                    .damage(20)
-    //                    .type(WeaponType.DAGGER);
-    //        addWeapon(weaponBuilder);
-    //
-    //        weaponBuilder = new WeaponBuilder();
-    //        weaponBuilder.id(ID.Weapon.GUT_RIPPER)
-    //                    .name("The Gut Ripper")
-    //                    .description(Desc.Weapon.GUT_RIPPER)
-    //                    .textureName("gut_ripper.png")
-    //                    .damage(100)
-    //                    .type(WeaponType.DAGGER)
-    //                    .itemLevel(ItemLevel.EPIC)
-    //                    .runes(new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1));
-    //        addWeapon(weaponBuilder);
-    //
-    ////      addWeapon(new Weapon(ID.Weapon.IRON_SWORD, "Iron Sword", Desc.Weapon.IRON_SWORD, 0, 5, WeaponType.ONE_H_SWORD, 15));
-    ////      addWeapon(new Weapon(ID.Weapon.CLAYMORE, "Claymore", Desc.Weapon.CLAYMORE, 10, 5, WeaponType.TWO_H_SWORD, 35));
-    ////      addWeapon(new Weapon(ID.Weapon.BROADSWORD, "Broadsword", Desc.Weapon.BROADSWORD, 11, 5, WeaponType.TWO_H_SWORD, 28));
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.BATTLESWORD,
-    ////              "Battlesword", Desc.Weapon.BATTLESWORD, 12, 5,
-    ////              "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 44, Element.NEUTRAL, 2,
-    ////              new Rune(Attribute.STRENGTH, 2)));
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.LONGSWORD,
-    ////              "Longsword", Desc.Weapon.LONGSWORD, 9, 5,
-    ////              "Almas", ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 33, Element.NEUTRAL, 2,
-    ////              new Rune(Attribute.DEXTERITY, 2), new Rune(Attribute.AGILITY, 1)));
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.GETSUGA_TENSHO,
-    ////              "Getsuga Tensho", Desc.Weapon.GETSUGA_TENSHO, 4, 6,
-    ////              "Matthew", ItemLevel.EPIC, WeaponType.ONE_H_SWORD, 150, Element.NEUTRAL, 4,
-    ////              new Rune(Attribute.STRENGTH, 5), new Rune(Attribute.AGILITY, 4), new Rune(Attribute.DEXTERITY, 4), new Rune(Attribute.LUCK, 1)));
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.SOUL_REAPER,
-    ////              "Soul Reaper", Desc.Weapon.SOUL_REAPER, 10, 10,
-    ////              "Sam Bowen", ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170, Element.NEUTRAL, 4,
-    ////              new Rune(Attribute.STRENGTH, 7), new Rune(Attribute.VITALITY, 4), new Rune(Attribute.DEXTERITY, 2)));
-    ////
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.DRAGON_CLAW,
-    ////              "Dragon's Claw", Desc.Weapon.DRAGON_CLAW, 12, 11,
-    ////              "Atheryos", ItemLevel.EPIC, WeaponType.BOW, 130, Element.FIRE, 4,
-    ////              new Rune(Attribute.VITALITY, 3), new Rune(Attribute.WISDOM, 5), new Rune(Attribute.AGILITY, 3)));
-    ////
-    ////      addWeapon(new Weapon(ID.Weapon.FROSTMOURN, "Frostmourn", Desc.Weapon.FROSTMOURN, 8, 25,
-    ////              "Stefos", ItemLevel.EPIC, WeaponType.TWO_H_SWORD, 130, Element.WATER, 4,
-    ////              new Rune(Attribute.DEXTERITY, 5), new Rune(Attribute.STRENGTH, 3)));
-    //    }
-    //
-    //    public static void load() {
-    //        loadArmor();
-    //        loadWeapons();
+
     ////        // SKILLS
     ////
     ////        addSkill(new Skill(ID.Skill.Gladiator.BLOODLUST, "Bloodlust", Desc.Skill.Gladiator.BLOODLUST, false, 0.0f) {
@@ -1465,71 +1344,6 @@ object Data {
     ////                EnemyType.NORMAL, Element.WATER, 1, new AttributeInfo(),
     ////                new Experience(100, 100, 100), 0, new DroppableItem(ID.Armor.CHAINMAL, 25), new DroppableItem(ID.Weapon.SOUL_REAPER, 5)));
     //    }
-    //
-    //    private static void addArmor(ArmorBuilder ab) {
-    //        Armor armor = ab.build();
-    //        defaultArmor.put(armor.getID(), armor);
-    //    }
-    //
-    //    private static void addWeapon(WeaponBuilder wb) {
-    //        Weapon weapon = wb.build();
-    //        defaultWeapons.put(weapon.getID(), weapon);
-    //    }
-    //
-    ////    private static void addSkill(Skill skill) {
-    ////        defaultSkills.put(skill..getID(), skill);
-    ////    }
-    //
-    //    private static void addEnemy(EnemyBuilder eb) {
-    ////        EnemyControl enemy = eb.build();
-    ////        defaultEnemies.put(enemy.getID(), enemy);
-    //    }
-    //
-    ////    private static void addEssence(Essence e) {
-    ////        defaultEssences.put(e.id, e);
-    ////    }
-    //
-    ////    public static Skill getSkillByID(int id) {
-    ////        if (defaultSkills.containsKey(id)) {
-    ////            Skill sk = defaultSkills.get(id);
-    ////            Constructor<? extends Skill> c;
-    ////            try {
-    ////                c = sk.getClass().getDeclaredConstructor(Integer.class, String.class, String.class, String.class, String.class, Boolean.class, Float.class);
-    ////                return c.newInstance(sk.getID(), sk.getName(), sk.getDes, sk.textureName, sk.active, sk.skillCooldown);
-    ////            }
-    ////            catch (Exception e) {
-    ////                e.printStackTrace();
-    ////            }
-    ////        }
-    ////
-    ////        return null;
-    ////    }
-    //
-    //    public static Armor getArmorByID(int id) {
-    //        return defaultArmor.containsKey(id) ? new Armor(defaultArmor.get(id)) : null;
-    //    }
-    //
-    //    public static Weapon getWeaponByID(int id) {
-    //        return defaultWeapons.containsKey(id) ? new Weapon(defaultWeapons.get(id)) : null;
-    //    }
-    //
-    //    public static EnemyControl getEnemyByID(int id) {
-    //        return defaultEnemies.containsKey(id) ? new EnemyControl(defaultEnemies.get(id)) : null;
-    //    }
-    //
-    //    public static DescriptionComponent getItemByID(int id) {
-    //        String sid = String.valueOf(id);
-    //
-    //        if (sid.startsWith("5"))
-    //            return getArmorByID(id);
-    //        if (sid.startsWith("4"))
-    //            return getWeaponByID(id);
-    //
-    //        return null;
-    //    }
-    //
-    ////    public static Essence getEssenceByID(int id) {
-    ////        return defaultEssences.containsKey(id) ? new Essence(defaultEssences.get(id)) : null;
-    ////    }
+
 
 }

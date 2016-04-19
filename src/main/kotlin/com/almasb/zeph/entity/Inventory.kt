@@ -12,7 +12,9 @@ class Inventory {
 
     private val _items = FXCollections.observableArrayList<Entity>()
 
-    fun getItems() = FXCollections.unmodifiableObservableList(_items)
+    //fun getItems() = FXCollections.unmodifiableObservableList(_items)
+
+    fun getItems() = _items
 
     fun addItem(item: Entity) {
         _items.add(item)

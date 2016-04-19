@@ -31,6 +31,8 @@ public class InventoryView extends InGameWindow {
     private Map<Integer, Boolean> slots = new HashMap<>();
     private Pane root = new Pane();
 
+    private ListChangeListener<Entity> listener;
+
     private PlayerEntity player;
 
     public InventoryView(PlayerEntity player, double width, double height) {
@@ -48,10 +50,7 @@ public class InventoryView extends InGameWindow {
             slots.put(i, true);
         }
 
-        player.getInventory().getItems().forEach(this::addItem);
-
-        // TODO: keep strong reference to listener
-        player.getInventory().getItems().addListener(new ListChangeListener<Entity>() {
+        listener = new ListChangeListener<Entity>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Entity> change) {
                 while (change.next()) {
@@ -80,31 +79,16 @@ public class InventoryView extends InGameWindow {
                     }
                 }
             }
-        });
+        };
+
+        player.getInventory().getItems().forEach(this::addItem);
+
+        player.getInventory().getItems().addListener(listener);
 
         Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_right.png");
         root.getChildren().add(background);
 
         setContentPane(root);
-
-//        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-//            if (newPane == null) {
-//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-//                tt.setToY(height - 25);
-//                tt.play();
-//            }
-//            else {
-//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-//                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-//                tt.play();
-//            }
-//        });
-
-        //setTranslateX(width - background.getLayoutBounds().getWidth() - 2);
-
-        //getPanes().add(new TitledPane("Inventory", root));
-
-        //setTranslateY(height - 25);
     }
 
     private int getNextFreeSlot() {

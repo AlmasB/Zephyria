@@ -24,6 +24,7 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.Experience;
+import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
@@ -33,6 +34,7 @@ import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
 import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
+import com.almasb.zeph.entity.item.ArmorEntity;
 import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
@@ -40,9 +42,11 @@ import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
 import com.almasb.zeph.ui.EquipmentView;
 import com.almasb.zeph.ui.InventoryView;
+import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
@@ -55,6 +59,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import kotlin.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +133,13 @@ public class ZephyriaApp extends GameApplication {
                         .forEach(ch -> startAttack(ch, player));
             }
         }, KeyCode.O);
+
+        input.addAction(new UserAction("Test Drop") {
+            @Override
+            protected void onActionBegin() {
+                dropItem(new WeaponEntity(Data.Weapon.INSTANCE.BROADSWORD()), new Point2D(500, 300));
+            }
+        }, KeyCode.K);
     }
 
     @Override
@@ -236,6 +248,14 @@ public class ZephyriaApp extends GameApplication {
                     // TODO: reward based on level differences
                     playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
                     playerControl.rewardXP(character.getData().getRewardXP());
+
+                    List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
+                    drops.forEach(p -> {
+                        if (GameMath.checkChance(p.getSecond())) {
+                            dropItem(EntityManager.INSTANCE.getItem(p.getFirst()),
+                                    character.getPositionComponent().getValue());
+                        }
+                    });
 
                     selected = null;
                     character.removeFromWorld();
@@ -379,25 +399,29 @@ public class ZephyriaApp extends GameApplication {
         }, Duration.seconds(0.8));
     }
 
-//    private void dropItem(DescriptionComponent item, Point2D position) {
-//        Entity e = item.toEntity();
-//        e.setPosition(position);
-////        e.setOnMouseClicked(event -> {
-////            sceneManager.removeEntity(e);
-////            playerData.getInventory().addItem(item);
-////        });
-////
-////        e.setCursor(Cursor.CLOSED_HAND);
-//
-//        getGameWorld().addEntities(e);
-//
-//        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), e.getSceneView().get());
-//        tt.setInterpolator(Interpolator.EASE_IN);
-//        tt.setByX(new Random().nextInt(20) - 10);
-//        tt.setByY(10 + new Random().nextInt(10));
-//        tt.play();
-//    }
-//
+    private void dropItem(Entity item, Point2D position) {
+        DescriptionComponent desc = item.getComponentUnsafe(DescriptionComponent.class);
+
+        EntityView view = new EntityView();
+        view.addNode(getAssetLoader().loadTexture(desc.getTextureName()));
+        view.setTranslateX(position.getX());
+        view.setTranslateY(position.getY());
+        view.setCursor(Cursor.CLOSED_HAND);
+
+        view.setOnMouseClicked(event -> {
+            getGameScene().removeGameView(view);
+            player.getInventory().addItem(item);
+        });
+
+        getGameScene().addGameView(view);
+
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), view);
+        tt.setInterpolator(Interpolator.EASE_IN);
+        tt.setByX(new Random().nextInt(20) - 10);
+        tt.setByY(10 + new Random().nextInt(10));
+        tt.play();
+    }
+
     private void showDamage(Damage damage, Point2D position) {
         Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
         text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
@@ -477,7 +501,8 @@ public class ZephyriaApp extends GameApplication {
         player.getMainViewComponent().setView(playerAnimation, true);
         player.getData().setAnimation(playerAnimation);
 
-        player.getInventory().addItem(EntityManager.INSTANCE.getWeapon(4800));
+        player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
+        player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));
 
         getGameWorld().addEntity(player);
 

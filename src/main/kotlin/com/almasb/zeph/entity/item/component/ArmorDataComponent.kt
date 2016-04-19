@@ -24,4 +24,9 @@ class ArmorDataComponent(itemLevel: ItemLevel, val armorType: ArmorType, val arm
         addRune(rune)
         return this
     }
+
+    // TODO: data binding since armor ratings can change realtime
+    override fun toString(): String {
+        return "Armor: ${armorRating()}% \n MArmor: ${marmorRating()}% \n $runes"
+    }
 }

@@ -33,4 +33,9 @@ class WeaponDataComponent(itemLevel: ItemLevel, val type: WeaponType, val pureDa
         addRune(rune)
         return this
     }
+
+    // TODO: data binding since armor ratings can change realtime
+    override fun toString(): String {
+        return "Damage: ${fullDamage()} \n $runes"
+    }
 }

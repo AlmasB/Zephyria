@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity
 
 import com.almasb.ents.Component
+import com.almasb.ents.Entity
 import com.almasb.zeph.entity.item.ArmorEntity
 import com.almasb.zeph.entity.item.WeaponEntity
 import java.lang.reflect.Method
@@ -19,6 +20,16 @@ object EntityManager {
     fun getWeapon(id: Int) = WeaponEntity(weapons[id]!!.invoke(Data.Weapon) as List<Component>)
 
     fun getArmor(id: Int) = ArmorEntity(armor[id]!!.invoke(Data.Armor) as List<Component>)
+
+    fun getItem(id: Int): Entity {
+        if (weapons.containsKey(id))
+            return getWeapon(id)
+
+        if (armor.containsKey(id))
+            return getArmor(id)
+
+        throw IllegalArgumentException("ID $id not found in the database")
+    }
 
     init {
         Data.Weapon.javaClass.declaredMethods.forEach {

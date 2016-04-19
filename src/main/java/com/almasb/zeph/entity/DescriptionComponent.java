@@ -7,6 +7,7 @@ import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 
 /**
+ * // TODO: redesign
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
@@ -62,7 +63,7 @@ public final class DescriptionComponent extends AbstractComponent implements jav
      * Entity description
      */
     private String description;
-    private transient ReadOnlyStringProperty descriptionProperty;
+    private ReadOnlyStringWrapper descriptionProperty = new ReadOnlyStringWrapper();
 
     /**
      * @return description
@@ -71,13 +72,16 @@ public final class DescriptionComponent extends AbstractComponent implements jav
         return description;
     }
 
+    public final void setDescription(String description) {
+        this.description = description;
+        descriptionProperty.set(description);
+    }
+
     /**
      * @return description property
      */
     public final ReadOnlyStringProperty descriptionProperty() {
-        if (descriptionProperty == null)
-            descriptionProperty = new ReadOnlyStringWrapper(description).getReadOnlyProperty();
-        return descriptionProperty;
+        return descriptionProperty.getReadOnlyProperty();
     }
 
     /**

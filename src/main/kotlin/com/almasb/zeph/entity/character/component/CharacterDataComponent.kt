@@ -6,6 +6,7 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.entity.character.CharacterType
 import javafx.beans.property.SimpleIntegerProperty
+import java.util.*
 
 /**
  *
@@ -18,6 +19,8 @@ class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
     val attributes = AttributesComponent()
 
     val rewardXP = Experience(0, 0, 0)
+
+    val dropItems = ArrayList<Pair<Int, Int> >()
 
     lateinit var animation: DynamicAnimatedTexture
 
@@ -35,6 +38,11 @@ class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
         rewardXP.base += base
         rewardXP.stat += stat
         rewardXP.job += job
+        return this
+    }
+
+    fun withDrop(itemID: Int, chance: Int): CharacterDataComponent {
+        dropItems.add(itemID.to(chance))
         return this
     }
 }

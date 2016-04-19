@@ -143,7 +143,7 @@ object Data {
                 ArmorDataComponent(ItemLevel.NORMAL, ArmorType.SHOES, 0, 0)
         )
 
-        // BODY ARMOR
+        // BODY ARMOR 5100
 
         fun CHAINMAIL() = listOf<Component>(
                 DescriptionComponent(5003, "Chainmail", "Armour consisting of small metal rings linked together in a pattern to form a mesh.", "items/armor/chainmail.png"),
@@ -176,9 +176,9 @@ object Data {
                         .withRune(Rune(Attribute.PERCEPTION, 3))
         )
 
-        // HELMETS
+        // HELMETS 5200
 
-        // SHOES
+        // SHOES 5300
     }
 
     object Character {
@@ -190,6 +190,7 @@ object Data {
                         .withAttribute(Attribute.VITALITY, 30)
                         .withAttribute(Attribute.DEXTERITY, 3)
                         .withAttribute(Attribute.AGILITY, 2)
+                        .withDrop(4001, 50)
         )
     }
 

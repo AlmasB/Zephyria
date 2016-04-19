@@ -203,7 +203,7 @@ class PlayerControl : CharacterControl() {
             unEquipItem(EquipPlace.RIGHT_HAND)
             unEquipItem(EquipPlace.LEFT_HAND)
             setEquip(EquipPlace.RIGHT_HAND, weapon)
-            setEquip(EquipPlace.RIGHT_HAND, weapon)
+            setEquip(EquipPlace.LEFT_HAND, weapon)
 
         } else if (weapon.data.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
             unEquipItem(EquipPlace.LEFT_HAND)

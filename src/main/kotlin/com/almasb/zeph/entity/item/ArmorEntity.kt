@@ -20,5 +20,7 @@ class ArmorEntity(dataComponents: List<Component>) : Entity() {
 
         desc = getComponentUnsafe(DescriptionComponent::class.java)
         data = getComponentUnsafe(ArmorDataComponent::class.java)
+
+        desc.description = "${desc.name}\n${desc.description}\n$data"
     }
 }

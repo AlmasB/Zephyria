@@ -68,8 +68,8 @@ import java.util.Random;
 public class ZephyriaApp extends GameApplication {
 
     private static final int TILE_SIZE = 64;
-    private static final int MAP_WIDTH = 100;
-    private static final int MAP_HEIGHT = 100;
+    private static final int MAP_WIDTH = 20;
+    private static final int MAP_HEIGHT = 20;
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -294,7 +294,7 @@ public class ZephyriaApp extends GameApplication {
             startAttack(player, selected);
         }
 
-        if (selected == null && !path.isEmpty()) {
+        while (selected == null && !path.isEmpty()) {
             AStarNode node = path.get(0);
 
             double dx = node.getX() * TILE_SIZE - (player).getPositionComponent().getX();
@@ -305,6 +305,7 @@ public class ZephyriaApp extends GameApplication {
 
             if (dx == 0 && dy == 0) {
                 path.remove(0);
+                continue;
             } else if (dx > 0) {
                 playerAnimation.setAnimationChannel(CharacterAnimation.WALK_RIGHT);
             } else if (dx < 0) {
@@ -319,6 +320,7 @@ public class ZephyriaApp extends GameApplication {
             dy *= 2;
 
             player.getPositionComponent().translate(dx, dy);
+            break;
         }
     }
 
@@ -502,6 +504,7 @@ public class ZephyriaApp extends GameApplication {
         player.getData().setAnimation(playerAnimation);
 
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
+        player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));
         player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));
 
         getGameWorld().addEntity(player);

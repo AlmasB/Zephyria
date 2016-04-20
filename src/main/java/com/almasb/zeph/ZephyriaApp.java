@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.EntityView;
 import com.almasb.fxgl.entity.GameEntity;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.component.CollidableComponent;
+import com.almasb.fxgl.entity.component.MainViewComponent;
 import com.almasb.fxgl.entity.component.PositionComponent;
 import com.almasb.fxgl.entity.control.OffscreenCleanControl;
 import com.almasb.fxgl.entity.control.ProjectileControl;
@@ -23,13 +24,11 @@ import com.almasb.fxgl.texture.DynamicAnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
-import com.almasb.zeph.combat.Experience;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.character.CharacterEntity;
-import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
 import com.almasb.zeph.entity.character.control.CharacterControl;
@@ -44,6 +43,8 @@ import com.almasb.zeph.ui.EquipmentView;
 import com.almasb.zeph.ui.InventoryView;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
@@ -51,7 +52,6 @@ import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -73,8 +73,7 @@ public class ZephyriaApp extends GameApplication {
 
     private PlayerEntity player;
     private PlayerControl playerControl;
-    private Entity selected = null;
-    private Point2D selectedPoint = null;
+    private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
 
     private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
@@ -161,6 +160,20 @@ public class ZephyriaApp extends GameApplication {
         //showGrid();
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+
+        selected.addListener((observable, oldValue, newValue) -> {
+            if (oldValue != null) {
+                oldValue.getComponent(MainViewComponent.class).ifPresent(c -> {
+                    c.getView().setEffect(null);
+                });
+            }
+
+            if (newValue != null) {
+                newValue.getComponent(MainViewComponent.class).ifPresent(c -> {
+                    c.getView().setEffect(selectedEffect);
+                });
+            }
+        });
     }
 
     private void initBackground() {
@@ -178,7 +191,7 @@ public class ZephyriaApp extends GameApplication {
         bg.getMainViewComponent().setView(region);
 
         bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
-            selected = null;
+            selected.set(null);
 
             int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
             int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
@@ -257,8 +270,13 @@ public class ZephyriaApp extends GameApplication {
                         }
                     });
 
-                    selected = null;
-                    character.removeFromWorld();
+                    character.getMainViewComponent().getView().setOnMouseClicked(null);
+                    selected.set(null);
+
+                    character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
+
+                    getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
+
                     initEnemies();
                 }
             }
@@ -290,11 +308,11 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void onUpdate(double tpf) {
-        if (selected != null) {
-            startAttack(player, selected);
+        if (selected.get() != null) {
+            startAttack(player, selected.get());
         }
 
-        while (selected == null && !path.isEmpty()) {
+        while (selected.get() == null && !path.isEmpty()) {
             AStarNode node = path.get(0);
 
             double dx = node.getX() * TILE_SIZE - (player).getPositionComponent().getX();
@@ -457,10 +475,12 @@ public class ZephyriaApp extends GameApplication {
         SLASH_DOWN(14, 6),
         SLASH_RIGHT(15, 6),
 
-        SHOOT_RIGHT(19, 13),
-        SHOOT_LEFT(17, 13),
         SHOOT_UP(16, 13),
-        SHOOT_DOWN(18, 13);
+        SHOOT_LEFT(17, 13),
+        SHOOT_DOWN(18, 13),
+        SHOOT_RIGHT(19, 13),
+
+        DEATH(20, 6);
 
         int row;
         int cycle;
@@ -523,7 +543,7 @@ public class ZephyriaApp extends GameApplication {
         spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
 
         enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
-            selected = enemy;
+            selected.set(enemy);
         });
     }
 

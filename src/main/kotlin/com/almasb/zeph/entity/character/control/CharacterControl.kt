@@ -245,6 +245,9 @@ open class CharacterControl : AbstractControl() {
     }
 
     override fun onUpdate(entity: Entity, tpf: Double) {
+        if (hp.isZero)
+            return
+
         updateRegen(tpf)
 
         if (!canAttack())

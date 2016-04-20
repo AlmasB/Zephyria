@@ -37,6 +37,7 @@ import com.almasb.zeph.entity.item.ArmorEntity;
 import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
+import com.almasb.zeph.entity.skill.SkillEntity;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.CharInfoView;
 import com.almasb.zeph.ui.EquipmentView;
@@ -139,6 +140,14 @@ public class ZephyriaApp extends GameApplication {
                 dropItem(new WeaponEntity(Data.Weapon.INSTANCE.BROADSWORD()), new Point2D(500, 300));
             }
         }, KeyCode.K);
+
+        input.addAction(new UserAction("Test Skill") {
+            @Override
+            protected void onActionBegin() {
+                SkillEntity skill = new SkillEntity(Data.Skill.INSTANCE.ROAR());
+                skill.getData().getFunc().invoke(player, player);
+            }
+        }, KeyCode.DIGIT1);
     }
 
     @Override

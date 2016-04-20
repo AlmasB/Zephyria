@@ -7,8 +7,8 @@ package com.almasb.zeph.entity.character;
  * @author Almas Baimagambetov
  */
 public enum GameCharacterClass {
-//    MONSTER  (50, 50),
-//    NOVICE   (10, 10),
+    MONSTER  (50, 50),
+    NOVICE   (10, 10);
 //
 //    WARRIOR  (40, 20, ID.Skill.Warrior.MIGHTY_SWING, ID.Skill.Warrior.ROAR, ID.Skill.Warrior.WARRIOR_HEART, ID.Skill.Warrior.ARMOR_MASTERY),
 //    CRUSADER (60, 35, ID.Skill.Crusader.DIVINE_ARMOR, ID.Skill.Crusader.FAITH, ID.Skill.Crusader.HOLY_LIGHT, ID.Skill.Crusader.LAST_STAND, ID.Skill.Crusader.PRECISION_STRIKE),
@@ -28,13 +28,13 @@ public enum GameCharacterClass {
 //    ENCHANTER(30, 65, ID.Skill.Enchanter.ASTRAL_PROTECTION, ID.Skill.Enchanter.CURSE_OF_WITCHCRAFT, ID.Skill.Enchanter.MAGIC_SHIELD, ID.Skill.Enchanter.MANA_BURN, ID.Skill.Enchanter.MIND_BLAST),
 //    SAGE     (40, 90);
 //
-//    public final int hp;
-//    public final int sp;
-//    public final int[] skillIDs;
-//
-//    GameCharacterClass(int hp, int sp, int... IDs) {
-//        this.hp = hp;
-//        this.sp = sp;
-//        this.skillIDs = IDs;
-//    }
+    public final int hp;
+    public final int sp;
+    public final int[] skillIDs;
+
+    GameCharacterClass(int hp, int sp, int... IDs) {
+        this.hp = hp;
+        this.sp = sp;
+        this.skillIDs = IDs;
+    }
 }

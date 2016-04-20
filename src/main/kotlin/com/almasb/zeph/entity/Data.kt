@@ -3,6 +3,7 @@ package com.almasb.zeph.entity
 import com.almasb.ents.Component
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.character.CharacterType
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.item.ArmorType
@@ -10,6 +11,10 @@ import com.almasb.zeph.entity.item.ItemLevel
 import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.item.component.ArmorDataComponent
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
+import com.almasb.zeph.entity.skill.SkillDataComponent
+import com.almasb.zeph.entity.skill.SkillTargetType
+import com.almasb.zeph.entity.skill.SkillType
+import java.util.*
 
 /**
  *
@@ -191,6 +196,18 @@ object Data {
                         .withAttribute(Attribute.DEXTERITY, 3)
                         .withAttribute(Attribute.AGILITY, 2)
                         .withDrop(4001, 50)
+        )
+    }
+
+    // TODO: caster.skills.level ? or smth similar
+    object Skill {
+        fun ROAR() = listOf<Component>(
+                DescriptionComponent(7000, "Roar", "Roar Description", "skills/ic_skill_bash.png"),
+                SkillDataComponent(SkillType.ACTIVE, EnumSet.of(SkillTargetType.SELF), { caster, target ->
+                    caster.stats.addBonusStat(Stat.ATK, 25)
+                })
+                        .withMana(10)
+                        .withCooldown(5.0)
         )
     }
 

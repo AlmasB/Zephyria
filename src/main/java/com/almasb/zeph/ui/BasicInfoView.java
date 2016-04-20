@@ -46,8 +46,7 @@ public class BasicInfoView extends InGameWindow {
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
         textPlayerName.setFill(Color.WHITESMOKE);
-        textPlayerName.setText(player.getDescription().getName());
-        //textPlayerName.textProperty().bind(player.nameProperty().concat("\n").concat(player.charClassProperty()));
+        textPlayerName.textProperty().bind(player.getDescription().nameProperty().concat("\n").concat(player.getData().getCharClass()));
 
         Text textLevels = new Text();
         textLevels.setTranslateX(15);
@@ -102,8 +101,6 @@ public class BasicInfoView extends InGameWindow {
         uiPane.setPrefSize(350, 200);
         uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
 
-        //getPanes().add(new TitledPane("Basic Info", uiPane));
-        //setExpandedPane(getPanes().get(0));
         setContentPane(uiPane);
     }
 }

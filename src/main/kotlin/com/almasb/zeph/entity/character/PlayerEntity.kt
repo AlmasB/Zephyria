@@ -9,7 +9,10 @@ import com.almasb.zeph.entity.Inventory
 import com.almasb.zeph.entity.character.component.*
 import com.almasb.zeph.entity.character.control.PlayerControl
 import com.almasb.zeph.entity.item.WeaponEntity
+import com.almasb.zeph.entity.skill.SkillEntity
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.collections.FXCollections
+import java.util.*
 
 /**
  *

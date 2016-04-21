@@ -41,7 +41,7 @@ public class InventoryView extends InGameWindow {
         relocate(400, 400);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(202, 300);
+        setPrefSize(202, 315);
         setResizableWindow(false);
 
         this.player = player;

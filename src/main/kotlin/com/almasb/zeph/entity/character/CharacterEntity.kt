@@ -7,7 +7,9 @@ import com.almasb.zeph.entity.Inventory
 import com.almasb.zeph.entity.character.component.*
 import com.almasb.zeph.entity.character.control.CharacterControl
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
+import com.almasb.zeph.entity.skill.SkillEntity
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.collections.FXCollections
 
 /**
  *
@@ -24,6 +26,7 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     val stats = StatsComponent()
 
     val inventory = Inventory()
+    val skills = FXCollections.observableArrayList<SkillEntity>()
 
     val baseXP = SimpleIntegerProperty()
     val statXP = SimpleIntegerProperty()

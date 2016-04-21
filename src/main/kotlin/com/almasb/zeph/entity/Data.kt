@@ -14,6 +14,7 @@ import com.almasb.zeph.entity.item.component.WeaponDataComponent
 import com.almasb.zeph.entity.skill.SkillDataComponent
 import com.almasb.zeph.entity.skill.SkillTargetType
 import com.almasb.zeph.entity.skill.SkillType
+import com.almasb.zeph.entity.skill.SkillUseResult
 import java.util.*
 
 /**
@@ -199,13 +200,15 @@ object Data {
         )
     }
 
-    // TODO: caster.skills.level ? or smth similar
     object Skill {
         fun ROAR() = listOf<Component>(
                 DescriptionComponent(7000, "Roar", "Roar Description", "skills/ic_skill_bash.png"),
-                SkillDataComponent(SkillType.ACTIVE, EnumSet.of(SkillTargetType.SELF), { caster, target ->
-                    caster.stats.addBonusStat(Stat.ATK, 25)
-                })
+                SkillDataComponent(SkillType.ACTIVE, EnumSet.of(SkillTargetType.SELF))
+                        .onCast { caster, target ->
+                            caster.stats.addBonusStat(Stat.ATK, 25)
+
+                            SkillUseResult(23)
+                        }
                         .withMana(10)
                         .withCooldown(5.0)
         )

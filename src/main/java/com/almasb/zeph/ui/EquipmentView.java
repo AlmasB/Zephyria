@@ -35,7 +35,7 @@ public final class EquipmentView extends InGameWindow {
         relocate(100, 400);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(202, 300);
+        setPrefSize(202, 315);
         setResizableWindow(false);
 
         this.player = player;

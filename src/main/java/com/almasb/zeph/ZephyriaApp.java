@@ -24,6 +24,7 @@ import com.almasb.fxgl.texture.DynamicAnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
+import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
@@ -38,10 +39,8 @@ import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
 import com.almasb.zeph.entity.skill.SkillEntity;
-import com.almasb.zeph.ui.BasicInfoView;
-import com.almasb.zeph.ui.CharInfoView;
-import com.almasb.zeph.ui.EquipmentView;
-import com.almasb.zeph.ui.InventoryView;
+import com.almasb.zeph.entity.skill.SkillUseResult;
+import com.almasb.zeph.ui.*;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -144,8 +143,11 @@ public class ZephyriaApp extends GameApplication {
         input.addAction(new UserAction("Test Skill") {
             @Override
             protected void onActionBegin() {
-                SkillEntity skill = new SkillEntity(Data.Skill.INSTANCE.ROAR());
-                skill.getData().getFunc().invoke(player, player);
+                // TODO: use digits-1 to get skills?
+                SkillEntity skill = player.getSkills().get(0);
+                SkillUseResult result = skill.getData().getOnCast().invoke(player, player);
+
+                showDamage(new Damage(Damage.DamageType.MAGICAL, Element.NEUTRAL, result.getValue(), Damage.DamageCritical.TRUE), player.getPositionComponent().getValue());
             }
         }, KeyCode.DIGIT1);
     }
@@ -297,18 +299,14 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initUI() {
         getGameScene().setUIMouseTransparent(false);
-
         getGameScene().setCursor("main.png", new Point2D(52, 10));
-
-        Texture hotbar = getAssetLoader().loadTexture("ui/hotbar.png");
-        hotbar.setTranslateX(getWidth() / 2 - hotbar.getLayoutBounds().getWidth() / 2);
-        hotbar.setTranslateY(getHeight() - hotbar.getLayoutBounds().getHeight());
 
         debug.setTranslateX(100);
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        getGameScene().addUINodes(hotbar,
+        getGameScene().addUINodes(
+                new HotbarView(player),
                 new BasicInfoView(player),
                 new CharInfoView(player),
                 new InventoryView(player, getWidth(), getHeight()),
@@ -532,9 +530,14 @@ public class ZephyriaApp extends GameApplication {
         player.getMainViewComponent().setView(playerAnimation, true);
         player.getData().setAnimation(playerAnimation);
 
+        // TODO: TEST DATA BEGIN
+        player.getSkills().add(new SkillEntity(Data.Skill.INSTANCE.ROAR()));
+
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));
         player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));
+
+        // TEST DATA END
 
         getGameWorld().addEntity(player);
 

@@ -10,8 +10,7 @@ import java.util.*
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class SkillDataComponent(val type: SkillType, val targetTypes: EnumSet<SkillTargetType>,
-                         val func: (CharacterEntity, CharacterEntity) -> Unit) : AbstractComponent() {
+class SkillDataComponent(val type: SkillType, val targetTypes: EnumSet<SkillTargetType>) : AbstractComponent() {
 
     var mana = 0
     var cooldown = 0.0
@@ -30,6 +29,13 @@ class SkillDataComponent(val type: SkillType, val targetTypes: EnumSet<SkillTarg
 
     fun withArea(size: Int): SkillDataComponent {
         areaSize = size
+        return this
+    }
+
+    lateinit var onCast: (CharacterEntity, CharacterEntity) -> SkillUseResult
+
+    fun onCast(func: (CharacterEntity, CharacterEntity) -> SkillUseResult): SkillDataComponent {
+        onCast = func
         return this
     }
 }

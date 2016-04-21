@@ -8,7 +8,10 @@ import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.EquipPlace;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.control.Accordion;
@@ -57,24 +60,19 @@ public final class EquipmentView extends InGameWindow {
 
         Texture background = FXGL.getAssetLoader().loadTexture("ui/inventory_left.png");
         pane.getChildren().add(background);
-
-//        expandedPaneProperty().addListener((obs, oldPane, newPane) -> {
-//            if (newPane == null) {
-//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.2), this);
-//                tt.setToY(height - 25);
-//                tt.play();
-//            }
-//            else {
-//                TranslateTransition tt = new TranslateTransition(Duration.seconds(0.5), this);
-//                tt.setToY(height - background.getLayoutBounds().getHeight() - 25);
-//                tt.play();
-//            }
-//        });
-
         pane.getChildren().addAll(groups.values());
-        //getPanes().add(new TitledPane("Equipment", pane));
+
         setContentPane(pane);
-        //setTranslateY(height - 25);
+
+        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+        getRightIcons().get(0).setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), pane);
+            st.setFromY(isMinimized() ? 0 : 1);
+            st.setToY(isMinimized() ? 1 : 0);
+            st.play();
+
+            handler.handle(e);
+        });
     }
 
     private Group createGroup(int x, int y) {

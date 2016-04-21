@@ -6,13 +6,17 @@ import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.character.PlayerEntity;
+import javafx.animation.ScaleTransition;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class BasicInfoView extends InGameWindow {
 
@@ -102,5 +106,15 @@ public class BasicInfoView extends InGameWindow {
         uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
 
         setContentPane(uiPane);
+
+        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+        getRightIcons().get(0).setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), uiPane);
+            st.setFromY(isMinimized() ? 0 : 1);
+            st.setToY(isMinimized() ? 1 : 0);
+            st.play();
+
+            handler.handle(e);
+        });
     }
 }

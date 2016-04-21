@@ -8,8 +8,11 @@ import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.item.ArmorEntity;
 import com.almasb.zeph.entity.item.WeaponEntity;
+import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
@@ -89,6 +92,16 @@ public class InventoryView extends InGameWindow {
         root.getChildren().add(background);
 
         setContentPane(root);
+
+        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+        getRightIcons().get(0).setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
+            st.setFromY(isMinimized() ? 0 : 1);
+            st.setToY(isMinimized() ? 1 : 0);
+            st.play();
+
+            handler.handle(e);
+        });
     }
 
     private int getNextFreeSlot() {

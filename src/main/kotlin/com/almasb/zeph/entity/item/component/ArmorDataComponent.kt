@@ -1,6 +1,9 @@
 package com.almasb.zeph.entity.item.component
 
+import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.entity.character.component.StatsComponent
 import com.almasb.zeph.entity.item.component.EquippableComponent
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.ItemLevel
@@ -18,6 +21,18 @@ class ArmorDataComponent(itemLevel: ItemLevel, val armorType: ArmorType, val arm
 
     fun marmorRating(): Int {
         return marmor + refineLevel * if (refineLevel > 2) itemLevel.bonus + 1 else itemLevel.bonus
+    }
+
+    override fun onEquip(entity: Entity) {
+        super.onEquip(entity)
+        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, armorRating())
+        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, marmorRating())
+    }
+
+    override fun onUnEquip(entity: Entity) {
+        super.onUnEquip(entity)
+        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, -armorRating())
+        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, -marmorRating())
     }
 
     fun withRune(rune: Rune): ArmorDataComponent {

@@ -6,13 +6,17 @@ import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.skill.SkillEntity;
+import javafx.animation.ScaleTransition;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -27,7 +31,7 @@ public class HotbarView extends InGameWindow {
         relocate(400, 600);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(600, 100);
+        setPrefSize(590, 150);
         setResizableWindow(false);
 
         Texture background = FXGL.getAssetLoader().loadTexture("ui/hotbar.png");
@@ -41,14 +45,26 @@ public class HotbarView extends InGameWindow {
         });
 
         setContentPane(root);
+
+        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+        getRightIcons().get(0).setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
+            st.setFromY(isMinimized() ? 0 : 1);
+            st.setToY(isMinimized() ? 1 : 0);
+            st.play();
+
+            handler.handle(e);
+        });
     }
 
     private void addSkill(SkillEntity skill) {
         DescriptionComponent desc = skill.getDesc();
 
         Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
-        view.setFitWidth(64);
-        view.setFitHeight(64);
+        view.setFitWidth(40);
+        view.setFitHeight(40);
+        view.setTranslateX(40);
+        view.setTranslateY(46);
 
         view.setCursor(Cursor.HAND);
 

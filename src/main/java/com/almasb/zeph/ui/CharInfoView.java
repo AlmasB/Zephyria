@@ -6,9 +6,12 @@ import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
+import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -22,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 public class CharInfoView extends InGameWindow {
 
@@ -127,6 +131,18 @@ public class CharInfoView extends InGameWindow {
             statBox.getChildren().add(new HBox(5, text, bText));
         }
 
-        setContentPane(new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
+        Pane root = new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox));
+
+        setContentPane(root);
+
+        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+        getRightIcons().get(0).setOnAction(e -> {
+            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
+            st.setFromY(isMinimized() ? 0 : 1);
+            st.setToY(isMinimized() ? 1 : 0);
+            st.play();
+
+            handler.handle(e);
+        });
     }
 }

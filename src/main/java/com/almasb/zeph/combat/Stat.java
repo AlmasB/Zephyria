@@ -1,10 +1,11 @@
 package com.almasb.zeph.combat;
 
 /**
- * Stats of a game character.
+ * Stats (16 in total) of a game character.
+ *
+ * TODO: hit / dodge mechanic
  */
 public enum Stat {
-    // TODO: externalize description
 
     /**
      * Maximum HP

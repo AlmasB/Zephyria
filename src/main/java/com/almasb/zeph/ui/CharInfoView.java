@@ -35,6 +35,7 @@ public class CharInfoView extends InGameWindow {
         setResizableWindow(false);
 
         Font font = Font.font("Lucida Console", 14);
+        Font largerFont = Font.font("Lucida Console", 16);
         Cursor cursorQuestion = new ImageCursor(FXGL.getAssetLoader().loadCursorImage("question.png"), 52, 10);
 
         VBox attrBox = new VBox(5);
@@ -48,7 +49,7 @@ public class CharInfoView extends InGameWindow {
 
             Text tooltipText = new Text(attr.getDescription());
             tooltipText.setFill(Color.WHITE);
-            tooltipText.setFont(Font.font(16));
+            tooltipText.setFont(largerFont);
             tooltipText.setWrappingWidth(200);
 
             Tooltip tooltip = new Tooltip();
@@ -103,7 +104,7 @@ public class CharInfoView extends InGameWindow {
 
             Text tooltipText = new Text(stat.getDescription());
             tooltipText.setFill(Color.WHITE);
-            tooltipText.setFont(Font.font(16));
+            tooltipText.setFont(largerFont);
             tooltipText.setWrappingWidth(200);
 
             Tooltip tooltip = new Tooltip();
@@ -125,8 +126,6 @@ public class CharInfoView extends InGameWindow {
 
             statBox.getChildren().add(new HBox(5, text, bText));
         }
-
-        //getPanes().add(new TitledPane("Char Info", new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
 
         setContentPane(new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox)));
     }

@@ -144,10 +144,16 @@ public class ZephyriaApp extends GameApplication {
             @Override
             protected void onActionBegin() {
                 // TODO: use digits-1 to get skills?
-                SkillEntity skill = player.getSkills().get(0);
-                SkillUseResult result = skill.getData().getOnCast().invoke(player, player);
+                //SkillEntity skill = player.getSkills().get(0);
+                //SkillUseResult result = skill.getData().getOnCast().invoke(player, player);
 
-                showDamage(new Damage(Damage.DamageType.MAGICAL, Element.NEUTRAL, result.getValue(), Damage.DamageCritical.TRUE), player.getPositionComponent().getValue());
+                // TODO: select skill, select target
+                // a projectile is built based on skill data component
+                // physics: when projectile hits we fire invoke(char, target)
+                // get result and use it to show in UI
+
+                // if passive, always on
+                // if self, skill auto activates here and returns result immediately
             }
         }, KeyCode.DIGIT1);
     }

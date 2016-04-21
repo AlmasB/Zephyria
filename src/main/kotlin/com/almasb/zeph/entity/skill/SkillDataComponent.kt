@@ -10,7 +10,7 @@ import java.util.*
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class SkillDataComponent(val type: SkillType, val targetTypes: EnumSet<SkillTargetType>) : AbstractComponent() {
+class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val targetTypes: EnumSet<SkillTargetType>) : AbstractComponent() {
 
     var mana = 0
     var cooldown = 0.0
@@ -38,4 +38,17 @@ class SkillDataComponent(val type: SkillType, val targetTypes: EnumSet<SkillTarg
         onCast = func
         return this
     }
+
+    /**
+     * Projectile texture name (if applicable).
+     */
+    lateinit var textureName: String
+
+    fun withTextureName(name: String): SkillDataComponent {
+        textureName = name
+        return this
+    }
+
+    // TODO: sound
+    // TODO: on skill end func?
 }

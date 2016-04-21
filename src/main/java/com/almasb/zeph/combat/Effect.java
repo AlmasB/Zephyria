@@ -10,6 +10,8 @@ import java.util.List;
  * Buff that lasts for a period of time, can be negative
  * i.e. atk decrease.
  *
+ * TODO: redesign
+ *
  * @author Almas Baimagambetov
  *
  */

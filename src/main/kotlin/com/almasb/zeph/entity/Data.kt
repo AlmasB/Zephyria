@@ -2,6 +2,7 @@ package com.almasb.zeph.entity
 
 import com.almasb.ents.Component
 import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Effect
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.character.CharacterType
@@ -11,10 +12,7 @@ import com.almasb.zeph.entity.item.ItemLevel
 import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.item.component.ArmorDataComponent
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
-import com.almasb.zeph.entity.skill.SkillDataComponent
-import com.almasb.zeph.entity.skill.SkillTargetType
-import com.almasb.zeph.entity.skill.SkillType
-import com.almasb.zeph.entity.skill.SkillUseResult
+import com.almasb.zeph.entity.skill.*
 import java.util.*
 
 /**
@@ -203,11 +201,13 @@ object Data {
     object Skill {
         fun ROAR() = listOf<Component>(
                 DescriptionComponent(7000, "Roar", "Roar Description", "skills/ic_skill_bash.png"),
-                SkillDataComponent(SkillType.ACTIVE, EnumSet.of(SkillTargetType.SELF))
+                SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
                         .onCast { caster, target ->
                             caster.stats.addBonusStat(Stat.ATK, 25)
 
-                            SkillUseResult(23)
+                            //caster.charConrol.addEffect(Effect())
+
+                            SkillUseResult.NONE
                         }
                         .withMana(10)
                         .withCooldown(5.0)

@@ -122,34 +122,39 @@ class PlayerControl : CharacterControl() {
     }
 
     /**
-     * Increases player's experience.
-     * TODO: check against MAX LEVELS
-     * @param gainedXP
-     * *
-     * @return
-     * *          true if player gained new base level
+     * Increases player's experience by [gainedXP].
+     *
+     * @return true if player gained new base level
      */
     fun rewardXP(gainedXP: Experience): Boolean {
         var baseLevelUp = false
 
-        player.baseXP.value += gainedXP.base
-        player.statXP.value += gainedXP.stat
-        player.jobXP.value += gainedXP.job
+        if (player.statLevel.value < MAX_LEVEL_STAT) {
+            player.statXP.value += gainedXP.stat
 
-        if (player.statXP.value >= expNeededForNextStatLevel()) {
-            player.statXP.value = 0
-            statLevelUp();
+            if (player.statXP.value >= expNeededForNextStatLevel()) {
+                player.statXP.value = 0
+                statLevelUp();
+            }
         }
 
-        if (player.jobXP.value >= expNeededForNextJobLevel()) {
-            player.jobXP.value = 0
-            jobLevelUp();
+        if (player.jobLevel.value < MAX_LEVEL_JOB) {
+            player.jobXP.value += gainedXP.job
+
+            if (player.jobXP.value >= expNeededForNextJobLevel()) {
+                player.jobXP.value = 0
+                jobLevelUp();
+            }
         }
 
-        if (player.baseXP.value >= expNeededForNextBaseLevel()) {
-            player.baseXP.value = 0
-            baseLevelUp();
-            baseLevelUp = true
+        if (player.baseLevel.value < MAX_LEVEL_BASE) {
+            player.baseXP.value += gainedXP.base
+
+            if (player.baseXP.value >= expNeededForNextBaseLevel()) {
+                player.baseXP.value = 0
+                baseLevelUp();
+                baseLevelUp = true
+            }
         }
 
         return baseLevelUp

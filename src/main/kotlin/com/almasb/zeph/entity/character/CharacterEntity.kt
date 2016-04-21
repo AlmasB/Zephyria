@@ -35,6 +35,8 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     val description: DescriptionComponent
     val data: CharacterDataComponent
 
+    val charConrol = CharacterControl()
+
     init {
         addComponent(stats)
 
@@ -51,8 +53,6 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
 
         addComponent(attributes)
 
-        addControl(CharacterControl())
+        addControl(charConrol)
     }
-
-    //TODO: fun getControl() = getControlUnsafe(PlayerControl::class.java)
 }

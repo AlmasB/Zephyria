@@ -18,7 +18,7 @@ open class CharacterControl : AbstractControl() {
     /**
      * Statuses currently affecting this character.
      */
-    private val statuses = FXCollections.observableArrayList<StatusEffect>()
+    val statuses = FXCollections.observableArrayList<StatusEffect>()
 
     /**
      * @param status status
@@ -39,7 +39,7 @@ open class CharacterControl : AbstractControl() {
     /**
      * Effects currently placed on this character.
      */
-    private val effects = FXCollections.observableArrayList<EffectEntity>()
+    val effects = FXCollections.observableArrayList<EffectEntity>()
 
     /**
      * Applies an effect to this character. If the effect comes from the same
@@ -211,7 +211,12 @@ open class CharacterControl : AbstractControl() {
         }
     }
 
-    private fun updateSkills() {
+    private fun updateSkills(tpf: Double) {
+        char.skills.forEach {
+            it.onUpdate(tpf)
+        }
+
+
         //        for (Skill sk : skills) {
         //            if (sk.active) {
         //                if (sk.getCurrentCooldown() > 0) {
@@ -257,7 +262,7 @@ open class CharacterControl : AbstractControl() {
         if (!canAttack())
             atkTick += tpf
 
-        updateSkills()
+        updateSkills(tpf)
         // check buffs
         updateEffects(tpf)
         updateStatusEffects(tpf)
@@ -427,18 +432,18 @@ open class CharacterControl : AbstractControl() {
         sp.value -= skill.data.mana
         skill.putOnCooldown()
 
-        skill.data.onCast(char, char)
+        skill.data.onCast(char, char, skill.level.value)
 
         return SkillUseResult.NONE
     }
 
     fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
-        return char.skills[index].data.onCast(char, target)
+        return char.skills[index].data.onCast(char, target, 1)
     }
 
     fun useAreaSkill(index: Int, target: Point2D): SkillUseResult {
         // TODO: complete
-        return char.skills[index].data.onCast(char, char)
+        return char.skills[index].data.onCast(char, char, 1)
     }
 
     // public SkillUseResult useSkill(int skillCode, GameCharacter target) {

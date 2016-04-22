@@ -5,6 +5,7 @@ import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerEntity;
+import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.skill.SkillEntity;
 import javafx.animation.ScaleTransition;
 import javafx.collections.ListChangeListener;
@@ -23,10 +24,14 @@ import javafx.util.Duration;
  */
 public class HotbarView extends InGameWindow {
 
+    private PlayerEntity player;
+
     private Pane root = new Pane();
 
     public HotbarView(PlayerEntity player) {
         super("Hotbar", WindowDecor.MINIMIZE);
+
+        this.player = player;
 
         relocate(340, 0);
 
@@ -68,6 +73,25 @@ public class HotbarView extends InGameWindow {
 
         view.setCursor(Cursor.HAND);
 
+        Text textLevel = new Text();
+        textLevel.setTranslateX(45);
+        textLevel.setTranslateY(110);
+        textLevel.setFill(Color.WHITE);
+        textLevel.textProperty().bind(skill.getLevel().asString("Lv. %d"));
+
+        Text btn = new Text("+");
+        btn.setTranslateX(45);
+        btn.setTranslateY(25);
+        btn.setCursor(Cursor.HAND);
+        btn.setStroke(Color.YELLOWGREEN.brighter());
+        btn.setStrokeWidth(3);
+        btn.setFont(Font.font(16));
+        btn.visibleProperty().bind(player.getSkillPoints().greaterThan(0).and(skill.getLevel().lessThan(10)));
+
+        btn.setOnMouseClicked(event -> {
+            player.getControlUnsafe(PlayerControl.class).increaseSkillLevel(0);
+        });
+
         Tooltip tooltip = new Tooltip();
 
         Text text = new Text();
@@ -79,6 +103,6 @@ public class HotbarView extends InGameWindow {
         tooltip.setGraphic(text);
         Tooltip.install(view, tooltip);
 
-        root.getChildren().add(view);
+        root.getChildren().addAll(view, btn, textLevel);
     }
 }

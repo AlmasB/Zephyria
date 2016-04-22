@@ -184,7 +184,7 @@ object Data {
 
     object Character {
         fun SKELETON_ARCHER() = listOf<Component>(
-                DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description", "chars/enemies/skeleton_archer.png"),
+                DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description.", "chars/enemies/skeleton_archer.png"),
                 CharacterDataComponent(CharacterType.NORMAL)
                         .withLevel(2)
                         .withXP(10, 3, 3)
@@ -197,18 +197,15 @@ object Data {
 
     object Skill {
         fun ROAR() = listOf<Component>(
-                DescriptionComponent(7000, "Roar", "Roar Description", "skills/ic_skill_bash.png"),
+                DescriptionComponent(7000, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_bash.png"),
                 SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-                        .onCast { caster, target ->
-                            //caster.stats.addBonusStat(Stat.ATK, 25)
-
-                            //caster.charConrol.addEffect(Effect())
+                        .onCast { caster, target, level ->
 
                             val effect = EffectEntity(listOf(
-                                    DescriptionComponent(7000, "Roar", "STR UP", "effects/test.png"),
-                                    EffectDataComponent(3.3)
-                                            .withRune(Rune(Attribute.STRENGTH, 25))
-                                            .withEssence(Essence(Stat.ARM, 5))
+                                    DescriptionComponent(7000, "Roar", "Roar", "effects/attr_up.png"),
+                                    EffectDataComponent(7.0)
+                                            .withRune(Rune(Attribute.STRENGTH, 3 * level))
+                                            .withRune(Rune(Attribute.VITALITY, 2 * level))
                             ))
 
                             caster.charConrol.addEffect(effect)
@@ -216,7 +213,7 @@ object Data {
                             SkillUseResult.NONE
                         }
                         .withMana(10)
-                        .withCooldown(5.0)
+                        .withCooldown(14.0)
         )
     }
 
@@ -308,7 +305,6 @@ object Data {
         //
         //        public class Warrior {
         //            public static final String MIGHTY_SWING = "Physical attack. Damage is greater if you have more STR than your target";
-        //            public static final String ROAR = "Increases STR and VIT for the duration";
         //            public static final String WARRIOR_HEART = "Passively increases max HP";
         //            public static final String ARMOR_MASTERY = "Increases armor rating";
         //        }

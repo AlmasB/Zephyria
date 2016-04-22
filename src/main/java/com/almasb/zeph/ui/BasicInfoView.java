@@ -1,13 +1,18 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.ents.Entity;
+import com.almasb.fxgl.app.FXGL;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.combat.EffectEntity;
 import com.almasb.zeph.combat.Stat;
+import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import javafx.animation.ScaleTransition;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Accordion;
@@ -106,6 +111,30 @@ public class BasicInfoView extends InGameWindow {
         uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
 
         setContentPane(uiPane);
+
+
+        player.getCharConrol().getEffects().addListener((ListChangeListener<? super EffectEntity>) c -> {
+            while (c.next()) {
+                if (c.wasAdded()) {
+                    c.getAddedSubList().forEach(effect -> {
+
+                        // TODO: this is where effect view is added + tooltip
+
+                        DescriptionComponent desc = effect.getDesc();
+
+                        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
+                        view.setTranslateX(10);
+                        view.setTranslateY(170);
+
+                        uiPane.getChildren().addAll(view);
+
+                    });
+                } else if (c.wasRemoved()) {
+                    // TODO: effect view is removed
+                }
+            }
+        });
+
 
         EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
         getRightIcons().get(0).setOnAction(e -> {

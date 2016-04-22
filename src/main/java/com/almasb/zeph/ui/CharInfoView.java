@@ -94,7 +94,8 @@ public class CharInfoView extends InGameWindow {
         info.setFont(font);
         info.setFill(Color.WHITE);
         info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
-        info.textProperty().bind(new SimpleStringProperty("Points: ").concat(player.getAttributePoints()));
+        info.textProperty().bind(new SimpleStringProperty("Attribute Points: ").concat(player.getAttributePoints())
+            .concat("\nSkill Points: ").concat(player.getSkillPoints()));
 
         attrBox.getChildren().addAll(new Separator(), info);
 

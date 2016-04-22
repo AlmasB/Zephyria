@@ -15,6 +15,7 @@ import com.almasb.zeph.entity.item.ArmorEntity
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.WeaponEntity
 import com.almasb.zeph.entity.item.WeaponType
+import com.almasb.zeph.entity.skill.SkillType
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyIntegerProperty
 import javafx.beans.property.ReadOnlyIntegerWrapper
@@ -59,6 +60,7 @@ class PlayerControl : CharacterControl() {
     private val MAX_LEVEL_BASE = 100
     private val MAX_LEVEL_STAT = 100
     private val MAX_LEVEL_JOB = 60
+    private val MAX_LEVEL_SKILL = 10
     private val MAX_ATTRIBUTE = 100
     private val ATTRIBUTE_POINTS_PER_LEVEL = 3
 
@@ -100,12 +102,29 @@ class PlayerControl : CharacterControl() {
      */
     fun increaseAttribute(attribute: Attribute) {
         if (player.attributePoints.value == 0)
-            return;
+            return
 
         val value = player.attributes.getBaseAttribute(attribute)
         if (value < MAX_ATTRIBUTE) {
             player.attributes.setAttribute(attribute, value + 1)
             player.attributePoints.value--
+        }
+    }
+
+    fun increaseSkillLevel(index: Int) {
+        if (player.skillPoints.value == 0)
+            return
+
+        val skill = player.skills[index]
+
+        if (skill.level.value < MAX_LEVEL_SKILL) {
+            skill.level.value++
+            player.skillPoints.value--
+
+            // apply passive skills immediately
+            if (skill.data.type == SkillType.PASSIVE) {
+                skill.data.onCast(player, player, skill.level.value)
+            }
         }
     }
 

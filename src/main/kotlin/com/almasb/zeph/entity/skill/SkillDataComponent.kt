@@ -32,9 +32,9 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
         return this
     }
 
-    lateinit var onCast: (CharacterEntity, CharacterEntity) -> SkillUseResult
+    lateinit var onCast: (CharacterEntity, CharacterEntity, Int) -> SkillUseResult
 
-    fun onCast(func: (CharacterEntity, CharacterEntity) -> SkillUseResult): SkillDataComponent {
+    fun onCast(func: (CharacterEntity, CharacterEntity, Int) -> SkillUseResult): SkillDataComponent {
         onCast = func
         return this
     }

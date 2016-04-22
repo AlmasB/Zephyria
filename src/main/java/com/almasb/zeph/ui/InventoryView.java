@@ -41,7 +41,7 @@ public class InventoryView extends InGameWindow {
     public InventoryView(PlayerEntity player, double width, double height) {
         super("Inventory", WindowDecor.MINIMIZE);
 
-        relocate(400, 400);
+        relocate(width - 202, height - 315);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(202, 315);

@@ -6,7 +6,10 @@ import com.almasb.ents.component.Required
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.*
+import com.almasb.zeph.entity.skill.SkillUseResult
 import javafx.beans.binding.Bindings
+import javafx.collections.FXCollections
+import javafx.geometry.Point2D
 import java.util.*
 import java.util.concurrent.Callable
 
@@ -15,7 +18,7 @@ open class CharacterControl : AbstractControl() {
     /**
      * Statuses currently affecting this character.
      */
-    private val statuses = ArrayList<StatusEffect>()
+    private val statuses = FXCollections.observableArrayList<StatusEffect>()
 
     /**
      * @param status status
@@ -36,7 +39,7 @@ open class CharacterControl : AbstractControl() {
     /**
      * Effects currently placed on this character.
      */
-    private val effects = ArrayList<Effect>()
+    private val effects = FXCollections.observableArrayList<EffectEntity>()
 
     /**
      * Applies an effect to this character. If the effect comes from the same
@@ -44,18 +47,18 @@ open class CharacterControl : AbstractControl() {
 
      * @param e effect
      */
-    fun addEffect(e: Effect) {
+    fun addEffect(e: EffectEntity) {
         val it = effects.iterator()
         while (it.hasNext()) {
             val eff = it.next()
-            if (eff.sourceID == e.sourceID) {
-                eff.onEnd(this)
+            if (eff.getID() == e.getID()) {
+                eff.onEnd(char)
                 it.remove()
                 break
             }
         }
 
-        e.onBegin(this)
+        e.onBegin(char)
         effects.add(e)
     }
 
@@ -66,15 +69,15 @@ open class CharacterControl : AbstractControl() {
     protected lateinit var hp: HPComponent
     protected lateinit var sp: SPComponent
 
-    protected lateinit var character: CharacterEntity
+    protected lateinit var char: CharacterEntity
 
     override fun onAdded(entity: Entity) {
-        character = entity as CharacterEntity
+        char = entity as CharacterEntity
 
-        attributes = character.attributes
-        stats = character.stats
-        hp = character.hp
-        sp = character.sp
+        attributes = char.attributes
+        stats = char.stats
+        hp = char.hp
+        sp = char.sp
 
         init()
     }
@@ -126,7 +129,7 @@ open class CharacterControl : AbstractControl() {
     }
 
     private fun level(): Int {
-        return character.baseLevel.intValue()
+        return char.baseLevel.intValue()
     }
 
     /**
@@ -143,7 +146,7 @@ open class CharacterControl : AbstractControl() {
         val per = attributes.totalAttributeProperty(Attribute.PERCEPTION)
         val luc = attributes.totalAttributeProperty(Attribute.LUCK)
 
-        val level = character.baseLevel
+        val level = char.baseLevel
 
         stats.statProperty(Stat.MAX_HP).bind(Bindings.createDoubleBinding(Callable {
             1.0 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + (vit() / 10)
@@ -192,6 +195,7 @@ open class CharacterControl : AbstractControl() {
     private var regenTick = 0.0
 
     /**
+     * TODO: when max HP is reduced, changes are delayed atm
      * Regeneration tick. HP/SP.
      */
     private fun updateRegen(tpf: Double) {
@@ -225,9 +229,9 @@ open class CharacterControl : AbstractControl() {
         val it = effects.iterator()
         while (it.hasNext()) {
             val e = it.next()
-            e.reduceDuration(0.016f)
-            if (e.duration <= 0) {
-                e.onEnd(this)
+            e.duration.value -= tpf
+            if (e.duration.value <= 0) {
+                e.onEnd(char)
                 it.remove()
             }
         }
@@ -406,6 +410,35 @@ open class CharacterControl : AbstractControl() {
         (target as CharacterEntity).hp.damage(amount.toDouble())
 
         return Damage(Damage.DamageType.PURE, Element.NEUTRAL, amount, Damage.DamageCritical.FALSE)
+    }
+
+    fun useSelfSkill(index: Int): SkillUseResult {
+        val skill = char.skills[index]
+
+        if (skill.level.value == 0)
+            return SkillUseResult.NONE
+
+        if (skill.currentCooldown.value > 0)
+            return SkillUseResult.NONE
+
+        if (skill.data.mana > sp.value)
+            return SkillUseResult.NONE
+
+        sp.value -= skill.data.mana
+        skill.putOnCooldown()
+
+        skill.data.onCast(char, char)
+
+        return SkillUseResult.NONE
+    }
+
+    fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
+        return char.skills[index].data.onCast(char, target)
+    }
+
+    fun useAreaSkill(index: Int, target: Point2D): SkillUseResult {
+        // TODO: complete
+        return char.skills[index].data.onCast(char, char)
     }
 
     // public SkillUseResult useSkill(int skillCode, GameCharacter target) {

@@ -1,10 +1,7 @@
 package com.almasb.zeph.entity
 
 import com.almasb.ents.Component
-import com.almasb.zeph.combat.Attribute
-import com.almasb.zeph.combat.Effect
-import com.almasb.zeph.combat.Rune
-import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterType
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.item.ArmorType
@@ -203,9 +200,18 @@ object Data {
                 DescriptionComponent(7000, "Roar", "Roar Description", "skills/ic_skill_bash.png"),
                 SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
                         .onCast { caster, target ->
-                            caster.stats.addBonusStat(Stat.ATK, 25)
+                            //caster.stats.addBonusStat(Stat.ATK, 25)
 
                             //caster.charConrol.addEffect(Effect())
+
+                            val effect = EffectEntity(listOf(
+                                    DescriptionComponent(7000, "Roar", "STR UP", "effects/test.png"),
+                                    EffectDataComponent(3.3)
+                                            .withRune(Rune(Attribute.STRENGTH, 25))
+                                            .withEssence(Essence(Stat.ARM, 5))
+                            ))
+
+                            caster.charConrol.addEffect(effect)
 
                             SkillUseResult.NONE
                         }

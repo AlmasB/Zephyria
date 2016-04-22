@@ -28,7 +28,7 @@ public class HotbarView extends InGameWindow {
     public HotbarView(PlayerEntity player) {
         super("Hotbar", WindowDecor.MINIMIZE);
 
-        relocate(400, 600);
+        relocate(340, 0);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(590, 150);

@@ -16,5 +16,7 @@ class SkillUseResult(val damage: Damage) {
          * Used when skill is not of damage/restore type.
          */
         val NONE = SkillUseResult(Damage(Damage.DamageType.PURE, Element.NEUTRAL, 0, Damage.DamageCritical.FALSE))
+
+        // TODO: more of these? like NO_MANA
     }
 }

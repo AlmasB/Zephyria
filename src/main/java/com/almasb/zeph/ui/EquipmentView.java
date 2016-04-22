@@ -32,10 +32,10 @@ public final class EquipmentView extends InGameWindow {
 
     private PlayerEntity player;
 
-    public EquipmentView(PlayerEntity player, double height) {
+    public EquipmentView(PlayerEntity player, double width, double height) {
         super("Equipment", WindowDecor.MINIMIZE);
 
-        relocate(100, 400);
+        relocate(width - 202 - 202, height - 315);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(202, 315);

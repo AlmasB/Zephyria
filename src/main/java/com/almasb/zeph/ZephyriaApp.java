@@ -21,10 +21,8 @@ import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.DynamicAnimatedTexture;
-import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
-import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
@@ -39,6 +37,8 @@ import com.almasb.zeph.entity.item.WeaponEntity;
 import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
 import com.almasb.zeph.entity.skill.SkillEntity;
+import com.almasb.zeph.entity.skill.SkillTargetType;
+import com.almasb.zeph.entity.skill.SkillType;
 import com.almasb.zeph.entity.skill.SkillUseResult;
 import com.almasb.zeph.ui.*;
 import javafx.animation.Interpolator;
@@ -73,7 +73,12 @@ public class ZephyriaApp extends GameApplication {
 
     private PlayerEntity player;
     private PlayerControl playerControl;
+
     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
+
+    private boolean selectingSkillTargetArea = false;
+    private boolean selectingSkillTargetChar = false;
+    private int selectedSkillIndex = -1;
 
     private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
@@ -140,22 +145,46 @@ public class ZephyriaApp extends GameApplication {
             }
         }, KeyCode.K);
 
-        input.addAction(new UserAction("Test Skill") {
+        input.addAction(new UserAction("Hotbar Skill 1") {
             @Override
             protected void onActionBegin() {
-                // TODO: use digits-1 to get skills?
-                //SkillEntity skill = player.getSkills().get(0);
-                //SkillUseResult result = skill.getData().getOnCast().invoke(player, player);
+                int index = 0;  // DIGIT1 - 1
 
-                // TODO: select skill, select target
-                // a projectile is built based on skill data component
-                // physics: when projectile hits we fire invoke(char, target)
-                // get result and use it to show in UI
+                if (index < player.getSkills().size()) {
+                    SkillEntity skill = player.getSkills().get(index);
 
-                // if passive, always on
-                // if self, skill auto activates here and returns result immediately
+                    if (skill.getData().getType() == SkillType.PASSIVE) {
+                        // skill is passive and is always on
+                        return;
+                    }
+
+                    if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
+
+                        // use skill immediately since player is the target
+                        SkillUseResult result = playerControl.useSelfSkill(index);
+                    } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
+
+                        // let player select the area
+                        selectingSkillTargetArea = true;
+                        selectedSkillIndex = index;
+                    } else {
+
+                        selectingSkillTargetChar = true;
+                        selectedSkillIndex = index;
+                    }
+                }
             }
         }, KeyCode.DIGIT1);
+    }
+
+    private void useAreaSkill() {
+        // TODO: we should fire projectile based on skill data component
+        SkillUseResult result = playerControl.useAreaSkill(selectedSkillIndex, getInput().getMousePositionWorld());
+    }
+
+    private void useTargetSkill(CharacterEntity ch) {
+        // TODO: we should fire projectile based on skill data component
+        SkillUseResult result = playerControl.useTargetSkill(selectedSkillIndex, ch);
     }
 
     @Override
@@ -178,17 +207,27 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
 
-        selected.addListener((observable, oldValue, newValue) -> {
+        selected.addListener((observable, oldValue, newEntity) -> {
             if (oldValue != null) {
                 oldValue.getComponent(MainViewComponent.class).ifPresent(c -> {
                     c.getView().setEffect(null);
                 });
             }
 
-            if (newValue != null) {
-                newValue.getComponent(MainViewComponent.class).ifPresent(c -> {
+            if (newEntity != null) {
+                newEntity.getComponent(MainViewComponent.class).ifPresent(c -> {
                     c.getView().setEffect(selectedEffect);
                 });
+
+                // TODO: at some point we need to check if it's ally or enemy based on skill target type
+                if (selectingSkillTargetChar) {
+                    if (newEntity instanceof CharacterEntity) {
+                        useTargetSkill((CharacterEntity) newEntity);
+                    }
+
+                    selectingSkillTargetChar = false;
+                    selectedSkillIndex = -1;
+                }
             }
         });
     }
@@ -208,6 +247,15 @@ public class ZephyriaApp extends GameApplication {
         bg.getMainViewComponent().setView(region);
 
         bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
+
+            if (selectingSkillTargetArea) {
+                useAreaSkill();
+
+                selectingSkillTargetArea = false;
+                selectedSkillIndex = -1;
+                return;
+            }
+
             selected.set(null);
 
             int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
@@ -316,11 +364,13 @@ public class ZephyriaApp extends GameApplication {
                 new BasicInfoView(player),
                 new CharInfoView(player),
                 new InventoryView(player, getWidth(), getHeight()),
-                new EquipmentView(player, getHeight()));
+                new EquipmentView(player, getWidth(), getHeight()));
     }
 
     @Override
     protected void onUpdate(double tpf) {
+
+        // TODO: not all selected entities should be attacked, e.g. merchants
         if (selected.get() != null) {
             startAttack(player, selected.get());
         }

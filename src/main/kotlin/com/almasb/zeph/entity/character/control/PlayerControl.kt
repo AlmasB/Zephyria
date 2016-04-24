@@ -41,9 +41,9 @@ class PlayerControl : CharacterControl() {
             val item: Entity = if (it.isWeapon) EntityManager.getWeapon(it.emptyID) else EntityManager.getArmor(it.emptyID)
 
             if (item is WeaponEntity)
-                item.data.onEquip(player)
+                item.onEquip(player)
             else if (item is ArmorEntity)
-                item.data.onEquip(player)
+                item.onEquip(player)
 
             equip.put(it, item)
             equipProperties.put(it, SimpleObjectProperty(item))
@@ -237,7 +237,7 @@ class PlayerControl : CharacterControl() {
             setEquip(EquipPlace.RIGHT_HAND, weapon)
         }
 
-        weapon.data.onEquip(player)
+        weapon.onEquip(player)
         player.weaponElement.value = weapon.data.element
     }
 
@@ -270,7 +270,7 @@ class PlayerControl : CharacterControl() {
                     setEquip(EquipPlace.RIGHT_HAND, EntityManager.getWeapon(place.emptyID))
             }
 
-            item.data.onUnEquip(player)
+            item.onUnEquip(player)
         } else if (item is ArmorEntity) {
             item.onUnEquip(player)
         }

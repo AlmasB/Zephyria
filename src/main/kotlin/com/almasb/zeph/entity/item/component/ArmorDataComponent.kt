@@ -16,39 +16,13 @@ import com.almasb.zeph.entity.item.ItemLevel
  */
 class ArmorDataComponent(itemLevel: ItemLevel, val armorType: ArmorType, val armor: Int, val marmor: Int) : EquippableComponent(itemLevel) {
 
-    fun armorRating(): Int {
-        return armor + refineLevel * if (refineLevel > 2) itemLevel.bonus + 1 else itemLevel.bonus
-    }
-
-    fun marmorRating(): Int {
-        return marmor + refineLevel * if (refineLevel > 2) itemLevel.bonus + 1 else itemLevel.bonus
-    }
-
-    override fun onEquip(entity: Entity) {
-        super.onEquip(entity)
-        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, armorRating())
-        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, marmorRating())
-    }
-
-    override fun onUnEquip(entity: Entity) {
-        super.onUnEquip(entity)
-        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, -armorRating())
-        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, -marmorRating())
-    }
-
     fun withRune(rune: Rune): ArmorDataComponent {
         addRune(rune)
         return this
     }
 
-    // TODO: data binding ? Property element
     fun withElement(element: Element): ArmorDataComponent {
         this.element = element
         return this
-    }
-
-    // TODO: data binding since armor ratings can change realtime
-    override fun toString(): String {
-        return "Armor: ${armorRating()}% \nMArmor: ${marmorRating()}% \n$element \n$runes"
     }
 }

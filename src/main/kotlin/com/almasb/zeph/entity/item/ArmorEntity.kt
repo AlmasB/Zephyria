@@ -23,9 +23,10 @@ class ArmorEntity(dataComponents: List<Component>) : Entity() {
     val data: ArmorDataComponent
 
     val refineLevel = SimpleIntegerProperty()
+    val element = SimpleObjectProperty<Element>()
+
     val armor = SimpleIntegerProperty()
     val marmor = SimpleIntegerProperty()
-    val element = SimpleObjectProperty<Element>()
 
     init {
         dataComponents.forEach { addComponent(it) }
@@ -33,7 +34,7 @@ class ArmorEntity(dataComponents: List<Component>) : Entity() {
         desc = getComponentUnsafe(DescriptionComponent::class.java)
         data = getComponentUnsafe(ArmorDataComponent::class.java)
 
-        refineLevel.value = data.refineLevel
+        element.value = data.element
 
         armor.bind(refineLevel.multiply(Bindings
                 .`when`(refineLevel.greaterThan(2))
@@ -46,8 +47,6 @@ class ArmorEntity(dataComponents: List<Component>) : Entity() {
                 .then(data.itemLevel.bonus + 1)
                 .otherwise(data.itemLevel.bonus))
                 .add(data.marmor))
-
-        element.value = data.element
 
         val rawDescription = desc.description.value
         desc.description.bind(desc.name.concat("\n")

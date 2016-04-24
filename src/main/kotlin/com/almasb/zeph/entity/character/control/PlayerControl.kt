@@ -123,7 +123,7 @@ class PlayerControl : CharacterControl() {
 
             // apply passive skills immediately
             if (skill.data.type == SkillType.PASSIVE) {
-                skill.data.onCast(player, player, skill.level.value)
+                //skill.data.onCast(player, player, skill.level.value)
             }
         }
     }

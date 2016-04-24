@@ -6,6 +6,7 @@ import com.almasb.ents.component.Required
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.*
+import com.almasb.zeph.entity.skill.SkillType
 import com.almasb.zeph.entity.skill.SkillUseResult
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
@@ -212,6 +213,9 @@ open class CharacterControl : AbstractControl() {
     private fun updateSkills(tpf: Double) {
         char.skills.forEach {
             it.onUpdate(tpf)
+            if (it.data.type == SkillType.PASSIVE) {
+                it.data.onCast(char, char, it.level.value)
+            }
         }
     }
 

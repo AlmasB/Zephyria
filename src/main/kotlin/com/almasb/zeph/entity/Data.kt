@@ -234,7 +234,8 @@ object Data {
                             .withCooldown(25.0)
             )
 
-            // TODO: this will have to be reapplied as max HP can change at runtime
+            // TODO: this will have to be reapplied as max HP can change at runtime but then it would cause
+            // huge GC problems, so need an efficient and simple data structure
 
             fun WARRIOR_HEART() = listOf<Component>(
                     DescriptionComponent(7012, "Warrior's Heart", "Passively increases max HP.", "skills/ic_skill_bash.png"),

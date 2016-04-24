@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity.item.component
 
 import com.almasb.ents.Entity
+import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.character.component.StatsComponent
@@ -40,8 +41,14 @@ class ArmorDataComponent(itemLevel: ItemLevel, val armorType: ArmorType, val arm
         return this
     }
 
+    // TODO: data binding ? Property element
+    fun withElement(element: Element): ArmorDataComponent {
+        this.element = element
+        return this
+    }
+
     // TODO: data binding since armor ratings can change realtime
     override fun toString(): String {
-        return "Armor: ${armorRating()}% \n MArmor: ${marmorRating()}% \n $runes"
+        return "Armor: ${armorRating()}% \nMArmor: ${marmorRating()}% \n$element \n$runes"
     }
 }

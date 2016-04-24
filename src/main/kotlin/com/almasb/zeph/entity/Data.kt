@@ -123,6 +123,7 @@ object Data {
                         .withRune(Rune(Attribute.WISDOM, 3))
                         .withRune(Rune(Attribute.DEXTERITY, 4))
                         .withRune(Rune(Attribute.LUCK, 1))
+                        .withElement(Element.FIRE)
         )
 
         // RODS 4900
@@ -187,6 +188,7 @@ object Data {
                 DescriptionComponent(2004, "Skeleton-Archer", "Skeleton-Archer Description.", "chars/enemies/skeleton_archer.png"),
                 CharacterDataComponent(CharacterType.NORMAL)
                         .withLevel(2)
+                        .withElement(Element.EARTH)
                         .withXP(10, 3, 3)
                         .withAttribute(Attribute.VITALITY, 30)
                         .withAttribute(Attribute.DEXTERITY, 3)

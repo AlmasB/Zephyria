@@ -3,6 +3,7 @@ package com.almasb.zeph.entity.character.component
 import com.almasb.ents.AbstractComponent
 import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.entity.character.CharacterType
 import com.almasb.zeph.entity.character.GameCharacterClass
@@ -22,6 +23,8 @@ class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
     val baseLevel = SimpleIntegerProperty(1)
     val attributes = AttributesComponent()
 
+    var element = Element.NEUTRAL
+
     val rewardXP = Experience(0, 0, 0)
 
     val dropItems = ArrayList<Pair<Int, Int> >()
@@ -35,6 +38,11 @@ class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
 
     fun withAttribute(attribute: Attribute, value: Int): CharacterDataComponent {
         attributes.setAttribute(attribute, value)
+        return this
+    }
+
+    fun withElement(element: Element): CharacterDataComponent {
+        this.element = element
         return this
     }
 

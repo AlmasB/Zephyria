@@ -215,19 +215,6 @@ open class CharacterControl : AbstractControl() {
         char.skills.forEach {
             it.onUpdate(tpf)
         }
-
-
-        //        for (Skill sk : skills) {
-        //            if (sk.active) {
-        //                if (sk.getCurrentCooldown() > 0) {
-        //                    sk.reduceCurrentCooldown(0.016f);
-        //                }
-        //            }
-        //            else { // reapply passive skills
-        //                if (sk.getLevel() > 0)
-        //                    sk.use(this, null);
-        //            }
-        //        }
     }
 
     private fun updateEffects(tpf: Double) {
@@ -268,16 +255,8 @@ open class CharacterControl : AbstractControl() {
         updateStatusEffects(tpf)
     }
 
-    //    public abstract Element getWeaponElement();
-    //
-    //    public abstract Element getArmorElement();
-
     /**
-     * Attack tick that decides if character can attack
-     */
-    /**
-
-     * @return attack tick
+     * Attack tick that decides if character can attack.
      */
     protected var atkTick = 0.0
         private set
@@ -303,11 +282,9 @@ open class CharacterControl : AbstractControl() {
      * @return damage dealt
      */
     fun attack(target: Entity): Damage {
-        //CharacterControl other = target.getControlUnsafe(CharacterControl.class);
-
         val other = target as CharacterEntity
 
-        return dealPhysicalDamage(other, stats.getTotalStat(Stat.ATK) + 2 * GameMath.random(level()), Element.NEUTRAL)
+        return dealPhysicalDamage(other, stats.getTotalStat(Stat.ATK) + 2 * GameMath.random(level()), char.weaponElement.value)
     }
 
     /**
@@ -335,11 +312,11 @@ open class CharacterControl : AbstractControl() {
             crit = true
         }
 
-        val elementalDamageModifier = 1.0f
-        //element.getDamageModifierAgainst(target.getArmorElement());
-        val damageAfterReduction = (100 - other.stats.getTotalStat(Stat.ARM)) * baseDamage / 100.0f - other.stats.getTotalStat(Stat.DEF)
+        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
 
-        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0)
+        val damageAfterReduction = (100 - other.stats.getTotalStat(Stat.ARM)) * baseDamage / 100.0 - other.stats.getTotalStat(Stat.DEF)
+
+        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         otherEntity.hp.damage(totalDamage.toDouble())
 
         return Damage(Damage.DamageType.PHYSICAL, element, totalDamage,

@@ -238,6 +238,7 @@ class PlayerControl : CharacterControl() {
         }
 
         weapon.data.onEquip(player)
+        player.weaponElement.value = weapon.data.element
     }
 
     fun equipArmor(armor: ArmorEntity) {
@@ -252,6 +253,7 @@ class PlayerControl : CharacterControl() {
         unEquipItem(place)
         setEquip(place, armor)
         armor.data.onEquip(player)
+        player.armorElement.value = armor.data.element
     }
 
     fun unEquipItem(place: EquipPlace) {
@@ -286,21 +288,5 @@ class PlayerControl : CharacterControl() {
     fun isFree(place: EquipPlace) = getEquip(place)
             .getComponentUnsafe(DescriptionComponent::class.java).id == place.emptyID
 
-//    override fun canAttack(): Boolean {
-//        val w1 = getEquip(EquipPlace.RIGHT_HAND) as WeaponEntity;
-//        val w2 = getEquip(EquipPlace.LEFT_HAND) as WeaponEntity;
-//
-//        return atkTick >= 2.0
-//        //return atkTick >= 50 / (1 + stats.getTotalStat(Stat.ASPD) *w1.data.type.aspdFactor*w2.data.type.aspdFactor/1000.0);
-//    }
-    //
-    //    @Override
-    //    public final Element getWeaponElement() {
-    //        return getEquip(EquipPlace.RIGHT_HAND).getElement();
-    //    }
-    //
-    //    @Override
-    //    public final Element getArmorElement() {
-    //        return getEquip(EquipPlace.BODY).getElement();
-    //    }
+    // TODO: player version of canAttack that uses aspd of both weapons
 }

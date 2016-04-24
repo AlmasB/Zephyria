@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity.item.component
 
 import com.almasb.ents.Entity
+import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.entity.item.component.EquippableComponent
 import com.almasb.zeph.combat.Stat
@@ -34,8 +35,14 @@ class WeaponDataComponent(itemLevel: ItemLevel, val type: WeaponType, val pureDa
         return this
     }
 
+    // TODO: data binding ? Property element
+    fun withElement(element: Element): WeaponDataComponent {
+        this.element = element
+        return this
+    }
+
     // TODO: data binding since armor ratings can change realtime
     override fun toString(): String {
-        return "Damage: ${fullDamage()} \n $runes"
+        return "Damage: ${fullDamage()}\n$element\n$runes"
     }
 }

@@ -273,37 +273,23 @@ open class CharacterControl : AbstractControl() {
     }
 
     /**
-     * Performs basic attack with equipped weapon Damage is physical and element
-     * depends on weapon element
-
-     * @param target
-     * *            target being attacked
-     * *
+     * Performs basic attack with equipped weapon on the [target].
+     * Damage is physical and element depends on weapon element.
+     *
      * @return damage dealt
      */
-    fun attack(target: Entity): Damage {
-        val other = target as CharacterEntity
-
-        return dealPhysicalDamage(other, stats.getTotalStat(Stat.ATK) + 2 * GameMath.random(level()), char.weaponElement.value)
+    fun attack(target: CharacterEntity): Damage {
+        return dealPhysicalDamage(target, stats.getTotalStat(Stat.ATK).toDouble() + 2 * GameMath.random(level()), char.weaponElement.value)
     }
 
     /**
-     * Deals physical damage to target. The damage is reduced by armor and
-     * defense The damage is affected by attacker's weapon element and by
-     * target's armor element
-
-     * @param target
-     * *
-     * @param baseDamage
-     * *
-     * @param element
-     * *
-     * @return
+     * Deals physical damage with [baseDamage] amount to [target]. The damage is reduced by armor and defense.
+     * The damage will be of [element] element.
+     *
+     * @return damage dealt
      */
-    fun dealPhysicalDamage(target: Entity, baseDamage: Float, element: Element): Damage {
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): Damage {
         var baseDamage = baseDamage
-        val otherEntity = target as CharacterEntity
-        val other = target.getControlUnsafe(CharacterControl::class.java)
 
         var crit = false
 
@@ -314,72 +300,61 @@ open class CharacterControl : AbstractControl() {
 
         val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
 
-        val damageAfterReduction = (100 - other.stats.getTotalStat(Stat.ARM)) * baseDamage / 100.0 - other.stats.getTotalStat(Stat.DEF)
+        val damageAfterReduction = (100 - target.stats.getTotalStat(Stat.ARM)) * baseDamage / 100.0 - target.stats.getTotalStat(Stat.DEF)
 
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
-        otherEntity.hp.damage(totalDamage.toDouble())
+        target.hp.damage(totalDamage.toDouble())
 
         return Damage(Damage.DamageType.PHYSICAL, element, totalDamage,
                 if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
     }
-    //
-    //    /**
-    //     * Deals physical damage of type NEUTRAL to target. The damage is reduced by
-    //     * target's armor and DEF
-    //     *
-    //     * @param target
-    //     * @param baseDamage
-    //     *
-    //     * @return damage dealt
-    //     */
-    //    public Damage dealPhysicalDamage(CharacterControl target, float baseDamage) {
-    //        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL);
-    //    }
-    //
-    //    /**
-    //     * Deal magical damage of type param element to target. The damage is
-    //     * reduced by target's magical armor and MDEF
-    //     *
-    //     * @param target
-    //     * @param baseDamage
-    //     *
-    //     * @return damage dealt
-    //     */
-    //    public Damage dealMagicalDamage(CharacterControl target, float baseDamage,
-    //                                    Element element) {
-    //        boolean crit = false;
-    //        if (GameMath.checkChance(getTotalStat(Stat.MCRIT_CHANCE))) {
-    //            baseDamage *= getTotalStat(Stat.MCRIT_DMG);
-    //            crit = true;
-    //        }
-    //
-    //        float elementalDamageModifier = element
-    //                .getDamageModifierAgainst(target.getArmorElement());
-    //        float damageAfterReduction = (100 - target.getTotalStat(Stat.MARM))
-    //                * baseDamage / 100.0f - target.getTotalStat(Stat.MDEF);
-    //
-    //        int totalDamage = Math.max(
-    //                Math.round(elementalDamageModifier * damageAfterReduction),
-    //                    0);
-    //        target.damageHP(totalDamage);
-    //
-    //        return new Damage(DamageType.MAGICAL, element, totalDamage,
-    //                crit ? DamageCritical.TRUE : DamageCritical.FALSE);
-    //    }
-    //
-    //    /**
-    //     * Deal magical damage of type NEUTRAL to target. The damage is reduced by
-    //     * target's magical armor and MDEF
-    //     *
-    //     * @param target
-    //     * @param baseDamage
-    //     *
-    //     * @return damage dealt
-    //     */
-    //    public Damage dealMagicalDamage(CharacterControl target, float baseDamage) {
-    //        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL);
-    //    }
-    //
+
+    /**
+     * Deals physical damage of type NEUTRAL to target. The damage is reduced by
+     * target's armor and DEF.
+     *
+     * @param target
+     * @param baseDamage
+     *
+     * @return damage dealt
+     */
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): Damage {
+        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL)
+    }
+
+    /**
+     * Deal magical [baseDamage] of type [element] to [target]. The damage is
+     * reduced by target's magical armor and MDEF.
+     *
+     * @return damage dealt
+     */
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): Damage {
+        var baseDamage = baseDamage
+
+        var crit = false
+
+        if (GameMath.checkChance(stats.getTotalStat(Stat.MCRIT_CHANCE))) {
+            baseDamage *= stats.getTotalStat(Stat.MCRIT_DMG)
+            crit = true
+        }
+
+        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
+
+        val damageAfterReduction = (100 - target.stats.getTotalStat(Stat.MARM)) * baseDamage / 100.0 - target.stats.getTotalStat(Stat.MDEF)
+
+        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
+        target.hp.damage(totalDamage.toDouble())
+
+        return Damage(Damage.DamageType.MAGICAL, element, totalDamage,
+                if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
+    }
+
+    /**
+     * Deal magical [baseDamage] of type NEUTRAL to [target].
+     */
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): Damage {
+        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL)
+    }
 
     /**
      * Deals the exact amount of damage to target as specified by param dmg
@@ -415,6 +390,7 @@ open class CharacterControl : AbstractControl() {
     }
 
     fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
+        // TODO: complete
         return char.skills[index].data.onCast(char, target, 1)
     }
 
@@ -422,22 +398,4 @@ open class CharacterControl : AbstractControl() {
         // TODO: complete
         return char.skills[index].data.onCast(char, char, 1)
     }
-
-    // public SkillUseResult useSkill(int skillCode, GameCharacter target) {
-    // if (skillCode >= skills.length || hasStatusEffect(Status.SILENCED))
-    // return SkillUseResult.DEFAULT_FALSE;
-    //
-    // Skill sk = skills[skillCode];
-    // if (sk != null && sk.active && sk.getLevel() > 0 &&
-    // sk.getCurrentCooldown() == 0) {
-    // if (this.sp >= sk.getManaCost()) {
-    // this.sp -= sk.getManaCost();
-    // sk.use(this, target);
-    // // successful use of skill
-    // return sk.getUseResult();
-    // }
-    // }
-    //
-    // return SkillUseResult.DEFAULT_FALSE;
-    // }
 }

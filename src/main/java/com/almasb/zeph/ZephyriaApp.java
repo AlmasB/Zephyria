@@ -145,36 +145,44 @@ public class ZephyriaApp extends GameApplication {
             }
         }, KeyCode.K);
 
-        input.addAction(new UserAction("Hotbar Skill 1") {
-            @Override
-            protected void onActionBegin() {
-                int index = 0;  // DIGIT1 - 1
+        for (int i = 1; i <= 9; i++) {
+            KeyCode key = KeyCode.getKeyCode(i + "");
 
-                if (index < player.getSkills().size()) {
-                    SkillEntity skill = player.getSkills().get(index);
+            final int index = i - 1;
 
-                    if (skill.getData().getType() == SkillType.PASSIVE) {
-                        // skill is passive and is always on
-                        return;
-                    }
-
-                    if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
-
-                        // use skill immediately since player is the target
-                        SkillUseResult result = playerControl.useSelfSkill(index);
-                    } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
-
-                        // let player select the area
-                        selectingSkillTargetArea = true;
-                        selectedSkillIndex = index;
-                    } else {
-
-                        selectingSkillTargetChar = true;
-                        selectedSkillIndex = index;
-                    }
+            input.addAction(new UserAction("Hotbar Skill " + i) {
+                @Override
+                protected void onActionBegin() {
+                    onHotbarSkill(index);
                 }
+            }, key);
+        }
+    }
+
+    private void onHotbarSkill(int index) {
+        if (index < player.getSkills().size()) {
+            SkillEntity skill = player.getSkills().get(index);
+
+            if (skill.getData().getType() == SkillType.PASSIVE) {
+                // skill is passive and is always on
+                return;
             }
-        }, KeyCode.DIGIT1);
+
+            if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
+
+                // use skill immediately since player is the target
+                SkillUseResult result = playerControl.useSelfSkill(index);
+            } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
+
+                // let player select the area
+                selectingSkillTargetArea = true;
+                selectedSkillIndex = index;
+            } else {
+
+                selectingSkillTargetChar = true;
+                selectedSkillIndex = index;
+            }
+        }
     }
 
     private void useAreaSkill() {
@@ -185,6 +193,7 @@ public class ZephyriaApp extends GameApplication {
     private void useTargetSkill(CharacterEntity ch) {
         // TODO: we should fire projectile based on skill data component
         SkillUseResult result = playerControl.useTargetSkill(selectedSkillIndex, ch);
+        showDamage(result.getDamage(), ch.getPositionComponent().getValue());
     }
 
     @Override
@@ -587,7 +596,10 @@ public class ZephyriaApp extends GameApplication {
         player.getData().setAnimation(playerAnimation);
 
         // TODO: TEST DATA BEGIN
-        player.getSkills().add(new SkillEntity(Data.Skill.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.MIGHTY_SWING()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
 
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));

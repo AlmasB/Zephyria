@@ -190,6 +190,7 @@ object Data {
                         .withLevel(2)
                         .withElement(Element.EARTH)
                         .withXP(10, 3, 3)
+                        .withAttribute(Attribute.STRENGTH, 5)
                         .withAttribute(Attribute.VITALITY, 30)
                         .withAttribute(Attribute.DEXTERITY, 3)
                         .withAttribute(Attribute.AGILITY, 2)
@@ -198,25 +199,77 @@ object Data {
     }
 
     object Skill {
-        fun ROAR() = listOf<Component>(
-                DescriptionComponent(7000, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_bash.png"),
-                SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-                        .onCast { caster, target, level ->
 
-                            val effect = EffectEntity(listOf(
-                                    DescriptionComponent(7000, "Roar", "Roar", "effects/attr_up.png"),
-                                    EffectDataComponent(7.0)
-                                            .withRune(Rune(Attribute.STRENGTH, 3 * level))
-                                            .withRune(Rune(Attribute.VITALITY, 2 * level))
-                            ))
+        object Warrior {
+            fun ROAR() = listOf<Component>(
+                    DescriptionComponent(7010, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .onCast { caster, target, level ->
 
-                            caster.charConrol.addEffect(effect)
+                                val effect = EffectEntity(listOf(
+                                        DescriptionComponent(7010, "Roar", "Roar", "effects/attr_up.png"),
+                                        EffectDataComponent(7.0)
+                                                .withRune(Rune(Attribute.STRENGTH, 3 * level))
+                                                .withRune(Rune(Attribute.VITALITY, 2 * level))
+                                ))
 
-                            SkillUseResult.NONE
-                        }
-                        .withMana(10)
-                        .withCooldown(14.0)
-        )
+                                caster.charConrol.addEffect(effect)
+
+                                SkillUseResult.NONE
+                            }
+                            .withMana(10)
+                            .withCooldown(14.0)
+            )
+
+            fun MIGHTY_SWING() = listOf<Component>(
+                    DescriptionComponent(7011, "Mighty Swing", "Physical attack. Damage is greater if you have more STR than your target.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .onCast { caster, target, level ->
+                                val diff = caster.attributes.getTotalAttribute(Attribute.STRENGTH) - target.attributes.getTotalAttribute(Attribute.STRENGTH)
+                                val dmg = (Math.max(diff, 0) + 10 * level) * 5.0
+
+                                SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
+                            }
+                            .withMana(25)
+                            .withCooldown(25.0)
+            )
+
+            // TODO: this will have to be reapplied as max HP can change at runtime
+
+            fun WARRIOR_HEART() = listOf<Component>(
+                    DescriptionComponent(7012, "Warrior's Heart", "Passively increases max HP.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .onCast { caster, target, level ->
+                                val factor = 0.025
+                                val value = (factor * level * caster.stats.getBaseStat(Stat.MAX_HP)).toInt()
+
+                                caster.charConrol.addEffect(EffectEntity(listOf(
+                                        DescriptionComponent(7012, "Warrior's Heart", "Warrior's Heart", "effects/attr_up.png"),
+                                        EffectDataComponent(9999.0)
+                                                .withEssence(Essence(Stat.MAX_HP, value))
+                                )))
+
+                                SkillUseResult.NONE
+                            }
+            )
+
+            fun ARMOR_MASTERY() = listOf<Component>(
+                    DescriptionComponent(7013, "Armor Mastery", "Increases armor rating.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .onCast { caster, target, level ->
+                                val factor = 2.0
+                                val value = (factor * level).toInt()
+
+                                caster.charConrol.addEffect(EffectEntity(listOf(
+                                        DescriptionComponent(7013, "Armor Mastery", "Armor Mastery", "effects/attr_up.png"),
+                                        EffectDataComponent(9999.0)
+                                                .withEssence(Essence(Stat.ARM, value))
+                                )))
+
+                                SkillUseResult.NONE
+                            }
+            )
+        }
     }
 
 
@@ -228,13 +281,6 @@ object Data {
     //    }
     //
     //    public class Skill {
-    //
-    //        public class Warrior {
-    //            public static final int MIGHTY_SWING = 7010;
-    //            public static final int ROAR = 7011;
-    //            public static final int WARRIOR_HEART = 7012;
-    //            public static final int ARMOR_MASTERY = 7013;
-    //        }
     //
     //        public class Crusader {
     //            public static final int HOLY_LIGHT = 7110;
@@ -306,9 +352,7 @@ object Data {
         //    public class Skill {
         //
         //        public class Warrior {
-        //            public static final String MIGHTY_SWING = "Physical attack. Damage is greater if you have more STR than your target";
-        //            public static final String WARRIOR_HEART = "Passively increases max HP";
-        //            public static final String ARMOR_MASTERY = "Increases armor rating";
+
         //        }
         //
         //        public class Crusader {
@@ -424,25 +468,7 @@ object Data {
     ////            }
     ////        });
     ////
-    ////        addSkill(new Skill(ID.Skill.Warrior.MIGHTY_SWING, "Mighty Swing", Desc.Skill.Warrior.MIGHTY_SWING, true, 15.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 8019137126608309704L;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 5 + level * 4;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                float diff = caster.getTotalAttribute(Attribute.STRENGTH) - target.getTotalAttribute(Attribute.STRENGTH);
-    ////                float dmg = (Math.max(diff, 0) + 10*level) * 5;
-    ////                int d = caster.dealPhysicalDamage(target, dmg);
-    ////                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
-    ////            }
-    ////        });
+
     ////
     ////        addSkill(new Skill(ID.Skill.Gladiator.DOUBLE_EDGE, "Double Edge", Desc.Skill.Gladiator.DOUBLE_EDGE, true, 0.0f) {
     ////            /**
@@ -465,35 +491,7 @@ object Data {
     ////            }
     ////        });
     ////
-    ////        addSkill(new Skill(ID.Skill.Warrior.ROAR, "Roar", Desc.Skill.Warrior.ROAR, true, 5.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 5098091102433780519L;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 2 + level*2;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                caster.addEffect(new Effect((5.0f), ID.Skill.Warrior.ROAR,
-    ////                        new Rune[] {
-    ////                        new Rune(Attribute.STRENGTH, level*2),
-    ////                        new Rune(Attribute.VITALITY, level*2)
-    ////                },
-    ////                new Essence[] {}
-    ////                        ));
-    ////
-    ////                useResult = new SkillUseResult("STR +" + level*2 + " VIT +" + level*2);
-    ////            }
-    ////
-    ////            @Override
-    ////            public boolean isSelfTarget() {
-    ////                return true;
-    ////            }
-    ////        });
+
     ////
     ////        addSkill(new Skill(ID.Skill.Crusader.LAST_STAND, "Last Stand", Desc.Skill.Crusader.LAST_STAND, true, 60.0f) {
     ////            /**
@@ -548,64 +546,7 @@ object Data {
     ////            }
     ////        });
     ////
-    ////        addSkill(new Skill(ID.Skill.Warrior.ARMOR_MASTERY, "Armor Mastery", Desc.Skill.Warrior.ARMOR_MASTERY, false, 0.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 8019137126608309704L;
-    ////
-    ////            private int value = 0;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 0;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                caster.addBonusStat(Stat.ARM, -value);
-    ////                float factor = 2.0f;
-    ////                for (Skill skill : caster.getSkills()) {
-    ////                    if (skill.id.equals(ID.Skill.Crusader.DIVINE_ARMOR)) {
-    ////                        factor += 0.15f * skill.getLevel();
-    ////                        break;
-    ////                    }
-    ////                }
-    ////
-    ////                value = (int)(factor * level);
-    ////                caster.addBonusStat(Stat.ARM, value);
-    ////            }
-    ////        });
-    ////
-    ////        addSkill(new Skill(ID.Skill.Warrior.WARRIOR_HEART, "Heart of a Warrior", Desc.Skill.Warrior.WARRIOR_HEART, false, 0.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = -9161209014480342120L;
-    ////
-    ////            private int value = 0;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 0;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                caster.addBonusStat(Stat.MAX_HP, -value);
-    ////                float factor = 0.025f;
-    ////                for (Skill skill : caster.getSkills()) {
-    ////                    if (skill.id.equals(ID.Skill.Crusader.FAITH)) {
-    ////                        factor += 0.01f * skill.getLevel();
-    ////                        break;
-    ////                    }
-    ////                }
-    ////
-    ////
-    ////                value = Math.round(factor * level * caster.getBaseStat(Stat.MAX_HP));
-    ////                caster.addBonusStat(Stat.MAX_HP, value);
-    ////            }
-    ////        });
+
     ////
     ////        // MAGE SKILL SET
     ////

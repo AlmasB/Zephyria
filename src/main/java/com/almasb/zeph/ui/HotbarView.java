@@ -62,25 +62,28 @@ public class HotbarView extends InGameWindow {
         });
     }
 
+    // TODO: remove ad-hoc
+    private int index = 0;
+
     private void addSkill(SkillEntity skill) {
         DescriptionComponent desc = skill.getDesc();
 
         Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
         view.setFitWidth(40);
         view.setFitHeight(40);
-        view.setTranslateX(40);
+        view.setTranslateX(40 + index * 60);
         view.setTranslateY(46);
 
         view.setCursor(Cursor.HAND);
 
         Text textLevel = new Text();
-        textLevel.setTranslateX(45);
+        textLevel.setTranslateX(45 + index * 55);
         textLevel.setTranslateY(110);
         textLevel.setFill(Color.WHITE);
         textLevel.textProperty().bind(skill.getLevel().asString("Lv. %d"));
 
         Text btn = new Text("+");
-        btn.setTranslateX(45);
+        btn.setTranslateX(45 + index * 60);
         btn.setTranslateY(25);
         btn.setCursor(Cursor.HAND);
         btn.setStroke(Color.YELLOWGREEN.brighter());
@@ -88,8 +91,9 @@ public class HotbarView extends InGameWindow {
         btn.setFont(Font.font(16));
         btn.visibleProperty().bind(player.getSkillPoints().greaterThan(0).and(skill.getLevel().lessThan(10)));
 
+        final int skillIndex = index;
         btn.setOnMouseClicked(event -> {
-            player.getControlUnsafe(PlayerControl.class).increaseSkillLevel(0);
+            player.getControlUnsafe(PlayerControl.class).increaseSkillLevel(skillIndex);
         });
 
         Tooltip tooltip = new Tooltip();
@@ -104,5 +108,7 @@ public class HotbarView extends InGameWindow {
         Tooltip.install(view, tooltip);
 
         root.getChildren().addAll(view, btn, textLevel);
+
+        index++;
     }
 }

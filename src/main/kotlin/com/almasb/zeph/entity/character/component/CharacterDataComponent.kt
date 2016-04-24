@@ -12,7 +12,7 @@ import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 
 /**
- *
+ * TODO: move some stuff to CharacterEntity and leave only "value" fields
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

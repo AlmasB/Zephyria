@@ -20,7 +20,7 @@ public class StatsComponent extends AbstractComponent {
      * Contains native character stats calculated from both attributes
      * and bAttributes
      */
-    private Map<Stat, Float> stats = new HashMap<>();
+    private Map<Stat, Double> stats = new HashMap<>();
     private transient Map<Stat, ReadOnlyIntegerWrapper> statProperties = new HashMap<>();
 
     /**
@@ -28,8 +28,8 @@ public class StatsComponent extends AbstractComponent {
      * @param stat
      * @return base (native) character stat
      */
-    public final float getBaseStat(Stat stat) {
-        return stats.get(stat);
+    public final double getBaseStat(Stat stat) {
+        return statProperty(stat).get();
     }
 
     /**
@@ -47,7 +47,7 @@ public class StatsComponent extends AbstractComponent {
      * @param stat
      * @param value
      */
-    private void setBaseStat(Stat stat, float value) {
+    private void setBaseStat(Stat stat, double value) {
         stats.put(stat, value);
         statProperties.get(stat).set((int) value);
     }
@@ -55,7 +55,7 @@ public class StatsComponent extends AbstractComponent {
     /**
      * Contains stats given by equipped items or effects
      */
-    private Map<Stat, Float> bStats = new HashMap<>();
+    private Map<Stat, Double> bStats = new HashMap<>();
     private transient Map<Stat, ReadOnlyIntegerWrapper> bStatProperties = new HashMap<>();
 
     /**
@@ -63,7 +63,7 @@ public class StatsComponent extends AbstractComponent {
      * @param stat
      * @return bonus stat value
      */
-    public final float getBonusStat(Stat stat) {
+    public final double getBonusStat(Stat stat) {
         return bStats.get(stat);
     }
 
@@ -91,7 +91,7 @@ public class StatsComponent extends AbstractComponent {
      *            value
      */
     public final void addBonusStat(Stat stat, int bonus) {
-        float value = getBonusStat(stat) + bonus;
+        double value = getBonusStat(stat) + bonus;
         bStats.put(stat, value);
         bStatProperties.get(stat).set((int) value);
     }
@@ -101,16 +101,16 @@ public class StatsComponent extends AbstractComponent {
      * @param stat
      * @return total value for stat, including bonuses
      */
-    public float getTotalStat(Stat stat) {
+    public double getTotalStat(Stat stat) {
         //return getBaseStat(stat) + getBonusStat(stat);
-        return bindings.get(stat).floatValue();
+        return bindings.get(stat).doubleValue();
     }
 
     public StatsComponent() {
         for (Stat stat : Stat.values()) {
-            stats.put(stat, 0f);
+            stats.put(stat, 0.0);
             statProperties.put(stat, new ReadOnlyIntegerWrapper(0));
-            bStats.put(stat, 0f);
+            bStats.put(stat, 0.0);
             bStatProperties.put(stat, new ReadOnlyIntegerWrapper(0));
 
             bindings.put(stat, statProperty(stat).add(bStatProperty(stat)));

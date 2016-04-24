@@ -27,7 +27,7 @@ public class StatusEffect implements java.io.Serializable {
         POISONED
     }
 
-    private float duration;
+    private double duration;
     private Status status;
 
     public StatusEffect(Status status, float duration) {
@@ -39,11 +39,11 @@ public class StatusEffect implements java.io.Serializable {
         return status;
     }
 
-    public void reduceDuration(float value) {
+    public void reduceDuration(double value) {
         duration -= value;
     }
 
-    public float getDuration() {
+    public double getDuration() {
         return duration;
     }
 }

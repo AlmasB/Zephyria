@@ -38,7 +38,7 @@ public class BasicInfoView extends InGameWindow {
         barHPUI.setWidth(100);
         barHPUI.setHeight(15);
         barHPUI.setLabelPosition(Position.RIGHT);
-        barHPUI.maxValueProperty().bind(player.getStats().statProperty(Stat.MAX_HP));
+        barHPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_HP));
         barHPUI.currentValueProperty().bind(player.getHp().valueProperty());
 
         ProgressBar barSPUI = ProgressBar.makeSkillBar();
@@ -47,7 +47,7 @@ public class BasicInfoView extends InGameWindow {
         barSPUI.setWidth(100);
         barSPUI.setHeight(15);
         barSPUI.setLabelPosition(Position.RIGHT);
-        barSPUI.maxValueProperty().bind(player.getStats().statProperty(Stat.MAX_SP));
+        barSPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_SP));
         barSPUI.currentValueProperty().bind(player.getSp().valueProperty());
 
         Text textPlayerName = new Text();

@@ -62,8 +62,6 @@ open class CharacterControl : AbstractControl() {
         effects.add(e)
     }
 
-    //protected var characterClass: CharacterClassComponent
-
     protected lateinit var attributes: AttributesComponent
     protected lateinit var stats: StatsComponent
     protected lateinit var hp: HPComponent
@@ -233,7 +231,7 @@ open class CharacterControl : AbstractControl() {
         val it = statuses.iterator()
         while (it.hasNext()) {
             val e = it.next()
-            e.reduceDuration(0.016f)
+            e.reduceDuration(tpf)
             if (e.duration <= 0) {
                 it.remove()
             }

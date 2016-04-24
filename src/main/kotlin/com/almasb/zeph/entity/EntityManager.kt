@@ -35,14 +35,14 @@ object EntityManager {
         Data.Weapon.javaClass.declaredMethods.forEach {
             val list = it.invoke(Data.Weapon) as List<Component>
 
-            val id = (list[0] as DescriptionComponent).id
+            val id = (list[0] as DescriptionComponent).id.value
             weapons[id] = it
         }
 
         Data.Armor.javaClass.declaredMethods.forEach {
             val list = it.invoke(Data.Armor) as List<Component>
 
-            val id = (list[0] as DescriptionComponent).id
+            val id = (list[0] as DescriptionComponent).id.value
             armor[id] = it
         }
     }

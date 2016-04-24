@@ -24,6 +24,6 @@ class WeaponEntity(dataComponents: List<Component>) : Entity() {
         desc = getComponentUnsafe(DescriptionComponent::class.java)
         data = getComponentUnsafe(WeaponDataComponent::class.java)
 
-        desc.description = "${desc.name}\n${desc.description}\n$data"
+        //desc.description = "${desc.name}\n${desc.description}\n$data"
     }
 }

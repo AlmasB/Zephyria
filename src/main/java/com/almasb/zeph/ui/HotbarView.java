@@ -68,7 +68,7 @@ public class HotbarView extends InGameWindow {
     private void addSkill(SkillEntity skill) {
         DescriptionComponent desc = skill.getDesc();
 
-        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
+        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName().get());
         view.setFitWidth(40);
         view.setFitHeight(40);
         view.setTranslateX(40 + index * 60);
@@ -102,7 +102,7 @@ public class HotbarView extends InGameWindow {
         text.setFont(Font.font(20));
         text.setFill(Color.WHITE);
         text.setWrappingWidth(200);
-        text.setText(desc.getDescription());
+        text.textProperty().bind(desc.getDescription());
 
         tooltip.setGraphic(text);
         Tooltip.install(view, tooltip);

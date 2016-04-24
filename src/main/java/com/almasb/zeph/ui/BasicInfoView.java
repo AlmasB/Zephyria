@@ -55,7 +55,7 @@ public class BasicInfoView extends InGameWindow {
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
         textPlayerName.setFill(Color.WHITESMOKE);
-        textPlayerName.textProperty().bind(player.getDescription().nameProperty().concat("\n").concat(player.getData().getCharClass()));
+        textPlayerName.textProperty().bind(player.getDescription().getName().concat("\n").concat(player.getData().getCharClass()));
 
         Text textLevels = new Text();
         textLevels.setTranslateX(15);
@@ -122,7 +122,7 @@ public class BasicInfoView extends InGameWindow {
 
                         DescriptionComponent desc = effect.getDesc();
 
-                        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
+                        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName().get());
                         view.setTranslateX(10);
                         view.setTranslateY(170);
 

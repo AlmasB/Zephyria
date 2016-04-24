@@ -18,6 +18,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -119,20 +120,26 @@ public class InventoryView extends InGameWindow {
 
         DescriptionComponent data = item.getComponentUnsafe(DescriptionComponent.class);
 
-        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName());
+        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName().get());
 
         view.setUserData(new Pair<>(item, index));
         view.setTranslateX((index % 5) * 40);
         view.setTranslateY((index / 5) * 40);
         view.setOnMouseClicked(event -> {
-            if (item instanceof WeaponEntity) {
-                player.getControl().equipWeapon((WeaponEntity) item);
-            }
-            else if (item instanceof ArmorEntity) {
-                player.getControl().equipArmor((ArmorEntity) item);
-            }
 
-            // TODO: other usable types
+            if (event.getButton() == MouseButton.PRIMARY) {
+                if (item instanceof WeaponEntity) {
+                    player.getControl().equipWeapon((WeaponEntity) item);
+                } else if (item instanceof ArmorEntity) {
+                    player.getControl().equipArmor((ArmorEntity) item);
+                }
+
+                // TODO: other usable types
+            } else {
+                // TODO: generalize
+                if (item instanceof ArmorEntity)
+                    ((ArmorEntity) item).getRefineLevel().set(((ArmorEntity) item).getRefineLevel().get() + 1);
+            }
         });
         view.setCursor(Cursor.HAND);
 
@@ -142,7 +149,7 @@ public class InventoryView extends InGameWindow {
         text.setFont(Font.font(20));
         text.setFill(Color.WHITE);
         text.setWrappingWidth(200);
-        text.setText(data.getDescription());
+        text.textProperty().bind(data.getDescription());
 
         tooltip.setGraphic(text);
         Tooltip.install(view, tooltip);

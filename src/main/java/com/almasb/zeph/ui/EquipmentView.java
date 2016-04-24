@@ -99,12 +99,12 @@ public final class EquipmentView extends InGameWindow {
 
         DescriptionComponent data = item.getComponentUnsafe(DescriptionComponent.class);
 
-        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName());
+        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName().get());
 
         view.setOnMouseClicked(event -> player.getControl().unEquipItem(place));
         view.setCursor(Cursor.HAND);
 
         group.getChildren().add(view);
-        ((Text)group.getUserData()).setText(data.getDescription());
+        ((Text)group.getUserData()).textProperty().bind(data.getDescription());
     }
 }

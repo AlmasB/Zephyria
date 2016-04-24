@@ -495,7 +495,7 @@ public class ZephyriaApp extends GameApplication {
         DescriptionComponent desc = item.getComponentUnsafe(DescriptionComponent.class);
 
         EntityView view = new EntityView();
-        view.addNode(getAssetLoader().loadTexture(desc.getTextureName()));
+        view.addNode(getAssetLoader().loadTexture(desc.getTextureName().get()));
         view.setTranslateX(position.getX());
         view.setTranslateY(position.getY());
         view.setCursor(Cursor.CLOSED_HAND);
@@ -589,7 +589,7 @@ public class ZephyriaApp extends GameApplication {
 
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
-        playerAnimation = getAssetLoader().loadTexture(player.getDescription().getTextureName())
+        playerAnimation = getAssetLoader().loadTexture(player.getDescription().getTextureName().get())
                 .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         player.getMainViewComponent().setView(playerAnimation, true);
@@ -670,7 +670,7 @@ public class ZephyriaApp extends GameApplication {
         Text text = new Text();
         text.setFont(Font.font(14));
         text.setFill(Color.WHITE);
-        text.textProperty().bind(entity.getDescription().nameProperty().concat(" Lv. ").concat(entity.getBaseLevel()));
+        text.textProperty().bind(entity.getDescription().getName().concat(" Lv. ").concat(entity.getBaseLevel()));
         text.setTranslateX(TILE_SIZE / 2 - text.getLayoutBounds().getWidth() / 2);
         text.setTranslateY(75);
 
@@ -694,7 +694,7 @@ public class ZephyriaApp extends GameApplication {
     private void spawnEntity(int x, int y, GameEntity entity) {
         entity.getPositionComponent().setValue(x * TILE_SIZE, y * TILE_SIZE);
 
-        DynamicAnimatedTexture texture = getAssetLoader().loadTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName())
+        DynamicAnimatedTexture texture = getAssetLoader().loadTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
                 .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         entity.getMainViewComponent().setView(texture, true);

@@ -252,7 +252,7 @@ class PlayerControl : CharacterControl() {
 
         unEquipItem(place)
         setEquip(place, armor)
-        armor.data.onEquip(player)
+        armor.onEquip(player)
         player.armorElement.value = armor.data.element
     }
 
@@ -272,7 +272,7 @@ class PlayerControl : CharacterControl() {
 
             item.data.onUnEquip(player)
         } else if (item is ArmorEntity) {
-            item.data.onUnEquip(player)
+            item.onUnEquip(player)
         }
 
         player.inventory.addItem(item)
@@ -286,7 +286,7 @@ class PlayerControl : CharacterControl() {
     }
 
     fun isFree(place: EquipPlace) = getEquip(place)
-            .getComponentUnsafe(DescriptionComponent::class.java).id == place.emptyID
+            .getComponentUnsafe(DescriptionComponent::class.java).id.value == place.emptyID
 
     // TODO: player version of canAttack that uses aspd of both weapons
 }

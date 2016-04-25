@@ -601,6 +601,12 @@ public class ZephyriaApp extends GameApplication {
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
 
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));
         player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));

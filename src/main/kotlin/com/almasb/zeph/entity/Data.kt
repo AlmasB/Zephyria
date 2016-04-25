@@ -287,158 +287,125 @@ object Data {
                             }
             )
         }
+
+        object Crusader {
+            //            public static final int HOLY_LIGHT = 7110;
+            //            public static final int FAITH = 7111;
+            //            public static final int DIVINE_ARMOR = 7112;
+            //            public static final int PRECISION_STRIKE = 7113;
+            //            public static final int LAST_STAND = 7114;
+
+            //            public static final String HOLY_LIGHT = "Heals and increases VIT for the duration";
+            //            public static final String FAITH = "Further increases bonus given by Heart of a Warrior skill";
+            //            public static final String DIVINE_ARMOR = "Further increases bonus given by Armor Mastery skill";
+            //            public static final String PRECISION_STRIKE = "Deals armor ignoring damage based on STR";
+            //            public static final String LAST_STAND = "Deals double base damage for the duration";
+        }
+
+        object Gladiator {
+            //            public static final int BASH = 7210;
+            //            public static final int ENDURANCE = 7211;
+            //            public static final int DOUBLE_EDGE = 7212;
+            //            public static final int BLOODLUST = 7213;
+            //            public static final int SHATTER_ARMOR = 7214;
+
+            //            public static final String BLOODLUST = "Increases ATK based on the missing % HP";
+            //            public static final String BASH = "A powerful physical attack that stuns the target for 5 seconds";
+            //            public static final String SHATTER_ARMOR = "Decreases target's armor for the duration";
+            //            public static final String DOUBLE_EDGE = "Sacrifice % of HP to deal double that damage to target. Damage is pure";
+            //            public static final String ENDURANCE = "Takes less damage and regenerates HP faster for the duration";
+        }
+
+        object Mage {
+            fun FIREBALL() = listOf<Component>(
+                    DescriptionComponent(7020, "Fireball", "Deals magic damage with fire element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            //            public static final int FIREBALL = 7020;
+            //            public static final int ICE_SHARD = 7021;
+            //            public static final int AIR_SPEAR = 7022;
+            //            public static final int EARTH_BOULDER = 7023;
+
+            //            public static final String FIREBALL = "Deals magic damage with fire element";
+            //            public static final String ICE_SHARD = "Deals magic damage with water element";
+            //            public static final String AIR_SPEAR = "Deals magic damage with air element";
+            //            public static final String EARTH_BOULDER = "Deals magic damage with earth element";
+        }
+
+        object Wizard {
+            //            public static final int MAGIC_MASTERY = 7120;
+            //            public static final int AMPLIFY_MAGIC = 7121;
+            //            public static final int MENTAL_STRIKE = 7122;
+            //            public static final int THUNDERBOLT_FIRESTORM = 7123;
+            //            public static final int ICICLE_AVALANCHE = 7124;
+
+            //            public static final String MENTAL_STRIKE = "Deals pure damage based on MATK";
+            //            public static final String AMPLIFY_MAGIC = "Increases MATK for the duration";
+            //            public static final String MAGIC_MASTERY = "Passively increases INT and WIL";
+            //            public static final String THUNDERBOLT_FIRESTORM = "Deals magic damage with air and fire element";
+            //            public static final String ICICLE_AVALANCHE = "Deals magic damage with water and earth element";
+        }
+
+        object Enchanter {
+            //            public static final int MAGIC_SHIELD = 7220;
+            //            public static final int ASTRAL_PROTECTION = 7221;
+            //            public static final int MIND_BLAST = 7222;
+            //            public static final int CURSE_OF_WITCHCRAFT = 7223;
+            //            public static final int MANA_BURN = 7224;
+
+            //            public static final String MAGIC_SHIELD = "Increases Armor rating for the duration";
+            //            public static final String ASTRAL_PROTECTION = "Passively increases MDEF";
+            //            public static final String MIND_BLAST = "Drains % of target's SP. Increases mana cost of all target's skills";
+            //            public static final String CURSE_OF_WITCHCRAFT = "Target cannot use skills for the duration";
+            //            public static final String MANA_BURN = "Burns target's SP and deals damage based on the SP burnt";
+        }
+
+        object Scout {
+            //            public static final int TRICK_ATTACK = 7030;
+            //            public static final int POISON_ATTACK = 7031;
+            //            public static final int WEAPON_MASTERY = 7032;
+            //            public static final int EXPERIENCED_FIGHTER = 7033;
+
+            //            public static final String POISON_ATTACK = "Attacks the target with high chance to poison him";
+            //            public static final String TRICK_ATTACK = "Deals physical damage and steals gold equal to damage dealt";
+            //            public static final String WEAPON_MASTERY = "Passively increases ATK";
+            //            public static final String EXPERIENCED_FIGHTER = "Passively increases AGI and DEX";
+        }
+
+        object Rogue {
+            //            public static final int SHAMELESS = 7130;
+            //            public static final int DOUBLE_STRIKE = 7131;
+            //            public static final int TRIPLE_STRIKE = 7132;
+            //            public static final int FIVE_FINGER_DEATH_PUNCH = 7133;
+            //            public static final int CRITICAL_STRIKE = 7134;
+
+            //            public static final String SHAMELESS = "Deals more damage if target's % HP is lower than yours. No cooldown but consumes mana";
+            //            public static final String DOUBLE_STRIKE = "Quickly performs two attacks with a chance to stun the target";
+            //            public static final String TRIPLE_STRIKE = "Quickly performs three attacks. Deals more damage if target is stunned";
+            //            public static final String CRITICAL_STRIKE = "Strikes the target with high chance of crit. Crit damage is greater for this skill";
+            //            public static final String FIVE_FINGER_DEATH_PUNCH = "Deals devastating damage to unarmoured targets";
+        }
+
+        object Ranger {
+            //            public static final int PINPOINT_WEAKNESS = 7230;
+            //            public static final int BULLSEYE = 7231;
+            //            public static final int FAST_REFLEXES = 7232;
+            //            public static final int ENCHANTED_ARROW = 7233;
+            //            public static final int EAGLE_EYE = 7234;
+
+            //            public static final String FAST_REFLEXES = "Increases ASPD for the duration";
+            //            public static final String ENCHANTED_ARROW = "Stuns target. Stun lasts longer for target's with high armor rating";
+            //            public static final String EAGLE_EYE = "Passively increases ATK based on DEX";
+            //            public static final String PINPOINT_WEAKNESS = "Decreases target's defense for the duration";
+            //            public static final String BULLSEYE = "Deals armor ignoring damage to target."
+            //                    + "Target's defense is not ignored. "
+            //                    + "Damage is based on caster's DEX";
+        }
     }
 
-
-    //    public class Enemy {
-    //        public static final int MINOR_FIRE_SPIRIT = 2000;
-    //        public static final int MINOR_EARTH_SPIRIT = 2001;
-    //        public static final int MINOR_WATER_SPIRIT = 2002;
-    //        public static final int MINOR_WIND_SPIRIT = 2003;
-    //    }
-    //
-    //    public class Skill {
-    //
-    //        public class Crusader {
-    //            public static final int HOLY_LIGHT = 7110;
-    //            public static final int FAITH = 7111;
-    //            public static final int DIVINE_ARMOR = 7112;
-    //            public static final int PRECISION_STRIKE = 7113;
-    //            public static final int LAST_STAND = 7114;
-    //        }
-    //
-    //        public class Gladiator {
-    //            public static final int BASH = 7210;
-    //            public static final int ENDURANCE = 7211;
-    //            public static final int DOUBLE_EDGE = 7212;
-    //            public static final int BLOODLUST = 7213;
-    //            public static final int SHATTER_ARMOR = 7214;
-    //        }
-    //
-    //        public class Mage {
-    //            public static final int FIREBALL = 7020;
-    //            public static final int ICE_SHARD = 7021;
-    //            public static final int AIR_SPEAR = 7022;
-    //            public static final int EARTH_BOULDER = 7023;
-    //        }
-    //
-    //        public class Wizard {
-    //            public static final int MAGIC_MASTERY = 7120;
-    //            public static final int AMPLIFY_MAGIC = 7121;
-    //            public static final int MENTAL_STRIKE = 7122;
-    //            public static final int THUNDERBOLT_FIRESTORM = 7123;
-    //            public static final int ICICLE_AVALANCHE = 7124;
-    //        }
-    //
-    //        public class Enchanter {
-    //            public static final int MAGIC_SHIELD = 7220;
-    //            public static final int ASTRAL_PROTECTION = 7221;
-    //            public static final int MIND_BLAST = 7222;
-    //            public static final int CURSE_OF_WITCHCRAFT = 7223;
-    //            public static final int MANA_BURN = 7224;
-    //        }
-    //
-    //        public class Scout {
-    //            public static final int TRICK_ATTACK = 7030;
-    //            public static final int POISON_ATTACK = 7031;
-    //            public static final int WEAPON_MASTERY = 7032;
-    //            public static final int EXPERIENCED_FIGHTER = 7033;
-    //        }
-    //
-    //        public class Rogue {
-    //            public static final int SHAMELESS = 7130;
-    //            public static final int DOUBLE_STRIKE = 7131;
-    //            public static final int TRIPLE_STRIKE = 7132;
-    //            public static final int FIVE_FINGER_DEATH_PUNCH = 7133;
-    //            public static final int CRITICAL_STRIKE = 7134;
-    //        }
-    //
-    //        public class Ranger {
-    //            public static final int PINPOINT_WEAKNESS = 7230;
-    //            public static final int BULLSEYE = 7231;
-    //            public static final int FAST_REFLEXES = 7232;
-    //            public static final int ENCHANTED_ARROW = 7233;
-    //            public static final int EAGLE_EYE = 7234;
-    //        }
-    //    }
-
-
-    // DESC
-
-        //
-        //    public class Skill {
-
-        //
-        //        public class Crusader {
-        //            public static final String HOLY_LIGHT = "Heals and increases VIT for the duration";
-        //            public static final String FAITH = "Further increases bonus given by Heart of a Warrior skill";
-        //            public static final String DIVINE_ARMOR = "Further increases bonus given by Armor Mastery skill";
-        //            public static final String PRECISION_STRIKE = "Deals armor ignoring damage based on STR";
-        //            public static final String LAST_STAND = "Deals double base damage for the duration";
-        //        }
-        //
-        //        public class Gladiator {
-        //            public static final String BLOODLUST = "Increases ATK based on the missing % HP";
-        //            public static final String BASH = "A powerful physical attack that stuns the target for 5 seconds";
-        //            public static final String SHATTER_ARMOR = "Decreases target's armor for the duration";
-        //            public static final String DOUBLE_EDGE = "Sacrifice % of HP to deal double that damage to target. Damage is pure";
-        //            public static final String ENDURANCE = "Takes less damage and regenerates HP faster for the duration";
-        //        }
-        //
-        //        public class Mage {
-        //            public static final String FIREBALL = "Deals magic damage with fire element";
-        //            public static final String ICE_SHARD = "Deals magic damage with water element";
-        //            public static final String AIR_SPEAR = "Deals magic damage with air element";
-        //            public static final String EARTH_BOULDER = "Deals magic damage with earth element";
-        //        }
-        //
-        //        public class Wizard {
-        //            public static final String MENTAL_STRIKE = "Deals pure damage based on MATK";
-        //            public static final String AMPLIFY_MAGIC = "Increases MATK for the duration";
-        //            public static final String MAGIC_MASTERY = "Passively increases INT and WIL";
-        //            public static final String THUNDERBOLT_FIRESTORM = "Deals magic damage with air and fire element";
-        //            public static final String ICICLE_AVALANCHE = "Deals magic damage with water and earth element";
-        //        }
-        //
-        //        public class Enchanter {
-        //            public static final String MAGIC_SHIELD = "Increases Armor rating for the duration";
-        //            public static final String ASTRAL_PROTECTION = "Passively increases MDEF";
-        //            public static final String MIND_BLAST = "Drains % of target's SP. Increases mana cost of all target's skills";
-        //            public static final String CURSE_OF_WITCHCRAFT = "Target cannot use skills for the duration";
-        //            public static final String MANA_BURN = "Burns target's SP and deals damage based on the SP burnt";
-        //        }
-        //
-        //        public class Scout {
-        //            public static final String POISON_ATTACK = "Attacks the target with high chance to poison him";
-        //            public static final String TRICK_ATTACK = "Deals physical damage and steals gold equal to damage dealt";
-        //            public static final String WEAPON_MASTERY = "Passively increases ATK";
-        //            public static final String EXPERIENCED_FIGHTER = "Passively increases AGI and DEX";
-        //        }
-        //
-        //        public class Rogue {
-        //            public static final String SHAMELESS = "Deals more damage if target's % HP is lower than yours. No cooldown but consumes mana";
-        //            public static final String DOUBLE_STRIKE = "Quickly performs two attacks with a chance to stun the target";
-        //            public static final String TRIPLE_STRIKE = "Quickly performs three attacks. Deals more damage if target is stunned";
-        //            public static final String CRITICAL_STRIKE = "Strikes the target with high chance of crit. Crit damage is greater for this skill";
-        //            public static final String FIVE_FINGER_DEATH_PUNCH = "Deals devastating damage to unarmoured targets";
-        //        }
-        //
-        //        public class Ranger {
-        //            public static final String FAST_REFLEXES = "Increases ASPD for the duration";
-        //            public static final String ENCHANTED_ARROW = "Stuns target. Stun lasts longer for target's with high armor rating";
-        //            public static final String EAGLE_EYE = "Passively increases ATK based on DEX";
-        //            public static final String PINPOINT_WEAKNESS = "Decreases target's defense for the duration";
-        //            public static final String BULLSEYE = "Deals armor ignoring damage to target."
-        //                    + "Target's defense is not ignored. "
-        //                    + "Damage is based on caster's DEX";
-        //        }
-        //    }
-        //
-
-
-
-    ////        // SKILLS
-    ////
     ////        addSkill(new Skill(ID.Skill.Gladiator.BLOODLUST, "Bloodlust", Desc.Skill.Gladiator.BLOODLUST, false, 0.0f) {
     ////            /**
     ////             *
@@ -1324,6 +1291,4 @@ object Data {
     ////                EnemyType.NORMAL, Element.WATER, 1, new AttributeInfo(),
     ////                new Experience(100, 100, 100), 0, new DroppableItem(ID.Armor.CHAINMAL, 25), new DroppableItem(ID.Weapon.SOUL_REAPER, 5)));
     //    }
-
-
 }

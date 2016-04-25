@@ -1,11 +1,12 @@
-package com.almasb.zeph.entity.character;
+package com.almasb.zeph.entity.character
 
 /**
  * Used to show where particular equipment goes on a character.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public enum EquipPlace {
+enum class EquipPlace
+private constructor(val emptyID: Int) {
     /**
      * Denotes a place for head item
      */
@@ -31,13 +32,6 @@ public enum EquipPlace {
      */
     LEFT_HAND(4000);
 
-    public final int emptyID;
-
-    EquipPlace(int emptyID) {
-        this.emptyID = emptyID;
-    }
-
-    public boolean isWeapon() {
-        return ordinal() >= RIGHT_HAND.ordinal();
-    }
+    val isWeapon: Boolean
+        get() = ordinal >= RIGHT_HAND.ordinal
 }

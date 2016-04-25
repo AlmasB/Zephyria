@@ -1,18 +1,12 @@
 package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Component
-import com.almasb.ents.Entity
-import com.almasb.fxgl.entity.GameEntity
-import com.almasb.zeph.entity.Data
 import com.almasb.zeph.entity.DescriptionComponent
-import com.almasb.zeph.entity.Inventory
-import com.almasb.zeph.entity.character.component.*
+import com.almasb.zeph.entity.character.component.CharacterDataComponent
+import com.almasb.zeph.entity.character.component.MoneyComponent
 import com.almasb.zeph.entity.character.control.PlayerControl
-import com.almasb.zeph.entity.item.WeaponEntity
-import com.almasb.zeph.entity.skill.SkillEntity
 import javafx.beans.property.SimpleIntegerProperty
-import javafx.collections.FXCollections
-import java.util.*
+import javafx.beans.property.SimpleObjectProperty
 
 /**
  *
@@ -32,9 +26,9 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
     val statLevel = SimpleIntegerProperty(1)
     val jobLevel = SimpleIntegerProperty(1)
 
-    init {
-        data.charClass.value = GameCharacterClass.NOVICE
+    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.NOVICE)
 
+    init {
         addComponent(money)
         addControl(PlayerControl())
     }

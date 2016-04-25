@@ -5,8 +5,8 @@ import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.entity.character.CharacterClass
 import com.almasb.zeph.entity.character.CharacterType
-import com.almasb.zeph.entity.character.GameCharacterClass
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import java.util.*
@@ -18,7 +18,7 @@ import java.util.*
  */
 class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
 
-    val charClass = SimpleObjectProperty<GameCharacterClass>(GameCharacterClass.MONSTER)
+    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
 
     val baseLevel = SimpleIntegerProperty(1)
     val attributes = AttributesComponent()

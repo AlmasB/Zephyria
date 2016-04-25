@@ -113,27 +113,28 @@ public class BasicInfoView extends InGameWindow {
         setContentPane(uiPane);
 
 
-        player.getCharConrol().getEffects().addListener((ListChangeListener<? super EffectEntity>) c -> {
-            while (c.next()) {
-                if (c.wasAdded()) {
-                    c.getAddedSubList().forEach(effect -> {
-
-                        // TODO: this is where effect view is added + tooltip
-
-                        DescriptionComponent desc = effect.getDesc();
-
-                        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName().get());
-                        view.setTranslateX(10);
-                        view.setTranslateY(170);
-
-                        uiPane.getChildren().addAll(view);
-
-                    });
-                } else if (c.wasRemoved()) {
-                    // TODO: effect view is removed
-                }
-            }
-        });
+        // TODO: if effects are added constantly we need to optimize
+//        player.getCharConrol().getEffects().addListener((ListChangeListener<? super EffectEntity>) c -> {
+//            while (c.next()) {
+//                if (c.wasAdded()) {
+//                    c.getAddedSubList().forEach(effect -> {
+//
+//                        // TODO: this is where effect view is added + tooltip
+//
+//                        DescriptionComponent desc = effect.getDesc();
+//
+//                        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName().get());
+//                        view.setTranslateX(10);
+//                        view.setTranslateY(170);
+//
+//                        uiPane.getChildren().addAll(view);
+//
+//                    });
+//                } else if (c.wasRemoved()) {
+//                    // TODO: effect view is removed
+//                }
+//            }
+//        });
 
 
         EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();

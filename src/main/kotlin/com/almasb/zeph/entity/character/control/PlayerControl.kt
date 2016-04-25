@@ -122,8 +122,8 @@ class PlayerControl : CharacterControl() {
             player.skillPoints.value--
 
             // apply passive skills immediately
-            if (skill.data.type == SkillType.PASSIVE) {
-                //skill.data.onCast(player, player, skill.level.value)
+            if (skill.data.type == SkillType.PASSIVE && skill.level.value == 1) {
+                skill.data.onLearn(player, skill)
             }
         }
     }

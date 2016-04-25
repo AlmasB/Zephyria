@@ -10,6 +10,7 @@ import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.item.component.ArmorDataComponent
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
 import com.almasb.zeph.entity.skill.*
+import javafx.beans.value.ChangeListener
 import java.util.*
 
 /**
@@ -204,13 +205,13 @@ object Data {
             fun ROAR() = listOf<Component>(
                     DescriptionComponent(7010, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_bash.png"),
                     SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-                            .onCast { caster, target, level ->
+                            .onCast { caster, target, skill ->
 
                                 val effect = EffectEntity(listOf(
                                         DescriptionComponent(7010, "Roar", "Roar", "effects/attr_up.png"),
                                         EffectDataComponent(7.0)
-                                                .withRune(Rune(Attribute.STRENGTH, 3 * level))
-                                                .withRune(Rune(Attribute.VITALITY, 2 * level))
+                                                .withRune(Rune(Attribute.STRENGTH, 3 * skill.level.value))
+                                                .withRune(Rune(Attribute.VITALITY, 2 * skill.level.value))
                                 ))
 
                                 caster.charConrol.addEffect(effect)
@@ -224,9 +225,9 @@ object Data {
             fun MIGHTY_SWING() = listOf<Component>(
                     DescriptionComponent(7011, "Mighty Swing", "Physical attack. Damage is greater if you have more STR than your target.", "skills/ic_skill_bash.png"),
                     SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-                            .onCast { caster, target, level ->
+                            .onCast { caster, target, skill ->
                                 val diff = caster.attributes.getTotalAttribute(Attribute.STRENGTH) - target.attributes.getTotalAttribute(Attribute.STRENGTH)
-                                val dmg = (Math.max(diff, 0) + 10 * level) * 5.0
+                                val dmg = (Math.max(diff, 0) + 10 * skill.level.value) * 5.0
 
                                 SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
                             }
@@ -240,15 +241,23 @@ object Data {
             fun WARRIOR_HEART() = listOf<Component>(
                     DescriptionComponent(7012, "Warrior's Heart", "Passively increases max HP.", "skills/ic_skill_bash.png"),
                     SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-                            .onCast { caster, target, level ->
-                                val factor = 0.025
-                                val value = (factor * level * caster.stats.getBaseStat(Stat.MAX_HP)).toInt()
+                            .onLearn { caster, skill ->
+                                skill.data.onCast(caster, caster, skill)
 
-                                caster.charConrol.addEffect(EffectEntity(listOf(
-                                        DescriptionComponent(7012, "Warrior's Heart", "Warrior's Heart", "effects/attr_up.png"),
-                                        EffectDataComponent(9999.0)
-                                                .withEssence(Essence(Stat.MAX_HP, value))
-                                )))
+                                caster.stats.statProperty(Stat.MAX_HP).addListener({ o, old, new ->
+                                    skill.data.onCast(caster, caster, skill)
+                                })
+
+                                skill.level.addListener({o, old, new ->
+                                    skill.data.onCast(caster, caster, skill)
+                                })
+                            }
+                            .onCast { caster, target, skill ->
+                                caster.stats.addBonusStat(Stat.MAX_HP, -skill.testValue)
+
+                                skill.testValue = (caster.stats.getBaseStat(Stat.MAX_HP) * 0.25 * skill.level.value).toInt()
+
+                                caster.stats.addBonusStat(Stat.MAX_HP, skill.testValue)
 
                                 SkillUseResult.NONE
                             }
@@ -257,15 +266,22 @@ object Data {
             fun ARMOR_MASTERY() = listOf<Component>(
                     DescriptionComponent(7013, "Armor Mastery", "Increases armor rating.", "skills/ic_skill_bash.png"),
                     SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-                            .onCast { caster, target, level ->
-                                val factor = 2.0
-                                val value = (factor * level).toInt()
+                            .onLearn { caster, skill ->
+                                skill.data.onCast(caster, caster, skill)
 
-                                caster.charConrol.addEffect(EffectEntity(listOf(
-                                        DescriptionComponent(7013, "Armor Mastery", "Armor Mastery", "effects/attr_up.png"),
-                                        EffectDataComponent(9999.0)
-                                                .withEssence(Essence(Stat.ARM, value))
-                                )))
+                                skill.level.addListener({o, old, new ->
+                                    skill.data.onCast(caster, caster, skill)
+                                })
+                            }
+                            .onCast { caster, target, skill ->
+                                val factor = 2.0
+                                val value = (factor * skill.level.value).toInt()
+
+                                caster.stats.addBonusStat(Stat.ARM, -skill.testValue)
+
+                                skill.testValue = value
+
+                                caster.stats.addBonusStat(Stat.ARM, skill.testValue)
 
                                 SkillUseResult.NONE
                             }
@@ -351,10 +367,7 @@ object Data {
 
         //
         //    public class Skill {
-        //
-        //        public class Warrior {
 
-        //        }
         //
         //        public class Crusader {
         //            public static final String HOLY_LIGHT = "Heals and increases VIT for the duration";

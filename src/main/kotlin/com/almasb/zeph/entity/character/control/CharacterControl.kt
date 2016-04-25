@@ -214,7 +214,7 @@ open class CharacterControl : AbstractControl() {
         char.skills.forEach {
             it.onUpdate(tpf)
             if (it.data.type == SkillType.PASSIVE) {
-                it.data.onCast(char, char, it.level.value)
+                //it.data.onCast(char, char, it.level.value)
             }
         }
     }
@@ -386,18 +386,18 @@ open class CharacterControl : AbstractControl() {
         sp.value -= skill.data.mana
         skill.putOnCooldown()
 
-        skill.data.onCast(char, char, skill.level.value)
+        skill.data.onCast(char, char, skill)
 
         return SkillUseResult.NONE
     }
 
     fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
         // TODO: complete
-        return char.skills[index].data.onCast(char, target, 1)
+        return char.skills[index].data.onCast(char, target, char.skills[index])
     }
 
     fun useAreaSkill(index: Int, target: Point2D): SkillUseResult {
         // TODO: complete
-        return char.skills[index].data.onCast(char, char, 1)
+        return char.skills[index].data.onCast(char, char, char.skills[index])
     }
 }

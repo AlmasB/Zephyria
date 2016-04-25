@@ -20,6 +20,8 @@ class SkillEntity(dataComponents: List<Component>) : Entity() {
     val level = SimpleIntegerProperty()
     val currentCooldown = SimpleDoubleProperty()
 
+    var testValue = 0
+
     // control ?
 
     init {

@@ -32,12 +32,19 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
         return this
     }
 
-    lateinit var onCast: (CharacterEntity, CharacterEntity, Int) -> SkillUseResult
+    lateinit var onCast: (CharacterEntity, CharacterEntity, SkillEntity) -> SkillUseResult
 
-    fun onCast(func: (CharacterEntity, CharacterEntity, Int) -> SkillUseResult): SkillDataComponent {
+    fun onCast(func: (CharacterEntity, CharacterEntity, SkillEntity) -> SkillUseResult): SkillDataComponent {
         onCast = func
         return this
     }
+
+//    lateinit var onPassive: (CharacterEntity, CharacterEntity, SkillEntity) -> Unit
+//
+//    fun onPassive(func: (CharacterEntity, CharacterEntity, SkillEntity) -> Unit): SkillDataComponent {
+//        onPassive = func
+//        return this
+//    }
 
     /**
      * Projectile texture name (if applicable).
@@ -51,4 +58,12 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
 
     // TODO: sound
     // TODO: on skill end func?
+
+    // TODO: default noop so we can call onLearn without checks
+    lateinit var onLearn: (CharacterEntity, SkillEntity) -> Unit
+
+    fun onLearn(func: (CharacterEntity, SkillEntity) -> Unit): SkillDataComponent {
+        onLearn = func
+        return this
+    }
 }

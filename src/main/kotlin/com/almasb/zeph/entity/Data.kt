@@ -3,6 +3,7 @@ package com.almasb.zeph.entity
 import com.almasb.ents.Component
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterType
+import com.almasb.zeph.entity.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.ItemLevel
@@ -289,31 +290,78 @@ object Data {
         }
 
         object Crusader {
-            //            public static final int HOLY_LIGHT = 7110;
-            //            public static final int FAITH = 7111;
-            //            public static final int DIVINE_ARMOR = 7112;
-            //            public static final int PRECISION_STRIKE = 7113;
-            //            public static final int LAST_STAND = 7114;
 
-            //            public static final String HOLY_LIGHT = "Heals and increases VIT for the duration";
-            //            public static final String FAITH = "Further increases bonus given by Heart of a Warrior skill";
-            //            public static final String DIVINE_ARMOR = "Further increases bonus given by Armor Mastery skill";
-            //            public static final String PRECISION_STRIKE = "Deals armor ignoring damage based on STR";
-            //            public static final String LAST_STAND = "Deals double base damage for the duration";
+            fun HOLY_LIGHT() = listOf<Component>(
+                    DescriptionComponent(7110, "Holy Light", "Heals and increases VIT for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.RESTORE, EnumSet.of(SkillTargetType.ALLY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun FAITH() = listOf<Component>(
+                    DescriptionComponent(7111, "Faith", "Further increases bonus given by Heart of a Warrior skill.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun DIVINE_ARMOR() = listOf<Component>(
+                    DescriptionComponent(7112, "Divine Armor", "Further increases bonus given by Armor Mastery skill.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun PRECISION_STRIKE() = listOf<Component>(
+                    DescriptionComponent(7113, "Precision Strike", "Deals armor ignoring damage based on STR.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun LAST_STAND() = listOf<Component>(
+                    DescriptionComponent(7114, "Last Stand", "Deals double base damage for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
         }
 
         object Gladiator {
-            //            public static final int BASH = 7210;
-            //            public static final int ENDURANCE = 7211;
-            //            public static final int DOUBLE_EDGE = 7212;
-            //            public static final int BLOODLUST = 7213;
-            //            public static final int SHATTER_ARMOR = 7214;
+            fun BASH() = listOf<Component>(
+                    DescriptionComponent(7210, "Bash", "A powerful physical attack that stuns the target for 5 seconds", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
 
-            //            public static final String BLOODLUST = "Increases ATK based on the missing % HP";
-            //            public static final String BASH = "A powerful physical attack that stuns the target for 5 seconds";
-            //            public static final String SHATTER_ARMOR = "Decreases target's armor for the duration";
-            //            public static final String DOUBLE_EDGE = "Sacrifice % of HP to deal double that damage to target. Damage is pure";
-            //            public static final String ENDURANCE = "Takes less damage and regenerates HP faster for the duration";
+            fun ENDURANCE() = listOf<Component>(
+                    DescriptionComponent(7211, "Endurance", "Takes less damage and regenerates HP faster for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun DOUBLE_EDGE() = listOf<Component>(
+                    DescriptionComponent(7212, "Double Edge", "Sacrifice % of HP to deal double that damage to target. Damage is pure.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun BLOODLUST() = listOf<Component>(
+                    DescriptionComponent(7213, "Bloodlust", "Increases ATK based on the missing % HP.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun SHATTER_ARMOR() = listOf<Component>(
+                    DescriptionComponent(7214, "Shatter Armor", "Decreases target's armor for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
         }
 
         object Mage {
@@ -324,29 +372,64 @@ object Data {
                             .withCooldown(15.0)
             )
 
-            //            public static final int FIREBALL = 7020;
-            //            public static final int ICE_SHARD = 7021;
-            //            public static final int AIR_SPEAR = 7022;
-            //            public static final int EARTH_BOULDER = 7023;
+            fun ICE_SHARD() = listOf<Component>(
+                    DescriptionComponent(7021, "Ice Shard", "Deals magic damage with water element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
 
-            //            public static final String FIREBALL = "Deals magic damage with fire element";
-            //            public static final String ICE_SHARD = "Deals magic damage with water element";
-            //            public static final String AIR_SPEAR = "Deals magic damage with air element";
-            //            public static final String EARTH_BOULDER = "Deals magic damage with earth element";
+            fun AIR_SPEAR() = listOf<Component>(
+                    DescriptionComponent(7022, "Air Spear", "Deals magic damage with air element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun EARTH_BOULDER() = listOf<Component>(
+                    DescriptionComponent(7023, "Earth Boulder", "Deals magic damage with earth element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
         }
 
         object Wizard {
-            //            public static final int MAGIC_MASTERY = 7120;
-            //            public static final int AMPLIFY_MAGIC = 7121;
-            //            public static final int MENTAL_STRIKE = 7122;
-            //            public static final int THUNDERBOLT_FIRESTORM = 7123;
-            //            public static final int ICICLE_AVALANCHE = 7124;
 
-            //            public static final String MENTAL_STRIKE = "Deals pure damage based on MATK";
-            //            public static final String AMPLIFY_MAGIC = "Increases MATK for the duration";
-            //            public static final String MAGIC_MASTERY = "Passively increases INT and WIL";
-            //            public static final String THUNDERBOLT_FIRESTORM = "Deals magic damage with air and fire element";
-            //            public static final String ICICLE_AVALANCHE = "Deals magic damage with water and earth element";
+            fun MAGIC_MASTERY() = listOf<Component>(
+                    DescriptionComponent(7120, "Magic Mastery", "Passively increases INT and WIL.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun AMPLIFY_MAGIC() = listOf<Component>(
+                    DescriptionComponent(7121, "Amplify Magic", "Increases MATK for the duration.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun MENTAL_STRIKE() = listOf<Component>(
+                    DescriptionComponent(7122, "Mental Strike", "Deals pure damage based on MATK.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun THUNDERBOLT_FIRESTORM() = listOf<Component>(
+                    DescriptionComponent(7123, "Thunderbolt Firestorm", "Deals magic damage with air and fire element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun ICICLE_AVALANCHE() = listOf<Component>(
+                    DescriptionComponent(7124, "Icicle Avalanche", "Deals magic damage with water and earth element.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
         }
 
         object Enchanter {
@@ -364,15 +447,95 @@ object Data {
         }
 
         object Scout {
-            //            public static final int TRICK_ATTACK = 7030;
-            //            public static final int POISON_ATTACK = 7031;
-            //            public static final int WEAPON_MASTERY = 7032;
-            //            public static final int EXPERIENCED_FIGHTER = 7033;
 
-            //            public static final String POISON_ATTACK = "Attacks the target with high chance to poison him";
-            //            public static final String TRICK_ATTACK = "Deals physical damage and steals gold equal to damage dealt";
-            //            public static final String WEAPON_MASTERY = "Passively increases ATK";
-            //            public static final String EXPERIENCED_FIGHTER = "Passively increases AGI and DEX";
+            fun TRICK_ATTACK() = listOf<Component>(
+                    DescriptionComponent(7030, "Trick Attack", "Deals physical damage and steals gold equal to damage dealt.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .onCast { caster, target, skill ->
+
+                                val dmg = caster.stats.getTotalStat(Stat.ATK) + skill.level.value * 2 * GameMath.random(5)
+
+                                var money = false
+                                if (caster is PlayerEntity) {
+                                    caster.getControl().rewardMoney(dmg.toInt())
+                                    money = true
+                                }
+
+                                // TODO: somehow notify user that he got money from attack
+
+                                SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
+                            }
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun POISON_ATTACK() = listOf<Component>(
+                    DescriptionComponent(7031, "Poison Attack", "Attacks the target with high chance to poison it.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+                            .onCast { caster, target, skill ->
+
+                                var poison = false
+                                if (GameMath.checkChance(skill.level.value * 7)) {
+                                    target.charConrol.addStatusEffect(StatusEffect(StatusEffect.Status.POISONED, 10.0f))
+                                    poison = true
+                                }
+
+                                // TODO: somehow notify user that target is poisoned
+
+                                SkillUseResult(caster.charConrol.attack(target))
+                            }
+                            .withMana(35)
+                            .withCooldown(15.0)
+            )
+
+            fun WEAPON_MASTERY() = listOf<Component>(
+                    DescriptionComponent(7032, "Weapon Mastery", "Passively increases ATK.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .onLearn { caster, skill ->
+                                skill.data.onCast(caster, caster, skill)
+
+                                skill.level.addListener({o, old, new ->
+                                    skill.data.onCast(caster, caster, skill)
+                                })
+                            }
+                            .onCast { caster, target, skill ->
+                                val factor = 7
+                                val value = skill.level.value * factor
+
+                                caster.stats.addBonusStat(Stat.ARM, -skill.testValue)
+
+                                skill.testValue = value
+
+                                caster.stats.addBonusStat(Stat.ARM, skill.testValue)
+
+                                SkillUseResult.NONE
+                            }
+            )
+
+            fun EXPERIENCED_FIGHTER() = listOf<Component>(
+                    DescriptionComponent(7033, "Experienced Fighter", "Passively increases AGI and DEX.", "skills/ic_skill_bash.png"),
+                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
+                            .onLearn { caster, skill ->
+                                skill.data.onCast(caster, caster, skill)
+
+                                skill.level.addListener({o, old, new ->
+                                    skill.data.onCast(caster, caster, skill)
+                                })
+                            }
+                            .onCast { caster, target, skill ->
+                                val value = skill.level.value * 2
+
+                                caster.attributes.addBonusAttribute(Attribute.AGILITY, -skill.testValue)
+                                caster.attributes.addBonusAttribute(Attribute.DEXTERITY, -skill.testValue)
+
+                                skill.testValue = value
+
+                                caster.attributes.addBonusAttribute(Attribute.AGILITY, skill.testValue)
+                                caster.attributes.addBonusAttribute(Attribute.DEXTERITY, skill.testValue)
+
+                                SkillUseResult.NONE
+                            }
+            )
         }
 
         object Rogue {
@@ -808,28 +971,7 @@ object Data {
     ////            }
     ////        });
     ////
-    ////        addSkill(new Skill(ID.Skill.Scout.EXPERIENCED_FIGHTER, "Experienced Fighter", Desc.Skill.Scout.EXPERIENCED_FIGHTER, false, 0.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 2024648263069876L;
-    ////
-    ////            private int value = 0;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 0;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                caster.addBonusAttribute(Attribute.AGILITY, -value);
-    ////                caster.addBonusAttribute(Attribute.DEXTERITY, -value);
-    ////                value = level * 2;
-    ////                caster.addBonusAttribute(Attribute.AGILITY, value);
-    ////                caster.addBonusAttribute(Attribute.DEXTERITY, value);
-    ////            }
-    ////        });
+
     ////
     ////        addSkill(new Skill(ID.Skill.Rogue.SHAMELESS, "Shameless", Desc.Skill.Rogue.SHAMELESS, true, 0.0f) {
     ////            /**
@@ -855,76 +997,7 @@ object Data {
     ////                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
     ////            }
     ////        });
-    ////
-    ////        addSkill(new Skill(ID.Skill.Scout.WEAPON_MASTERY, "Weapon Mastery", Desc.Skill.Scout.WEAPON_MASTERY, false, 0.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = -6762381875332894326L;
-    ////
-    ////            private int value = 0;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 0;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                caster.addBonusStat(Stat.ATK, -value);
-    ////                value = level * 7;
-    ////                caster.addBonusStat(Stat.ATK, value);
-    ////            }
-    ////        });
-    ////
-    ////        addSkill(new Skill(ID.Skill.Scout.POISON_ATTACK, "Poison Attack", Desc.Skill.Scout.POISON_ATTACK, true, 30.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 6791451275759000638L;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 3 + level*2;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                int dmg = caster.attack(target);
-    ////                boolean poison = false;
-    ////                if (GameMath.checkChance(level*7)) {
-    ////                    target.addStatusEffect(new StatusEffect(Status.POISONED, 10.0f));
-    ////                    poison = true;
-    ////                }
-    ////
-    ////                useResult = new SkillUseResult(GameMath.normalizeDamage(dmg) + (poison ? ",POISONED" : ""));
-    ////            }
-    ////        });
-    ////
-    ////        addSkill(new Skill(ID.Skill.Scout.TRICK_ATTACK, "Throw Dagger", Desc.Skill.Scout.TRICK_ATTACK, true, 20.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = 1031700846462374399L;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 5 + level*2;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                float dmg = caster.getTotalStat(Stat.ATK) + level * 2 * GameMath.random(5);
-    ////                int d = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
-    ////                boolean money = false;
-    ////                if (caster instanceof Player) {
-    ////                    ((Player)caster).incMoney(d);
-    ////                    money = true;
-    ////                }
-    ////
-    ////                useResult = new SkillUseResult(d + (money ? ",MONEY" : ""));
-    ////            }
-    ////        });
+
     ////
     ////        addSkill(new Skill(ID.Skill.Rogue.TRIPLE_STRIKE, "Triple Strike", Desc.Skill.Rogue.TRIPLE_STRIKE, true, 40.0f) {
     ////            /**

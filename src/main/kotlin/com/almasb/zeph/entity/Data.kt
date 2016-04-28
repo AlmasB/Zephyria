@@ -366,9 +366,16 @@ object Data {
 
         object Mage {
             fun FIREBALL() = listOf<Component>(
-                    DescriptionComponent(7020, "Fireball", "Deals magic damage with fire element.", "skills/ic_skill_bash.png"),
+                    DescriptionComponent(7020, "Fireball", "Deals magic damage with fire element.", "skills/ic_skill_fireball.png"),
                     SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-                            .withMana(35)
+                            .onCast { caster, target, skill ->
+
+                                val dmg = caster.stats.getTotalStat(Stat.MATK) + skill.level.value * 20
+
+                                SkillUseResult(caster.charConrol.dealMagicalDamage(target, dmg, Element.FIRE))
+                            }
+                            .withTextureName("projectiles/fireball.png")
+                            .withMana(5)
                             .withCooldown(15.0)
             )
 
@@ -784,25 +791,7 @@ object Data {
     ////            }
     ////        });
     ////
-    ////        addSkill(new Skill(ID.Skill.Mage.FIREBALL, "Fireball", Desc.Skill.Mage.FIREBALL, true, 9.0f) {
-    ////            /**
-    ////             *
-    ////             */
-    ////            private static final long serialVersionUID = -1839096679550971399L;
-    ////
-    ////            @Override
-    ////            public int getManaCost() {
-    ////                return 5 + level * 5;
-    ////            }
-    ////
-    ////            @Override
-    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    ////                float dmg = caster.getTotalStat(Stat.MATK) + level *20;
-    ////                int d = caster.dealMagicalDamage(target, dmg, Element.FIRE);
-    ////
-    ////                useResult = new SkillUseResult(d);
-    ////            }
-    ////        });
+
     ////
     ////        addSkill(new Skill(ID.Skill.Mage.ICE_SHARD, "Ice Shard", Desc.Skill.Mage.ICE_SHARD, true, 9.0f) {
     ////            /**

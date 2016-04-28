@@ -20,6 +20,8 @@ class SkillEntity(dataComponents: List<Component>) : Entity() {
     val level = SimpleIntegerProperty()
     val currentCooldown = SimpleDoubleProperty()
 
+    // TODO: rename to something meaningful
+    // this is where we store the value associated with passive bonus
     var testValue = 0
 
     // control ?

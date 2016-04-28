@@ -6,6 +6,7 @@ import com.almasb.ents.component.Required
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.*
+import com.almasb.zeph.entity.skill.SkillEntity
 import com.almasb.zeph.entity.skill.SkillType
 import com.almasb.zeph.entity.skill.SkillUseResult
 import javafx.beans.binding.Bindings
@@ -394,6 +395,22 @@ open class CharacterControl : AbstractControl() {
     fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
         // TODO: complete
         return char.skills[index].data.onCast(char, target, char.skills[index])
+    }
+
+    fun useTargetSkill(skill: SkillEntity, target: CharacterEntity): SkillUseResult {
+        if (skill.level.value == 0)
+            return SkillUseResult.NONE
+
+        if (skill.currentCooldown.value > 0)
+            return SkillUseResult.NONE
+
+        if (skill.data.mana > sp.value)
+            return SkillUseResult.NONE
+
+        sp.value -= skill.data.mana
+        skill.putOnCooldown()
+
+        return skill.data.onCast(char, target, skill)
     }
 
     fun useAreaSkill(index: Int, target: Point2D): SkillUseResult {

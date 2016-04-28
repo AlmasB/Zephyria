@@ -21,6 +21,7 @@ import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.DynamicAnimatedTexture;
+import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
@@ -179,6 +180,7 @@ public class ZephyriaApp extends GameApplication {
                 selectedSkillIndex = index;
             } else {
 
+                // let player select the target character
                 selectingSkillTargetChar = true;
                 selectedSkillIndex = index;
             }
@@ -190,10 +192,45 @@ public class ZephyriaApp extends GameApplication {
         SkillUseResult result = playerControl.useAreaSkill(selectedSkillIndex, getInput().getMousePositionWorld());
     }
 
-    private void useTargetSkill(CharacterEntity ch) {
-        // TODO: we should fire projectile based on skill data component
-        SkillUseResult result = playerControl.useTargetSkill(selectedSkillIndex, ch);
-        showDamage(result.getDamage(), ch.getPositionComponent().getValue());
+    // TODO: generalize to use skill or attack
+    private void useTargetSkill(CharacterEntity target) {
+        SkillEntity skill = player.getSkills().get(selectedSkillIndex);
+
+        // TODO: before firing projectile we must check if player has enough mana
+
+
+        Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
+
+        DynamicAnimatedTexture animation = player.getData().getAnimation();
+
+        if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
+            if (vector.getX() >= 0) {
+                animation.setAnimationChannel(CharacterAnimation.CAST_RIGHT);
+            } else {
+                animation.setAnimationChannel(CharacterAnimation.CAST_LEFT);
+            }
+        } else {
+            if (vector.getY() >= 0) {
+                animation.setAnimationChannel(CharacterAnimation.CAST_DOWN);
+            } else {
+                animation.setAnimationChannel(CharacterAnimation.CAST_UP);
+            }
+        }
+
+        getMasterTimer().runOnceAfter(() -> {
+            if (!player.isActive() || !target.isActive())
+                return;
+
+            Entities.builder()
+                    .type(EntityType.SKILL_PROJECTILE)
+                    .at(player.getBoundingBoxComponent().getCenterWorld())
+                    .viewFromTextureWithBBox(skill.getData().getTextureName())
+                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 10))
+                    .with(new OffscreenCleanControl())
+                    .with(new OwnerComponent(skill))
+                    .with(new CollidableComponent(true))
+                    .buildAndAttach(getGameWorld());
+        }, Duration.seconds(0.8));
     }
 
     @Override
@@ -329,32 +366,59 @@ public class ZephyriaApp extends GameApplication {
                 CharacterEntity character = (CharacterEntity) target;
 
                 Damage damage = player.getControl().attack(character);
-                showDamage(damage, character.getComponentUnsafe(PositionComponent.class).getValue());
+                showDamage(damage, character.getPositionComponent().getValue());
 
                 if (character.getHp().getValue() <= 0) {
-                    // TODO: reward based on level differences
-                    playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
-                    playerControl.rewardXP(character.getData().getRewardXP());
-
-                    List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
-                    drops.forEach(p -> {
-                        if (GameMath.checkChance(p.getSecond())) {
-                            dropItem(EntityManager.INSTANCE.getItem(p.getFirst()),
-                                    character.getPositionComponent().getValue());
-                        }
-                    });
-
-                    character.getMainViewComponent().getView().setOnMouseClicked(null);
-                    selected.set(null);
-
-                    character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
-
-                    getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
-
-                    initEnemies();
+                    onKill(character);
                 }
             }
         });
+
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.CHARACTER) {
+            @Override
+            protected void onCollisionBegin(Entity proj, Entity target) {
+                SkillEntity skill = (SkillEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
+
+                proj.removeFromWorld();
+
+                CharacterEntity character = (CharacterEntity) target;
+
+                SkillUseResult result = playerControl.useTargetSkill(skill, character);
+                showDamage(result.getDamage(), character.getPositionComponent().getValue());
+
+                if (character.getHp().getValue() <= 0) {
+                    onKill(character);
+                }
+            }
+        });
+    }
+
+    /**
+     * Called when a player kills given character.
+     *
+     * @param character killed char
+     */
+    private void onKill(CharacterEntity character) {
+        // TODO: reward based on level differences
+        playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
+        playerControl.rewardXP(character.getData().getRewardXP());
+
+        List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
+        drops.forEach(p -> {
+            if (GameMath.checkChance(p.getSecond())) {
+                dropItem(EntityManager.INSTANCE.getItem(p.getFirst()),
+                        character.getPositionComponent().getValue());
+            }
+        });
+
+        character.getMainViewComponent().getView().setOnMouseClicked(null);
+        selected.set(null);
+
+        character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
+
+        getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
+
+        initEnemies();
     }
 
     private Text debug = new Text();
@@ -381,7 +445,7 @@ public class ZephyriaApp extends GameApplication {
 
         // TODO: not all selected entities should be attacked, e.g. merchants
         if (selected.get() != null) {
-            startAttack(player, selected.get());
+            //startAttack(player, selected.get());
         }
 
         while (selected.get() == null && !path.isEmpty()) {
@@ -533,10 +597,15 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private enum EntityType {
-        PLAYER, CHARACTER, PROJECTILE
+        PLAYER, CHARACTER, PROJECTILE, SKILL_PROJECTILE
     }
 
     private enum CharacterAnimation implements AnimationChannel {
+        CAST_UP(0, 7),
+        CAST_LEFT(1, 7),
+        CAST_DOWN(2, 7),
+        CAST_RIGHT(3, 7),
+
         WALK_RIGHT(11, 9),
         WALK_LEFT(9, 9),
         WALK_UP(8, 9),
@@ -605,7 +674,7 @@ public class ZephyriaApp extends GameApplication {
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
 
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));

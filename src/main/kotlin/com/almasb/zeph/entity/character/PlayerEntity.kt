@@ -26,9 +26,9 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
     val statLevel = SimpleIntegerProperty(1)
     val jobLevel = SimpleIntegerProperty(1)
 
-    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.NOVICE)
-
     init {
+        charClass.value = CharacterClass.NOVICE
+
         addComponent(money)
         addControl(PlayerControl())
     }

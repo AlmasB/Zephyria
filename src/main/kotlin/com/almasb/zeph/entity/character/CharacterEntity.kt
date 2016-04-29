@@ -20,6 +20,8 @@ import javafx.collections.FXCollections
  */
 open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
 
+    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
+
     val hp = HPComponent()
     val sp = SPComponent()
 

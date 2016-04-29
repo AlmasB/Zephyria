@@ -21,6 +21,8 @@ import java.util.*
  */
 class RandomWanderControl : AbstractControl() {
 
+    var enabled = true
+
     private lateinit var char: CharacterEntity
     private lateinit var animation: DynamicAnimatedTexture
 
@@ -35,6 +37,8 @@ class RandomWanderControl : AbstractControl() {
     }
 
     override fun onUpdate(entity: Entity, tpf: Double) {
+        if (!enabled)
+            return
 
         while (!path.isEmpty()) {
             val node = path[0]

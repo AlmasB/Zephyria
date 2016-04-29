@@ -149,11 +149,12 @@ open class CharacterControl : AbstractControl() {
         val level = char.baseLevel
 
         stats.statProperty(Stat.MAX_HP).bind(Bindings.createDoubleBinding(Callable {
-            1.0 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + (vit() / 10)
+            1.0 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + (vit() / 10) + char.charClass.value.hp * level()
         }, vit, str, level))
 
-        stats.statProperty(Stat.MAX_SP).bind(Bindings.createDoubleBinding(Callable{ 1.0 + wis() * 0.4 + wil() * 0.3 + level() * 0.25 + (wis() / 10).toDouble() + int_() * 0.3 },
-                wis, wil, level, int_))
+        stats.statProperty(Stat.MAX_SP).bind(Bindings.createDoubleBinding(Callable {
+            1.0 + wis() * 0.4 + wil() * 0.3 + level() * 0.25 + (wis() / 10).toDouble() + int_() * 0.3 + char.charClass.value.sp * level()
+        }, wis, wil, level, int_))
 
         stats.statProperty(Stat.HP_REGEN).bind(Bindings.createDoubleBinding(Callable{ 1 + vit() * 0.1 },
                 vit))

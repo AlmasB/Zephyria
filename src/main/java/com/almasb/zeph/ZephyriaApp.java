@@ -27,6 +27,7 @@ import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.EntityType;
+import com.almasb.zeph.entity.ai.AIControl;
 import com.almasb.zeph.entity.ai.RandomWanderControl;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.PlayerEntity;
@@ -71,6 +72,8 @@ public class ZephyriaApp extends GameApplication {
     private static final int TILE_SIZE = Config.INSTANCE.getTileSize();
     private static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
     private static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
+
+    private GameDataService game;
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -219,10 +222,12 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        game = FXGL.getService(Services.INSTANCE.getGAME_APP());
+
         initBackground();
 
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
-        FXGL.getService(Services.INSTANCE.getGAME_APP()).setGrid(grid);
+        game.setGrid(grid);
 
         selectedEffect.setInput(new Glow(0.8));
 
@@ -357,6 +362,26 @@ public class ZephyriaApp extends GameApplication {
             }
         });
 
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.PLAYER) {
+            @Override
+            protected void onCollisionBegin(Entity proj, Entity target) {
+                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+                    return;
+
+                proj.removeFromWorld();
+
+                CharacterEntity attacker = (CharacterEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
+                CharacterEntity character = (CharacterEntity) target;
+
+                Damage damage = attacker.getCharConrol().attack(character);
+                showDamage(damage, character.getPositionComponent().getValue());
+
+//                if (character.getHp().getValue() <= 0) {
+//                    onKill(character);
+//                }
+            }
+        });
+
         physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.CHARACTER) {
             @Override
             protected void onCollisionBegin(Entity proj, Entity target) {
@@ -382,6 +407,8 @@ public class ZephyriaApp extends GameApplication {
      * @param character killed char
      */
     private void onKill(CharacterEntity character) {
+        character.setControlsEnabled(false);
+
         // TODO: reward based on level differences
         playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
         playerControl.rewardXP(character.getData().getRewardXP());
@@ -585,6 +612,8 @@ public class ZephyriaApp extends GameApplication {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
         playerControl = player.getControl();
 
+        game.setPlayer(player);
+
         player.getTypeComponent().setValue(EntityType.PLAYER);
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
@@ -629,14 +658,12 @@ public class ZephyriaApp extends GameApplication {
         character.getMainViewComponent().setView(texture, true);
 
         if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
-            character.addControl(new RandomWanderControl());
+            character.addControl(new AIControl());
 
             character.getMainViewComponent().getView().setOnMouseClicked(e -> {
                 selected.set(character);
             });
         }
-
-
 
         EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
 

@@ -2,7 +2,7 @@ package com.almasb.zeph.combat;
 
 public final class Damage {
 
-    //public static final Damage NULL = new Damage();
+    public static final Damage NULL = new Damage();
 
     public enum DamageType {
         /**
@@ -38,6 +38,8 @@ public final class Damage {
         this.element = element;
         this.critical = critical == DamageCritical.TRUE;
     }
+
+    private Damage() {}
 
     public Element getElement() {
         return element;

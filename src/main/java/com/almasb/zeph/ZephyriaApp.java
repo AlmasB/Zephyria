@@ -173,7 +173,7 @@ public class ZephyriaApp extends GameApplication {
         SkillEntity skill = player.getSkills().get(selectedSkillIndex);
 
         // TODO: before firing projectile we must check if player has enough mana
-        
+
         Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
 
         DynamicAnimatedTexture animation = player.getData().getAnimation();
@@ -621,9 +621,12 @@ public class ZephyriaApp extends GameApplication {
                 .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
         character.getMainViewComponent().setView(texture, true);
-        character.getMainViewComponent().getView().setOnMouseClicked(e -> {
-            selected.set(character);
-        });
+
+        if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
+            character.getMainViewComponent().getView().setOnMouseClicked(e -> {
+                selected.set(character);
+            });
+        }
 
         character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
 

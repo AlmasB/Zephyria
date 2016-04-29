@@ -31,7 +31,7 @@ open class CharacterControl : AbstractControl() {
 
     /**
      * Apply status effect.
-
+     *
      * @param e effect
      */
     fun addStatusEffect(e: StatusEffect) {
@@ -46,7 +46,7 @@ open class CharacterControl : AbstractControl() {
     /**
      * Applies an effect to this character. If the effect comes from the same
      * source, e.g. skill, the effect will be re-applied (will reset its timer).
-
+     *
      * @param e effect
      */
     fun addEffect(e: EffectEntity) {
@@ -195,7 +195,6 @@ open class CharacterControl : AbstractControl() {
     private var regenTick = 0.0
 
     /**
-     * TODO: when max HP is reduced, changes are delayed atm
      * Regeneration tick. HP/SP.
      */
     private fun updateRegen(tpf: Double) {
@@ -208,6 +207,15 @@ open class CharacterControl : AbstractControl() {
                 sp.restore(stats.getTotalStat(Stat.SP_REGEN).toDouble())
             }
             regenTick = 0.0
+        }
+
+        // effects may have ended, leaving us with more hp / sp than max, so limit it.
+        if (hp.value > hp.maxValue) {
+            hp.restorePercentageMax(100.0)
+        }
+
+        if (sp.value > sp.maxValue) {
+            sp.restorePercentageMax(100.0)
         }
     }
 
@@ -286,7 +294,8 @@ open class CharacterControl : AbstractControl() {
     }
 
     /**
-     * Deals physical damage with [baseDamage] amount to [target]. The damage is reduced by armor and defense.
+     * Deals physical damage with [baseDamage] amount to [target].
+     * The damage is reduced by armor and defense.
      * The damage will be of [element] element.
      *
      * @return damage dealt
@@ -313,11 +322,8 @@ open class CharacterControl : AbstractControl() {
     }
 
     /**
-     * Deals physical damage of type NEUTRAL to target. The damage is reduced by
-     * target's armor and DEF.
-     *
-     * @param target
-     * @param baseDamage
+     * Deals physical [baseDamage] of type NEUTRAL to [target].
+     * The damage is reduced by target's armor and DEF.
      *
      * @return damage dealt
      */
@@ -326,8 +332,8 @@ open class CharacterControl : AbstractControl() {
     }
 
     /**
-     * Deal magical [baseDamage] of type [element] to [target]. The damage is
-     * reduced by target's magical armor and MDEF.
+     * Deal magical [baseDamage] of type [element] to [target].
+     * The damage is reduced by target's magical armor and MDEF.
      *
      * @return damage dealt
      */
@@ -360,10 +366,7 @@ open class CharacterControl : AbstractControl() {
     }
 
     /**
-     * Deals the exact amount of damage to target as specified by param dmg
-     *
-     * @param target
-     * @param dmg
+     * Deals the exact amount of [value] damage to [target].
      */
     fun dealPureDamage(target: Entity, value: Double): Damage {
         val amount = value.toInt()
@@ -379,10 +382,10 @@ open class CharacterControl : AbstractControl() {
             return SkillUseResult.NONE
 
         if (skill.currentCooldown.value > 0)
-            return SkillUseResult.NONE
+            return SkillUseResult.ON_COOLDOWN
 
         if (skill.data.mana > sp.value)
-            return SkillUseResult.NONE
+            return SkillUseResult.NO_MANA
 
         sp.value -= skill.data.mana
         skill.putOnCooldown()
@@ -393,8 +396,7 @@ open class CharacterControl : AbstractControl() {
     }
 
     fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
-        // TODO: complete
-        return char.skills[index].data.onCast(char, target, char.skills[index])
+        return useTargetSkill(char.skills[index], target)
     }
 
     fun useTargetSkill(skill: SkillEntity, target: CharacterEntity): SkillUseResult {
@@ -402,10 +404,10 @@ open class CharacterControl : AbstractControl() {
             return SkillUseResult.NONE
 
         if (skill.currentCooldown.value > 0)
-            return SkillUseResult.NONE
+            return SkillUseResult.ON_COOLDOWN
 
         if (skill.data.mana > sp.value)
-            return SkillUseResult.NONE
+            return SkillUseResult.NO_MANA
 
         sp.value -= skill.data.mana
         skill.putOnCooldown()

@@ -28,9 +28,11 @@ import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
+import com.almasb.zeph.entity.EntityType;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
+import com.almasb.zeph.entity.character.component.SubViewComponent;
 import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.ArmorEntity;
@@ -68,9 +70,9 @@ import java.util.Random;
 
 public class ZephyriaApp extends GameApplication {
 
-    private static final int TILE_SIZE = 64;
-    private static final int MAP_WIDTH = 20;
-    private static final int MAP_HEIGHT = 20;
+    private static final int TILE_SIZE = Config.INSTANCE.getTileSize();
+    private static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
+    private static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -225,7 +227,7 @@ public class ZephyriaApp extends GameApplication {
                     .type(EntityType.SKILL_PROJECTILE)
                     .at(player.getBoundingBoxComponent().getCenterWorld())
                     .viewFromTextureWithBBox(skill.getData().getTextureName())
-                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 10))
+                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 6))
                     .with(new OffscreenCleanControl())
                     .with(new OwnerComponent(skill))
                     .with(new CollidableComponent(true))
@@ -273,6 +275,7 @@ public class ZephyriaApp extends GameApplication {
 
                     selectingSkillTargetChar = false;
                     selectedSkillIndex = -1;
+                    selected.set(null);
                 }
             }
         });
@@ -445,7 +448,7 @@ public class ZephyriaApp extends GameApplication {
 
         // TODO: not all selected entities should be attacked, e.g. merchants
         if (selected.get() != null) {
-            //startAttack(player, selected.get());
+            startAttack(player, selected.get());
         }
 
         while (selected.get() == null && !path.isEmpty()) {
@@ -596,10 +599,6 @@ public class ZephyriaApp extends GameApplication {
         tt.play();
     }
 
-    private enum EntityType {
-        PLAYER, CHARACTER, PROJECTILE, SKILL_PROJECTILE
-    }
-
     private enum CharacterAnimation implements AnimationChannel {
         CAST_UP(0, 7),
         CAST_LEFT(1, 7),
@@ -688,18 +687,20 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initEnemies() {
-        CharacterEntity enemy = new CharacterEntity(Data.Character.INSTANCE.SKELETON_ARCHER());
-
-        enemy.getTypeComponent().setValue(EntityType.CHARACTER);
-        enemy.addComponent(new CollidableComponent(true));
-
+//        CharacterEntity enemy = new CharacterEntity(Data.Character.INSTANCE.SKELETON_ARCHER());
+//
+//        enemy.getTypeComponent().setValue(EntityType.CHARACTER);
+//        enemy.addComponent(new CollidableComponent(true));
+//
         Random random = new Random();
+//
+//        spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
+//
+//        enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
+//            selected.set(enemy);
+//        });
 
-        spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
-
-        enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
-            selected.set(enemy);
-        });
+        spawnEntityNEW(EntityManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
     }
 
     public static ProgressBar makeHPBar() {
@@ -778,6 +779,32 @@ public class ZephyriaApp extends GameApplication {
         getGameWorld().addEntity(entity);
 
         addCharacterSubView((CharacterEntity) entity);
+    }
+
+    private void spawnEntityNEW(CharacterEntity character) {
+        character.addComponent(new CollidableComponent(true));
+
+        DynamicAnimatedTexture texture = getAssetLoader()
+                .loadTexture(character.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
+                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
+
+        character.getMainViewComponent().setView(texture, true);
+        character.getMainViewComponent().getView().setOnMouseClicked(e -> {
+            selected.set(character);
+        });
+
+        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
+
+        EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
+
+        getGameWorld().addEntity(character);
+        getGameScene().addGameView(subView);
+
+        character.activeProperty().addListener((o, wasActive, isActive) -> {
+            if (!isActive) {
+                getGameScene().removeGameView(subView);
+            }
+        });
     }
 
     public static void main(String[] args) {

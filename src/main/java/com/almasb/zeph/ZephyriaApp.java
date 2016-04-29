@@ -179,7 +179,8 @@ public class ZephyriaApp extends GameApplication {
     private void useTargetSkill(CharacterEntity target) {
         SkillEntity skill = player.getSkills().get(selectedSkillIndex);
 
-        // TODO: before firing projectile we must check if player has enough mana
+        if (skill.isOnCooldown() || skill.getManaCost().intValue() > player.getSp().getValue())
+            return;
 
         Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
 

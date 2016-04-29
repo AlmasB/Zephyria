@@ -32,15 +32,25 @@ class SkillEntity(dataComponents: List<Component>) : Entity() {
         desc = getComponentUnsafe(DescriptionComponent::class.java)
         data = getComponentUnsafe(SkillDataComponent::class.java)
 
-        //desc.description = "${desc.name}\n${desc.description}\n$data"
+        val rawDescription = desc.description.value
+        desc.description.bind(desc.name.concat("\n")
+                .concat(rawDescription + "\n")
+                .concat(level.asString("Level: %d\n"))
+                .concat(level.multiply(data.mana).asString("Mana Cost: %d\n")))
     }
+
+    val manaCost by lazy { level.multiply(data.mana) }
+
+    //fun getManaCost() = level.value * data.mana
+
+    fun isOnCooldown() = currentCooldown.value > 0
 
     fun putOnCooldown() {
         currentCooldown.value = data.cooldown
     }
 
     fun onUpdate(tpf: Double) {
-        if (currentCooldown.value > 0) {
+        if (isOnCooldown()) {
             currentCooldown.value -= tpf
         } else if (currentCooldown.value < 0) {
             currentCooldown.value = 0.0

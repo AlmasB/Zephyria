@@ -123,6 +123,8 @@ public class HotbarView extends InGameWindow {
         view.setTranslateX(2 + index * 69);
         view.setTranslateY(30);
         view.setCursor(Cursor.HAND);
+        view.visibleProperty().bind(player.getSp().valueProperty().greaterThan(skill.getManaCost())
+                .and(skill.getCurrentCooldown().lessThanOrEqualTo(0)));
 
         Tooltip tooltip = new Tooltip();
 

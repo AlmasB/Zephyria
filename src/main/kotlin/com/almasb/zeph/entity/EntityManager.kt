@@ -85,7 +85,7 @@ object EntityManager {
         return bar
     }
 
-    private fun makeCharacterSubView(entity: CharacterEntity): SubViewComponent {
+    fun makeCharacterSubView(entity: CharacterEntity): SubViewComponent {
         val barHP = makeHPBar()
         val barSP = makeSkillBar()
 
@@ -123,13 +123,6 @@ object EntityManager {
         subView.translateYProperty().bind(entity.positionComponent.yProperty())
 
         return SubViewComponent(subView)
-//        getGameScene().addGameView(subView)
-//
-//        entity.activeProperty().addListener { observable, oldValue, newValue ->
-//            if (!newValue) {
-//                getGameScene().removeGameView(subView)
-//            }
-//        }
     }
 
     fun createCharacter(dataComponents: List<Component>, x: Int, y: Int): CharacterEntity {

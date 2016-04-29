@@ -11,7 +11,6 @@ import com.almasb.fxgl.entity.GameEntity;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.component.CollidableComponent;
 import com.almasb.fxgl.entity.component.MainViewComponent;
-import com.almasb.fxgl.entity.component.PositionComponent;
 import com.almasb.fxgl.entity.control.OffscreenCleanControl;
 import com.almasb.fxgl.entity.control.ProjectileControl;
 import com.almasb.fxgl.input.Input;
@@ -21,8 +20,6 @@ import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimationChannel;
 import com.almasb.fxgl.texture.DynamicAnimatedTexture;
-import com.almasb.fxgl.texture.Texture;
-import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.combat.Damage;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
@@ -51,7 +48,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.Group;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -107,31 +103,9 @@ public class ZephyriaApp extends GameApplication {
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
-    private List<AStarNode> path = new ArrayList<>();
-
     @Override
     protected void initInput() {
         Input input = getInput();
-
-//        input.addAction(new UserAction("TargetSelection") {
-//            @Override
-//            protected void onActionBegin() {
-//                int targetX = (int) (input.getMouseXWorld() / TILE_SIZE);
-//                int targetY = (int) (input.getMouseYWorld() / TILE_SIZE);
-//
-//                int startX = getTileX(player);
-//                int startY = getTileY(player);
-//
-//                //System.out.println(startX + " " + startY + " " + targetX +" " + targetY);
-//
-//                path = grid.getPath(startX, startY, targetX, targetY);
-//
-////                Entities.builder()
-////                        .at(input.getMousePositionWorld())
-////                        .viewFromNode(new Rectangle(5, 5))
-////                        .buildAndAttach(getGameWorld());
-//            }
-//        }, MouseButton.PRIMARY);
 
         input.addAction(new UserAction("Test Attack") {
             @Override
@@ -199,8 +173,7 @@ public class ZephyriaApp extends GameApplication {
         SkillEntity skill = player.getSkills().get(selectedSkillIndex);
 
         // TODO: before firing projectile we must check if player has enough mana
-
-
+        
         Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
 
         DynamicAnimatedTexture animation = player.getData().getAnimation();
@@ -280,6 +253,8 @@ public class ZephyriaApp extends GameApplication {
             }
         });
     }
+
+    private List<AStarNode> path = new ArrayList<>();
 
     private void initBackground() {
         GameEntity bg = Entities.builder()
@@ -397,7 +372,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     /**
-     * Called when a player kills given character.
+     * Called when player kills given character.
      *
      * @param character killed char
      */
@@ -599,53 +574,6 @@ public class ZephyriaApp extends GameApplication {
         tt.play();
     }
 
-    private enum CharacterAnimation implements AnimationChannel {
-        CAST_UP(0, 7),
-        CAST_LEFT(1, 7),
-        CAST_DOWN(2, 7),
-        CAST_RIGHT(3, 7),
-
-        WALK_RIGHT(11, 9),
-        WALK_LEFT(9, 9),
-        WALK_UP(8, 9),
-        WALK_DOWN(10, 9),
-
-        SLASH_UP(12, 6),
-        SLASH_LEFT(13, 6),
-        SLASH_DOWN(14, 6),
-        SLASH_RIGHT(15, 6),
-
-        SHOOT_UP(16, 13),
-        SHOOT_LEFT(17, 13),
-        SHOOT_DOWN(18, 13),
-        SHOOT_RIGHT(19, 13),
-
-        DEATH(20, 6);
-
-        int row;
-        int cycle;
-
-        CharacterAnimation(int row, int cycle) {
-            this.row = row;
-            this.cycle = cycle;
-        }
-
-        @Override
-        public Rectangle2D area() {
-            return new Rectangle2D(0, TILE_SIZE*row, TILE_SIZE*cycle, TILE_SIZE);
-        }
-
-        @Override
-        public int frames() {
-            return cycle;
-        }
-
-        @Override
-        public Duration duration() {
-            return Duration.seconds(1.2);
-        }
-    }
-
     private DynamicAnimatedTexture playerAnimation;
 
     private void initPlayer() {
@@ -653,15 +581,12 @@ public class ZephyriaApp extends GameApplication {
         playerControl = player.getControl();
 
         player.getTypeComponent().setValue(EntityType.PLAYER);
-        player.addComponent(new CollidableComponent(true));
-
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
 
-        playerAnimation = getAssetLoader().loadTexture(player.getDescription().getTextureName().get())
-                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
+        player.addComponent(EntityManager.INSTANCE.makeCharacterSubView(player));
+        spawnCharacter(player);
 
-        player.getMainViewComponent().setView(playerAnimation, true);
-        player.getData().setAnimation(playerAnimation);
+        playerAnimation = player.getData().getAnimation();
 
         // TODO: TEST DATA BEGIN
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
@@ -680,108 +605,15 @@ public class ZephyriaApp extends GameApplication {
         player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));
 
         // TEST DATA END
-
-        getGameWorld().addEntity(player);
-
-        addCharacterSubView(player);
     }
 
     private void initEnemies() {
-//        CharacterEntity enemy = new CharacterEntity(Data.Character.INSTANCE.SKELETON_ARCHER());
-//
-//        enemy.getTypeComponent().setValue(EntityType.CHARACTER);
-//        enemy.addComponent(new CollidableComponent(true));
-//
         Random random = new Random();
-//
-//        spawnEntity(random.nextInt(15), random.nextInt(10), enemy);
-//
-//        enemy.getMainViewComponent().getView().setOnMouseClicked(e -> {
-//            selected.set(enemy);
-//        });
 
-        spawnEntityNEW(EntityManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
+        spawnCharacter(EntityManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
     }
 
-    public static ProgressBar makeHPBar() {
-        ProgressBar bar = new ProgressBar(false);
-        bar.setHeight(25);
-        bar.setFill(Color.GREEN.brighter());
-        bar.setTraceFill(Color.GREEN.brighter());
-        bar.setLabelVisible(true);
-        return bar;
-    }
-
-    public static ProgressBar makeSkillBar() {
-        ProgressBar bar = new ProgressBar(false);
-        bar.setHeight(25);
-        bar.setFill(Color.BLUE.brighter().brighter());
-        bar.setTraceFill(Color.BLUE);
-        bar.setLabelVisible(true);
-        return bar;
-    }
-
-    private void addCharacterSubView(CharacterEntity entity) {
-        ProgressBar barHP = makeHPBar();
-        ProgressBar barSP = makeSkillBar();
-
-        barHP.setTranslateX(0);
-        barHP.setTranslateY(80);
-        barHP.setWidth(TILE_SIZE);
-        barHP.setHeight(10);
-        barHP.setLabelVisible(false);
-
-        barSP.setTranslateX(0);
-        barSP.setTranslateY(90);
-        barSP.setWidth(TILE_SIZE);
-        barSP.setHeight(10);
-        barSP.setLabelVisible(false);
-
-        barHP.maxValueProperty().bind(entity.getHp().maxValueProperty());
-        barHP.currentValueProperty().bind(entity.getHp().valueProperty());
-
-        barSP.maxValueProperty().bind(entity.getSp().maxValueProperty());
-        barSP.currentValueProperty().bind(entity.getSp().valueProperty());
-
-        Text text = new Text();
-        text.setFont(Font.font(14));
-        text.setFill(Color.WHITE);
-        text.textProperty().bind(entity.getDescription().getName().concat(" Lv. ").concat(entity.getBaseLevel()));
-        text.setTranslateX(TILE_SIZE / 2 - text.getLayoutBounds().getWidth() / 2);
-        text.setTranslateY(75);
-
-        Group vbox = new Group(barHP, barSP, text);
-
-        EntityView subView = new EntityView();
-        subView.addNode(vbox);
-
-        subView.translateXProperty().bind(entity.getPositionComponent().xProperty());
-        subView.translateYProperty().bind(entity.getPositionComponent().yProperty());
-
-        getGameScene().addGameView(subView);
-
-        entity.activeProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) {
-                getGameScene().removeGameView(subView);
-            }
-        });
-    }
-
-    private void spawnEntity(int x, int y, GameEntity entity) {
-        entity.getPositionComponent().setValue(x * TILE_SIZE, y * TILE_SIZE);
-
-        DynamicAnimatedTexture texture = getAssetLoader().loadTexture(entity.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
-                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
-
-        entity.getMainViewComponent().setView(texture, true);
-        entity.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
-
-        getGameWorld().addEntity(entity);
-
-        addCharacterSubView((CharacterEntity) entity);
-    }
-
-    private void spawnEntityNEW(CharacterEntity character) {
+    private void spawnCharacter(CharacterEntity character) {
         character.addComponent(new CollidableComponent(true));
 
         DynamicAnimatedTexture texture = getAssetLoader()

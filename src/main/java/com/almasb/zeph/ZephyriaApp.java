@@ -4,6 +4,7 @@ import com.almasb.astar.AStarGrid;
 import com.almasb.astar.AStarNode;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
+import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.EntityView;
@@ -26,6 +27,7 @@ import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.EntityType;
+import com.almasb.zeph.entity.ai.RandomWanderControl;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
@@ -101,6 +103,8 @@ public class ZephyriaApp extends GameApplication {
         settings.setFullScreen(full);
         settings.setShowFPS(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
+
+        settings.addServiceType(Services.INSTANCE.getGAME_APP());
     }
 
     @Override
@@ -218,6 +222,7 @@ public class ZephyriaApp extends GameApplication {
         initBackground();
 
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
+        FXGL.getService(Services.INSTANCE.getGAME_APP()).setGrid(grid);
 
         selectedEffect.setInput(new Glow(0.8));
 
@@ -620,15 +625,18 @@ public class ZephyriaApp extends GameApplication {
                 .loadTexture(character.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
                 .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
 
+        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
         character.getMainViewComponent().setView(texture, true);
 
         if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
+            character.addControl(new RandomWanderControl());
+
             character.getMainViewComponent().getView().setOnMouseClicked(e -> {
                 selected.set(character);
             });
         }
 
-        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
+
 
         EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
 

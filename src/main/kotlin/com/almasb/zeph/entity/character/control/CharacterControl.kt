@@ -410,6 +410,8 @@ open class CharacterControl : AbstractControl() {
         if (skill.data.mana > sp.value)
             return SkillUseResult.NO_MANA
 
+        // TODO: do these checks before using skills
+
         sp.value -= skill.manaCost.intValue()
         skill.putOnCooldown()
 

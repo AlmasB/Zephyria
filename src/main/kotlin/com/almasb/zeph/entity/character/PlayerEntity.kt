@@ -2,8 +2,10 @@ package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Component
 import com.almasb.zeph.entity.DescriptionComponent
+import com.almasb.zeph.entity.ai.MovementControl
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.character.component.MoneyComponent
+import com.almasb.zeph.entity.character.control.PlayerActionControl
 import com.almasb.zeph.entity.character.control.PlayerControl
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -31,6 +33,7 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
 
         addComponent(money)
         addControl(PlayerControl())
+        //addControl(PlayerActionControl())
     }
 
     fun getControl() = getControlUnsafe(PlayerControl::class.java)

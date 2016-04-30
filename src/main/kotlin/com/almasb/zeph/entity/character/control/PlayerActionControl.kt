@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.ai
+package com.almasb.zeph.entity.character.control
 
 import com.almasb.astar.AStarGrid
 import com.almasb.ents.AbstractControl
@@ -6,45 +6,49 @@ import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.zeph.Config
 import com.almasb.zeph.Services
+import com.almasb.zeph.entity.ai.AttackControl
+import com.almasb.zeph.entity.ai.MovementControl
+import com.almasb.zeph.entity.ai.RandomWanderControl
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.PlayerEntity
+import javafx.beans.property.SimpleObjectProperty
 
 /**
  *
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class AIControl : AbstractControl() {
+class PlayerActionControl : AbstractControl() {
 
-    lateinit var char: CharacterEntity
+    private lateinit var player: PlayerEntity
 
-    val moveControl = RandomWanderControl()
+    val moveControl = MovementControl()
     val attackControl = AttackControl()
+
+    val selected = SimpleObjectProperty<Entity>()
 
     private var attacking = false
 
     private val range = 5
     private val grid: AStarGrid
-    private val player: PlayerEntity
 
     init {
         grid = FXGL.getService(Services.GAME_APP).grid
-        player = FXGL.getService(Services.GAME_APP).player
-
-        attackControl.selected.value = player
     }
 
     override fun onAdded(entity: Entity) {
-        char = entity as CharacterEntity
+        player = entity as PlayerEntity
 
         attackControl.enabled = false
+        attackControl.selected.bind(selected)
 
-        char.addControl(moveControl)
-        char.addControl(attackControl)
+        player.addControl(moveControl)
+        player.addControl(attackControl)
     }
 
     override fun onUpdate(entity: Entity, tpf: Double) {
-        if (isInRange()) {
+
+        if (selected.value is CharacterEntity /* TODO: && can be attacked, i.e. enemy */) {
             if (!attacking) {
                 moveControl.enabled = false
                 attackControl.enabled = true
@@ -59,5 +63,9 @@ class AIControl : AbstractControl() {
         }
     }
 
-    private fun isInRange() = player.positionComponent.distance(char.positionComponent) <= range * Config.tileSize
+    //private fun isInRange() = player.positionComponent.distance(char.positionComponent) <= range * Config.tileSize
+
+    fun moveTo(x: Int, y: Int) {
+        moveControl.moveTo(x, y)
+    }
 }

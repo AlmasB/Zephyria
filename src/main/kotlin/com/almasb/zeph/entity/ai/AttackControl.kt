@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.astar.AStarNode
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
@@ -11,16 +10,12 @@ import com.almasb.fxgl.entity.control.OffscreenCleanControl
 import com.almasb.fxgl.entity.control.ProjectileControl
 import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.CharacterAnimation
-import com.almasb.zeph.Services
 import com.almasb.zeph.entity.EntityType
 import com.almasb.zeph.entity.character.CharacterEntity
-import com.almasb.zeph.entity.character.PlayerEntity
 import com.almasb.zeph.entity.character.control.CharacterControl
-import com.almasb.zeph.entity.character.control.PlayerControl
-import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.item.component.OwnerComponent
+import javafx.beans.property.SimpleObjectProperty
 import javafx.util.Duration
-import java.util.*
 
 /**
  *
@@ -34,14 +29,7 @@ class AttackControl : AbstractControl() {
     private lateinit var char: CharacterEntity
     private lateinit var animation: DynamicAnimatedTexture
 
-    private val random = Random()
-    private var time = 0.0
-
-    private val player: PlayerEntity
-
-    init {
-        player = FXGL.getService(Services.GAME_APP).player
-    }
+    val selected = SimpleObjectProperty<Entity>()
 
     override fun onAdded(entity: Entity) {
         char = entity as CharacterEntity
@@ -49,7 +37,8 @@ class AttackControl : AbstractControl() {
     }
 
     override fun onUpdate(entity: Entity, tpf: Double) {
-        startAttack(char, player)
+        if (selected.value is CharacterEntity)
+            startAttack(char, selected.value)
     }
 
     private fun startAttack(attacker: Entity, target: Entity) {

@@ -253,8 +253,6 @@ public class ZephyriaApp extends GameApplication {
         });
     }
 
-    private List<AStarNode> path = new ArrayList<>();
-
     private void initBackground() {
         GameEntity bg = Entities.builder()
                 .buildAndAttach(getGameWorld());
@@ -285,10 +283,6 @@ public class ZephyriaApp extends GameApplication {
             int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
             playerActionControl.moveTo(targetX, targetY);
-//            int startX = getTileX(player);
-//            int startY = getTileY(player);
-//
-//            path = grid.getPath(startX, startY, targetX, targetY);
         });
 
         bg.getMainViewComponent().setRenderLayer(new RenderLayer() {
@@ -443,119 +437,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     @Override
-    protected void onUpdate(double tpf) {
-
-        // TODO: not all selected entities should be attacked, e.g. merchants
-//        if (selected.get() != null) {
-//            startAttack(player, selected.get());
-//        }
-
-//        while (selected.get() == null && !path.isEmpty()) {
-//            AStarNode node = path.get(0);
-//
-//            double dx = node.getX() * TILE_SIZE - (player).getPositionComponent().getX();
-//            double dy = node.getY() * TILE_SIZE - (player).getPositionComponent().getY();
-//
-//            dx = Math.signum(dx);
-//            dy = Math.signum(dy);
-//
-//            if (dx == 0 && dy == 0) {
-//                path.remove(0);
-//                continue;
-//            } else if (dx > 0) {
-//                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_RIGHT);
-//            } else if (dx < 0) {
-//                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_LEFT);
-//            } else if (dy > 0) {
-//                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_DOWN);
-//            } else if (dy < 0) {
-//                playerAnimation.setAnimationChannel(CharacterAnimation.WALK_UP);
-//            }
-//
-//            dx *= 2;
-//            dy *= 2;
-//
-//            player.getPositionComponent().translate(dx, dy);
-//            break;
-//        }
-    }
-
-//    private int getTileX(GameEntity entity) {
-//        return (int) (entity.getPositionComponent().getX()) / TILE_SIZE;
-//    }
-//
-//    private int getTileY(GameEntity entity) {
-//        return (int) (entity.getPositionComponent().getY()) / TILE_SIZE;
-//    }
-//
-//    private void startAttack(Entity attacker, Entity target) {
-//        if (!attacker.isActive() || !target.isActive())
-//            return;
-//
-//        CharacterControl a = attacker.getControlUnsafe(CharacterControl.class);
-//
-//        if (!a.canAttack())
-//            return;
-//
-//        a.resetAtkTick();
-//
-//        attack((CharacterEntity) attacker, (CharacterEntity) target);
-//    }
-//
-//    private void attack(CharacterEntity attacker, GameEntity target) {
-//        Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(attacker.getBoundingBoxComponent().getCenterWorld());
-//
-//        DynamicAnimatedTexture animation = attacker.getData().getAnimation();
-//
-//        if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
-//            if (vector.getX() >= 0) {
-//                animation.setAnimationChannel(CharacterAnimation.SLASH_RIGHT);
-//            } else {
-//                animation.setAnimationChannel(CharacterAnimation.SLASH_LEFT);
-//            }
-//        } else {
-//            if (vector.getY() >= 0) {
-//                animation.setAnimationChannel(CharacterAnimation.SLASH_DOWN);
-//            } else {
-//                animation.setAnimationChannel(CharacterAnimation.SLASH_UP);
-//            }
-//        }
-//
-//        // TODO: generalize
-//
-//        attacker.getControl(PlayerControl.class).ifPresent(c -> {
-//            if (playerControl.getRightWeapon().getData().getType() == WeaponType.BOW) {
-//                if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
-//                    if (vector.getX() >= 0) {
-//                        animation.setAnimationChannel(CharacterAnimation.SHOOT_RIGHT);
-//                    } else {
-//                        animation.setAnimationChannel(CharacterAnimation.SHOOT_LEFT);
-//                    }
-//                } else {
-//                    if (vector.getY() >= 0) {
-//                        animation.setAnimationChannel(CharacterAnimation.SHOOT_DOWN);
-//                    } else {
-//                        animation.setAnimationChannel(CharacterAnimation.SHOOT_UP);
-//                    }
-//                }
-//            }
-//        });
-//
-//        getMasterTimer().runOnceAfter(() -> {
-//            if (!attacker.isActive() || !target.isActive())
-//                return;
-//
-//            Entities.builder()
-//                    .type(EntityType.PROJECTILE)
-//                    .at(attacker.getBoundingBoxComponent().getCenterWorld())
-//                    .viewFromTextureWithBBox("projectiles/arrow2.png")
-//                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(attacker.getBoundingBoxComponent().getCenterWorld()), 5))
-//                    .with(new OffscreenCleanControl())
-//                    .with(new OwnerComponent(attacker))
-//                    .with(new CollidableComponent(true))
-//                    .buildAndAttach(getGameWorld());
-//        }, Duration.seconds(0.8));
-//    }
+    protected void onUpdate(double tpf) {}
 
     private void dropItem(Entity item, Point2D position) {
         DescriptionComponent desc = item.getComponentUnsafe(DescriptionComponent.class);
@@ -598,12 +480,9 @@ public class ZephyriaApp extends GameApplication {
         tt.play();
     }
 
-    private DynamicAnimatedTexture playerAnimation;
-
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
         playerControl = player.getControl();
-
 
         game.setPlayer(player);
 
@@ -612,8 +491,6 @@ public class ZephyriaApp extends GameApplication {
 
         player.addComponent(EntityManager.INSTANCE.makeCharacterSubView(player));
         spawnCharacter(player);
-
-        playerAnimation = player.getData().getAnimation();
 
         // TODO: do something with circular references
         player.addControl(new PlayerActionControl());

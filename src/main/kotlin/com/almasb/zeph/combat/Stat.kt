@@ -2,8 +2,6 @@ package com.almasb.zeph.combat
 
 /**
  * Stats (16 in total) of a game character.
- *
- * TODO: hit / dodge mechanic
  */
 enum class Stat
 private constructor(val description: String, val measureUnit: String) {

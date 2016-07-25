@@ -128,17 +128,11 @@ class PlayerControl : CharacterControl() {
         }
     }
 
-    fun expNeededForNextBaseLevel(): Int {
-        return EXP_NEEDED_BASE[player.baseLevel.value - 1]
-    }
+    fun expNeededForNextBaseLevel() = EXP_NEEDED_BASE[player.baseLevel.value - 1]
 
-    fun expNeededForNextStatLevel(): Int {
-        return EXP_NEEDED_STAT[player.statLevel.value - 1]
-    }
+    fun expNeededForNextStatLevel() = EXP_NEEDED_STAT[player.statLevel.value - 1]
 
-    fun expNeededForNextJobLevel(): Int {
-        return EXP_NEEDED_JOB[player.jobLevel.value - 1]
-    }
+    fun expNeededForNextJobLevel()  = EXP_NEEDED_JOB[player.jobLevel.value - 1]
 
     /**
      * Increases player's experience by [gainedXP].

@@ -2,21 +2,23 @@ package com.almasb.zeph.entity.character.control
 
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
-import com.almasb.ents.component.Required
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterEntity
-import com.almasb.zeph.entity.character.component.*
+import com.almasb.zeph.entity.character.component.AttributesComponent
+import com.almasb.zeph.entity.character.component.HPComponent
+import com.almasb.zeph.entity.character.component.SPComponent
+import com.almasb.zeph.entity.character.component.StatsComponent
 import com.almasb.zeph.entity.skill.SkillEntity
 import com.almasb.zeph.entity.skill.SkillType
 import com.almasb.zeph.entity.skill.SkillUseResult
 import javafx.beans.binding.Bindings
 import javafx.collections.FXCollections
 import javafx.geometry.Point2D
-import java.util.*
 import java.util.concurrent.Callable
 
 open class CharacterControl : AbstractControl() {
 
+    // TODO: this needs to move to Data component
     /**
      * Statuses currently affecting this character.
      */
@@ -92,45 +94,25 @@ open class CharacterControl : AbstractControl() {
         sp.restorePercentageMax(100.0)
     }
 
-    private fun str(): Int {
-        return attributes.getTotalAttribute(Attribute.STRENGTH)
-    }
+    private fun str()   = attributes.getTotalAttribute(Attribute.STRENGTH)
 
-    private fun vit(): Int {
-        return attributes.getTotalAttribute(Attribute.VITALITY)
-    }
+    private fun vit()   = attributes.getTotalAttribute(Attribute.VITALITY)
 
-    private fun dex(): Int {
-        return attributes.getTotalAttribute(Attribute.DEXTERITY)
-    }
+    private fun dex()   = attributes.getTotalAttribute(Attribute.DEXTERITY)
 
-    private fun agi(): Int {
-        return attributes.getTotalAttribute(Attribute.AGILITY)
-    }
+    private fun agi()   = attributes.getTotalAttribute(Attribute.AGILITY)
 
-    private fun int_(): Int {
-        return attributes.getTotalAttribute(Attribute.INTELLECT)
-    }
+    private fun int_()  = attributes.getTotalAttribute(Attribute.INTELLECT)
 
-    private fun wis(): Int {
-        return attributes.getTotalAttribute(Attribute.WISDOM)
-    }
+    private fun wis()   = attributes.getTotalAttribute(Attribute.WISDOM)
 
-    private fun wil(): Int {
-        return attributes.getTotalAttribute(Attribute.WILLPOWER)
-    }
+    private fun wil()   = attributes.getTotalAttribute(Attribute.WILLPOWER)
 
-    private fun per(): Int {
-        return attributes.getTotalAttribute(Attribute.PERCEPTION)
-    }
+    private fun per()   = attributes.getTotalAttribute(Attribute.PERCEPTION)
 
-    private fun luc(): Int {
-        return attributes.getTotalAttribute(Attribute.LUCK)
-    }
+    private fun luc()   = attributes.getTotalAttribute(Attribute.LUCK)
 
-    private fun level(): Int {
-        return char.baseLevel.intValue()
-    }
+    private fun level() = char.baseLevel.intValue()
 
     /**
      * Bind base stats to attributes.
@@ -285,9 +267,8 @@ open class CharacterControl : AbstractControl() {
     /**
      * @return if character is ready to perform basic attack based on his ASPD
      */
-    open fun canAttack(): Boolean {
-        return atkTick >= 3.0 - stats.getTotalStat(Stat.ASPD) / 100.0
-    }
+    open fun canAttack() =
+            atkTick >= 3.0 - stats.getTotalStat(Stat.ASPD) / 100.0
 
     /**
      * Performs basic attack with equipped weapon on the [target].

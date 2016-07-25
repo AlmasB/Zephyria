@@ -318,7 +318,7 @@ open class CharacterControl : AbstractControl() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
-        return Damage(Damage.DamageType.PHYSICAL, element, totalDamage,
+        return Damage(DamageType.PHYSICAL, element, totalDamage,
                 if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
     }
 
@@ -355,7 +355,7 @@ open class CharacterControl : AbstractControl() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
-        return Damage(Damage.DamageType.MAGICAL, element, totalDamage,
+        return Damage(DamageType.MAGICAL, element, totalDamage,
                 if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
     }
 
@@ -373,7 +373,7 @@ open class CharacterControl : AbstractControl() {
         val amount = value.toInt()
         (target as CharacterEntity).hp.damage(amount.toDouble())
 
-        return Damage(Damage.DamageType.PURE, Element.NEUTRAL, amount, Damage.DamageCritical.FALSE)
+        return Damage(DamageType.PURE, Element.NEUTRAL, amount, Damage.DamageCritical.FALSE)
     }
 
     fun useSelfSkill(index: Int): SkillUseResult {

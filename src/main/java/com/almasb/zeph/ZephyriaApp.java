@@ -401,7 +401,7 @@ public class ZephyriaApp extends GameApplication {
 
         List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
         drops.forEach(p -> {
-            if (GameMath.checkChance(p.getSecond())) {
+            if (GameMath.INSTANCE.checkChance(p.getSecond())) {
                 dropItem(EntityManager.INSTANCE.getItem(p.getFirst()),
                         character.getPositionComponent().getValue());
             }

@@ -7,8 +7,10 @@ import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.character.component.MoneyComponent
 import com.almasb.zeph.entity.character.control.PlayerActionControl
 import com.almasb.zeph.entity.character.control.PlayerControl
+import com.almasb.zeph.entity.item.WeaponEntity
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.value.ChangeListener
 
 /**
  *
@@ -34,6 +36,10 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
         addComponent(money)
         addControl(PlayerControl())
         //addControl(PlayerActionControl())
+
+        getControl().equipProperty(EquipPlace.RIGHT_HAND).addListener({ o, old, newWeapon ->
+            weapon.value = newWeapon as WeaponEntity
+        })
     }
 
     fun getControl() = getControlUnsafe(PlayerControl::class.java)

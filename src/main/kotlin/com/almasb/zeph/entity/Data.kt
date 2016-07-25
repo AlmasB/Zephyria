@@ -204,7 +204,7 @@ object Data {
 
         object Warrior {
             fun ROAR() = listOf<Component>(
-                    DescriptionComponent(7010, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_bash.png"),
+                    DescriptionComponent(7010, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_roar.png"),
                     SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
                             .onCast { caster, target, skill ->
 
@@ -224,7 +224,7 @@ object Data {
             )
 
             fun MIGHTY_SWING() = listOf<Component>(
-                    DescriptionComponent(7011, "Mighty Swing", "Physical attack. Damage is greater if you have more STR than your target.", "skills/ic_skill_bash.png"),
+                    DescriptionComponent(7011, "Mighty Swing", "Physical attack. Damage is greater if you have more STR than your target.", "skills/ic_skill_mighty_swing.png"),
                     SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
                             .onCast { caster, target, skill ->
                                 val diff = caster.attributes.getTotalAttribute(Attribute.STRENGTH) - target.attributes.getTotalAttribute(Attribute.STRENGTH)
@@ -240,7 +240,7 @@ object Data {
             // huge GC problems, so need an efficient and simple data structure
 
             fun WARRIOR_HEART() = listOf<Component>(
-                    DescriptionComponent(7012, "Warrior's Heart", "Passively increases max HP.", "skills/ic_skill_bash.png"),
+                    DescriptionComponent(7012, "Warrior's Heart", "Passively increases max HP.", "skills/ic_skill_warrior_heart.png"),
                     SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
                             .onLearn { caster, skill ->
                                 skill.data.onCast(caster, caster, skill)
@@ -265,7 +265,7 @@ object Data {
             )
 
             fun ARMOR_MASTERY() = listOf<Component>(
-                    DescriptionComponent(7013, "Armor Mastery", "Increases armor rating.", "skills/ic_skill_bash.png"),
+                    DescriptionComponent(7013, "Armor Mastery", "Increases armor rating.", "skills/ic_skill_armor_mastery.png"),
                     SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
                             .onLearn { caster, skill ->
                                 skill.data.onCast(caster, caster, skill)

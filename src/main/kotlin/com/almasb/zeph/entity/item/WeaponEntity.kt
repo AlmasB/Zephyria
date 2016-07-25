@@ -27,6 +27,8 @@ class WeaponEntity(dataComponents: List<Component>) : Entity() {
 
     val pureDamage = SimpleIntegerProperty()
 
+    val range: Int
+
     init {
         dataComponents.forEach { addComponent(it) }
 
@@ -34,6 +36,8 @@ class WeaponEntity(dataComponents: List<Component>) : Entity() {
         data = getComponentUnsafe(WeaponDataComponent::class.java)
 
         element.value = data.element
+
+        range = data.type.range
 
         pureDamage.bind(refineLevel.multiply(Bindings
                 .`when`(refineLevel.greaterThan(2))

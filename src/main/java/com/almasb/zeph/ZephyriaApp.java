@@ -496,11 +496,11 @@ public class ZephyriaApp extends GameApplication {
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
         player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
 
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
 
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
         player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));

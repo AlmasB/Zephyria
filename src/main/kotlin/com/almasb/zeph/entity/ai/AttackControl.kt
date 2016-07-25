@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.control.OffscreenCleanControl
 import com.almasb.fxgl.entity.control.ProjectileControl
 import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.CharacterAnimation
+import com.almasb.zeph.Config
 import com.almasb.zeph.entity.EntityType
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.control.CharacterControl
@@ -38,24 +39,33 @@ class AttackControl : AbstractControl() {
 
     override fun onUpdate(entity: Entity, tpf: Double) {
         if (selected.value is CharacterEntity)
-            startAttack(char, selected.value)
+            startAttack(char, selected.value as GameEntity)
     }
 
-    private fun startAttack(attacker: Entity, target: Entity) {
+    private fun startAttack(attacker: CharacterEntity, target: GameEntity) {
         if (!enabled)
             return
 
         if (!attacker.isActive || !target.isActive)
             return
 
-        val a = attacker.getControlUnsafe(CharacterControl::class.java)
+        val atkRange = attacker.weapon.value.range
 
-        if (!a.canAttack())
-            return
+        // are we close enough?
+        if (attacker.positionComponent.distance(target.positionComponent) <= atkRange * Config.tileSize) {
+            val control = attacker.charConrol
 
-        a.resetAtkTick()
+            // can we attack already?
+            if (!control.canAttack())
+                return
 
-        attack(attacker as CharacterEntity, target as CharacterEntity)
+            control.resetAtkTick()
+
+            attack(attacker, target)
+        } else {
+
+            // move closer
+        }
     }
 
     private fun attack(attacker: CharacterEntity, target: GameEntity) {

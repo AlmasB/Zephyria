@@ -4,6 +4,7 @@ import com.almasb.astar.AStarGrid
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
+import com.almasb.fxgl.entity.GameEntity
 import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.ai.AttackControl
@@ -29,7 +30,7 @@ class PlayerActionControl : AbstractControl() {
 
     private var attacking = false
 
-    private val range = 5
+    private var range = 5
     private val grid: AStarGrid
 
     init {
@@ -48,12 +49,21 @@ class PlayerActionControl : AbstractControl() {
 
     override fun onUpdate(entity: Entity, tpf: Double) {
 
+        range = player.weapon.value.range
+
         if (selected.value is CharacterEntity /* TODO: && can be attacked, i.e. enemy */) {
-            if (!attacking) {
-                moveControl.enabled = false
-                attackControl.enabled = true
-                attacking = true
+
+            if (isInRange()) {
+                if (!attacking) {
+                    moveControl.enabled = false
+                    attackControl.enabled = true
+                    attacking = true
+                }
+            } else {
+                val target = selected.value as CharacterEntity
+                moveTo(target.getTileX(), target.getTileY())
             }
+
         } else {
             if (attacking) {
                 moveControl.enabled = true
@@ -63,7 +73,8 @@ class PlayerActionControl : AbstractControl() {
         }
     }
 
-    //private fun isInRange() = player.positionComponent.distance(char.positionComponent) <= range * Config.tileSize
+    private fun isInRange() =
+            player.positionComponent.distance((selected.value as GameEntity).positionComponent) <= range * Config.tileSize
 
     fun moveTo(x: Int, y: Int) {
         moveControl.moveTo(x, y)

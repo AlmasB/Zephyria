@@ -8,6 +8,7 @@ import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.skill.SkillEntity;
 import javafx.animation.ScaleTransition;
+import javafx.animation.StrokeTransition;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -115,6 +116,11 @@ public class HotbarView extends InGameWindow {
         final int skillIndex = index;
         btn.setOnMouseClicked(event -> {
             player.getControlUnsafe(PlayerControl.class).increaseSkillLevel(skillIndex);
+
+            Rectangle frame = (Rectangle) framesRoot.getChildren().get(skillIndex);
+
+            StrokeTransition st = new StrokeTransition(Duration.seconds(1), frame, Color.YELLOW, Color.AQUAMARINE.darker());
+            st.play();
         });
 
         Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName().get());

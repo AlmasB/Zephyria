@@ -2,11 +2,13 @@ package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Component
 import com.almasb.fxgl.entity.GameEntity
+import com.almasb.zeph.Config
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.Inventory
 import com.almasb.zeph.entity.character.component.*
 import com.almasb.zeph.entity.character.control.CharacterControl
+import com.almasb.zeph.entity.item.WeaponEntity
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
 import com.almasb.zeph.entity.skill.SkillEntity
 import javafx.beans.property.SimpleIntegerProperty
@@ -28,6 +30,8 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     val baseLevel: SimpleIntegerProperty
     val attributes: AttributesComponent
     val stats = StatsComponent()
+
+    val weapon = SimpleObjectProperty<WeaponEntity>()
 
     val weaponElement = SimpleObjectProperty<Element>()
     val armorElement = SimpleObjectProperty<Element>()
@@ -58,6 +62,8 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
         attributes = data.attributes
         baseLevel = data.baseLevel
 
+        weapon.value = data.defaultWeapon
+
         weaponElement.value = data.element
         armorElement.value = data.element
 
@@ -65,4 +71,8 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
 
         addControl(charConrol)
     }
+
+    fun getTileX() = positionComponent.x.toInt() / Config.tileSize
+
+    fun getTileY() = positionComponent.y.toInt() / Config.tileSize
 }

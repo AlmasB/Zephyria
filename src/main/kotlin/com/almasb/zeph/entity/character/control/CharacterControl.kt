@@ -20,21 +20,21 @@ open class CharacterControl : AbstractControl() {
     /**
      * Statuses currently affecting this character.
      */
-    val statuses = FXCollections.observableArrayList<StatusEffect>()
+    val statuses = FXCollections.observableArrayList<StatusEffectEntity>()
 
     /**
      * @param status status
      *
      * @return true if character is under status, false otherwise
      */
-    fun hasStatus(status: Status) = statuses.any { it.status == status }
+    fun hasStatus(status: Status) = statuses.any { it.data.status == status }
 
     /**
      * Apply status effect.
      *
      * @param e effect
      */
-    fun addStatusEffect(e: StatusEffect) {
+    fun addStatusEffect(e: StatusEffectEntity) {
         statuses.add(e)
     }
 
@@ -201,12 +201,17 @@ open class CharacterControl : AbstractControl() {
     private fun updateRegen(tpf: Double) {
         regenTick += tpf
 
+        // TODO: externalize magic numbers into config
         if (regenTick >= 2.0f) {
-            // 2 secs
+
             if (!hasStatus(Status.POISONED)) {
-                hp.restore(stats.getTotalStat(Stat.HP_REGEN).toDouble())
-                sp.restore(stats.getTotalStat(Stat.SP_REGEN).toDouble())
+                hp.restore(stats.getTotalStat(Stat.HP_REGEN))
+                sp.restore(stats.getTotalStat(Stat.SP_REGEN))
+            } else {
+                hp.damagePercentageMax(1.0)
+                sp.damagePercentageMax(1.0)
             }
+
             regenTick = 0.0
         }
 
@@ -245,8 +250,8 @@ open class CharacterControl : AbstractControl() {
         val it = statuses.iterator()
         while (it.hasNext()) {
             val e = it.next()
-            e.reduceDuration(tpf)
-            if (e.getDuration() <= 0) {
+            e.duration.value -= tpf
+            if (e.duration.value <= 0) {
                 it.remove()
             }
         }

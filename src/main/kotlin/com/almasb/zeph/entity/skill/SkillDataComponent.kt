@@ -46,6 +46,9 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
 //        return this
 //    }
 
+    // allows us to check if we need to create a projectile or do a simple attack
+    var hasProjectile = false
+
     /**
      * Projectile texture name (if applicable).
      */
@@ -53,6 +56,7 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
 
     fun withTextureName(name: String): SkillDataComponent {
         textureName = name
+        hasProjectile = true
         return this
     }
 

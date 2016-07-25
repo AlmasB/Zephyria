@@ -129,9 +129,9 @@ public class InventoryView extends InGameWindow {
 
             if (event.getButton() == MouseButton.PRIMARY) {
                 if (item instanceof WeaponEntity) {
-                    player.getControl().equipWeapon((WeaponEntity) item);
+                    player.getPlayerControl().equipWeapon((WeaponEntity) item);
                 } else if (item instanceof ArmorEntity) {
-                    player.getControl().equipArmor((ArmorEntity) item);
+                    player.getPlayerControl().equipArmor((ArmorEntity) item);
                 }
 
                 // TODO: other usable types

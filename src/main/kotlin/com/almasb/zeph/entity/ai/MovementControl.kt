@@ -66,17 +66,9 @@ open class MovementControl : AbstractControl() {
         }
     }
 
-    protected fun getTileX(entity: GameEntity): Int {
-        return entity.positionComponent.x.toInt() / Config.tileSize
-    }
-
-    protected fun getTileY(entity: GameEntity): Int {
-        return entity.positionComponent.y.toInt() / Config.tileSize
-    }
-
     fun moveTo(x: Int, y: Int) {
-        val startX = getTileX(char)
-        val startY = getTileY(char)
+        val startX = char.getTileX()
+        val startY = char.getTileY()
 
         path = grid.getPath(startX, startY, x, y)
     }

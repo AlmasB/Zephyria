@@ -27,8 +27,8 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     val hp = HPComponent()
     val sp = SPComponent()
 
-    val baseLevel: SimpleIntegerProperty
-    val attributes: AttributesComponent
+    val baseLevel = SimpleIntegerProperty(1)
+    val attributes = AttributesComponent()
     val stats = StatsComponent()
 
     val weapon = SimpleObjectProperty<WeaponEntity>()
@@ -49,6 +49,7 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     val charConrol = CharacterControl()
 
     init {
+        addComponent(attributes)
         addComponent(stats)
 
         addComponent(hp)
@@ -59,15 +60,15 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
         description = getComponentUnsafe(DescriptionComponent::class.java)
         data = getComponentUnsafe(CharacterDataComponent::class.java)
 
-        attributes = data.attributes
-        baseLevel = data.baseLevel
+        charClass.value = data.charClass
+
+        data.attributes.forEach { attribute, value ->  attributes.setAttribute(attribute, value)}
+        baseLevel.value = data.baseLevel
 
         weapon.value = data.defaultWeapon
 
         weaponElement.value = data.element
         armorElement.value = data.element
-
-        addComponent(attributes)
 
         addControl(charConrol)
     }
@@ -75,4 +76,10 @@ open class CharacterEntity(dataComponents: List<Component>) : GameEntity() {
     fun getTileX() = positionComponent.x.toInt() / Config.tileSize
 
     fun getTileY() = positionComponent.y.toInt() / Config.tileSize
+
+    /**
+     * @return true if [target] is in weapon range of this character
+     */
+    fun isInWeaponRange(target: CharacterEntity) =
+            this.positionComponent.distance(target.positionComponent) <= weapon.value.range * Config.tileSize
 }

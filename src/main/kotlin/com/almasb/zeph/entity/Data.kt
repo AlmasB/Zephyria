@@ -464,7 +464,7 @@ object Data {
 
                                 var money = false
                                 if (caster is PlayerEntity) {
-                                    caster.getControl().rewardMoney(dmg.toInt())
+                                    caster.playerControl.rewardMoney(dmg.toInt())
                                     money = true
                                 }
 

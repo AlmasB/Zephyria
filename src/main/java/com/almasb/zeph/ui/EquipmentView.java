@@ -50,8 +50,8 @@ public final class EquipmentView extends InGameWindow {
         groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
         for (EquipPlace place : EquipPlace.values()) {
-            setItem(place, player.getControl().getEquip(place));
-            player.getControl().equipProperty(place).addListener((obs, old, newItem) -> {
+            setItem(place, player.getPlayerControl().getEquip(place));
+            player.getPlayerControl().equipProperty(place).addListener((obs, old, newItem) -> {
                 setItem(place, newItem);
             });
         }
@@ -101,7 +101,7 @@ public final class EquipmentView extends InGameWindow {
 
         Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName().get());
 
-        view.setOnMouseClicked(event -> player.getControl().unEquipItem(place));
+        view.setOnMouseClicked(event -> player.getPlayerControl().unEquipItem(place));
         view.setCursor(Cursor.HAND);
 
         group.getChildren().add(view);

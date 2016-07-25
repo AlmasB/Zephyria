@@ -191,15 +191,33 @@ public class ZephyriaApp extends GameApplication {
             if (!player.isActive() || !target.isActive())
                 return;
 
-            Entities.builder()
-                    .type(EntityType.SKILL_PROJECTILE)
-                    .at(player.getBoundingBoxComponent().getCenterWorld())
-                    .viewFromTextureWithBBox(skill.getData().getTextureName())
-                    .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 6))
-                    .with(new OffscreenCleanControl())
-                    .with(new OwnerComponent(skill))
-                    .with(new CollidableComponent(true))
-                    .buildAndAttach(getGameWorld());
+            // we are using a skill
+
+            if (skill.getData().getHasProjectile()) {
+                Entities.builder()
+                        .type(EntityType.SKILL_PROJECTILE)
+                        .at(player.getBoundingBoxComponent().getCenterWorld())
+                        .viewFromTextureWithBBox(skill.getData().getTextureName())
+                        .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 6))
+                        .with(new OffscreenCleanControl())
+                        .with(new OwnerComponent(skill))
+                        .with(new CollidableComponent(true))
+                        .buildAndAttach(getGameWorld());
+            } else {
+                if (player.isInWeaponRange(target)) {
+
+                    SkillUseResult result = playerControl.useTargetSkill(skill, target);
+                    showDamage(result.getDamage(), target.getPositionComponent().getValue());
+
+                    if (target.getHp().getValue() <= 0) {
+                        onKill(target);
+                    }
+
+                } else {
+                    playerActionControl.moveTo(target.getTileX(), target.getTileY());
+                }
+            }
+
         }, Duration.seconds(0.8));
     }
 
@@ -335,7 +353,7 @@ public class ZephyriaApp extends GameApplication {
 
                 CharacterEntity character = (CharacterEntity) target;
 
-                DamageResult damage = player.getControl().attack(character);
+                DamageResult damage = player.getPlayerControl().attack(character);
                 showDamage(damage, character.getPositionComponent().getValue());
 
                 if (character.getHp().getValue() <= 0) {
@@ -478,7 +496,7 @@ public class ZephyriaApp extends GameApplication {
 
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
-        playerControl = player.getControl();
+        playerControl = player.getPlayerControl();
 
         player.getTypeComponent().setValue(EntityType.PLAYER);
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
@@ -526,7 +544,7 @@ public class ZephyriaApp extends GameApplication {
         character.getMainViewComponent().setView(texture, true);
 
         if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
-            character.addControl(new AIControl());
+            //character.addControl(new AIControl());
 
             character.getMainViewComponent().getView().setOnMouseClicked(e -> {
                 selected.set(character);

@@ -2,15 +2,11 @@ package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Component
 import com.almasb.zeph.entity.DescriptionComponent
-import com.almasb.zeph.entity.ai.MovementControl
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.character.component.MoneyComponent
-import com.almasb.zeph.entity.character.control.PlayerActionControl
 import com.almasb.zeph.entity.character.control.PlayerControl
 import com.almasb.zeph.entity.item.WeaponEntity
 import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleObjectProperty
-import javafx.beans.value.ChangeListener
 
 /**
  *
@@ -30,17 +26,20 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
     val statLevel = SimpleIntegerProperty(1)
     val jobLevel = SimpleIntegerProperty(1)
 
+    val playerControl: PlayerControl
+
     init {
         charClass.value = CharacterClass.NOVICE
 
         addComponent(money)
-        addControl(PlayerControl())
+
+        playerControl = PlayerControl()
+
+        addControl(playerControl)
         //addControl(PlayerActionControl())
 
-        getControl().equipProperty(EquipPlace.RIGHT_HAND).addListener({ o, old, newWeapon ->
+        playerControl.equipProperty(EquipPlace.RIGHT_HAND).addListener({ o, old, newWeapon ->
             weapon.value = newWeapon as WeaponEntity
         })
     }
-
-    fun getControl() = getControlUnsafe(PlayerControl::class.java)
 }

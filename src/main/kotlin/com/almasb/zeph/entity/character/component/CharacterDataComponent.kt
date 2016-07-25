@@ -14,34 +14,37 @@ import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 
 /**
- * TODO: move some stuff to CharacterEntity and leave only "value" fields
+ * Data structure that contains "init" values.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
 
-    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
+    val charClass = CharacterClass.MONSTER
 
-    val baseLevel = SimpleIntegerProperty(1)
-    val attributes = AttributesComponent()
+    var baseLevel = 1
+    val attributes = HashMap<Attribute, Int>()
 
-    val defaultWeapon = WeaponEntity(Data.Weapon.DRAGON_CLAW())
+    val defaultWeapon = WeaponEntity(Data.Weapon.HANDS())
 
     var element = Element.NEUTRAL
 
     val rewardXP = Experience(0, 0, 0)
 
+    /**
+     * Item ID -> chance to drop
+     */
     val dropItems = ArrayList<Pair<Int, Int> >()
 
     lateinit var animation: DynamicAnimatedTexture
 
     fun withLevel(value: Int): CharacterDataComponent {
-        baseLevel.value = value
+        baseLevel = value
         return this
     }
 
     fun withAttribute(attribute: Attribute, value: Int): CharacterDataComponent {
-        attributes.setAttribute(attribute, value)
+        attributes[attribute] = value
         return this
     }
 

@@ -53,7 +53,7 @@ class PlayerActionControl : AbstractControl() {
 
         if (selected.value is CharacterEntity /* TODO: && can be attacked, i.e. enemy */) {
 
-            if (isInRange()) {
+            if (player.isInWeaponRange(selected.value as CharacterEntity)) {
                 if (!attacking) {
                     moveControl.enabled = false
                     attackControl.enabled = true
@@ -72,9 +72,6 @@ class PlayerActionControl : AbstractControl() {
             }
         }
     }
-
-    private fun isInRange() =
-            player.positionComponent.distance((selected.value as GameEntity).positionComponent) <= range * Config.tileSize
 
     fun moveTo(x: Int, y: Int) {
         moveControl.moveTo(x, y)

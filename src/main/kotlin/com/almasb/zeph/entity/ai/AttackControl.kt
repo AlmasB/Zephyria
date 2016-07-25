@@ -109,7 +109,7 @@ class AttackControl : AbstractControl() {
                     .with(OffscreenCleanControl())
                     .with(OwnerComponent(attacker))
                     .with(CollidableComponent(true))
-                    .buildAndAttach(FXGL.getGame().gameWorld)
+                    .buildAndAttach(FXGL.getApp().gameWorld)
         }, Duration.seconds(0.8))
     }
 }

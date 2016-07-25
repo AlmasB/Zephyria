@@ -30,7 +30,6 @@ class PlayerActionControl : AbstractControl() {
 
     private var attacking = false
 
-    private var range = 5
     private val grid: AStarGrid
 
     init {
@@ -48,8 +47,6 @@ class PlayerActionControl : AbstractControl() {
     }
 
     override fun onUpdate(entity: Entity, tpf: Double) {
-
-        range = player.weapon.value.range
 
         if (selected.value is CharacterEntity /* TODO: && can be attacked, i.e. enemy */) {
 

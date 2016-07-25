@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity.character
 
 import com.almasb.ents.Component
+import com.almasb.zeph.Config
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.character.component.MoneyComponent
@@ -18,8 +19,9 @@ class PlayerEntity(name: String, textureName: String) : CharacterEntity(listOf<C
         CharacterDataComponent(CharacterType.NORMAL)
 )) {
 
-    val money = MoneyComponent(9999)
+    val money = MoneyComponent(Config.STARTING_MONEY)
 
+    // TODO: set to 0 when tests are done
     val attributePoints = SimpleIntegerProperty(90)
     val skillPoints = SimpleIntegerProperty(90)
 

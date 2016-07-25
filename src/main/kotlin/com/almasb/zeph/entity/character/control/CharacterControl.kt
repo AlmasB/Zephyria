@@ -2,6 +2,7 @@ package com.almasb.zeph.entity.character.control
 
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
+import com.almasb.zeph.Config
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.AttributesComponent
@@ -183,8 +184,7 @@ open class CharacterControl : AbstractControl() {
     private fun updateRegen(tpf: Double) {
         regenTick += tpf
 
-        // TODO: externalize magic numbers into config
-        if (regenTick >= 2.0f) {
+        if (regenTick >= Config.REGEN_INTERVAL) {
 
             if (!hasStatus(Status.POISONED)) {
                 hp.restore(stats.getTotalStat(Stat.HP_REGEN))
@@ -268,7 +268,7 @@ open class CharacterControl : AbstractControl() {
      * @return if character is ready to perform basic attack based on his ASPD
      */
     open fun canAttack() =
-            atkTick >= 3.0 - stats.getTotalStat(Stat.ASPD) / 100.0
+            atkTick >= Config.SLOWEST_ATTACK_INTERVAL - stats.getTotalStat(Stat.ASPD) / 100.0
 
     /**
      * Performs basic attack with equipped weapon on the [target].

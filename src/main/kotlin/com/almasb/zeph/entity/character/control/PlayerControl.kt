@@ -2,6 +2,7 @@ package com.almasb.zeph.entity.character.control
 
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
+import com.almasb.zeph.Config
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.combat.Stat
@@ -55,45 +56,25 @@ class PlayerControl : CharacterControl() {
     }
 
     /**
-     * Gameplay constants
-     */
-    private val MAX_LEVEL_BASE = 100
-    private val MAX_LEVEL_STAT = 100
-    private val MAX_LEVEL_JOB = 60
-    private val MAX_LEVEL_SKILL = 10
-    private val MAX_ATTRIBUTE = 100
-    private val ATTRIBUTE_POINTS_PER_LEVEL = 3
-
-    /**
      * Holds experience needed for each level
      */
-    private val EXP_NEEDED_BASE = IntArray(MAX_LEVEL_BASE)
-    private val EXP_NEEDED_STAT = IntArray(MAX_LEVEL_STAT)
-    private val EXP_NEEDED_JOB = IntArray(MAX_LEVEL_JOB)
+    private val EXP_NEEDED_BASE = IntArray(Config.MAX_LEVEL_BASE)
+    private val EXP_NEEDED_STAT = IntArray(Config.MAX_LEVEL_STAT)
+    private val EXP_NEEDED_JOB = IntArray(Config.MAX_LEVEL_JOB)
 
     init {
-        /**
-         * By what value should experience needed for next level
-         * increase per level
-         */
-        val EXP_NEEDED_INC_BASE = 1.75f;
-        val EXP_NEEDED_INC_STAT = 1.5f;
-        val EXP_NEEDED_INC_JOB  = 2.25f;
-
-        val EXP_NEEDED_FOR_LEVEL2 = 10;
-
-        EXP_NEEDED_BASE[0] = EXP_NEEDED_FOR_LEVEL2;
-        EXP_NEEDED_STAT[0] = EXP_NEEDED_FOR_LEVEL2;
-        EXP_NEEDED_JOB[0] = EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_BASE[0] = Config.EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_STAT[0] = Config.EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_JOB[0] = Config.EXP_NEEDED_FOR_LEVEL2;
 
         for (i in 1..EXP_NEEDED_BASE.size - 1) {
-            EXP_NEEDED_BASE[i] = (EXP_NEEDED_BASE[i - 1] * EXP_NEEDED_INC_BASE + 2 * i).toInt();
+            EXP_NEEDED_BASE[i] = (EXP_NEEDED_BASE[i - 1] * Config.EXP_NEEDED_INC_BASE + 2 * i).toInt();
 
             if (i < EXP_NEEDED_STAT.size)
-                EXP_NEEDED_STAT[i] = (EXP_NEEDED_STAT[i - 1] * EXP_NEEDED_INC_STAT + i).toInt();
+                EXP_NEEDED_STAT[i] = (EXP_NEEDED_STAT[i - 1] * Config.EXP_NEEDED_INC_STAT + i).toInt();
 
             if (i < EXP_NEEDED_JOB.size)
-                EXP_NEEDED_JOB[i] = (EXP_NEEDED_JOB[i - 1] * EXP_NEEDED_INC_JOB + 3 * i).toInt();
+                EXP_NEEDED_JOB[i] = (EXP_NEEDED_JOB[i - 1] * Config.EXP_NEEDED_INC_JOB + 3 * i).toInt();
         }
     }
 
@@ -105,19 +86,22 @@ class PlayerControl : CharacterControl() {
             return
 
         val value = player.attributes.getBaseAttribute(attribute)
-        if (value < MAX_ATTRIBUTE) {
+        if (value < Config.MAX_ATTRIBUTE) {
             player.attributes.setAttribute(attribute, value + 1)
             player.attributePoints.value--
         }
     }
 
+    /**
+     * Level up a skill with given skill [index].
+     */
     fun increaseSkillLevel(index: Int) {
         if (player.skillPoints.value == 0)
             return
 
         val skill = player.skills[index]
 
-        if (skill.level.value < MAX_LEVEL_SKILL) {
+        if (skill.level.value < Config.MAX_LEVEL_SKILL) {
             skill.level.value++
             player.skillPoints.value--
 
@@ -142,7 +126,7 @@ class PlayerControl : CharacterControl() {
     fun rewardXP(gainedXP: Experience): Boolean {
         var baseLevelUp = false
 
-        if (player.statLevel.value < MAX_LEVEL_STAT) {
+        if (player.statLevel.value < Config.MAX_LEVEL_STAT) {
             player.statXP.value += gainedXP.stat
 
             if (player.statXP.value >= expNeededForNextStatLevel()) {
@@ -151,7 +135,7 @@ class PlayerControl : CharacterControl() {
             }
         }
 
-        if (player.jobLevel.value < MAX_LEVEL_JOB) {
+        if (player.jobLevel.value < Config.MAX_LEVEL_JOB) {
             player.jobXP.value += gainedXP.job
 
             if (player.jobXP.value >= expNeededForNextJobLevel()) {
@@ -160,7 +144,7 @@ class PlayerControl : CharacterControl() {
             }
         }
 
-        if (player.baseLevel.value < MAX_LEVEL_BASE) {
+        if (player.baseLevel.value < Config.MAX_LEVEL_BASE) {
             player.baseXP.value += gainedXP.base
 
             if (player.baseXP.value >= expNeededForNextBaseLevel()) {
@@ -182,7 +166,7 @@ class PlayerControl : CharacterControl() {
 
     private fun statLevelUp() {
         player.statLevel.value++
-        player.attributePoints.value += ATTRIBUTE_POINTS_PER_LEVEL
+        player.attributePoints.value += Config.ATTRIBUTE_POINTS_PER_LEVEL
     }
 
     private fun jobLevelUp() {

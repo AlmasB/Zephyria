@@ -1,6 +1,7 @@
 package com.almasb.zeph.entity
 
 import com.almasb.ents.Entity
+import com.almasb.zeph.Config
 import javafx.collections.FXCollections
 
 /**
@@ -24,5 +25,5 @@ class Inventory {
         _items.remove(item)
     }
 
-    fun isFull() = _items.size >= 30
+    fun isFull() = _items.size >= Config.MAX_INVENTORY_SIZE
 }

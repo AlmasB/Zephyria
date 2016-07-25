@@ -2,12 +2,10 @@ package com.almasb.zeph.entity
 
 import com.almasb.ents.Component
 import com.almasb.ents.Entity
-import com.almasb.fxgl.app.FXGL
 import com.almasb.fxgl.entity.EntityView
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config
 import com.almasb.zeph.entity.character.CharacterEntity
-import com.almasb.zeph.entity.character.component.CharacterDataComponent
 import com.almasb.zeph.entity.character.component.SubViewComponent
 import com.almasb.zeph.entity.item.ArmorEntity
 import com.almasb.zeph.entity.item.WeaponEntity
@@ -19,6 +17,7 @@ import javafx.scene.text.Text
 import java.lang.reflect.Method
 import java.util.*
 
+@Suppress("UNCHECKED_CAST")
 /**
  *
  *

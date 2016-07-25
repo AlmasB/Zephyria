@@ -2,8 +2,8 @@ package com.almasb.zeph.entity.item
 
 import com.almasb.ents.Component
 import com.almasb.ents.Entity
-import com.almasb.zeph.combat.*
-import com.almasb.zeph.entity.Data
+import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.StatsComponent

@@ -1,10 +1,8 @@
 package com.almasb.zeph.entity
 
 import com.almasb.ents.AbstractComponent
-import javafx.beans.property.IntegerProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
 
 /**
  *

@@ -4,7 +4,6 @@ import com.almasb.astar.AStarNode
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
-import com.almasb.fxgl.entity.GameEntity
 import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.CharacterAnimation
 import com.almasb.zeph.Config

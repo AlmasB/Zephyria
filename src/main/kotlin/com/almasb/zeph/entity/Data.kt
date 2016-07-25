@@ -11,7 +11,6 @@ import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.item.component.ArmorDataComponent
 import com.almasb.zeph.entity.item.component.WeaponDataComponent
 import com.almasb.zeph.entity.skill.*
-import javafx.beans.value.ChangeListener
 import java.util.*
 
 /**

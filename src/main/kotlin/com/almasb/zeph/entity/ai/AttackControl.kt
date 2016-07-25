@@ -13,7 +13,6 @@ import com.almasb.zeph.CharacterAnimation
 import com.almasb.zeph.Config
 import com.almasb.zeph.entity.EntityType
 import com.almasb.zeph.entity.character.CharacterEntity
-import com.almasb.zeph.entity.character.control.CharacterControl
 import com.almasb.zeph.entity.item.component.OwnerComponent
 import javafx.beans.property.SimpleObjectProperty
 import javafx.util.Duration

@@ -4,12 +4,9 @@ import com.almasb.astar.AStarGrid
 import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
-import com.almasb.fxgl.entity.GameEntity
-import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.ai.AttackControl
 import com.almasb.zeph.entity.ai.MovementControl
-import com.almasb.zeph.entity.ai.RandomWanderControl
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.PlayerEntity
 import javafx.beans.property.SimpleObjectProperty

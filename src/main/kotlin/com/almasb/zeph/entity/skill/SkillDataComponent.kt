@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity.skill
 
 import com.almasb.ents.AbstractComponent
-import com.almasb.ents.Entity
 import com.almasb.zeph.entity.character.CharacterEntity
 import java.util.*
 

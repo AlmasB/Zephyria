@@ -1,11 +1,7 @@
 package com.almasb.zeph.entity.item.component
 
-import com.almasb.ents.Entity
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Rune
-import com.almasb.zeph.entity.item.component.EquippableComponent
-import com.almasb.zeph.combat.Stat
-import com.almasb.zeph.entity.character.component.StatsComponent
 import com.almasb.zeph.entity.item.ItemLevel
 import com.almasb.zeph.entity.item.WeaponType
 

@@ -1,25 +1,19 @@
 package com.almasb.zeph.entity.character.control
 
-import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.zeph.Config
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
-import com.almasb.zeph.combat.Stat
-import com.almasb.zeph.entity.Data
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.EntityManager
 import com.almasb.zeph.entity.character.EquipPlace
 import com.almasb.zeph.entity.character.PlayerEntity
-import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.item.ArmorEntity
 import com.almasb.zeph.entity.item.ArmorType
 import com.almasb.zeph.entity.item.WeaponEntity
 import com.almasb.zeph.entity.item.WeaponType
 import com.almasb.zeph.entity.skill.SkillType
 import javafx.beans.property.ObjectProperty
-import javafx.beans.property.ReadOnlyIntegerProperty
-import javafx.beans.property.ReadOnlyIntegerWrapper
 import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 

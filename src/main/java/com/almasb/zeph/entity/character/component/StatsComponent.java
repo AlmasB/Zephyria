@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity.character.component;
 
 import com.almasb.ents.AbstractComponent;
-import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;

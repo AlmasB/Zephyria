@@ -5,7 +5,7 @@ import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.zeph.Config
-import com.almasb.zeph.Services
+import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.ai.AttackControl
 import com.almasb.zeph.entity.ai.MovementControl
 import com.almasb.zeph.entity.ai.RandomWanderControl
@@ -33,7 +33,7 @@ class PlayerActionControl : AbstractControl() {
     private val grid: AStarGrid
 
     init {
-        grid = FXGL.getService(Services.GAME_APP).grid
+        grid = (FXGL.getApp() as ZephyriaApp).grid
     }
 
     override fun onAdded(entity: Entity) {

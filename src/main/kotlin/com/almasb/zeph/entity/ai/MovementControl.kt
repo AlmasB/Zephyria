@@ -8,7 +8,7 @@ import com.almasb.fxgl.entity.GameEntity
 import com.almasb.fxgl.texture.DynamicAnimatedTexture
 import com.almasb.zeph.CharacterAnimation
 import com.almasb.zeph.Config
-import com.almasb.zeph.Services
+import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.character.CharacterEntity
 import java.util.*
 
@@ -24,7 +24,7 @@ open class MovementControl : AbstractControl() {
     protected lateinit var char: CharacterEntity
     private lateinit var animation: DynamicAnimatedTexture
 
-    private val grid = FXGL.getService(Services.GAME_APP).grid
+    private val grid = (FXGL.getApp() as ZephyriaApp).grid
     protected var path: MutableList<AStarNode> = ArrayList()
 
     override fun onAdded(entity: Entity) {

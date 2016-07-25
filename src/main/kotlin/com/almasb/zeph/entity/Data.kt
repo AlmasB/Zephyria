@@ -483,7 +483,11 @@ object Data {
 
                                 var poison = false
                                 if (GameMath.checkChance(skill.level.value * 7)) {
-                                    target.charConrol.addStatusEffect(StatusEffectEntity(Status.POISONED, 10.0))
+                                    target.charConrol.addStatusEffect(StatusEffectEntity(listOf<Component>(
+                                            // TODO: what do we assign statuses?
+                                            DescriptionComponent(10000, "Poison", "...", "effects/attr_up.png"),
+                                            StatusEffectDataComponent(Status.POISONED, 10.0)
+                                    )))
                                     poison = true
                                 }
 

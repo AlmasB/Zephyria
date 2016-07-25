@@ -5,7 +5,7 @@ import com.almasb.ents.AbstractControl
 import com.almasb.ents.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.zeph.Config
-import com.almasb.zeph.Services
+import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.character.CharacterEntity
 import com.almasb.zeph.entity.character.PlayerEntity
 
@@ -28,8 +28,8 @@ class AIControl : AbstractControl() {
     private val player: PlayerEntity
 
     init {
-        grid = FXGL.getService(Services.GAME_APP).grid
-        player = FXGL.getService(Services.GAME_APP).player
+        grid = (FXGL.getApp() as ZephyriaApp).grid
+        player = (FXGL.getApp() as ZephyriaApp).player
 
         attackControl.selected.value = player
     }

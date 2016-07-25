@@ -1,11 +1,9 @@
 package com.almasb.zeph;
 
 import com.almasb.astar.AStarGrid;
-import com.almasb.astar.AStarNode;
 import com.almasb.astar.NodeState;
 import com.almasb.ents.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
-import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.EntityView;
@@ -28,17 +26,14 @@ import com.almasb.zeph.entity.DescriptionComponent;
 import com.almasb.zeph.entity.EntityManager;
 import com.almasb.zeph.entity.EntityType;
 import com.almasb.zeph.entity.ai.AIControl;
-import com.almasb.zeph.entity.ai.MovementControl;
 import com.almasb.zeph.entity.character.CharacterEntity;
 import com.almasb.zeph.entity.character.PlayerEntity;
 import com.almasb.zeph.entity.character.component.CharacterDataComponent;
 import com.almasb.zeph.entity.character.component.SubViewComponent;
-import com.almasb.zeph.entity.character.control.CharacterControl;
 import com.almasb.zeph.entity.character.control.PlayerActionControl;
 import com.almasb.zeph.entity.character.control.PlayerControl;
 import com.almasb.zeph.entity.item.ArmorEntity;
 import com.almasb.zeph.entity.item.WeaponEntity;
-import com.almasb.zeph.entity.item.WeaponType;
 import com.almasb.zeph.entity.item.component.OwnerComponent;
 import com.almasb.zeph.entity.skill.SkillEntity;
 import com.almasb.zeph.entity.skill.SkillTargetType;
@@ -64,7 +59,6 @@ import javafx.stage.Screen;
 import javafx.util.Duration;
 import kotlin.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -74,7 +68,7 @@ public class ZephyriaApp extends GameApplication {
     private static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
     private static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
 
-    private GameDataService game;
+    private AStarGrid grid;
 
     private PlayerEntity player;
     private PlayerControl playerControl;
@@ -87,6 +81,14 @@ public class ZephyriaApp extends GameApplication {
     private int selectedSkillIndex = -1;
 
     private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
+
+    public AStarGrid getGrid() {
+        return grid;
+    }
+
+    public PlayerEntity getPlayer() {
+        return player;
+    }
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -108,8 +110,6 @@ public class ZephyriaApp extends GameApplication {
         settings.setFullScreen(full);
         settings.setShowFPS(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
-
-        settings.addServiceType(Services.INSTANCE.getGAME_APP());
     }
 
     @Override
@@ -206,13 +206,9 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initAssets() {}
 
-    private AStarGrid grid;
-
     @Override
     protected void initGame() {
-        game = FXGL.getService(Services.INSTANCE.getGAME_APP());
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
-        game.setGrid(grid);
 
         initBackground();
 
@@ -483,8 +479,6 @@ public class ZephyriaApp extends GameApplication {
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
         playerControl = player.getControl();
-
-        game.setPlayer(player);
 
         player.getTypeComponent().setValue(EntityType.PLAYER);
         player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);

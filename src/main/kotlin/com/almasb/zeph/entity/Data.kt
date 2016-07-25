@@ -483,7 +483,7 @@ object Data {
 
                                 var poison = false
                                 if (GameMath.checkChance(skill.level.value * 7)) {
-                                    target.charConrol.addStatusEffect(StatusEffect(StatusEffect.Status.POISONED, 10.0f))
+                                    target.charConrol.addStatusEffect(StatusEffect(Status.POISONED, 10.0))
                                     poison = true
                                 }
 

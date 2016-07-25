@@ -27,7 +27,7 @@ open class CharacterControl : AbstractControl() {
      *
      * @return true if character is under status, false otherwise
      */
-    fun hasStatus(status: StatusEffect.Status) = statuses.any { it.status == status }
+    fun hasStatus(status: Status) = statuses.any { it.status == status }
 
     /**
      * Apply status effect.
@@ -203,7 +203,7 @@ open class CharacterControl : AbstractControl() {
 
         if (regenTick >= 2.0f) {
             // 2 secs
-            if (!hasStatus(StatusEffect.Status.POISONED)) {
+            if (!hasStatus(Status.POISONED)) {
                 hp.restore(stats.getTotalStat(Stat.HP_REGEN).toDouble())
                 sp.restore(stats.getTotalStat(Stat.SP_REGEN).toDouble())
             }
@@ -246,7 +246,7 @@ open class CharacterControl : AbstractControl() {
         while (it.hasNext()) {
             val e = it.next()
             e.reduceDuration(tpf)
-            if (e.duration <= 0) {
+            if (e.getDuration() <= 0) {
                 it.remove()
             }
         }
@@ -290,7 +290,7 @@ open class CharacterControl : AbstractControl() {
      *
      * @return damage dealt
      */
-    fun attack(target: CharacterEntity): Damage {
+    fun attack(target: CharacterEntity): DamageResult {
         return dealPhysicalDamage(target, stats.getTotalStat(Stat.ATK).toDouble() + 2 * GameMath.random(level()), char.weaponElement.value)
     }
 
@@ -301,7 +301,7 @@ open class CharacterControl : AbstractControl() {
      *
      * @return damage dealt
      */
-    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): Damage {
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
         var baseDamage = baseDamage
 
         var crit = false
@@ -318,8 +318,7 @@ open class CharacterControl : AbstractControl() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
-        return Damage(DamageType.PHYSICAL, element, totalDamage,
-                if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
+        return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
     }
 
     /**
@@ -328,7 +327,7 @@ open class CharacterControl : AbstractControl() {
      *
      * @return damage dealt
      */
-    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): Damage {
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
         return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL)
     }
 
@@ -338,7 +337,7 @@ open class CharacterControl : AbstractControl() {
      *
      * @return damage dealt
      */
-    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): Damage {
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
         var baseDamage = baseDamage
 
         var crit = false
@@ -355,25 +354,24 @@ open class CharacterControl : AbstractControl() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
-        return Damage(DamageType.MAGICAL, element, totalDamage,
-                if (crit) Damage.DamageCritical.TRUE else Damage.DamageCritical.FALSE)
+        return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
     }
 
     /**
      * Deal magical [baseDamage] of type NEUTRAL to [target].
      */
-    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): Damage {
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
         return dealMagicalDamage(target, baseDamage, Element.NEUTRAL)
     }
 
     /**
      * Deals the exact amount of [value] damage to [target].
      */
-    fun dealPureDamage(target: Entity, value: Double): Damage {
+    fun dealPureDamage(target: Entity, value: Double): DamageResult {
         val amount = value.toInt()
         (target as CharacterEntity).hp.damage(amount.toDouble())
 
-        return Damage(DamageType.PURE, Element.NEUTRAL, amount, Damage.DamageCritical.FALSE)
+        return DamageResult(DamageType.PURE, Element.NEUTRAL, amount, false)
     }
 
     fun useSelfSkill(index: Int): SkillUseResult {

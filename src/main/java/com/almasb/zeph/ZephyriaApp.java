@@ -21,7 +21,7 @@ import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.DynamicAnimatedTexture;
-import com.almasb.zeph.combat.Damage;
+import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
 import com.almasb.zeph.entity.DescriptionComponent;
@@ -339,7 +339,7 @@ public class ZephyriaApp extends GameApplication {
 
                 CharacterEntity character = (CharacterEntity) target;
 
-                Damage damage = player.getControl().attack(character);
+                DamageResult damage = player.getControl().attack(character);
                 showDamage(damage, character.getPositionComponent().getValue());
 
                 if (character.getHp().getValue() <= 0) {
@@ -359,7 +359,7 @@ public class ZephyriaApp extends GameApplication {
                 CharacterEntity attacker = (CharacterEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
                 CharacterEntity character = (CharacterEntity) target;
 
-                Damage damage = attacker.getCharConrol().attack(character);
+                DamageResult damage = attacker.getCharConrol().attack(character);
                 showDamage(damage, character.getPositionComponent().getValue());
 
 //                if (character.getHp().getValue() <= 0) {
@@ -462,10 +462,10 @@ public class ZephyriaApp extends GameApplication {
         tt.play();
     }
 
-    private void showDamage(Damage damage, Point2D position) {
-        Text text = new Text(damage.getValue() + (damage.isCritical() ? "!" : ""));
-        text.setFill(damage.isCritical() ? Color.RED : Color.WHITE);
-        text.setFont(Font.font(damage.isCritical() ? 22 : 16));
+    private void showDamage(DamageResult damage, Point2D position) {
+        Text text = new Text(damage.getValue() + (damage.getCritical() ? "!" : ""));
+        text.setFill(damage.getCritical() ? Color.RED : Color.WHITE);
+        text.setFont(Font.font(damage.getCritical() ? 22 : 16));
 
         EntityView view = new EntityView();
         view.addNode(text);

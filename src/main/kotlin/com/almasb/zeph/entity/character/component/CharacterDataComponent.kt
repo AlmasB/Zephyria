@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.character.component
 
 import com.almasb.ents.AbstractComponent
-import com.almasb.fxgl.texture.DynamicAnimatedTexture
+import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
@@ -34,7 +34,7 @@ class CharacterDataComponent(val type: CharacterType) : AbstractComponent() {
      */
     val dropItems = ArrayList<Pair<Int, Int> >()
 
-    lateinit var animation: DynamicAnimatedTexture
+    lateinit var animation: AnimatedTexture
 
     fun withLevel(value: Int): CharacterDataComponent {
         baseLevel = value

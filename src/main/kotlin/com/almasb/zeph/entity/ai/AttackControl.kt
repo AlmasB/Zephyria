@@ -8,7 +8,7 @@ import com.almasb.fxgl.entity.GameEntity
 import com.almasb.fxgl.entity.component.CollidableComponent
 import com.almasb.fxgl.entity.control.OffscreenCleanControl
 import com.almasb.fxgl.entity.control.ProjectileControl
-import com.almasb.fxgl.texture.DynamicAnimatedTexture
+import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.zeph.CharacterAnimation
 import com.almasb.zeph.Config
 import com.almasb.zeph.entity.EntityType
@@ -27,7 +27,7 @@ class AttackControl : AbstractControl() {
     var enabled = true
 
     private lateinit var char: CharacterEntity
-    private lateinit var animation: DynamicAnimatedTexture
+    private lateinit var animation: AnimatedTexture
 
     val selected = SimpleObjectProperty<Entity>()
 
@@ -114,7 +114,7 @@ class AttackControl : AbstractControl() {
                     .type(EntityType.PROJECTILE)
                     .at(attacker.boundingBoxComponent.centerWorld)
                     .viewFromTextureWithBBox("projectiles/arrow2.png")
-                    .with(ProjectileControl(target.boundingBoxComponent.centerWorld.subtract(attacker.boundingBoxComponent.centerWorld), 5.0))
+                    .with(ProjectileControl(target.boundingBoxComponent.centerWorld.subtract(attacker.boundingBoxComponent.centerWorld), 60 * 5.0))
                     .with(OffscreenCleanControl())
                     .with(OwnerComponent(attacker))
                     .with(CollidableComponent(true))

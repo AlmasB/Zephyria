@@ -18,7 +18,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
-import com.almasb.fxgl.texture.DynamicAnimatedTexture;
+import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.entity.Data;
@@ -170,7 +170,7 @@ public class ZephyriaApp extends GameApplication {
 
         Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
 
-        DynamicAnimatedTexture animation = player.getData().getAnimation();
+        AnimatedTexture animation = player.getData().getAnimation();
 
         if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
             if (vector.getX() >= 0) {
@@ -426,8 +426,7 @@ public class ZephyriaApp extends GameApplication {
         character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
 
         getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
-
-        initEnemies();
+        getMasterTimer().runOnceAfter(this::initEnemies, Duration.seconds(0.1));
     }
 
     private Text debug = new Text();
@@ -535,9 +534,9 @@ public class ZephyriaApp extends GameApplication {
     private void spawnCharacter(CharacterEntity character) {
         character.addComponent(new CollidableComponent(true));
 
-        DynamicAnimatedTexture texture = getAssetLoader()
+        AnimatedTexture texture = getAssetLoader()
                 .loadTexture(character.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
-                .toDynamicAnimatedTexture(CharacterAnimation.WALK_RIGHT, CharacterAnimation.values());
+                .toAnimatedTexture(CharacterAnimation.WALK_RIGHT);
 
         character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
         character.getMainViewComponent().setView(texture, true);

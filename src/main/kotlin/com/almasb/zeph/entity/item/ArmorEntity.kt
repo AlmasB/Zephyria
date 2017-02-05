@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.item
 
-import com.almasb.ents.Component
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Component
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.entity.DescriptionComponent

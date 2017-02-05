@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.skill
 
-import com.almasb.ents.Component
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Component
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.zeph.entity.DescriptionComponent
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty

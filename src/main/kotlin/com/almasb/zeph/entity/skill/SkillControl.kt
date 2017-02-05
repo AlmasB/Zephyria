@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.skill
 
-import com.almasb.ents.AbstractControl
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.AbstractControl
+import com.almasb.fxgl.ecs.Entity
 
 /**
  *

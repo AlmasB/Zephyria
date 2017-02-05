@@ -1,6 +1,6 @@
 package com.almasb.zeph.combat
 
-import com.almasb.ents.AbstractComponent
+import com.almasb.fxgl.ecs.AbstractComponent
 import javafx.beans.property.SimpleDoubleProperty
 
 /**

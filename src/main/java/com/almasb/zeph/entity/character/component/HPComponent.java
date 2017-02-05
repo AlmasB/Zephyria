@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.component;
 
-import com.almasb.ents.component.DoubleComponent;
+import com.almasb.fxgl.ecs.component.DoubleComponent;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 

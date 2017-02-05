@@ -1,8 +1,8 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.astar.AStarNode
-import com.almasb.ents.AbstractControl
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ai.pathfinding.AStarNode
+import com.almasb.fxgl.ecs.AbstractControl
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.zeph.CharacterAnimation

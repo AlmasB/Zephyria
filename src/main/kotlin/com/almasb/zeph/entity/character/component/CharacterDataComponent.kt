@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.component
 
-import com.almasb.ents.AbstractComponent
+import com.almasb.fxgl.ecs.AbstractComponent
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element

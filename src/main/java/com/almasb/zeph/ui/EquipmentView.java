@@ -1,6 +1,6 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.ents.Entity;
+import com.almasb.fxgl.ecs.Entity;
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.InGameWindow;

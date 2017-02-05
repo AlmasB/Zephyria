@@ -1,8 +1,8 @@
 package com.almasb.zeph;
 
-import com.almasb.astar.AStarGrid;
-import com.almasb.astar.NodeState;
-import com.almasb.ents.Entity;
+import com.almasb.fxgl.ai.pathfinding.AStarGrid;
+import com.almasb.fxgl.ai.pathfinding.NodeState;
+import com.almasb.fxgl.ecs.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
@@ -10,13 +10,14 @@ import com.almasb.fxgl.entity.EntityView;
 import com.almasb.fxgl.entity.GameEntity;
 import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.component.CollidableComponent;
-import com.almasb.fxgl.entity.component.MainViewComponent;
+import com.almasb.fxgl.entity.component.ViewComponent;
 import com.almasb.fxgl.entity.control.OffscreenCleanControl;
 import com.almasb.fxgl.entity.control.ProjectileControl;
-import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.parser.tiled.TiledMap;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
+import com.almasb.fxgl.service.Input;
 import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.zeph.combat.DamageResult;
@@ -107,7 +108,8 @@ public class ZephyriaApp extends GameApplication {
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
         settings.setFullScreen(full);
-        settings.setShowFPS(false);
+        settings.setProfilingEnabled(false);
+        settings.setCloseConfirmation(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
@@ -227,7 +229,11 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
 
-        initBackground();
+        //initBackground();
+
+        TiledMap map = getAssetLoader().loadJSON("sample_map.json", TiledMap.class);
+
+        getGameWorld().setLevelFromMap(map);
 
         selectedEffect.setInput(new Glow(0.8));
 
@@ -240,13 +246,13 @@ public class ZephyriaApp extends GameApplication {
 
         selected.addListener((observable, oldValue, newEntity) -> {
             if (oldValue != null) {
-                oldValue.getComponent(MainViewComponent.class).ifPresent(c -> {
+                oldValue.getComponent(ViewComponent.class).ifPresent(c -> {
                     c.getView().setEffect(null);
                 });
             }
 
             if (newEntity != null) {
-                newEntity.getComponent(MainViewComponent.class).ifPresent(c -> {
+                newEntity.getComponent(ViewComponent.class).ifPresent(c -> {
                     c.getView().setEffect(selectedEffect);
                 });
 
@@ -278,9 +284,9 @@ public class ZephyriaApp extends GameApplication {
 
         region.setBackground(new Background(bgImg));
 
-        bg.getMainViewComponent().setView(region);
+        bg.getViewComponent().setView(region);
 
-        bg.getMainViewComponent().getView().setOnMouseClicked(e -> {
+        bg.getViewComponent().getView().setOnMouseClicked(e -> {
 
             if (selectingSkillTargetArea) {
                 useAreaSkill();
@@ -298,7 +304,7 @@ public class ZephyriaApp extends GameApplication {
             playerActionControl.moveTo(targetX, targetY);
         });
 
-        bg.getMainViewComponent().setRenderLayer(new RenderLayer() {
+        bg.getViewComponent().setRenderLayer(new RenderLayer() {
             @Override
             public String name() {
                 return "BACKGROUND";
@@ -420,7 +426,7 @@ public class ZephyriaApp extends GameApplication {
             }
         });
 
-        character.getMainViewComponent().getView().setOnMouseClicked(null);
+        character.getViewComponent().getView().setOnMouseClicked(null);
         selected.set(null);
 
         character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
@@ -539,12 +545,12 @@ public class ZephyriaApp extends GameApplication {
                 .toAnimatedTexture(CharacterAnimation.WALK_RIGHT);
 
         character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
-        character.getMainViewComponent().setView(texture, true);
+        character.getViewComponent().setView(texture, true);
 
         if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
             //character.addControl(new AIControl());
 
-            character.getMainViewComponent().getView().setOnMouseClicked(e -> {
+            character.getViewComponent().getView().setOnMouseClicked(e -> {
                 selected.set(character);
             });
         }

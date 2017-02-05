@@ -1,7 +1,7 @@
 package com.almasb.zeph.combat
 
-import com.almasb.ents.Component
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Component
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.zeph.entity.DescriptionComponent
 import com.almasb.zeph.entity.character.CharacterEntity
 import javafx.beans.property.DoubleProperty

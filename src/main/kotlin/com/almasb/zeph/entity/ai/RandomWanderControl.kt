@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.zeph.Config
 import java.util.*
 

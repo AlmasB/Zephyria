@@ -1,8 +1,8 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.astar.AStarGrid
-import com.almasb.ents.AbstractControl
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ai.pathfinding.AStarGrid
+import com.almasb.fxgl.ecs.AbstractControl
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp

@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character
 
-import com.almasb.ents.Component
+import com.almasb.fxgl.ecs.Component
 import com.almasb.fxgl.entity.GameEntity
 import com.almasb.zeph.Config
 import com.almasb.zeph.combat.Element

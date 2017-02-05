@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.item.component
 
-import com.almasb.ents.Entity
-import com.almasb.ents.component.ObjectComponent
+import com.almasb.fxgl.ecs.Entity
+import com.almasb.fxgl.ecs.component.ObjectComponent
 
 /**
  *

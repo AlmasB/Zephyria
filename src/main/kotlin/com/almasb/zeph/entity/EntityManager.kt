@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity
 
-import com.almasb.ents.Component
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Component
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.fxgl.entity.EntityView
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config

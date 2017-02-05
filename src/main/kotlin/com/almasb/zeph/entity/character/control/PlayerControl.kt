@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.control
 
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.zeph.Config
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience

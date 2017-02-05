@@ -1,8 +1,8 @@
 package com.almasb.zeph.entity.character.control
 
-import com.almasb.astar.AStarGrid
-import com.almasb.ents.AbstractControl
-import com.almasb.ents.Entity
+import com.almasb.fxgl.ai.pathfinding.AStarGrid
+import com.almasb.fxgl.ecs.AbstractControl
+import com.almasb.fxgl.ecs.Entity
 import com.almasb.fxgl.app.FXGL
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.entity.ai.AttackControl

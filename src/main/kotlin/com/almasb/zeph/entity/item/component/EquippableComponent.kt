@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.item.component
 
-import com.almasb.ents.AbstractComponent
+import com.almasb.fxgl.ecs.AbstractComponent
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.Rune

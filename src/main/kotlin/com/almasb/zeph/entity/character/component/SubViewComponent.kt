@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.component
 
-import com.almasb.ents.component.ObjectComponent
+import com.almasb.fxgl.ecs.component.ObjectComponent
 import com.almasb.fxgl.entity.EntityView
 
 /**

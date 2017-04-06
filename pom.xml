@@ -16,16 +16,9 @@
         <maven.compiler.version>3.3</maven.compiler.version>
         <maven.shade.version>2.4.2</maven.shade.version>
 
-        <fxgl.version>0.3.0-SNAPSHOT</fxgl.version>
+        <fxgl.version>0.3.0</fxgl.version>
         <kotlin.version>1.0.5</kotlin.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>OSS_SNAPSHOTS</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
 
     <dependencies>
         <dependency>

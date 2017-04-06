@@ -108,7 +108,7 @@ public class ZephyriaApp extends GameApplication {
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
         settings.setFullScreen(full);
-        settings.setProfilingEnabled(false);
+        settings.setProfilingEnabled(true);
         settings.setCloseConfirmation(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
@@ -229,11 +229,11 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
 
-        //initBackground();
+        initBackground();
 
-        TiledMap map = getAssetLoader().loadJSON("sample_map.json", TiledMap.class);
-
-        getGameWorld().setLevelFromMap(map);
+//        TiledMap map = getAssetLoader().loadJSON("sample_map.json", TiledMap.class);
+//
+//        getGameWorld().setLevelFromMap(map);
 
         selectedEffect.setInput(new Glow(0.8));
 

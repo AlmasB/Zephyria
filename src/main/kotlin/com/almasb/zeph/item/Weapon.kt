@@ -1,21 +1,18 @@
-package com.almasb.zeph.entity.item
+package com.almasb.zeph.item
 
 import com.almasb.fxgl.entity.Entity
-import com.almasb.fxgl.entity.component.Component
+import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.combat.Element
-import com.almasb.zeph.entity.Description
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 
 /**
- *
+ * Weapon item.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class WeaponComponent(data: WeaponData) : Component() {
-
-    val desc: Description = Description()
+class Weapon(data: WeaponData) : Item(data.description) {
 
     val refineLevel = SimpleIntegerProperty()
     val element = SimpleObjectProperty<Element>()
@@ -45,14 +42,16 @@ class WeaponComponent(data: WeaponData) : Component() {
 //                .concat("${data.runes}"))
     }
 
-    fun onEquip(entity: Entity) {
+    fun onEquip(entity: PlayerEntity) {
+        // TODO: dynamic runes, not data runes
+
 //        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
 //
 //        data.runes.forEach { attrs.addBonusAttribute(it.attribute, it.bonus) }
 //        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ATK, pureDamage.value)
     }
 
-    fun onUnEquip(entity: Entity) {
+    fun onUnEquip(entity: PlayerEntity) {
 //        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
 //
 //        data.runes.forEach { attrs.addBonusAttribute(it.attribute, -it.bonus) }

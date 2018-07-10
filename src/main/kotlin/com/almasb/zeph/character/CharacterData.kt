@@ -1,10 +1,8 @@
 package com.almasb.zeph.character
 
 import com.almasb.zeph.combat.*
-import com.almasb.zeph.entity.Description
-import com.almasb.zeph.entity.DescriptionBuilder
-import com.almasb.zeph.entity.item.ItemLevel
-import com.almasb.zeph.entity.item.armor
+import com.almasb.zeph.Description
+import com.almasb.zeph.DescriptionBuilder
 
 @DslMarker
 annotation class DataDSL

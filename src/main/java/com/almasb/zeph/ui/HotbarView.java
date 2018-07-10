@@ -1,21 +1,11 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.InGameWindow;
-import com.almasb.zeph.entity.Description;
-import com.almasb.zeph.entity.skill.SkillComponent;
-import javafx.animation.StrokeTransition;
-import javafx.collections.ListChangeListener;
-import javafx.scene.Cursor;
-import javafx.scene.control.Tooltip;
+import com.almasb.zeph.skill.SkillComponent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 /**
  * Hotbar skills UI.

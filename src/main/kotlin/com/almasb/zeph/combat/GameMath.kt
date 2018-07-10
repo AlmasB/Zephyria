@@ -1,4 +1,4 @@
-package com.almasb.zeph.old
+package com.almasb.zeph.combat
 
 import com.almasb.fxgl.core.math.FXGLMath
 

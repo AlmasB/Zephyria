@@ -9,16 +9,16 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.entity.Inventory
+import com.almasb.zeph.Inventory
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.HPComponent
 import com.almasb.zeph.entity.character.component.SPComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
-import com.almasb.zeph.entity.item.WeaponComponent
-import com.almasb.zeph.entity.skill.SkillComponent
-import com.almasb.zeph.entity.skill.SkillUseResult
-import com.almasb.zeph.old.GameMath
-import com.almasb.zeph.old.StatusEffectComponent
+import com.almasb.zeph.item.Weapon
+import com.almasb.zeph.skill.SkillComponent
+import com.almasb.zeph.skill.SkillUseResult
+import com.almasb.zeph.combat.GameMath
+import com.almasb.zeph.combat.StatusEffect
 import javafx.beans.binding.Bindings.*
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -42,14 +42,14 @@ open class CharacterComponent(data: CharacterData) : Component() {
     /**
      * Statuses currently affecting this character.
      */
-    val statuses = FXCollections.observableArrayList<StatusEffectComponent>()
+    val statuses = FXCollections.observableArrayList<StatusEffect>()
 
     /**
      * Effects currently placed on this character.
      */
-    val effects = FXCollections.observableArrayList<Buff>()
+    val effects = FXCollections.observableArrayList<Effect>()
 
-    val weapon = SimpleObjectProperty<WeaponComponent>()
+    val weapon = SimpleObjectProperty<Weapon>()
 
     val weaponElement = SimpleObjectProperty<Element>()
     val armorElement = SimpleObjectProperty<Element>()
@@ -116,7 +116,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @param e effect
      */
-    fun addStatusEffect(e: StatusEffectComponent) {
+    fun addStatusEffect(e: StatusEffect) {
         statuses.add(e)
     }
 
@@ -126,7 +126,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @param e effect
      */
-    fun addEffect(e: Buff) {
+    fun addEffect(e: Effect) {
         val it = effects.iterator()
         while (it.hasNext()) {
             val eff = it.next()

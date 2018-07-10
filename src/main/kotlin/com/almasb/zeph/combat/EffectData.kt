@@ -1,6 +1,6 @@
 package com.almasb.zeph.combat
 
-import com.almasb.zeph.entity.Description
+import com.almasb.zeph.Description
 
 /**
  *

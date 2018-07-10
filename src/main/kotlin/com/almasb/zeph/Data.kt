@@ -1,12 +1,11 @@
-package com.almasb.zeph.entity
+package com.almasb.zeph
 
 import com.almasb.zeph.character.char
-import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Element.*
 import com.almasb.zeph.combat.Experience
-import com.almasb.zeph.entity.item.*
-import com.almasb.zeph.entity.item.ArmorType.*
-import com.almasb.zeph.entity.item.WeaponType.*
+import com.almasb.zeph.item.*
+import com.almasb.zeph.item.ArmorType.*
+import com.almasb.zeph.item.WeaponType.*
 
 
 /**
@@ -17,28 +16,27 @@ import com.almasb.zeph.entity.item.WeaponType.*
 object Data {
 
     private val weapons = hashMapOf<Int, WeaponData>()
+    private val armors = hashMapOf<Int, ArmorData>()
 
     init {
-        Data.Weapon.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Data.Weapon) as WeaponData
+        Weapon.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Weapon) as WeaponData
 
             weapons[data.description.id] = data
         }
+
+        Armor.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Armor) as ArmorData
+
+            armors[data.description.id] = data
+        }
     }
-
-
-//
-//        Data.Armor.javaClass.declaredMethods.forEach {
-//            val list = it.invoke(Data.Armor) as List<Component>
-//
-//            val id = (list[0] as Description).id.value
-//            armor[id] = it
-//        }
 
     fun isWeapon(id: Int) = id.toString().startsWith("4")
     fun isArmor(id: Int) = id.toString().startsWith("5")
 
-    fun getWeapon(id: Int) = weapons[id]!!
+    fun getWeapon(id: Int) = weapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
+    fun getArmor(id: Int) = armors[id] ?: throw IllegalArgumentException("No armor found: $id")
 
     object Weapon {
 
@@ -81,7 +79,7 @@ object Data {
 
         fun CLOTHES() = armor {
             desc {
-                id = 5000
+                id = 5001
                 name = "Clothes"
                 description = "Just normal clothes, don't count on any defense."
                 textureName = "items/armor/clothes.png"
@@ -92,7 +90,7 @@ object Data {
 
         fun SHOES() = armor {
             desc {
-                id = 5000
+                id = 5002
                 name = "Shoes"
                 description = "Ordinary hat, already out of fashion."
                 textureName = "items/armor/shoes.png"
@@ -137,7 +135,95 @@ object Data {
 
 
 
+    //fun getWeapon(id: Int) = WeaponComponent(weapons[id]!!.invoke(Data.Weapon) as List<Component>)
 
+    //fun getArmor(id: Int) = ArmorComponent(armor[id]!!.invoke(Data.Armor) as List<Component>)
+//
+//    fun getItem(id: Int): Entity {
+//        if (weapons.containsKey(id))
+//            return getWeapon(id)
+//
+//        if (armor.containsKey(id))
+//            return getArmor(id)
+//
+//        throw IllegalArgumentException("ID $id not found in the database")
+//    }
+//
+//    fun makeHPBar(): ProgressBar {
+//        val bar = ProgressBar(false)
+//
+//        with(bar) {
+//            setHeight(25.0)
+//            setFill(Color.GREEN.brighter())
+//            setTraceFill(Color.GREEN.brighter())
+//            isLabelVisible = true
+//        }
+//
+//        return bar
+//    }
+//
+//    fun makeSkillBar(): ProgressBar {
+//        val bar = ProgressBar(false)
+//
+//        with(bar) {
+//            setHeight(25.0)
+//            setFill(Color.BLUE.brighter().brighter())
+//            setTraceFill(Color.BLUE)
+//            isLabelVisible = true
+//        }
+//
+//        return bar
+//    }
+//
+//    fun makeCharacterSubView(entity: CharacterEntity): SubViewComponent {
+//        val barHP = makeHPBar()
+//        val barSP = makeSkillBar()
+//
+//        barHP.translateX = 0.0
+//        barHP.translateY = 80.0
+//        barHP.setWidth(Config.tileSize.toDouble())
+//        barHP.setHeight(10.0)
+//        barHP.isLabelVisible = false
+//
+//        barSP.translateX = 0.0
+//        barSP.translateY = 90.0
+//        barSP.setWidth(Config.tileSize.toDouble())
+//        barSP.setHeight(10.0)
+//        barSP.isLabelVisible = false
+//
+//        barHP.maxValueProperty().bind(entity.hp.maxValueProperty())
+//        barHP.currentValueProperty().bind(entity.hp.valueProperty())
+//
+//        barSP.maxValueProperty().bind(entity.sp.maxValueProperty())
+//        barSP.currentValueProperty().bind(entity.sp.valueProperty())
+//
+//        val text = Text()
+//        text.font = Font.font(14.0)
+//        text.fill = Color.WHITE
+//        text.textProperty().bind(entity.description.name.concat(" Lv. ").concat(entity.baseLevel))
+//        text.translateX = Config.tileSize.toDouble() / 2 - text.layoutBounds.width / 2
+//        text.translateY = 75.0
+//
+//        val vbox = Group(barHP, barSP, text)
+//
+//        val subView = EntityView()
+//        subView.addNode(vbox)
+//
+//        subView.translateXProperty().bind(entity.positionComponent.xProperty())
+//        subView.translateYProperty().bind(entity.positionComponent.yProperty())
+//
+//        return SubViewComponent(subView)
+//    }
+//
+//    fun createCharacter(dataComponents: List<Component>, x: Int, y: Int): CharacterEntity {
+//        val char = CharacterEntity(dataComponents)
+//        char.typeComponent.value = EntityType.CHARACTER
+//        char.positionComponent.value = Point2D(x * Config.tileSize.toDouble(), y * Config.tileSize.toDouble())
+//
+//        char.addComponent(makeCharacterSubView(char))
+//
+//        return char
+//    }
 
 
 

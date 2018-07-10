@@ -11,9 +11,9 @@
 //import com.almasb.fxgl.texture.AnimatedTexture
 //import com.almasb.zeph.CharacterAnimation
 //import com.almasb.zeph.Config
-//import com.almasb.zeph.entity.EntityType
+//import com.almasb.zeph.EntityType
 //import com.almasb.zeph.entity.character.CharacterEntity
-//import com.almasb.zeph.entity.item.component.OwnerComponent
+//import com.almasb.zeph.item.component.OwnerComponent
 //import javafx.beans.property.SimpleObjectProperty
 //import javafx.util.Duration
 //

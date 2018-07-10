@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.skill
+package com.almasb.zeph.skill
 
 import com.almasb.zeph.combat.DamageResult
 

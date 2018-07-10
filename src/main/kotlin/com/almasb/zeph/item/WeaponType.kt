@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.item
+package com.almasb.zeph.item
 
 /**
  *

@@ -2,38 +2,30 @@ package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Config
-import com.almasb.zeph.character.CharacterClass
-import com.almasb.zeph.character.CharacterDataBuilder
+import com.almasb.zeph.Data
+import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
-import com.almasb.zeph.character.EquipPlace
-import com.almasb.zeph.entity.item.ArmorComponent
-import com.almasb.zeph.entity.item.WeaponComponent
-import com.almasb.zeph.entity.skill.SkillType
+import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.Item
+import com.almasb.zeph.item.Weapon
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 
 /**
- * on player entity, good / bad ? maybe leave both and separate responsibilities
+ *
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-
-// TODO: use char data
-class PlayerComponent : CharacterComponent(CharacterDataBuilder().build()) {
-
-//    class Entity(name: String, textureName: String) : CharacterEntity(listOf<Component>(
-//            DescriptionComponent(1, name, "It's you! $name", textureName),
-//            CharacterDataComponent(CharacterType.NORMAL)
-//    )) {
-
+class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
 
     init {
         charClass.value = CharacterClass.NOVICE
     }
 
-    private lateinit var player: Entity
+    private lateinit var player: PlayerEntity
 
     // TODO: set to 0 when tests are done
     val attributePoints = SimpleIntegerProperty(90)
@@ -47,22 +39,30 @@ class PlayerComponent : CharacterComponent(CharacterDataBuilder().build()) {
     override fun onAdded() {
         super.onAdded()
 
-        player = entity
-
-        //            playerControl.equipProperty(EquipPlace.RIGHT_HAND).addListener({ o, old, newWeapon ->
-//                weapon.value = newWeapon as WeaponEntity
-//            })
+        player = entity as PlayerEntity
 
         EquipPlace.values().forEach {
-//            val item: Entity = if (it.isWeapon) DataManager.getWeapon(it.emptyID) else DataManager.getArmor(it.emptyID)
-//
-//            if (item is WeaponComponent)
-//                item.onEquip(player)
-//            else if (item is ArmorComponent)
-//                item.onEquip(player)
-//
-//            equip.put(it, item)
-//            equipProperties.put(it, SimpleObjectProperty(item))
+
+            val item: Item
+
+            if (it.isWeapon) {
+                val weapon = Weapon(Data.getWeapon(it.emptyID))
+                weapon.onEquip(player)
+
+                item = weapon
+            } else {
+                val armor = Armor(Data.getArmor(it.emptyID))
+                armor.onEquip(player)
+
+                item = armor
+            }
+
+            equip[it] = item
+            equipProperties[it] = SimpleObjectProperty(item)
+        }
+
+        equipProperty(EquipPlace.RIGHT_HAND).addListener { _, _, newWeapon ->
+            weapon.value = newWeapon as Weapon
         }
     }
 
@@ -189,21 +189,21 @@ class PlayerComponent : CharacterComponent(CharacterDataBuilder().build()) {
         skillPoints.value++
     }
 
-    val equip = HashMap<EquipPlace, Entity>()
-    val equipProperties = HashMap<EquipPlace, ObjectProperty<Entity> >()
+    val equip = HashMap<EquipPlace, Item>()
+    val equipProperties = HashMap<EquipPlace, ObjectProperty<Item> >()
 
     fun getEquip(place: EquipPlace) = equip[place]!!
     fun equipProperty(place: EquipPlace) = equipProperties[place]!!
 
-    fun setEquip(place: EquipPlace, item: Entity) {
+    fun setEquip(place: EquipPlace, item: Item) {
         equip.put(place, item)
         equipProperties[place]!!.set(item)
     }
 
-    fun getRightWeapon() = getEquip(EquipPlace.RIGHT_HAND) as WeaponComponent
-    fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as WeaponComponent
+    fun getRightWeapon() = getEquip(EquipPlace.RIGHT_HAND) as Weapon
+    fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as Weapon
 
-    fun equipWeapon(weapon: WeaponComponent) {
+    fun equipWeapon(weapon: Weapon) {
 //        inventory.removeItem(weapon)
 //
 //        if (weapon.data.type.isTwoHanded()) {
@@ -234,7 +234,7 @@ class PlayerComponent : CharacterComponent(CharacterDataBuilder().build()) {
 //        weaponElement.value = weapon.data.element
     }
 
-    fun equipArmor(armor: ArmorComponent) {
+    fun equipArmor(armor: Armor) {
 //        inventory.removeItem(armor)
 //
 //        val place = when (armor.data.armorType) {
@@ -278,7 +278,7 @@ class PlayerComponent : CharacterComponent(CharacterDataBuilder().build()) {
 //        }
     }
 
-    //fun isFree(place: EquipPlace) = getEquip(place).getComponentUnsafe(Description::class.java).id.value == place.emptyID
+    fun isFree(place: EquipPlace) = getEquip(place).description.id == place.emptyID
 
     // TODO: player version of canAttack that uses aspd of both weapons
 }

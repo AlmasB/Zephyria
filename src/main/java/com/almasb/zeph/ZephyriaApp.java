@@ -12,17 +12,16 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
+import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
+import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.character.components.PlayerComponent;
-import com.almasb.zeph.entity.Data;
-import com.almasb.zeph.entity.DataManager;
-import com.almasb.zeph.entity.item.WeaponData;
-import com.almasb.zeph.entity.skill.SkillComponent;
-import com.almasb.zeph.entity.skill.SkillTargetType;
-import com.almasb.zeph.entity.skill.SkillType;
-import com.almasb.zeph.entity.skill.SkillUseResult;
-import com.almasb.zeph.old.GameMath;
+import com.almasb.zeph.item.WeaponData;
+import com.almasb.zeph.skill.SkillComponent;
+import com.almasb.zeph.skill.SkillUseResult;
+import com.almasb.zeph.combat.GameMath;
+import com.almasb.zeph.ui.EquipmentView;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -53,7 +52,7 @@ public class ZephyriaApp extends GameApplication {
 
     private AStarGrid grid;
 
-    private Entity player;
+    private PlayerEntity player;
     private PlayerComponent playerComponent;
 
     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
@@ -68,7 +67,7 @@ public class ZephyriaApp extends GameApplication {
         return grid;
     }
 
-    public Entity getPlayer() {
+    public PlayerEntity getPlayer() {
         return player;
     }
 
@@ -440,12 +439,13 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-//        getGameScene().addUINodes(
+        getGameScene().addUINodes(
 //                new HotbarView(player),
 //                new BasicInfoView(player),
 //                new CharInfoView(player),
 //                new InventoryView(player, getWidth(), getHeight()),
-//                new EquipmentView(player, getWidth(), getHeight()));
+                new EquipmentView(player, getWidth(), getHeight())
+        );
     }
 
     private void dropItem(int itemID, Point2D position) {
@@ -503,12 +503,20 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initPlayer() {
-//        player = new Entity("Developer", "chars/players/player_full.png");
-//        playerComponent = player.getPlayerControl();
-//
-//        player.getTypeComponent().setValue(EntityType.PLAYER);
-//        player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
-//
+        player = new PlayerEntity("Developer", "chars/players/player_full.png");
+        playerComponent = player.getPlayerComponent();
+        player.setType(EntityType.PLAYER);
+        player.setPosition(TILE_SIZE * 4, TILE_SIZE * 4);
+
+
+        //player.setView(new Rectangle(40, 40, Color.BLUE));
+
+
+        getGameWorld().addEntity(player);
+
+
+
+
 //        player.addComponent(DataManager.INSTANCE.makeCharacterSubView(player));
 //        spawnCharacter(player);
 //

@@ -1,7 +1,6 @@
-package com.almasb.zeph.old
+package com.almasb.zeph.combat
 
-import com.almasb.fxgl.entity.component.Component
-import com.almasb.zeph.entity.Description
+import com.almasb.zeph.Description
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 
@@ -10,7 +9,7 @@ import javafx.beans.property.SimpleDoubleProperty
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-class StatusEffectComponent(data: StatusEffectData) : Component() {
+class StatusEffect(data: StatusEffectData) {
 
     val desc: Description = data.description
 

@@ -1,11 +1,11 @@
-package com.almasb.zeph.entity.item
+package com.almasb.zeph.item
 
 import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.Rune
-import com.almasb.zeph.entity.Description
-import com.almasb.zeph.entity.DescriptionBuilder
+import com.almasb.zeph.Description
+import com.almasb.zeph.DescriptionBuilder
 
 @DataDSL
 class ArmorDataBuilder(

@@ -5,9 +5,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
-import com.almasb.zeph.character.components.CharacterComponent;
-import com.almasb.zeph.entity.Description;
-import com.almasb.zeph.entity.item.WeaponData;
+import com.almasb.zeph.item.WeaponData;
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -37,7 +35,6 @@ public class ZephFactory implements EntityFactory {
 
         return Entities.builder()
                 .from(data)
-                // with Armor / Weapon Component
                 .viewFromTexture(weaponData.getDescription().getTextureName())
                 .build();
     }

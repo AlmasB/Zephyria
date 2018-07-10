@@ -1,8 +1,6 @@
-package com.almasb.zeph.entity
+package com.almasb.zeph
 
 import com.almasb.zeph.character.DataDSL
-import javafx.beans.property.SimpleIntegerProperty
-import javafx.beans.property.SimpleStringProperty
 
 @DataDSL
 class DescriptionBuilder(

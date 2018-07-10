@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.skill
+package com.almasb.zeph.skill
 
 /**
  *

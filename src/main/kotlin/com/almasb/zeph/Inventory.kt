@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity
+package com.almasb.zeph
 
 import com.almasb.zeph.Config
 import javafx.collections.FXCollections

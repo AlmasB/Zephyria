@@ -1,8 +1,6 @@
-package com.almasb.zeph.old
+package com.almasb.zeph.combat
 
-import com.almasb.zeph.combat.Status
-import com.almasb.zeph.entity.Description
-import javafx.beans.property.SimpleDoubleProperty
+import com.almasb.zeph.Description
 
 /**
  *

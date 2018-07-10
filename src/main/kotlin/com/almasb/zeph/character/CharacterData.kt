@@ -1,6 +1,8 @@
 package com.almasb.zeph.character
 
 import com.almasb.zeph.combat.*
+import com.almasb.zeph.entity.Description
+import com.almasb.zeph.entity.DescriptionBuilder
 import com.almasb.zeph.entity.item.ItemLevel
 import com.almasb.zeph.entity.item.armor
 
@@ -9,6 +11,7 @@ annotation class DataDSL
 
 @DataDSL
 class CharacterDataBuilder(
+        var description: Description = Description(),
         var type: CharacterType = CharacterType.NORMAL,
         var charClass: CharacterClass = CharacterClass.MONSTER,
         var baseLevel: Int = 1,
@@ -23,6 +26,12 @@ class CharacterDataBuilder(
         val dropItems: MutableList<Pair<Int, Int>> = arrayListOf()
 ) {
 
+    fun desc(setup: DescriptionBuilder.() -> Unit) {
+        val builder = DescriptionBuilder()
+        builder.setup()
+        description = builder.build()
+    }
+
     fun attributes(setup: Attribute.AttributeInfo.() -> Unit) {
         attributes.setup()
     }
@@ -32,7 +41,7 @@ class CharacterDataBuilder(
     }
 
     fun build(): CharacterData {
-        return CharacterData(type, charClass, baseLevel, attributes, element, rewardXP, dropItems)
+        return CharacterData(description, type, charClass, baseLevel, attributes, element, rewardXP, dropItems)
     }
 }
 
@@ -43,39 +52,13 @@ fun char(setup: CharacterDataBuilder.() -> Unit): CharacterData {
     return builder.build()
 }
 
-fun test() {
-    val myChar = char {
-        type = CharacterType.NORMAL
-        charClass = CharacterClass.MONSTER
-        baseLevel = 2
-        element = Element.AIR
-        rewardXP = Experience(25, 0, 0)
-
-        attributes {
-            str = 5
-            int = 2
-            luc = 1
-        }
-
-        //drops {
-            1890 has 50
-        //}
-    }
-
-    val myArmor = armor {
-        itemLevel = ItemLevel.UNIQUE
-        armor = 22
-        marmor = 15
-        essences += Essence(Stat.ARM, 5)
-    }
-}
-
 /**
  *
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 data class CharacterData(
+        val description: Description,
         val type: CharacterType,
         val charClass: CharacterClass,
         val baseLevel: Int,

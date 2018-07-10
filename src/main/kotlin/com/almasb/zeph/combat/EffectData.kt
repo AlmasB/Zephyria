@@ -1,11 +1,6 @@
-package com.almasb.zeph.old
+package com.almasb.zeph.combat
 
-import com.almasb.zeph.combat.Essence
-import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.entity.Description
-import javafx.beans.property.SimpleDoubleProperty
-import javafx.util.Duration
-import java.util.*
 
 /**
  *

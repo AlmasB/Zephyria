@@ -12,12 +12,17 @@ import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.settings.GameSettings;
+import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.character.components.PlayerComponent;
+import com.almasb.zeph.entity.Data;
+import com.almasb.zeph.entity.DataManager;
+import com.almasb.zeph.entity.item.WeaponData;
 import com.almasb.zeph.entity.skill.SkillComponent;
 import com.almasb.zeph.entity.skill.SkillTargetType;
 import com.almasb.zeph.entity.skill.SkillType;
 import com.almasb.zeph.entity.skill.SkillUseResult;
+import com.almasb.zeph.old.GameMath;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,7 +38,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
+import kotlin.Pair;
 
+import java.util.List;
 import java.util.Random;
 
 import static com.almasb.fxgl.app.DSLKt.*;
@@ -107,11 +114,17 @@ public class ZephyriaApp extends GameApplication {
         onKeyDown(KeyCode.K, "Spawn Dev", () -> {
             SpawnData data = new SpawnData(200, 200);
 
-            // add any properties needed
-            // then
-            // DataManager.load(Data.Character.SKELETON_ARCHER, data);
+            data.put("charData", Data.Character.INSTANCE.SKELETON_ARCHER());
 
             spawn("char", data);
+        });
+
+        onKeyDown(KeyCode.J, "Kill Dev", () -> {
+            getGameWorld().getEntitiesInRange(new Rectangle2D(getInput().getMouseXWorld() - 20, getInput().getMouseYWorld() - 20, 40, 40))
+                    .stream()
+                    .filter(e -> e instanceof CharacterEntity)
+                    .map(e -> (CharacterEntity) e)
+                    .forEach(this::onKill);
         });
     }
 
@@ -208,13 +221,11 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        getGameWorld().addEntityFactory(new ZephFactory());
+
         grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
 
         initBackground();
-
-//        TiledMap map = getAssetLoader().loadJSON("sample_map.json", TiledMap.class);
-//
-//        getGameWorld().setLevelFromMap(map);
 
         selectedEffect.setInput(new Glow(0.8));
 
@@ -223,7 +234,7 @@ public class ZephyriaApp extends GameApplication {
 
         //showGrid();
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
-        getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+        //getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
 
 //        selected.addListener((observable, oldValue, newEntity) -> {
 //            if (oldValue != null) {
@@ -392,20 +403,22 @@ public class ZephyriaApp extends GameApplication {
      *
      * @param character killed char
      */
-    private void onKill(Entity character) {
-        //character.setControlsEnabled(false);
+    private void onKill(CharacterEntity character) {
+        character.kill();
 
 //        // TODO: reward based on level differences
 //        playerComponent.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
 //        playerComponent.rewardXP(character.getData().getRewardXP());
 //
-//        List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
-//        drops.forEach(p -> {
-//            if (GameMath.INSTANCE.checkChance(p.getSecond())) {
-//                dropItem(DataManager.INSTANCE.getItem(p.getFirst()),
-//                        character.getPositionComponent().getValue());
-//            }
-//        });
+        List<Pair<Integer, Integer>> drops = character.getData().getDropItems();
+        drops.forEach(p -> {
+            int itemID = p.getFirst();
+            int chance = p.getSecond();
+
+            if (GameMath.INSTANCE.checkChance(chance)) {
+                dropItem(itemID, character.getPosition());
+            }
+        });
 //
 //        character.getViewComponent().getView().setOnMouseClicked(null);
 //        selected.set(null);
@@ -435,7 +448,20 @@ public class ZephyriaApp extends GameApplication {
 //                new EquipmentView(player, getWidth(), getHeight()));
     }
 
-    private void dropItem(Entity item, Point2D position) {
+    private void dropItem(int itemID, Point2D position) {
+
+        SpawnData data = new SpawnData(position);
+
+        if (Data.INSTANCE.isWeapon(itemID)) {
+            WeaponData weaponData = Data.INSTANCE.getWeapon(itemID);
+            data.put("weaponData", weaponData);
+        } else if (Data.INSTANCE.isArmor(itemID)) {
+
+            // TODO:
+        }
+
+        spawn("item", data);
+
 //        Description desc = item.getComponentUnsafe(Description.class);
 //
 //        EntityView view = new EntityView();

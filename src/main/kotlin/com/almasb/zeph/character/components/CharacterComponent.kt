@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
+import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
@@ -16,7 +17,6 @@ import com.almasb.zeph.entity.character.component.StatsComponent
 import com.almasb.zeph.entity.item.WeaponComponent
 import com.almasb.zeph.entity.skill.SkillComponent
 import com.almasb.zeph.entity.skill.SkillUseResult
-import com.almasb.zeph.old.EffectComponent
 import com.almasb.zeph.old.GameMath
 import com.almasb.zeph.old.StatusEffectComponent
 import javafx.beans.binding.Bindings.*
@@ -28,7 +28,7 @@ import java.util.concurrent.Callable
 
 open class CharacterComponent(data: CharacterData) : Component() {
 
-    private lateinit var char: Entity
+    private lateinit var char: CharacterEntity
 
     val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
 
@@ -47,7 +47,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
     /**
      * Effects currently placed on this character.
      */
-    val effects = FXCollections.observableArrayList<EffectComponent>()
+    val effects = FXCollections.observableArrayList<Buff>()
 
     val weapon = SimpleObjectProperty<WeaponComponent>()
 
@@ -75,7 +75,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
     }
 
     override fun onAdded() {
-        char = entity
+        char = entity as CharacterEntity
 
         init()
     }
@@ -126,7 +126,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @param e effect
      */
-    fun addEffect(e: EffectComponent) {
+    fun addEffect(e: Buff) {
         val it = effects.iterator()
         while (it.hasNext()) {
             val eff = it.next()
@@ -266,8 +266,8 @@ open class CharacterComponent(data: CharacterData) : Component() {
         val it = effects.iterator()
         while (it.hasNext()) {
             val e = it.next()
-            e.duration.value -= tpf
-            if (e.duration.value <= 0) {
+            e.duration -= tpf
+            if (e.duration <= 0) {
                 e.onEnd(char)
                 it.remove()
             }
@@ -457,5 +457,10 @@ open class CharacterComponent(data: CharacterData) : Component() {
         //return skills[index].data.onCast(char, char, skills[index])
 
         return SkillUseResult.NONE
+    }
+
+    fun kill() {
+        char.setUpdateEnabled(false)
+        char.animationComponent.playDeath(Runnable { char.removeFromWorld() })
     }
 }

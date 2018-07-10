@@ -1,7 +1,9 @@
 package com.almasb.zeph.entity
 
+import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config
+import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.entity.item.ArmorComponent
 import com.almasb.zeph.entity.item.WeaponComponent
 import javafx.geometry.Point2D
@@ -24,19 +26,11 @@ object DataManager {
     private val armor = HashMap<Int, Method>()
 
     init {
-//        Data.Weapon.javaClass.declaredMethods.forEach {
-//            val list = it.invoke(Data.Weapon) as List<Component>
-//
-//            val id = (list[0] as Description).id.value
-//            weapons[id] = it
-//        }
-//
-//        Data.Armor.javaClass.declaredMethods.forEach {
-//            val list = it.invoke(Data.Armor) as List<Component>
-//
-//            val id = (list[0] as Description).id.value
-//            armor[id] = it
-//        }
+
+    }
+
+    @JvmStatic fun load(charData: CharacterData, spawnData: SpawnData) {
+
     }
 
     //fun getWeapon(id: Int) = WeaponComponent(weapons[id]!!.invoke(Data.Weapon) as List<Component>)

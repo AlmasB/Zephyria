@@ -1,5 +1,13 @@
 package com.almasb.zeph.entity
 
+import com.almasb.zeph.character.char
+import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.Element.*
+import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.entity.item.*
+import com.almasb.zeph.entity.item.ArmorType.*
+import com.almasb.zeph.entity.item.WeaponType.*
+
 
 /**
  *
@@ -7,19 +15,137 @@ package com.almasb.zeph.entity
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 object Data {
+
+    private val weapons = hashMapOf<Int, WeaponData>()
+
+    init {
+        Data.Weapon.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Data.Weapon) as WeaponData
+
+            weapons[data.description.id] = data
+        }
+    }
+
+
 //
-//    object Weapon {
-//        fun HANDS() = listOf<Component>(
-//                Description(4000, "Hands", "That's right, go kill everyone with your bare hands.", "items/weapons/hands.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.MACE, 0)
-//        )
+//        Data.Armor.javaClass.declaredMethods.forEach {
+//            val list = it.invoke(Data.Armor) as List<Component>
+//
+//            val id = (list[0] as Description).id.value
+//            armor[id] = it
+//        }
+
+    fun isWeapon(id: Int) = id.toString().startsWith("4")
+    fun isArmor(id: Int) = id.toString().startsWith("5")
+
+    fun getWeapon(id: Int) = weapons[id]!!
+
+    object Weapon {
+
+        fun HANDS() = weapon {
+            desc {
+                id = 4000
+                name = "Hands"
+                description = "That's right, go kill everyone with your bare hands."
+                textureName = "items/weapons/hands.png"
+            }
+
+            type = MACE
+        }
+
+        fun KNIFE() = weapon {
+            desc {
+                id = 4001
+                name = "Knife"
+                description = "A simple knife with poor blade."
+                textureName = "items/weapons/knife.png"
+            }
+
+            type = DAGGER
+            pureDamage = 15
+        }
+    }
+
+    object Armor {
+
+        fun HAT() = armor {
+            desc {
+                id = 5000
+                name = "Hat"
+                description = "Ordinary hat, already out of fashion."
+                textureName = "items/armor/hat.png"
+            }
+
+            armorType = HELM
+        }
+
+        fun CLOTHES() = armor {
+            desc {
+                id = 5000
+                name = "Clothes"
+                description = "Just normal clothes, don't count on any defense."
+                textureName = "items/armor/clothes.png"
+            }
+
+            armorType = BODY
+        }
+
+        fun SHOES() = armor {
+            desc {
+                id = 5000
+                name = "Shoes"
+                description = "Ordinary hat, already out of fashion."
+                textureName = "items/armor/shoes.png"
+            }
+
+            armorType = SHOES
+        }
+    }
+
+    object Character {
+
+        fun SKELETON_ARCHER() = char {
+            desc {
+                id = 2004
+                name = "Skeleton-Archer"
+                description = "Skeleton-Archer Description."
+                textureName = "chars/enemies/skeleton_archer.png"
+            }
+
+            baseLevel = 2
+            element = EARTH
+            rewardXP = Experience(10, 3, 3)
+
+            attributes {
+                str = 5
+                vit = 30
+                dex = 3
+                agi = 2
+            }
+
+            // drop items
+            4001 has 50
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //
 //        // DAGGERS 4000+
 //
-//        fun KNIFE() = listOf<Component>(
-//                Description(4001, "Knife", "A simple knife with poor blade.", "items/weapons/knife.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.DAGGER, 15)
-//        )
+
 //
 //        fun GUT_RIPPER() = listOf<Component>(
 //                Description(4003, "The Gut Ripper", "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows.", "items/weapons/gut_ripper.png"),
@@ -118,21 +244,9 @@ object Data {
 //        // RODS 4900
 //    }
 //
-//    object Armor {
-//        fun HAT() = listOf<Component>(
-//                Description(5000, "Hat", "Ordinary hat, already out of fashion.", "items/armor/hat.png"),
-//                ArmorDataComponent(ItemLevel.NORMAL, ArmorType.HELM, 0, 0)
-//        )
-//
-//        fun CLOTHES() = listOf<Component>(
-//                Description(5001, "Clothes", "Just normal clothes, don't count on any defense.", "items/armor/clothes.png"),
-//                ArmorDataComponent(ItemLevel.NORMAL, ArmorType.BODY, 0, 0)
-//        )
-//
-//        fun SHOES() = listOf<Component>(
-//                Description(5002, "Shoes", "Average size shoes.", "items/armor/shoes.png"),
-//                ArmorDataComponent(ItemLevel.NORMAL, ArmorType.SHOES, 0, 0)
-//        )
+
+
+
 //
 //        // BODY ARMOR 5100
 //
@@ -172,20 +286,7 @@ object Data {
 //        // SHOES 5300
 //    }
 //
-//    object Character {
-//        fun SKELETON_ARCHER() = listOf<Component>(
-//                Description(2004, "Skeleton-Archer", "Skeleton-Archer Description.", "chars/enemies/skeleton_archer.png"),
-//                CharacterDataComponent(CharacterType.NORMAL)
-//                        .withLevel(2)
-//                        .withElement(Element.EARTH)
-//                        .withXP(10, 3, 3)
-//                        .withAttribute(Attribute.STRENGTH, 5)
-//                        .withAttribute(Attribute.VITALITY, 30)
-//                        .withAttribute(Attribute.DEXTERITY, 3)
-//                        .withAttribute(Attribute.AGILITY, 2)
-//                        .withDrop(4001, 50)
-//        )
-//    }
+
 //
 //    object Skill {
 //

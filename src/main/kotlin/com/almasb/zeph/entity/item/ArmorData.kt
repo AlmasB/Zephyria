@@ -5,10 +5,11 @@ import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.entity.Description
+import com.almasb.zeph.entity.DescriptionBuilder
 
 @DataDSL
 class ArmorDataBuilder(
-        val description: Description = Description(),
+        var description: Description = Description(),
         var itemLevel: ItemLevel = ItemLevel.NORMAL,
         var element: Element = Element.NEUTRAL,
         val runes: MutableList<Rune> = arrayListOf(),
@@ -18,6 +19,12 @@ class ArmorDataBuilder(
         var marmor: Int = 0
 ) {
 
+    fun desc(setup: DescriptionBuilder.() -> Unit) {
+        val builder = DescriptionBuilder()
+        builder.setup()
+        description = builder.build()
+    }
+
     fun build(): ArmorData {
         return ArmorData(description, itemLevel, element, runes, essences, armorType, armor, marmor)
     }
@@ -25,16 +32,23 @@ class ArmorDataBuilder(
 
 @DataDSL
 class WeaponDataBuilder(
+        var description: Description = Description(),
         var itemLevel: ItemLevel = ItemLevel.NORMAL,
         var element: Element = Element.NEUTRAL,
         val runes: MutableList<Rune> = arrayListOf(),
         val essences: MutableList<Essence> = arrayListOf(),
-        var type: WeaponType = WeaponType.DAGGER,
+        var type: WeaponType = WeaponType.MACE,
         var pureDamage: Int = 0
 ) {
 
+    fun desc(setup: DescriptionBuilder.() -> Unit) {
+        val builder = DescriptionBuilder()
+        builder.setup()
+        description = builder.build()
+    }
+
     fun build(): WeaponData {
-        return WeaponData(itemLevel, element, runes, essences, type, pureDamage)
+        return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage)
     }
 }
 
@@ -64,6 +78,7 @@ data class ArmorData(
 )
 
 data class WeaponData(
+        val description: Description,
         val itemLevel: ItemLevel,
         val element: Element,
         val runes: List<Rune>,

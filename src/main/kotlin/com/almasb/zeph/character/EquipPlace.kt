@@ -1,12 +1,11 @@
-package com.almasb.zeph.entity.character
+package com.almasb.zeph.character
 
 /**
  * Used to show where particular equipment goes on a character.
  *
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-enum class EquipPlace
-private constructor(val emptyID: Int) {
+enum class EquipPlace(val emptyID: Int) {
     /**
      * Denotes a place for head item
      */

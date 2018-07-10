@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.fxgl.ecs.Entity
+import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Config
 import java.util.*
 
@@ -14,8 +14,8 @@ class RandomWanderControl : MovementControl() {
     private val random = Random()
     private var time = 0.0
 
-    override fun onUpdate(entity: Entity, tpf: Double) {
-        super.onUpdate(entity, tpf)
+    override fun onUpdate(tpf: Double) {
+        super.onUpdate(tpf)
 
         if (path.isEmpty()) {
             time += tpf

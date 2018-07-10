@@ -1,23 +1,17 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.ecs.Entity;
 import com.almasb.fxgl.app.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.InGameWindow;
-import com.almasb.zeph.entity.DescriptionComponent;
-import com.almasb.zeph.entity.character.EquipPlace;
-import com.almasb.zeph.entity.character.PlayerEntity;
-import javafx.animation.ScaleTransition;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Cursor;
+import com.almasb.zeph.character.EquipPlace;
+
 import javafx.scene.Group;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,16 +20,16 @@ public final class EquipmentView extends InGameWindow {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
-    private PlayerEntity player;
+    private Entity player;
 
-    public EquipmentView(PlayerEntity player, double width, double height) {
+    public EquipmentView(Entity player, double width, double height) {
         super("Equipment", WindowDecor.MINIMIZE);
 
         relocate(width - 202 - 202, height - 315);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(202, 315);
-        setResizableWindow(false);
+        setCanResize(false);
 
         this.player = player;
 
@@ -45,12 +39,12 @@ public final class EquipmentView extends InGameWindow {
         groups.put(EquipPlace.LEFT_HAND, createGroup(133, 105));
         groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
-        for (EquipPlace place : EquipPlace.values()) {
-            setItem(place, player.getPlayerControl().getEquip(place));
-            player.getPlayerControl().equipProperty(place).addListener((obs, old, newItem) -> {
-                setItem(place, newItem);
-            });
-        }
+//        for (EquipPlace place : EquipPlace.values()) {
+//            setItem(place, player.getPlayerControl().getEquip(place));
+//            player.getPlayerControl().equipProperty(place).addListener((obs, old, newItem) -> {
+//                setItem(place, newItem);
+//            });
+//        }
 
         Pane pane = new Pane();
 
@@ -60,15 +54,15 @@ public final class EquipmentView extends InGameWindow {
 
         setContentPane(pane);
 
-        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-        getRightIcons().get(0).setOnAction(e -> {
-            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), pane);
-            st.setFromY(isMinimized() ? 0 : 1);
-            st.setToY(isMinimized() ? 1 : 0);
-            st.play();
-
-            handler.handle(e);
-        });
+//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+//        getRightIcons().get(0).setOnAction(e -> {
+//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), pane);
+//            st.setFromY(isMinimized() ? 0 : 1);
+//            st.setToY(isMinimized() ? 1 : 0);
+//            st.play();
+//
+//            handler.handle(e);
+//        });
     }
 
     private Group createGroup(int x, int y) {
@@ -93,14 +87,14 @@ public final class EquipmentView extends InGameWindow {
         Group group = groups.get(place);
         group.getChildren().clear();
 
-        DescriptionComponent data = item.getComponentUnsafe(DescriptionComponent.class);
+        //DescriptionComponent data = item.getComponentUnsafe(DescriptionComponent.class);
 
-        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName().get());
-
-        view.setOnMouseClicked(event -> player.getPlayerControl().unEquipItem(place));
-        view.setCursor(Cursor.HAND);
-
-        group.getChildren().add(view);
-        ((Text)group.getUserData()).textProperty().bind(data.getDescription());
+//        Texture view = FXGL.getAssetLoader().loadTexture(data.getTextureName().get());
+//
+//        view.setOnMouseClicked(event -> player.getPlayerControl().unEquipItem(place));
+//        view.setCursor(Cursor.HAND);
+//
+//        group.getChildren().add(view);
+        //((Text)group.getUserData()).textProperty().bind(data.getDescription());
     }
 }

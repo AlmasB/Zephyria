@@ -1,4 +1,6 @@
-package com.almasb.zeph.combat
+package com.almasb.zeph.old
+
+import com.almasb.fxgl.core.math.FXGLMath
 
 /**
  * Handles everything to do with math and calculations.

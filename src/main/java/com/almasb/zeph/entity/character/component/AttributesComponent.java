@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.component;
 
-import com.almasb.fxgl.ecs.AbstractComponent;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.zeph.combat.Attribute;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public class AttributesComponent extends AbstractComponent {
+public class AttributesComponent extends Component {
 
     /**
      * Contains native character attribute values

@@ -1,52 +1,28 @@
 package com.almasb.zeph;
 
-import com.almasb.fxgl.ai.pathfinding.AStarGrid;
-import com.almasb.fxgl.ai.pathfinding.NodeState;
-import com.almasb.fxgl.ecs.Entity;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
-import com.almasb.fxgl.entity.EntityView;
-import com.almasb.fxgl.entity.GameEntity;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.RenderLayer;
-import com.almasb.fxgl.entity.component.CollidableComponent;
-import com.almasb.fxgl.entity.component.ViewComponent;
-import com.almasb.fxgl.entity.control.OffscreenCleanControl;
-import com.almasb.fxgl.entity.control.ProjectileControl;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.view.EntityView;
+import com.almasb.fxgl.extra.ai.pathfinding.AStarGrid;
+import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.parser.tiled.TiledMap;
-import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
-import com.almasb.fxgl.service.Input;
 import com.almasb.fxgl.settings.GameSettings;
-import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.zeph.combat.DamageResult;
-import com.almasb.zeph.combat.GameMath;
-import com.almasb.zeph.entity.Data;
-import com.almasb.zeph.entity.DescriptionComponent;
-import com.almasb.zeph.entity.EntityManager;
-import com.almasb.zeph.entity.EntityType;
-import com.almasb.zeph.entity.character.CharacterEntity;
-import com.almasb.zeph.entity.character.PlayerEntity;
-import com.almasb.zeph.entity.character.component.CharacterDataComponent;
-import com.almasb.zeph.entity.character.component.SubViewComponent;
-import com.almasb.zeph.entity.character.control.PlayerActionControl;
-import com.almasb.zeph.entity.character.control.PlayerControl;
-import com.almasb.zeph.entity.item.ArmorEntity;
-import com.almasb.zeph.entity.item.WeaponEntity;
-import com.almasb.zeph.entity.item.component.OwnerComponent;
-import com.almasb.zeph.entity.skill.SkillEntity;
+import com.almasb.zeph.character.components.PlayerComponent;
+import com.almasb.zeph.entity.skill.SkillComponent;
 import com.almasb.zeph.entity.skill.SkillTargetType;
 import com.almasb.zeph.entity.skill.SkillType;
 import com.almasb.zeph.entity.skill.SkillUseResult;
-import com.almasb.zeph.ui.*;
-import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
@@ -57,10 +33,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.util.Duration;
-import kotlin.Pair;
 
-import java.util.List;
 import java.util.Random;
+
+import static com.almasb.fxgl.app.DSLKt.*;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -70,9 +46,8 @@ public class ZephyriaApp extends GameApplication {
 
     private AStarGrid grid;
 
-    private PlayerEntity player;
-    private PlayerControl playerControl;
-    private PlayerActionControl playerActionControl;
+    private Entity player;
+    private PlayerComponent playerComponent;
 
     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
 
@@ -86,7 +61,7 @@ public class ZephyriaApp extends GameApplication {
         return grid;
     }
 
-    public PlayerEntity getPlayer() {
+    public Entity getPlayer() {
         return player;
     }
 
@@ -107,7 +82,6 @@ public class ZephyriaApp extends GameApplication {
         settings.setVersion("0.0.1");
         settings.setIntroEnabled(false);
         settings.setMenuEnabled(false);
-        settings.setFullScreen(full);
         settings.setProfilingEnabled(true);
         settings.setCloseConfirmation(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -129,101 +103,108 @@ public class ZephyriaApp extends GameApplication {
                 }
             }, key);
         }
+
+        onKeyDown(KeyCode.K, "Spawn Dev", () -> {
+            SpawnData data = new SpawnData(200, 200);
+
+            // add any properties needed
+            // then
+            // DataManager.load(Data.Character.SKELETON_ARCHER, data);
+
+            spawn("char", data);
+        });
     }
 
     private void onHotbarSkill(int index) {
-        if (index < player.getSkills().size()) {
-            SkillEntity skill = player.getSkills().get(index);
-
-            if (skill.getData().getType() == SkillType.PASSIVE) {
-                // skill is passive and is always on
-                return;
-            }
-
-            if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
-
-                // use skill immediately since player is the target
-                SkillUseResult result = playerControl.useSelfSkill(index);
-            } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
-
-                // let player select the area
-                selectingSkillTargetArea = true;
-                selectedSkillIndex = index;
-            } else {
-
-                // let player select the target character
-                selectingSkillTargetChar = true;
-                selectedSkillIndex = index;
-            }
-        }
+//        if (index < playerComponent.getSkills().size()) {
+//            SkillComponent skill = playerComponent.getSkills().get(index);
+//
+//            if (skill.getData().getType() == SkillType.PASSIVE) {
+//                // skill is passive and is always on
+//                return;
+//            }
+//
+//            if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
+//
+//                // use skill immediately since player is the target
+//                SkillUseResult result = playerComponent.useSelfSkill(index);
+//            } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
+//
+//                // let player select the area
+//                selectingSkillTargetArea = true;
+//                selectedSkillIndex = index;
+//            } else {
+//
+//                // let player select the target character
+//                selectingSkillTargetChar = true;
+//                selectedSkillIndex = index;
+//            }
+//        }
     }
 
     private void useAreaSkill() {
         // TODO: we should fire projectile based on skill data component
-        SkillUseResult result = playerControl.useAreaSkill(selectedSkillIndex, getInput().getMousePositionWorld());
+        SkillUseResult result = playerComponent.useAreaSkill(selectedSkillIndex, getInput().getMousePositionWorld());
     }
 
     // TODO: generalize to use skill or attack
-    private void useTargetSkill(CharacterEntity target) {
-        SkillEntity skill = player.getSkills().get(selectedSkillIndex);
+    private void useTargetSkill(Entity target) {
+        SkillComponent skill = playerComponent.getSkills().get(selectedSkillIndex);
 
-        if (skill.isOnCooldown() || skill.getManaCost().intValue() > player.getSp().getValue())
-            return;
+//        if (skill.isOnCooldown() || skill.getManaCost().intValue() > playerComponent.getSp().getValue())
+//            return;
 
         Point2D vector = target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld());
 
-        AnimatedTexture animation = player.getData().getAnimation();
-
-        if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
-            if (vector.getX() >= 0) {
-                animation.setAnimationChannel(CharacterAnimation.CAST_RIGHT);
-            } else {
-                animation.setAnimationChannel(CharacterAnimation.CAST_LEFT);
-            }
-        } else {
-            if (vector.getY() >= 0) {
-                animation.setAnimationChannel(CharacterAnimation.CAST_DOWN);
-            } else {
-                animation.setAnimationChannel(CharacterAnimation.CAST_UP);
-            }
-        }
-
-        getMasterTimer().runOnceAfter(() -> {
-            if (!player.isActive() || !target.isActive())
-                return;
-
-            // we are using a skill
-
-            if (skill.getData().getHasProjectile()) {
-                Entities.builder()
-                        .type(EntityType.SKILL_PROJECTILE)
-                        .at(player.getBoundingBoxComponent().getCenterWorld())
-                        .viewFromTextureWithBBox(skill.getData().getTextureName())
-                        .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 6))
-                        .with(new OffscreenCleanControl())
-                        .with(new OwnerComponent(skill))
-                        .with(new CollidableComponent(true))
-                        .buildAndAttach(getGameWorld());
-            } else {
-                if (player.isInWeaponRange(target)) {
-
-                    SkillUseResult result = playerControl.useTargetSkill(skill, target);
-                    showDamage(result.getDamage(), target.getPositionComponent().getValue());
-
-                    if (target.getHp().getValue() <= 0) {
-                        onKill(target);
-                    }
-
-                } else {
-                    playerActionControl.moveTo(target.getTileX(), target.getTileY());
-                }
-            }
-
-        }, Duration.seconds(0.8));
+//        AnimatedTexture animation = player.getData().getAnimation();
+//
+//        if (Math.abs(vector.getX()) >= Math.abs(vector.getY())) {
+//            if (vector.getX() >= 0) {
+//                animation.setAnimationChannel(CharacterAnimation.CAST_RIGHT);
+//            } else {
+//                animation.setAnimationChannel(CharacterAnimation.CAST_LEFT);
+//            }
+//        } else {
+//            if (vector.getY() >= 0) {
+//                animation.setAnimationChannel(CharacterAnimation.CAST_DOWN);
+//            } else {
+//                animation.setAnimationChannel(CharacterAnimation.CAST_UP);
+//            }
+//        }
+//
+//        getMasterTimer().runOnceAfter(() -> {
+//            if (!player.isActive() || !target.isActive())
+//                return;
+//
+//            // we are using a skill
+//
+//            if (skill.getData().getHasProjectile()) {
+//                Entities.builder()
+//                        .type(EntityType.SKILL_PROJECTILE)
+//                        .at(player.getBoundingBoxComponent().getCenterWorld())
+//                        .viewFromTextureWithBBox(skill.getData().getTextureName())
+//                        .with(new ProjectileControl(target.getBoundingBoxComponent().getCenterWorld().subtract(player.getBoundingBoxComponent().getCenterWorld()), 6))
+//                        .with(new OffscreenCleanComponent())
+//                        .with(new OwnerComponent(skill))
+//                        .with(new CollidableComponent(true))
+//                        .buildAndAttach(getGameWorld());
+//            } else {
+//                if (player.isInWeaponRange(target)) {
+//
+//                    SkillUseResult result = playerComponent.useTargetSkill(skill, target);
+//                    showDamage(result.getDamage(), target.getPositionComponent().getValue());
+//
+//                    if (target.getHp().getValue() <= 0) {
+//                        onKill(target);
+//                    }
+//
+//                } else {
+//                    playerActionControl.moveTo(target.getTileX(), target.getTileY());
+//                }
+//            }
+//
+//        }, Duration.seconds(0.8));
     }
-
-    @Override
-    protected void initAssets() {}
 
     @Override
     protected void initGame() {
@@ -244,36 +225,36 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
 
-        selected.addListener((observable, oldValue, newEntity) -> {
-            if (oldValue != null) {
-                oldValue.getComponent(ViewComponent.class).ifPresent(c -> {
-                    c.getView().setEffect(null);
-                });
-            }
-
-            if (newEntity != null) {
-                newEntity.getComponent(ViewComponent.class).ifPresent(c -> {
-                    c.getView().setEffect(selectedEffect);
-                });
-
-                // TODO: at some point we need to check if it's ally or enemy based on skill target type
-                if (selectingSkillTargetChar) {
-                    if (newEntity instanceof CharacterEntity) {
-                        useTargetSkill((CharacterEntity) newEntity);
-                    }
-
-                    selectingSkillTargetChar = false;
-                    selectedSkillIndex = -1;
-                    selected.set(null);
-                }
-            }
-
-            playerActionControl.getSelected().set(newEntity);
-        });
+//        selected.addListener((observable, oldValue, newEntity) -> {
+//            if (oldValue != null) {
+//                oldValue.getComponent(ViewComponent.class).ifPresent(c -> {
+//                    c.getView().setEffect(null);
+//                });
+//            }
+//
+//            if (newEntity != null) {
+//                newEntity.getComponent(ViewComponent.class).ifPresent(c -> {
+//                    c.getView().setEffect(selectedEffect);
+//                });
+//
+//                // TODO: at some point we need to check if it's ally or enemy based on skill target type
+//                if (selectingSkillTargetChar) {
+//                    if (newEntity instanceof CharacterEntity) {
+//                        useTargetSkill((CharacterEntity) newEntity);
+//                    }
+//
+//                    selectingSkillTargetChar = false;
+//                    selectedSkillIndex = -1;
+//                    selected.set(null);
+//                }
+//            }
+//
+//            playerActionControl.getSelected().set(newEntity);
+//        });
     }
 
     private void initBackground() {
-        GameEntity bg = Entities.builder()
+        Entity bg = Entities.builder()
                 .buildAndAttach(getGameWorld());
 
         Region region = new Region();
@@ -301,7 +282,7 @@ public class ZephyriaApp extends GameApplication {
             int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
             int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
-            playerActionControl.moveTo(targetX, targetY);
+            //playerActionControl.moveTo(targetX, targetY);
         });
 
         bg.getViewComponent().setRenderLayer(new RenderLayer() {
@@ -323,12 +304,12 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void spawnTree(int x, int y) {
-        GameEntity tree = Entities.builder()
-                .at(x * TILE_SIZE, y * TILE_SIZE - 85 + 64)
-                .viewFromTexture("tree2.png")
-                .buildAndAttach(getGameWorld());
-
-        grid.setNodeState(x, y, NodeState.NOT_WALKABLE);
+//        GameEntity tree = Entities.builder()
+//                .at(x * TILE_SIZE, y * TILE_SIZE - 85 + 64)
+//                .viewFromTexture("tree2.png")
+//                .buildAndAttach(getGameWorld());
+//
+//        grid.setNodeState(x, y, NodeState.NOT_WALKABLE);
     }
 
     private void showGrid() {
@@ -348,62 +329,62 @@ public class ZephyriaApp extends GameApplication {
     protected void initPhysics() {
         PhysicsWorld physicsWorld = getPhysicsWorld();
 
-        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
-            @Override
-            protected void onCollisionBegin(Entity proj, Entity target) {
-                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
-                    return;
-
-                proj.removeFromWorld();
-
-                CharacterEntity character = (CharacterEntity) target;
-
-                DamageResult damage = player.getPlayerControl().attack(character);
-                showDamage(damage, character.getPositionComponent().getValue());
-
-                if (character.getHp().getValue() <= 0) {
-                    onKill(character);
-                }
-            }
-        });
-
-        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.PLAYER) {
-            @Override
-            protected void onCollisionBegin(Entity proj, Entity target) {
-                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
-                    return;
-
-                proj.removeFromWorld();
-
-                CharacterEntity attacker = (CharacterEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
-                CharacterEntity character = (CharacterEntity) target;
-
-                DamageResult damage = attacker.getCharConrol().attack(character);
-                showDamage(damage, character.getPositionComponent().getValue());
-
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+//                    return;
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                DamageResult damage = player.getPlayerControl().attack(character);
+//                showDamage(damage, character.getPositionComponent().getValue());
+//
 //                if (character.getHp().getValue() <= 0) {
 //                    onKill(character);
 //                }
-            }
-        });
-
-        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.CHARACTER) {
-            @Override
-            protected void onCollisionBegin(Entity proj, Entity target) {
-                SkillEntity skill = (SkillEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
-
-                proj.removeFromWorld();
-
-                CharacterEntity character = (CharacterEntity) target;
-
-                SkillUseResult result = playerControl.useTargetSkill(skill, character);
-                showDamage(result.getDamage(), character.getPositionComponent().getValue());
-
-                if (character.getHp().getValue() <= 0) {
-                    onKill(character);
-                }
-            }
-        });
+//            }
+//        });
+//
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.PLAYER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+//                    return;
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity attacker = (CharacterEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                DamageResult damage = attacker.getCharConrol().attack(character);
+//                showDamage(damage, character.getPositionComponent().getValue());
+//
+////                if (character.getHp().getValue() <= 0) {
+////                    onKill(character);
+////                }
+//            }
+//        });
+//
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.CHARACTER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                SkillEntity skill = (SkillEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
+//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
+//
+//                if (character.getHp().getValue() <= 0) {
+//                    onKill(character);
+//                }
+//            }
+//        });
     }
 
     /**
@@ -411,28 +392,28 @@ public class ZephyriaApp extends GameApplication {
      *
      * @param character killed char
      */
-    private void onKill(CharacterEntity character) {
-        character.setControlsEnabled(false);
+    private void onKill(Entity character) {
+        //character.setControlsEnabled(false);
 
-        // TODO: reward based on level differences
-        playerControl.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
-        playerControl.rewardXP(character.getData().getRewardXP());
-
-        List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
-        drops.forEach(p -> {
-            if (GameMath.INSTANCE.checkChance(p.getSecond())) {
-                dropItem(EntityManager.INSTANCE.getItem(p.getFirst()),
-                        character.getPositionComponent().getValue());
-            }
-        });
-
-        character.getViewComponent().getView().setOnMouseClicked(null);
-        selected.set(null);
-
-        character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
-
-        getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
-        getMasterTimer().runOnceAfter(this::initEnemies, Duration.seconds(0.1));
+//        // TODO: reward based on level differences
+//        playerComponent.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
+//        playerComponent.rewardXP(character.getData().getRewardXP());
+//
+//        List<Pair<Integer, Integer> > drops = character.getData().getDropItems();
+//        drops.forEach(p -> {
+//            if (GameMath.INSTANCE.checkChance(p.getSecond())) {
+//                dropItem(DataManager.INSTANCE.getItem(p.getFirst()),
+//                        character.getPositionComponent().getValue());
+//            }
+//        });
+//
+//        character.getViewComponent().getView().setOnMouseClicked(null);
+//        selected.set(null);
+//
+//        character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
+//
+//        getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
+//        getMasterTimer().runOnceAfter(this::initEnemies, Duration.seconds(0.1));
     }
 
     private Text debug = new Text();
@@ -446,38 +427,35 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        getGameScene().addUINodes(
-                new HotbarView(player),
-                new BasicInfoView(player),
-                new CharInfoView(player),
-                new InventoryView(player, getWidth(), getHeight()),
-                new EquipmentView(player, getWidth(), getHeight()));
+//        getGameScene().addUINodes(
+//                new HotbarView(player),
+//                new BasicInfoView(player),
+//                new CharInfoView(player),
+//                new InventoryView(player, getWidth(), getHeight()),
+//                new EquipmentView(player, getWidth(), getHeight()));
     }
 
-    @Override
-    protected void onUpdate(double tpf) {}
-
     private void dropItem(Entity item, Point2D position) {
-        DescriptionComponent desc = item.getComponentUnsafe(DescriptionComponent.class);
-
-        EntityView view = new EntityView();
-        view.addNode(getAssetLoader().loadTexture(desc.getTextureName().get()));
-        view.setTranslateX(position.getX());
-        view.setTranslateY(position.getY());
-        view.setCursor(Cursor.CLOSED_HAND);
-
-        view.setOnMouseClicked(event -> {
-            getGameScene().removeGameView(view);
-            player.getInventory().addItem(item);
-        });
-
-        getGameScene().addGameView(view);
-
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), view);
-        tt.setInterpolator(Interpolator.EASE_IN);
-        tt.setByX(new Random().nextInt(20) - 10);
-        tt.setByY(10 + new Random().nextInt(10));
-        tt.play();
+//        Description desc = item.getComponentUnsafe(Description.class);
+//
+//        EntityView view = new EntityView();
+//        view.addNode(getAssetLoader().loadTexture(desc.getTextureName().get()));
+//        view.setTranslateX(position.getX());
+//        view.setTranslateY(position.getY());
+//        view.setCursor(Cursor.CLOSED_HAND);
+//
+//        view.setOnMouseClicked(event -> {
+//            getGameScene().removeGameView(view);
+//            player.getInventory().addItem(item);
+//        });
+//
+//        getGameScene().addGameView(view);
+//
+//        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), view);
+//        tt.setInterpolator(Interpolator.EASE_IN);
+//        tt.setByX(new Random().nextInt(20) - 10);
+//        tt.setByY(10 + new Random().nextInt(10));
+//        tt.play();
     }
 
     private void showDamage(DamageResult damage, Point2D position) {
@@ -494,39 +472,39 @@ public class ZephyriaApp extends GameApplication {
 
         TranslateTransition tt = new TranslateTransition(Duration.seconds(1), view);
         tt.setByY(-30);
-        tt.setOnFinished(e -> getGameScene().removeGameView(view));
+        tt.setOnFinished(e -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
         tt.play();
     }
 
     private void initPlayer() {
-        player = new PlayerEntity("Developer", "chars/players/player_full.png");
-        playerControl = player.getPlayerControl();
-
-        player.getTypeComponent().setValue(EntityType.PLAYER);
-        player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
-
-        player.addComponent(EntityManager.INSTANCE.makeCharacterSubView(player));
-        spawnCharacter(player);
-
-        // TODO: do something with circular references
-        player.addControl(new PlayerActionControl());
-        playerActionControl = player.getControlUnsafe(PlayerActionControl.class);
-
-        // TODO: TEST DATA BEGIN
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.MIGHTY_SWING()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
-        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
-
+//        player = new Entity("Developer", "chars/players/player_full.png");
+//        playerComponent = player.getPlayerControl();
+//
+//        player.getTypeComponent().setValue(EntityType.PLAYER);
+//        player.getPositionComponent().setValue(TILE_SIZE * 4, TILE_SIZE * 4);
+//
+//        player.addComponent(DataManager.INSTANCE.makeCharacterSubView(player));
+//        spawnCharacter(player);
+//
+//        // TODO: do something with circular references
+//        player.addControl(new PlayerActionControl());
+//        playerActionControl = player.getControlUnsafe(PlayerActionControl.class);
+//
+//        // TODO: TEST DATA BEGIN
 //        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
-
-        player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.GUT_RIPPER()));
-        player.getInventory().addItem(new WeaponEntity(Data.Weapon.INSTANCE.DRAGON_CLAW()));
-        player.getInventory().addItem(new ArmorEntity(Data.Armor.INSTANCE.CHAINMAIL()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.MIGHTY_SWING()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
+//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
+//
+////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
+////        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
+//
+//        player.getInventory().addItem(new WeaponComponent(Data.Weapon.INSTANCE.GUT_RIPPER()));
+//        player.getInventory().addItem(new WeaponComponent(Data.Weapon.INSTANCE.DRAGON_CLAW()));
+//        player.getInventory().addItem(new ArmorComponent(Data.Armor.INSTANCE.CHAINMAIL()));
 
         // TEST DATA END
     }
@@ -534,37 +512,37 @@ public class ZephyriaApp extends GameApplication {
     private void initEnemies() {
         Random random = new Random();
 
-        spawnCharacter(EntityManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
+        //spawnCharacter(DataManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
     }
 
-    private void spawnCharacter(CharacterEntity character) {
-        character.addComponent(new CollidableComponent(true));
-
-        AnimatedTexture texture = getAssetLoader()
-                .loadTexture(character.getComponentUnsafe(DescriptionComponent.class).getTextureName().get())
-                .toAnimatedTexture(CharacterAnimation.WALK_RIGHT);
-
-        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
-        character.getViewComponent().setView(texture, true);
-
-        if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
-            //character.addControl(new AIControl());
-
-            character.getViewComponent().getView().setOnMouseClicked(e -> {
-                selected.set(character);
-            });
-        }
-
-        EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
-
-        getGameWorld().addEntity(character);
-        getGameScene().addGameView(subView);
-
-        character.activeProperty().addListener((o, wasActive, isActive) -> {
-            if (!isActive) {
-                getGameScene().removeGameView(subView);
-            }
-        });
+    private void spawnCharacter(Entity character) {
+//        character.addComponent(new CollidableComponent(true));
+//
+//        AnimatedTexture texture = getAssetLoader()
+//                .loadTexture(character.getComponentUnsafe(Description.class).getTextureName().get())
+//                .toAnimatedTexture(CharacterAnimation.WALK_RIGHT);
+//
+//        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
+//        character.getViewComponent().setView(texture, true);
+//
+//        if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
+//            //character.addControl(new AIControl());
+//
+//            character.getViewComponent().getView().setOnMouseClicked(e -> {
+//                selected.set(character);
+//            });
+//        }
+//
+//        EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
+//
+//        getGameWorld().addEntity(character);
+//        getGameScene().addGameView(subView);
+//
+//        character.activeProperty().addListener((o, wasActive, isActive) -> {
+//            if (!isActive) {
+//                getGameScene().removeGameView(subView);
+//            }
+//        });
     }
 
     public static void main(String[] args) {

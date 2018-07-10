@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.character
+package com.almasb.zeph.character
 
 import java.util.*
 
@@ -28,12 +28,12 @@ object CharacterClassChanger {
         reqList[CharacterClass.ENCHANTER] = Ascension(5, 5, CharacterClass.SAGE)
     }
 
-    fun canChangeClass(player: PlayerEntity): Boolean {
-        val r = reqList[player.charClass.value]
-        return r != null && player.baseLevel.value >= r.baseLevel && player.jobLevel.value >= r.jobLevel
-    }
-
-    fun getAscensionClasses(player: PlayerEntity) = reqList[player.charClass.value]!!.classesTo
+//    fun canChangeClass(player: Entity): Boolean {
+//        val r = reqList[player.charClass.value]
+//        return r != null && player.baseLevel.value >= r.baseLevel && player.jobLevel.value >= r.jobLevel
+//    }
+//
+//    fun getAscensionClasses(player: Entity) = reqList[player.charClass.value]!!.classesTo
 
     private class Ascension(val baseLevel: Int, val jobLevel: Int, vararg classes: CharacterClass) {
         val classesTo = classes as Array<CharacterClass>

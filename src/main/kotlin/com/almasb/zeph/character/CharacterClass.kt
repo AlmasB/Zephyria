@@ -1,7 +1,7 @@
-package com.almasb.zeph.entity.character
+package com.almasb.zeph.character
 
 /**
- *
+ * Character classes with base hp/sp.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

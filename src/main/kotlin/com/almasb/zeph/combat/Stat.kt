@@ -3,8 +3,7 @@ package com.almasb.zeph.combat
 /**
  * Stats (16 in total) of a game character.
  */
-enum class Stat
-private constructor(val description: String, val measureUnit: String) {
+enum class Stat(val description: String, val measureUnit: String) {
 
     /**
      * Maximum HP.
@@ -91,4 +90,14 @@ private constructor(val description: String, val measureUnit: String) {
      * Critical damage modifier for magical attacks.
      */
     MCRIT_DMG("Increases critical damage for magical attacks", "x")
+}
+
+/**
+ * Increases a stat.
+ *
+ * @author Almas Baimagambetov (almaslvl@gmail.com)
+ */
+class Essence(val stat: Stat, val bonus: Int) {
+
+    override fun toString() = "$stat +$bonus"
 }

@@ -1,6 +1,6 @@
 package com.almasb.zeph.entity.character.component;
 
-import com.almasb.fxgl.ecs.AbstractComponent;
+import com.almasb.fxgl.entity.component.Component;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public class StatsComponent extends AbstractComponent {
+public class StatsComponent extends Component {
 
     /**
      * Contains native character stats calculated from both attributes

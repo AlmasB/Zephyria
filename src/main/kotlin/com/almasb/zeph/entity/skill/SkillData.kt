@@ -1,7 +1,6 @@
 package com.almasb.zeph.entity.skill
 
-import com.almasb.fxgl.ecs.AbstractComponent
-import com.almasb.zeph.entity.character.CharacterEntity
+import com.almasb.fxgl.entity.Entity
 import java.util.*
 
 /**
@@ -9,31 +8,31 @@ import java.util.*
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val targetTypes: EnumSet<SkillTargetType>) : AbstractComponent() {
+data class SkillData(val type: SkillType, val useType: SkillUseType, val targetTypes: EnumSet<SkillTargetType>) {
 
     var mana = 0
     var cooldown = 0.0
 
     var areaSize = 0
 
-    fun withMana(m: Int): SkillDataComponent {
+    fun withMana(m: Int): SkillData {
         mana = m
         return this
     }
 
-    fun withCooldown(c: Double): SkillDataComponent {
+    fun withCooldown(c: Double): SkillData {
         cooldown = c
         return this
     }
 
-    fun withArea(size: Int): SkillDataComponent {
+    fun withArea(size: Int): SkillData {
         areaSize = size
         return this
     }
 
-    lateinit var onCast: (CharacterEntity, CharacterEntity, SkillEntity) -> SkillUseResult
+    lateinit var onCast: (Entity, Entity, SkillComponent) -> SkillUseResult
 
-    fun onCast(func: (CharacterEntity, CharacterEntity, SkillEntity) -> SkillUseResult): SkillDataComponent {
+    fun onCast(func: (Entity, Entity, SkillComponent) -> SkillUseResult): SkillData {
         onCast = func
         return this
     }
@@ -53,7 +52,7 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
      */
     lateinit var textureName: String
 
-    fun withTextureName(name: String): SkillDataComponent {
+    fun withTextureName(name: String): SkillData {
         textureName = name
         hasProjectile = true
         return this
@@ -63,9 +62,9 @@ class SkillDataComponent(val type: SkillType, val useType: SkillUseType, val tar
     // TODO: on skill end func?
 
     // TODO: default noop so we can call onLearn without checks
-    lateinit var onLearn: (CharacterEntity, SkillEntity) -> Unit
+    lateinit var onLearn: (Entity, SkillComponent) -> Unit
 
-    fun onLearn(func: (CharacterEntity, SkillEntity) -> Unit): SkillDataComponent {
+    fun onLearn(func: (Entity, SkillComponent) -> Unit): SkillData {
         onLearn = func
         return this
     }

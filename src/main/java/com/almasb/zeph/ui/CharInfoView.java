@@ -1,17 +1,13 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.app.FXGL;
+import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
-import com.almasb.zeph.entity.character.PlayerEntity;
-import com.almasb.zeph.entity.character.control.PlayerControl;
-import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -23,18 +19,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class CharInfoView extends InGameWindow {
 
-    public CharInfoView(PlayerEntity player) {
+    public CharInfoView(Entity player) {
         super("Char Info", WindowDecor.MINIMIZE);
 
         relocate(0, 240);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(340, 340);
-        setResizableWindow(false);
+        setCanResize(false);
 
         Font font = Font.font("Lucida Console", 14);
         Font largerFont = Font.font("Lucida Console", 16);
@@ -47,7 +42,7 @@ public class CharInfoView extends InGameWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
+            //text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
 
             Text tooltipText = new Text(attr.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -62,20 +57,20 @@ public class CharInfoView extends InGameWindow {
             Text bText = new Text();
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
-            bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
-            bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
-                    .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
+//            bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
+//            bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
+//                    .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
 
             Text btn = new Text("+");
             btn.setCursor(Cursor.HAND);
             btn.setStroke(Color.YELLOWGREEN.brighter());
             btn.setStrokeWidth(3);
             btn.setFont(font);
-            btn.visibleProperty().bind(player.getAttributePoints().greaterThan(0)
-                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
+//            btn.visibleProperty().bind(player.getAttributePoints().greaterThan(0)
+//                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
 
             btn.setOnMouseClicked(event -> {
-                player.getControlUnsafe(PlayerControl.class).increaseAttribute(attr);
+                //player.getControlUnsafe(PlayerComponent.class).increaseAttribute(attr);
             });
 
             Pane box = new Pane();
@@ -91,9 +86,9 @@ public class CharInfoView extends InGameWindow {
         Text info = new Text();
         info.setFont(font);
         info.setFill(Color.WHITE);
-        info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
-        info.textProperty().bind(new SimpleStringProperty("Attribute Points: ").concat(player.getAttributePoints())
-            .concat("\nSkill Points: ").concat(player.getSkillPoints()));
+//        info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
+//        info.textProperty().bind(new SimpleStringProperty("Attribute Points: ").concat(player.getAttributePoints())
+//            .concat("\nSkill Points: ").concat(player.getSkillPoints()));
 
         attrBox.getChildren().addAll(new Separator(), info);
 
@@ -103,7 +98,7 @@ public class CharInfoView extends InGameWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
+            //text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
 
             Text tooltipText = new Text(stat.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -119,13 +114,13 @@ public class CharInfoView extends InGameWindow {
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
 
-            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
-                .then(player.getStats().bStatProperty(stat).asString("+%d ")
-                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
-                        .concat(stat.getMeasureUnit()))
-                .otherwise(stat.getMeasureUnit());
+//            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
+//                .then(player.getStats().bStatProperty(stat).asString("+%d ")
+//                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
+//                        .concat(stat.getMeasureUnit()))
+//                .otherwise(stat.getMeasureUnit());
 
-            bText.textProperty().bind(textBinding);
+            //bText.textProperty().bind(textBinding);
 
             statBox.getChildren().add(new HBox(5, text, bText));
         }
@@ -134,14 +129,14 @@ public class CharInfoView extends InGameWindow {
 
         setContentPane(root);
 
-        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-        getRightIcons().get(0).setOnAction(e -> {
-            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
-            st.setFromY(isMinimized() ? 0 : 1);
-            st.setToY(isMinimized() ? 1 : 0);
-            st.play();
-
-            handler.handle(e);
-        });
+//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
+//        getRightIcons().get(0).setOnAction(e -> {
+//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
+//            st.setFromY(isMinimized() ? 0 : 1);
+//            st.setToY(isMinimized() ? 1 : 0);
+//            st.play();
+//
+//            handler.handle(e);
+//        });
     }
 }

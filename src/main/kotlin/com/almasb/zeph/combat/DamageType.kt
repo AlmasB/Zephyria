@@ -1,7 +1,7 @@
 package com.almasb.zeph.combat
 
 /**
- *
+ * There are 3 types of damage that can be dealt to a character.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

@@ -1,78 +1,85 @@
 package com.almasb.zeph.combat
 
+import com.almasb.zeph.combat.Attribute.AM.*
+import com.almasb.zeph.combat.Stat.*
+
+private infix fun Stat.increase(am: Attribute.AM) = this to am
+
 /**
  * Primary attributes (9 in total) of a game character.
  *
  * @author Almas Baimagambetov
  */
-enum class Attribute private constructor(description: String, vararg cStats: Pair<Stat, AM>) {
+enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
 
     STRENGTH("Increases damage dealt by physical attacks. Increases HP and regeneration.",
-            Stat.ATK.to(AM.VERY_HIGH),
-            Stat.MAX_HP.to(AM.MEDIUM),
-            Stat.HP_REGEN.to(AM.LOW)),
+            ATK increase VERY_HIGH,
+            MAX_HP increase MEDIUM,
+            HP_REGEN increase LOW),
 
     VITALITY("Reduces damage you take. Increases HP and regeneration.",
-            Stat.MAX_HP.to(AM.VERY_HIGH),
-            Stat.HP_REGEN.to(AM.HIGH),
-            Stat.DEF.to(AM.HIGH)),
+            MAX_HP increase (VERY_HIGH),
+            HP_REGEN increase (HIGH),
+            DEF increase (HIGH)),
 
     DEXTERITY("Increases attack speed and improves offense based stats.",
-            Stat.ATK.to(AM.MEDIUM),
-            Stat.MATK.to(AM.MEDIUM),
-            Stat.ASPD.to(AM.LOW),
-            Stat.MSPD.to(AM.LOW)),
+            ATK increase (MEDIUM),
+            MATK increase (MEDIUM),
+            ASPD increase (LOW),
+            MSPD increase (LOW)),
 
     AGILITY("Allows to attack faster with all weapons.",
-            Stat.ASPD.to(AM.VERY_HIGH)),
+            ASPD increase (VERY_HIGH)),
 
     INTELLECT("Increases magic damage and defense. Provides greater SP pool.",
-            Stat.MATK.to(AM.VERY_HIGH),
-            Stat.MDEF.to(AM.MEDIUM),
-            Stat.MAX_SP.to(AM.LOW)),
+            MATK increase (VERY_HIGH),
+            MDEF increase (MEDIUM),
+            MAX_SP increase (LOW)),
 
     WISDOM("Increases SP pool and regeneration. Increases magic damage.",
-            Stat.MATK.to(AM.VERY_LOW),
-            Stat.MDEF.to(AM.VERY_LOW),
-            Stat.MAX_SP.to(AM.VERY_HIGH),
-            Stat.SP_REGEN.to(AM.VERY_HIGH)),
+            MATK increase (VERY_LOW),
+            MDEF increase (VERY_LOW),
+            MAX_SP increase (VERY_HIGH),
+            SP_REGEN increase (VERY_HIGH)),
 
     WILLPOWER("Increases magic defense and SP pool. Increases critical hit chance with skills",
-            Stat.MCRIT_CHANCE.to(AM.HIGH),
-            Stat.MDEF.to(AM.VERY_HIGH),
-            Stat.MAX_SP.to(AM.LOW),
-            Stat.MSPD.to(AM.MEDIUM)),
+            MCRIT_CHANCE increase (HIGH),
+            MDEF increase (VERY_HIGH),
+            MAX_SP increase (LOW),
+            MSPD increase (MEDIUM)),
 
     PERCEPTION("Improves all combat stats.",
-            Stat.ATK.to(AM.LOW),
-            Stat.MATK.to(AM.LOW),
-            Stat.DEF.to(AM.VERY_LOW),
-            Stat.MDEF.to(AM.VERY_LOW),
-            Stat.CRIT_CHANCE.to(AM.VERY_LOW),
-            Stat.MCRIT_CHANCE.to(AM.VERY_LOW)),
+            ATK increase (LOW),
+            MATK increase (LOW),
+            DEF increase (VERY_LOW),
+            MDEF increase (VERY_LOW),
+            CRIT_CHANCE increase (VERY_LOW),
+            MCRIT_CHANCE increase (VERY_LOW)),
 
     LUCK("Affects the ability to score critical hits and deal more critical damage.",
-            Stat.CRIT_CHANCE.to(AM.VERY_HIGH),
-            Stat.MCRIT_CHANCE.to(AM.VERY_HIGH),
-            Stat.CRIT_DMG.to(AM.VERY_LOW),
-            Stat.MCRIT_DMG.to(AM.VERY_LOW));
+            CRIT_CHANCE increase (VERY_HIGH),
+            MCRIT_CHANCE increase (VERY_HIGH),
+            CRIT_DMG increase (VERY_LOW),
+            MCRIT_DMG increase (VERY_LOW));
 
     /**
      * @return attribute description
      */
     val description: String
-    val stats: Array<Pair<Stat, AM> >
+
+    @Suppress("UNCHECKED_CAST")
+    val stats: Array<Pair<Stat, AM> > = cStats as Array<Pair<Stat, AM> >
 
     init {
-        @Suppress("UNCHECKED_CAST")
-        this.stats = cStats as Array<Pair<Stat, AM> >
-
         this.description = /*"$description\n" +*/ stats.mapIndexed { i, pair -> "%12s %-5s".format(pair.first, pair.second.desc()) }
-                .joinToString("\n", "", "", -1, "", null)
+                .joinToString("\n")
     }
 
     override fun toString() = if (this.name.length > 3) this.name.substring(0, 3) else this.name
 
+    /**
+     * Attribute modifier.
+     */
     enum class AM {
         VERY_LOW, LOW, MEDIUM, HIGH, VERY_HIGH;
 
@@ -91,7 +98,7 @@ enum class Attribute private constructor(description: String, vararg cStats: Pai
         var vit = 1
         var dex = 1
         var agi = 1
-        var int_ = 1
+        var int = 1
         var wis = 1
         var wil = 1
         var per = 1
@@ -117,8 +124,8 @@ enum class Attribute private constructor(description: String, vararg cStats: Pai
             return this
         }
 
-        fun int_(value: Int): AttributeInfo {
-            int_ = value
+        fun int(value: Int): AttributeInfo {
+            int = value
             return this
         }
 
@@ -142,4 +149,14 @@ enum class Attribute private constructor(description: String, vararg cStats: Pai
             return this
         }
     }
+}
+
+/**
+ * Increases an attribute.
+ *
+ * @author Almas Baimagambetov (almaslvl@gmail.com)
+ */
+class Rune(val attribute: Attribute, val bonus: Int) {
+
+    override fun toString() = "$attribute +$bonus"
 }

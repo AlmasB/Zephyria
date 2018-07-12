@@ -6,9 +6,7 @@ import com.almasb.zeph.Data
 import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
-import com.almasb.zeph.item.Armor
-import com.almasb.zeph.item.Item
-import com.almasb.zeph.item.Weapon
+import com.almasb.zeph.item.*
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
@@ -204,78 +202,78 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as Weapon
 
     fun equipWeapon(weapon: Weapon) {
-//        inventory.removeItem(weapon)
-//
-//        if (weapon.data.type.isTwoHanded()) {
-//
-//            if (30 - inventory.getItems().size == 1
-//                && !isFree(EquipPlace.RIGHT_HAND)
-//                && !isFree(EquipPlace.LEFT_HAND)) {
-//                // ex case, when inventory is full and player tries to equip 2H weapon
-//                // but holds two 1H weapons
-//                inventory.addItem(weapon)
-//                return
-//            }
-//
-//            unEquipItem(EquipPlace.RIGHT_HAND)
-//            unEquipItem(EquipPlace.LEFT_HAND)
-//            setEquip(EquipPlace.RIGHT_HAND, weapon)
-//            setEquip(EquipPlace.LEFT_HAND, weapon)
-//
-//        } else if (weapon.data.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
-//            unEquipItem(EquipPlace.LEFT_HAND)
-//            setEquip(EquipPlace.LEFT_HAND, weapon)
-//        } else {    // normal 1H weapon
-//            unEquipItem(EquipPlace.RIGHT_HAND)
-//            setEquip(EquipPlace.RIGHT_HAND, weapon)
-//        }
-//
-//        weapon.onEquip(player)
-//        weaponElement.value = weapon.data.element
+        inventory.removeItem(weapon)
+
+        if (weapon.type.isTwoHanded()) {
+
+            if (30 - inventory.items.size == 1
+                && !isFree(EquipPlace.RIGHT_HAND)
+                && !isFree(EquipPlace.LEFT_HAND)) {
+                // ex case, when inventory is full and player tries to equip 2H weapon
+                // but holds two 1H weapons
+                inventory.addItem(weapon)
+                return
+            }
+
+            unEquipItem(EquipPlace.RIGHT_HAND)
+            unEquipItem(EquipPlace.LEFT_HAND)
+            setEquip(EquipPlace.RIGHT_HAND, weapon)
+            setEquip(EquipPlace.LEFT_HAND, weapon)
+
+        } else if (weapon.type == WeaponType.SHIELD || !isFree(EquipPlace.RIGHT_HAND)) {
+            unEquipItem(EquipPlace.LEFT_HAND)
+            setEquip(EquipPlace.LEFT_HAND, weapon)
+        } else {    // normal 1H weapon
+            unEquipItem(EquipPlace.RIGHT_HAND)
+            setEquip(EquipPlace.RIGHT_HAND, weapon)
+        }
+
+        weapon.onEquip(player)
+        weaponElement.value = weapon.element.value
     }
 
     fun equipArmor(armor: Armor) {
-//        inventory.removeItem(armor)
-//
-//        val place = when (armor.data.armorType) {
-//            ArmorType.BODY -> EquipPlace.BODY
-//            ArmorType.HELM -> EquipPlace.HELM
-//            ArmorType.SHOES -> EquipPlace.SHOES
-//        }
-//
-//        unEquipItem(place)
-//        setEquip(place, armor)
-//        armor.onEquip(player)
-//        armorElement.value = armor.data.element
+        inventory.removeItem(armor)
+
+        val place = when (armor.type) {
+            ArmorType.BODY -> EquipPlace.BODY
+            ArmorType.HELM -> EquipPlace.HELM
+            ArmorType.SHOES -> EquipPlace.SHOES
+        }
+
+        unEquipItem(place)
+        setEquip(place, armor)
+        armor.onEquip(player)
+        armorElement.value = armor.element.value
     }
 
     fun unEquipItem(place: EquipPlace) {
-//        if (isFree(place) || inventory.isFull())
-//            return
-//
-//        val item = getEquip(place)
-//
-//        if (item is WeaponComponent) {
-//            if (item.data.type.isTwoHanded()) {
-//                if (place == EquipPlace.RIGHT_HAND)
-//                    setEquip(EquipPlace.LEFT_HAND, DataManager.getWeapon(place.emptyID))
-//                else
-//                    setEquip(EquipPlace.RIGHT_HAND, DataManager.getWeapon(place.emptyID))
-//            }
-//
-//            item.onUnEquip(player)
-//        } else if (item is ArmorComponent) {
-//            item.onUnEquip(player)
-//        }
-//
-//        inventory.addItem(item)
-//
-//        // replace with default
-//        if (place.isWeapon) {
-//            setEquip(place, DataManager.getWeapon(place.emptyID))
-//        } else {
-//            setEquip(place, DataManager.getArmor(place.emptyID))
-//        }
+        if (isFree(place) || inventory.isFull())
+            return
+
+        val item = getEquip(place)
+
+        if (item is Weapon) {
+            if (item.type.isTwoHanded()) {
+                if (place == EquipPlace.RIGHT_HAND)
+                    setEquip(EquipPlace.LEFT_HAND, Data.hands)
+                else
+                    setEquip(EquipPlace.RIGHT_HAND, Data.hands)
+            }
+
+            item.onUnEquip(player)
+        } else if (item is Armor) {
+            item.onUnEquip(player)
+        }
+
+        inventory.addItem(item)
+
+        // replace with default
+        if (place.isWeapon) {
+            setEquip(place, Data.hands)
+        } else {
+            setEquip(place, Data.getDefaultArmor(place.emptyID))
+        }
     }
 
     fun isFree(place: EquipPlace) = getEquip(place).description.id == place.emptyID

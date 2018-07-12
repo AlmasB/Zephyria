@@ -3,9 +3,11 @@ package com.almasb.zeph.item
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.Stat
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
 
 /**
  * Armor item.
@@ -19,6 +21,8 @@ class Armor(data: ArmorData) : Item(data.description) {
 
     val armor = SimpleIntegerProperty()
     val marmor = SimpleIntegerProperty()
+
+    val type = data.armorType
 
     init {
         element.value = data.element
@@ -35,31 +39,34 @@ class Armor(data: ArmorData) : Item(data.description) {
                 .otherwise(data.itemLevel.bonus))
                 .add(data.marmor))
 
-//        val rawDescription = desc.description.value
-//        desc.description.bind(desc.name.concat("\n")
-//                .concat(rawDescription + "\n")
-//                .concat(element.asString("Element: %s").concat("\n"))
-//                .concat(armor.asString("Armor: %d").concat("%\n"))
-//                .concat(marmor.asString("MArmor: %d").concat("%\n"))
-//                .concat("${data.runes}"))
+        dynamicDescription.bind(SimpleStringProperty("")
+                .concat(description.name + "\n")
+                .concat(description.description + "\n")
+                .concat(element.asString("Element: %s").concat("\n"))
+                .concat(armor.asString("Armor: %d").concat("%\n"))
+                .concat(marmor.asString("MArmor: %d").concat("%\n"))
+                .concat("${data.runes}")
+        )
     }
 
-    fun onEquip(entity: PlayerEntity) {
+    fun onEquip(char: PlayerEntity) {
 //        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
 //
 //        // TODO: must use actual runes not data
 //        data.runes.forEach { attrs.addBonusAttribute(it.attribute, it.bonus) }
 //
-//        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, armor.value)
-//        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, marmor.value)
+
+        char.stats.addBonusStat(Stat.ARM, armor.value)
+        char.stats.addBonusStat(Stat.MARM, marmor.value)
     }
 
-    fun onUnEquip(entity: PlayerEntity) {
+    fun onUnEquip(char: PlayerEntity) {
 //        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
 //
 //        data.runes.forEach { attrs.addBonusAttribute(it.attribute, -it.bonus) }
 //
-//        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.ARM, -armor.value)
-//        entity.getComponentUnsafe(StatsComponent::class.java).addBonusStat(Stat.MARM, -marmor.value)
+
+        char.stats.addBonusStat(Stat.ARM, -armor.value)
+        char.stats.addBonusStat(Stat.MARM, -marmor.value)
     }
 }

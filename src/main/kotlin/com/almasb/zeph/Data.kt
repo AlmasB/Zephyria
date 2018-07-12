@@ -18,6 +18,12 @@ object Data {
     private val weapons = hashMapOf<Int, WeaponData>()
     private val armors = hashMapOf<Int, ArmorData>()
 
+    // There is ever only one of these
+    val hands by lazy { Weapon(getWeapon(4000)) }
+    val hat by lazy { Armor(getArmor(5000)) }
+    val clothes by lazy { Armor(getArmor(5001)) }
+    val shoes by lazy { Armor(getArmor(5002)) }
+
     init {
         Weapon.javaClass.declaredMethods.forEach {
             val data = it.invoke(Weapon) as WeaponData
@@ -37,6 +43,15 @@ object Data {
 
     fun getWeapon(id: Int) = weapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
     fun getArmor(id: Int) = armors[id] ?: throw IllegalArgumentException("No armor found: $id")
+
+    fun getDefaultArmor(id: Int): com.almasb.zeph.item.Armor {
+        return when (id) {
+            5000 -> hat
+            5001 -> clothes
+            5002 -> shoes
+            else -> throw RuntimeException("")
+        }
+    }
 
     object Weapon {
 
@@ -61,6 +76,18 @@ object Data {
 
             type = DAGGER
             pureDamage = 15
+        }
+
+        fun IRON_SWORD() = weapon {
+            desc {
+                id = 4100
+                name = "Iron Sword"
+                description = "A standard warrior's sword with decent attack damage."
+                textureName = "items/weapons/iron_sword.png"
+            }
+
+            type = ONE_H_SWORD
+            pureDamage = 25
         }
     }
 
@@ -92,7 +119,7 @@ object Data {
             desc {
                 id = 5002
                 name = "Shoes"
-                description = "Ordinary hat, already out of fashion."
+                description = "Some old shoes."
                 textureName = "items/armor/shoes.png"
             }
 
@@ -132,12 +159,6 @@ object Data {
 
 
 
-
-
-
-    //fun getWeapon(id: Int) = WeaponComponent(weapons[id]!!.invoke(Data.Weapon) as List<Component>)
-
-    //fun getArmor(id: Int) = ArmorComponent(armor[id]!!.invoke(Data.Armor) as List<Component>)
 //
 //    fun getItem(id: Int): Entity {
 //        if (weapons.containsKey(id))
@@ -251,10 +272,7 @@ object Data {
 //
 //        // 1H SWORDS 4100
 //
-//        fun IRON_SWORD() = listOf<Component>(
-//                Description(4100, "Iron Sword", "A standard warrior's sword with decent attack damage.", "items/weapons/iron_sword.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.ONE_H_SWORD, 25)
-//        )
+
 //
 //        fun GETSUGA_TENSHO() = listOf<Component>(
 //                Description(4101, "Getsuga Tensho", "A powerful sword that is carved from the fangs of the moon itself and pierced through heaven.", "items/weapons/getsuga_tensho.png"),

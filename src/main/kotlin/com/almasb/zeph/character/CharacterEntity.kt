@@ -4,6 +4,7 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.extra.entity.effect.EffectComponent
 import com.almasb.zeph.character.components.AnimationComponent
 import com.almasb.zeph.character.components.CharacterComponent
+import com.almasb.zeph.character.components.MovementComponent
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
 
@@ -17,7 +18,7 @@ open class CharacterEntity(val data: CharacterData, val characterComponent: Char
     constructor(data: CharacterData) : this(data, CharacterComponent(data))
 
     val animationComponent = AnimationComponent(data.description.textureName)
-    val effectComponent = EffectComponent()
+    val moveComponent = MovementComponent()
 
     val attributes = characterComponent.attributes
 
@@ -31,7 +32,7 @@ open class CharacterEntity(val data: CharacterData, val characterComponent: Char
     init {
         addComponent(characterComponent)
         addComponent(animationComponent)
-        addComponent(effectComponent)
+        addComponent(moveComponent)
     }
 
     fun kill() {

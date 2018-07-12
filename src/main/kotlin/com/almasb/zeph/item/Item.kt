@@ -1,6 +1,7 @@
 package com.almasb.zeph.item
 
 import com.almasb.zeph.Description
+import javafx.beans.property.SimpleStringProperty
 
 /**
  *
@@ -8,4 +9,8 @@ import com.almasb.zeph.Description
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 abstract class Item(val description: Description) {
+
+    val dynamicDescription = SimpleStringProperty("")
+
+    // TODO: copy() ?
 }

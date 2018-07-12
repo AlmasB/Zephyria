@@ -96,6 +96,6 @@ public final class EquipmentView extends InGameWindow {
         Group group = groups.get(place);
         group.getChildren().setAll(view);
 
-        //((Text)group.getUserData()).textProperty().bind(data.getDescription());
+        ((Text)group.getUserData()).textProperty().bind(item.getDynamicDescription());
     }
 }

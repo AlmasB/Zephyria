@@ -322,7 +322,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun attack(target: Entity): DamageResult {
+    fun attack(target: CharacterEntity): DamageResult {
         return dealPhysicalDamage(target, stats.getTotalStat(ATK) + 2 * GameMath.random(level()), weaponElement.value)
     }
 
@@ -333,25 +333,24 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun dealPhysicalDamage(target: Entity, baseDamage: Double, element: Element): DamageResult {
-//        var baseDamage = baseDamage
-//
-//        var crit = false
-//
-//        if (GameMath.checkChance(stats.getTotalStat(CRIT_CHANCE))) {
-//            baseDamage *= stats.getTotalStat(CRIT_DMG)
-//            crit = true
-//        }
-//
-//        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
-//
-//        val damageAfterReduction = (100 - target.stats.getTotalStat(ARM)) * baseDamage / 100.0 - target.stats.getTotalStat(DEF)
-//
-//        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
-//        target.hp.damage(totalDamage.toDouble())
-//
-//        return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
-        return DamageResult.NONE
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
+        var baseDamage = baseDamage
+
+        var crit = false
+
+        if (GameMath.checkChance(stats.getTotalStat(CRIT_CHANCE))) {
+            baseDamage *= stats.getTotalStat(CRIT_DMG)
+            crit = true
+        }
+
+        val elementalDamageModifier = element.getDamageModifierAgainst(target.characterComponent.armorElement.value);
+
+        val damageAfterReduction = (100 - target.stats.getTotalStat(ARM)) * baseDamage / 100.0 - target.stats.getTotalStat(DEF)
+
+        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
+        target.hp.damage(totalDamage.toDouble())
+
+        return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
     }
 
     /**
@@ -360,7 +359,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun dealPhysicalDamage(target: Entity, baseDamage: Double): DamageResult {
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
         return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL)
     }
 
@@ -370,7 +369,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun dealMagicalDamage(target: Entity, baseDamage: Double, element: Element): DamageResult {
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
 //        var baseDamage = baseDamage
 //
 //        var crit = false
@@ -394,14 +393,14 @@ open class CharacterComponent(data: CharacterData) : Component() {
     /**
      * Deal magical [baseDamage] of type NEUTRAL to [target].
      */
-    fun dealMagicalDamage(target: Entity, baseDamage: Double): DamageResult {
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
         return dealMagicalDamage(target, baseDamage, Element.NEUTRAL)
     }
 
     /**
      * Deals the exact amount of [value] damage to [target].
      */
-    fun dealPureDamage(target: Entity, value: Double): DamageResult {
+    fun dealPureDamage(target: CharacterEntity, value: Double): DamageResult {
         val amount = value.toInt()
         //(target).hp.damage(amount.toDouble())
 

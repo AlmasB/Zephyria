@@ -1,7 +1,7 @@
 package com.almasb.zeph.entity.ai
 
-import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Config
+import com.almasb.zeph.character.components.MovementComponent
 import java.util.*
 
 /**
@@ -9,7 +9,7 @@ import java.util.*
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class RandomWanderControl : MovementControl() {
+class RandomWanderControl : MovementComponent() {
 
     private val random = Random()
     private var time = 0.0

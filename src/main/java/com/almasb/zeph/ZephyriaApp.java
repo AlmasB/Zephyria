@@ -1,5 +1,7 @@
 package com.almasb.zeph;
 
+import com.almasb.fxgl.animation.Animation;
+import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.entity.Entities;
@@ -17,10 +19,14 @@ import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.character.components.PlayerComponent;
+import com.almasb.zeph.combat.DamageType;
+import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.item.WeaponData;
 import com.almasb.zeph.skill.SkillComponent;
 import com.almasb.zeph.skill.SkillUseResult;
 import com.almasb.zeph.combat.GameMath;
+import com.almasb.zeph.ui.BasicInfoView;
+import com.almasb.zeph.ui.CharInfoView;
 import com.almasb.zeph.ui.EquipmentView;
 import javafx.animation.TranslateTransition;
 import javafx.beans.property.ObjectProperty;
@@ -124,6 +130,12 @@ public class ZephyriaApp extends GameApplication {
                     .filter(e -> e instanceof CharacterEntity)
                     .map(e -> (CharacterEntity) e)
                     .forEach(this::onKill);
+        });
+
+        onKeyDown(KeyCode.O, "Show Damage", () -> {
+            DamageResult dmg = new DamageResult(DamageType.PHYSICAL, Element.NEUTRAL, random(1, 15), false);
+
+            showDamage(dmg, getInput().getMousePositionWorld());
         });
     }
 
@@ -441,8 +453,8 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
 //                new HotbarView(player),
-//                new BasicInfoView(player),
-//                new CharInfoView(player),
+                new BasicInfoView(player),
+                new CharInfoView(player),
 //                new InventoryView(player, getWidth(), getHeight()),
                 new EquipmentView(player, getWidth(), getHeight())
         );
@@ -491,22 +503,26 @@ public class ZephyriaApp extends GameApplication {
 
         EntityView view = new EntityView();
         view.addNode(text);
-        view.setTranslateX(position.getX());
+        view.setTranslateX(position.getX() + random(-10, 10));
         view.setTranslateY(position.getY());
 
         getGameScene().addGameView(view);
 
-        TranslateTransition tt = new TranslateTransition(Duration.seconds(1), view);
-        tt.setByY(-30);
-        tt.setOnFinished(e -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
-        tt.play();
+        Animation<?> anim = translate(view, position.add(random(-10, 10), random(-40, -25)), Duration.seconds(1));
+        anim.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
+        anim.startInPlayState();
+
+        Animation<?> anim2 = fadeOut(view, Duration.seconds(1.15));
+        anim2.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
+        anim2.setOnFinished(() -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
+        anim2.startInPlayState();
     }
 
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
         playerComponent = player.getPlayerComponent();
         player.setType(EntityType.PLAYER);
-        player.setPosition(TILE_SIZE * 4, TILE_SIZE * 4);
+        player.setPosition(TILE_SIZE * 8, TILE_SIZE * 4);
 
 
         //player.setView(new Rectangle(40, 40, Color.BLUE));

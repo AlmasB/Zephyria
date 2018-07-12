@@ -3,6 +3,7 @@ package com.almasb.zeph.ui;
 import com.almasb.fxgl.app.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.InGameWindow;
+import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.binding.Bindings;
@@ -22,7 +23,7 @@ import javafx.scene.text.Text;
 
 public class CharInfoView extends InGameWindow {
 
-    public CharInfoView(Entity player) {
+    public CharInfoView(PlayerEntity player) {
         super("Char Info", WindowDecor.MINIMIZE);
 
         relocate(0, 240);
@@ -42,7 +43,7 @@ public class CharInfoView extends InGameWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            //text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
+            text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
 
             Text tooltipText = new Text(attr.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -57,20 +58,20 @@ public class CharInfoView extends InGameWindow {
             Text bText = new Text();
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
-//            bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
-//            bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
-//                    .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
+            bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
+            bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
+                    .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
 
             Text btn = new Text("+");
             btn.setCursor(Cursor.HAND);
             btn.setStroke(Color.YELLOWGREEN.brighter());
             btn.setStrokeWidth(3);
             btn.setFont(font);
-//            btn.visibleProperty().bind(player.getAttributePoints().greaterThan(0)
-//                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
+            btn.visibleProperty().bind(player.getPlayerComponent().getAttributePoints().greaterThan(0)
+                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
 
             btn.setOnMouseClicked(event -> {
-                //player.getControlUnsafe(PlayerComponent.class).increaseAttribute(attr);
+                player.getPlayerComponent().increaseAttribute(attr);
             });
 
             Pane box = new Pane();
@@ -86,9 +87,9 @@ public class CharInfoView extends InGameWindow {
         Text info = new Text();
         info.setFont(font);
         info.setFill(Color.WHITE);
-//        info.visibleProperty().bind(player.getAttributePoints().greaterThan(0));
-//        info.textProperty().bind(new SimpleStringProperty("Attribute Points: ").concat(player.getAttributePoints())
-//            .concat("\nSkill Points: ").concat(player.getSkillPoints()));
+        info.visibleProperty().bind(player.getPlayerComponent().getAttributePoints().greaterThan(0));
+        info.textProperty().bind(new SimpleStringProperty("Attribute Points: ").concat(player.getPlayerComponent().getAttributePoints())
+            .concat("\nSkill Points: ").concat(player.getPlayerComponent().getSkillPoints()));
 
         attrBox.getChildren().addAll(new Separator(), info);
 
@@ -98,7 +99,7 @@ public class CharInfoView extends InGameWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            //text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
+            text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
 
             Text tooltipText = new Text(stat.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -114,13 +115,13 @@ public class CharInfoView extends InGameWindow {
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
 
-//            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
-//                .then(player.getStats().bStatProperty(stat).asString("+%d ")
-//                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
-//                        .concat(stat.getMeasureUnit()))
-//                .otherwise(stat.getMeasureUnit());
+            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
+                .then(player.getStats().bStatProperty(stat).asString("+%d ")
+                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
+                        .concat(stat.getMeasureUnit()))
+                .otherwise(stat.getMeasureUnit());
 
-            //bText.textProperty().bind(textBinding);
+            bText.textProperty().bind(textBinding);
 
             statBox.getChildren().add(new HBox(5, text, bText));
         }

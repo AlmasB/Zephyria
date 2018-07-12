@@ -12,17 +12,21 @@ import com.almasb.zeph.entity.character.component.StatsComponent
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-open class CharacterEntity(val data: CharacterData) : Entity() {
+open class CharacterEntity(val data: CharacterData, val characterComponent: CharacterComponent) : Entity() {
 
-    val characterComponent = CharacterComponent(data)
+    constructor(data: CharacterData) : this(data, CharacterComponent(data))
+
     val animationComponent = AnimationComponent(data.description.textureName)
     val effectComponent = EffectComponent()
 
-    val attributes: AttributesComponent
-        get() = characterComponent.attributes
+    val attributes = characterComponent.attributes
 
-    val stats: StatsComponent
-        get() = characterComponent.stats
+    val stats = characterComponent.stats
+
+    val hp = characterComponent.hp
+    val sp = characterComponent.sp
+
+    val baseLevel = characterComponent.baseLevel
 
     init {
         addComponent(characterComponent)

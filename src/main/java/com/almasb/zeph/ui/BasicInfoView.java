@@ -1,9 +1,9 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.ui.InGameWindow;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
+import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.combat.Stat;
 import javafx.animation.ScaleTransition;
 import javafx.beans.property.SimpleStringProperty;
@@ -17,7 +17,7 @@ import javafx.util.Duration;
 
 public class BasicInfoView extends InGameWindow {
 
-    public BasicInfoView(Entity player) {
+    public BasicInfoView(PlayerEntity player) {
         super("Basic Info", WindowDecor.MINIMIZE);
 
         setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
@@ -30,8 +30,8 @@ public class BasicInfoView extends InGameWindow {
         barHPUI.setWidth(100);
         barHPUI.setHeight(15);
         barHPUI.setLabelPosition(Position.RIGHT);
-        //barHPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_HP));
-        //barHPUI.currentValueProperty().bind(player.getHp().valueProperty());
+        barHPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_HP));
+        barHPUI.currentValueProperty().bind(player.getHp().valueProperty());
 
         ProgressBar barSPUI = ProgressBar.makeSkillBar();
         barSPUI.setTranslateX(160);
@@ -39,8 +39,8 @@ public class BasicInfoView extends InGameWindow {
         barSPUI.setWidth(100);
         barSPUI.setHeight(15);
         barSPUI.setLabelPosition(Position.RIGHT);
-        //barSPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_SP));
-        //barSPUI.currentValueProperty().bind(player.getSp().valueProperty());
+        barSPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_SP));
+        barSPUI.currentValueProperty().bind(player.getSp().valueProperty());
 
         Text textPlayerName = new Text();
         textPlayerName.setTranslateX(15);
@@ -54,49 +54,49 @@ public class BasicInfoView extends InGameWindow {
         textLevels.setTranslateY(100);
         textLevels.setFont(Font.font(16));
         textLevels.setFill(Color.WHITESMOKE);
-//        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
-//                .concat("\nStat Lv. ").concat(player.getStatLevel())
-//                .concat("\nJob Lv. ").concat(player.getJobLevel()));
+        textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
+                .concat("\nStat Lv. ").concat(player.getStatLevel())
+                .concat("\nJob Lv. ").concat(player.getJobLevel()));
 
         ProgressBar barXPBase = new ProgressBar();
         barXPBase.setWidth(150);
         barXPBase.setTranslateX(120);
         barXPBase.setTranslateY(90);
-        //barXPBase.setMaxValue(player.getPlayerControl().expNeededForNextBaseLevel());
-        //barXPBase.currentValueProperty().bind(player.getBaseXP());
+        barXPBase.setMaxValue(player.getPlayerComponent().expNeededForNextBaseLevel());
+        barXPBase.currentValueProperty().bind(player.getBaseXP());
 
         ProgressBar barXPStat = new ProgressBar();
         barXPStat.setWidth(150);
         barXPStat.setTranslateX(120);
         barXPStat.setTranslateY(110);
-        //barXPStat.setMaxValue(player.getPlayerControl().expNeededForNextStatLevel());
-        //barXPStat.currentValueProperty().bind(player.getStatXP());
+        barXPStat.setMaxValue(player.getPlayerComponent().expNeededForNextStatLevel());
+        barXPStat.currentValueProperty().bind(player.getStatXP());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);
         barXPJob.setTranslateX(120);
         barXPJob.setTranslateY(130);
-        //barXPJob.setMaxValue(player.getPlayerControl().expNeededForNextJobLevel());
-        //barXPJob.currentValueProperty().bind(player.getJobXP());
+        barXPJob.setMaxValue(player.getPlayerComponent().expNeededForNextJobLevel());
+        barXPJob.currentValueProperty().bind(player.getJobXP());
 
         Text textMoney = new Text("");
         textMoney.setTranslateX(200);
         textMoney.setTranslateY(180);
         textMoney.setFont(Font.font(14));
         textMoney.setFill(Color.WHITESMOKE);
-        //textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getMoney().valueProperty()).concat("G"));
+        textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getPlayerComponent().getMoney()).concat("G"));
 
-//        player.getBaseLevel().addListener((obs, old, newValue) -> {
-//            barXPBase.setMaxValue(player.getPlayerControl().expNeededForNextBaseLevel());
-//        });
-//
-//        player.getStatLevel().addListener((obs, old, newValue) -> {
-//            barXPStat.setMaxValue(player.getPlayerControl().expNeededForNextStatLevel());
-//        });
-//
-//        player.getJobLevel().addListener((obs, old, newValue) -> {
-//            barXPJob.setMaxValue(player.getPlayerControl().expNeededForNextJobLevel());
-//        });
+        player.getBaseLevel().addListener((obs, old, newValue) -> {
+            barXPBase.setMaxValue(player.getPlayerComponent().expNeededForNextBaseLevel());
+        });
+
+        player.getStatLevel().addListener((obs, old, newValue) -> {
+            barXPStat.setMaxValue(player.getPlayerComponent().expNeededForNextStatLevel());
+        });
+
+        player.getJobLevel().addListener((obs, old, newValue) -> {
+            barXPJob.setMaxValue(player.getPlayerComponent().expNeededForNextJobLevel());
+        });
 
         Pane uiPane = new Pane();
         uiPane.setPrefSize(350, 200);

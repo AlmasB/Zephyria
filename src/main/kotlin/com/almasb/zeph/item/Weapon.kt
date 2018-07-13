@@ -17,21 +17,15 @@ import javafx.beans.property.SimpleStringProperty
 class Weapon(data: WeaponData) : Item(data.description) {
 
     val refineLevel = SimpleIntegerProperty()
-    val element = SimpleObjectProperty<Element>()
+    val element = SimpleObjectProperty<Element>(data.element)
 
     val pureDamage = SimpleIntegerProperty()
 
-    val range: Int
+    val range = data.type.range
 
     val type = data.type
 
     init {
-        // TODO: desc = data.description
-
-        element.value = data.element
-
-        range = data.type.range
-
         pureDamage.bind(refineLevel.multiply(Bindings
                 .`when`(refineLevel.greaterThan(2))
                 .then(data.itemLevel.bonus + 1)

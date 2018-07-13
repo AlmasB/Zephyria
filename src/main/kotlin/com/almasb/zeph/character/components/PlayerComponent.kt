@@ -30,6 +30,7 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     val skillPoints = SimpleIntegerProperty(90)
 
     val money = SimpleIntegerProperty(Config.STARTING_MONEY)
+    val weapon = SimpleObjectProperty<Weapon>()
 
     val statLevel = SimpleIntegerProperty(1)
     val jobLevel = SimpleIntegerProperty(1)

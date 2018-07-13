@@ -172,7 +172,10 @@ class CharacterActionComponent : StateComponent() {
 
                     char.characterComponent.resetAtkTick()
 
-                    // TODO: if dead, state IDLE
+                    if (attackTarget!!.hp.isZero) {
+                        FXGL.getAppCast<ZephyriaApp>().kill(attackTarget!!)
+                        state = IDLE
+                    }
                 }
 
             } else {

@@ -49,8 +49,6 @@ open class CharacterComponent(data: CharacterData) : Component() {
      */
     val effects = FXCollections.observableArrayList<Effect>()
 
-    val weapon = SimpleObjectProperty<Weapon>()
-
     val weaponElement = SimpleObjectProperty<Element>()
     val armorElement = SimpleObjectProperty<Element>()
 
@@ -62,13 +60,13 @@ open class CharacterComponent(data: CharacterData) : Component() {
     val statXP = SimpleIntegerProperty()
     val jobXP = SimpleIntegerProperty()
 
+    val attackRange: Int = data.attackRange
+
     init {
         charClass.value = data.charClass
 
         //data.attributes.forEach { attribute, value ->  attributes.setAttribute(attribute, value)}
         baseLevel.value = data.baseLevel
-
-        //weapon.value = data.defaultWeapon
 
         weaponElement.value = data.element
         armorElement.value = data.element
@@ -97,7 +95,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
     /**
      * @return true if [target] is in weapon range of this character
      */
-    fun isInWeaponRange(target: Entity) = entity.distance(target) <= weapon.value.range * Config.tileSize
+    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.tileSize
 
     /**
      * @param status status
@@ -402,7 +400,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      */
     fun dealPureDamage(target: CharacterEntity, value: Double): DamageResult {
         val amount = value.toInt()
-        //(target).hp.damage(amount.toDouble())
+        (target).hp.damage(amount.toDouble())
 
         return DamageResult(DamageType.PURE, Element.NEUTRAL, amount, false)
     }
@@ -459,6 +457,8 @@ open class CharacterComponent(data: CharacterData) : Component() {
     }
 
     fun kill() {
+
+
         char.setUpdateEnabled(false)
         char.animationComponent.playDeath(Runnable { char.removeFromWorld() })
     }

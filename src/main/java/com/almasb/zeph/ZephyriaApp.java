@@ -133,7 +133,7 @@ public class ZephyriaApp extends GameApplication {
                     .stream()
                     .filter(e -> e instanceof CharacterEntity)
                     .map(e -> (CharacterEntity) e)
-                    .forEach(this::onKill);
+                    .forEach(this::kill);
         });
 
         onKeyDown(KeyCode.O, "Show Damage", () -> {
@@ -223,7 +223,7 @@ public class ZephyriaApp extends GameApplication {
 //                    showDamage(result.getDamage(), target.getPositionComponent().getValue());
 //
 //                    if (target.getHp().getValue() <= 0) {
-//                        onKill(target);
+//                        kill(target);
 //                    }
 //
 //                } else {
@@ -359,7 +359,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(damage, character.getPositionComponent().getValue());
 //
 //                if (character.getHp().getValue() <= 0) {
-//                    onKill(character);
+//                    kill(character);
 //                }
 //            }
 //        });
@@ -379,7 +379,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(damage, character.getPositionComponent().getValue());
 //
 ////                if (character.getHp().getValue() <= 0) {
-////                    onKill(character);
+////                    kill(character);
 ////                }
 //            }
 //        });
@@ -397,7 +397,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(result.getDamage(), character.getPositionComponent().getValue());
 //
 //                if (character.getHp().getValue() <= 0) {
-//                    onKill(character);
+//                    kill(character);
 //                }
 //            }
 //        });
@@ -408,7 +408,7 @@ public class ZephyriaApp extends GameApplication {
      *
      * @param character killed char
      */
-    private void onKill(CharacterEntity character) {
+    public void kill(CharacterEntity character) {
         character.kill();
 
 //        // TODO: reward based on level differences

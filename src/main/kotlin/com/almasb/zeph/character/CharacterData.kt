@@ -1,8 +1,10 @@
 package com.almasb.zeph.character
 
+import com.almasb.zeph.Data
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
+import com.almasb.zeph.item.Weapon
 
 @DslMarker
 annotation class DataDSL
@@ -14,7 +16,7 @@ class CharacterDataBuilder(
         var charClass: CharacterClass = CharacterClass.MONSTER,
         var baseLevel: Int = 1,
         val attributes: Attribute.AttributeInfo = Attribute.AttributeInfo(),
-        //val defaultWeapon: Weapon = WeaponEntity(Data.Weapon.HANDS())
+        val attackRange: Int = 1,
         var element: Element = Element.NEUTRAL,
         var rewardXP: Experience = Experience(0, 0, 0),
 
@@ -39,7 +41,7 @@ class CharacterDataBuilder(
     }
 
     fun build(): CharacterData {
-        return CharacterData(description, type, charClass, baseLevel, attributes, element, rewardXP, dropItems)
+        return CharacterData(description, type, charClass, baseLevel, attributes, attackRange, element, rewardXP, dropItems)
     }
 }
 
@@ -61,7 +63,7 @@ data class CharacterData(
         val charClass: CharacterClass,
         val baseLevel: Int,
         val attributes: Attribute.AttributeInfo,
-        //val defaultWeapon: Weapon = WeaponEntity(Data.Weapon.HANDS())
+        val attackRange: Int,
         val element: Element,
         val rewardXP: Experience,
 

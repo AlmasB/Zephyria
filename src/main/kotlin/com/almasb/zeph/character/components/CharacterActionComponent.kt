@@ -25,10 +25,12 @@ class CharacterActionComponent : StateComponent() {
     private var moveTarget: Point2D? = null
 
     private lateinit var char: CharacterEntity
+    private lateinit var animationComponent: AnimationComponent
 
     private val IDLE: State = object : State() {
         override fun onEnter(prevState: State?) {
-
+            if (prevState != null)
+                animationComponent.loopIdle()
         }
 
         override fun onUpdate(tpf: Double) {
@@ -38,10 +40,8 @@ class CharacterActionComponent : StateComponent() {
 
     private val MOVE: State = object : State() {
         override fun onEnter(prevState: State?) {
-            // play anim
+            //
         }
-
-        //private lateinit var animation: AnimatedTexture
 
         private val grid = FXGL.getAppCast<ZephyriaApp>().grid
         protected var path: MutableList<AStarNode> = arrayListOf()
@@ -103,12 +103,16 @@ class CharacterActionComponent : StateComponent() {
                     continue
                 } else if (dx > 0) {
                     //animation.setAnimationChannel(CharacterAnimation.WALK_RIGHT)
+                    onChangeDir(0)
                 } else if (dx < 0) {
                     //animation.setAnimationChannel(CharacterAnimation.WALK_LEFT)
+                    onChangeDir(1)
                 } else if (dy > 0) {
                     //animation.setAnimationChannel(CharacterAnimation.WALK_DOWN)
+                    onChangeDir(2)
                 } else if (dy < 0) {
                     //animation.setAnimationChannel(CharacterAnimation.WALK_UP)
+                    onChangeDir(3)
                 }
 
                 dx *= 2.0
@@ -116,6 +120,29 @@ class CharacterActionComponent : StateComponent() {
 
                 char.positionComponent.translate(dx, dy)
                 break
+            }
+        }
+
+        private var currentDir = 0
+
+        private fun onChangeDir(newDir: Int) {
+            if (newDir != currentDir) {
+                currentDir = newDir
+                when (currentDir) {
+                    0 -> {
+                        animationComponent.loopWalkRight()
+                    }
+                    1 -> {
+                        animationComponent.loopWalkLeft()
+                    }
+                    2 -> {
+                        animationComponent.loopWalkDown()
+                    }
+                    3 -> {
+                        animationComponent.loopWalkUp()
+                    }
+                    else -> {}
+                }
             }
         }
 
@@ -133,7 +160,7 @@ class CharacterActionComponent : StateComponent() {
 
     private val ATTACK: State = object : State() {
         override fun onEnter(prevState: State?) {
-            // play anim
+            animationComponent.loopAttack()
         }
 
         override fun onUpdate(tpf: Double) {

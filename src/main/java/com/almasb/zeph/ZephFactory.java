@@ -19,8 +19,9 @@ public class ZephFactory implements EntityFactory {
         CharacterEntity entity = new CharacterEntity(charData);
         entity.setX(data.getX());
         entity.setY(data.getY());
+        entity.setType(EntityType.CHARACTER);
 
-        entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.INSTANCE.getTileSize(), Config.INSTANCE.getTileSize())));
+        entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.tileSize, Config.tileSize)));
 
         // TODO: parse properties
 

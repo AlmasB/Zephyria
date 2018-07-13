@@ -27,6 +27,10 @@ class PlayerEntity(playerName: String, playerTextureName: String) : CharacterEnt
 
     val playerComponent = characterComponent as PlayerComponent
 
+    val name = data.description.name
+
+    val charClass = playerComponent.charClass
+
     val statLevel = playerComponent.statLevel
     val jobLevel = playerComponent.jobLevel
 

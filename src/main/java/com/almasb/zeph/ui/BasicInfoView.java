@@ -47,7 +47,9 @@ public class BasicInfoView extends InGameWindow {
         textPlayerName.setTranslateY(15);
         textPlayerName.setFont(Font.font(18));
         textPlayerName.setFill(Color.WHITESMOKE);
-        //textPlayerName.textProperty().bind(player.getDescription().getName().concat("\n").concat(player.getData().getCharClass()));
+        textPlayerName.textProperty().bind(
+                player.getCharClass().asString(player.getName() + "\n%s")
+        );
 
         Text textLevels = new Text();
         textLevels.setTranslateX(15);
@@ -55,7 +57,7 @@ public class BasicInfoView extends InGameWindow {
         textLevels.setFont(Font.font(16));
         textLevels.setFill(Color.WHITESMOKE);
         textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
-                .concat("\nStat Lv. ").concat(player.getStatLevel())
+                .concat("\nAttr Lv. ").concat(player.getStatLevel())
                 .concat("\nJob Lv. ").concat(player.getJobLevel()));
 
         ProgressBar barXPBase = new ProgressBar();

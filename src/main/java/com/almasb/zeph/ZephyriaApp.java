@@ -5,6 +5,7 @@ import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.asset.FXGLAssets;
+import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entities;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.RenderLayer;
@@ -12,6 +13,7 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.view.EntityView;
 import com.almasb.fxgl.extra.ai.pathfinding.AStarGrid;
 import com.almasb.fxgl.extra.ai.pathfinding.NodeState;
+import com.almasb.fxgl.extra.entity.components.ExpireCleanComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.physics.PhysicsWorld;
@@ -53,7 +55,7 @@ import static com.almasb.fxgl.app.DSLKt.*;
 
 public class ZephyriaApp extends GameApplication {
 
-    private static final int TILE_SIZE = Config.INSTANCE.getTileSize();
+    private static final int TILE_SIZE = Config.tileSize;
     private static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
     private static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
 
@@ -133,7 +135,7 @@ public class ZephyriaApp extends GameApplication {
                     .stream()
                     .filter(e -> e instanceof CharacterEntity)
                     .map(e -> (CharacterEntity) e)
-                    .forEach(this::kill);
+                    .forEach(this::playerKilledChar);
         });
 
         onKeyDown(KeyCode.O, "Show Damage", () -> {
@@ -223,7 +225,7 @@ public class ZephyriaApp extends GameApplication {
 //                    showDamage(result.getDamage(), target.getPositionComponent().getValue());
 //
 //                    if (target.getHp().getValue() <= 0) {
-//                        kill(target);
+//                        playerKilledChar(target);
 //                    }
 //
 //                } else {
@@ -359,7 +361,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(damage, character.getPositionComponent().getValue());
 //
 //                if (character.getHp().getValue() <= 0) {
-//                    kill(character);
+//                    playerKilledChar(character);
 //                }
 //            }
 //        });
@@ -379,7 +381,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(damage, character.getPositionComponent().getValue());
 //
 ////                if (character.getHp().getValue() <= 0) {
-////                    kill(character);
+////                    playerKilledChar(character);
 ////                }
 //            }
 //        });
@@ -397,7 +399,7 @@ public class ZephyriaApp extends GameApplication {
 //                showDamage(result.getDamage(), character.getPositionComponent().getValue());
 //
 //                if (character.getHp().getValue() <= 0) {
-//                    kill(character);
+//                    playerKilledChar(character);
 //                }
 //            }
 //        });
@@ -408,13 +410,18 @@ public class ZephyriaApp extends GameApplication {
      *
      * @param character killed char
      */
-    public void kill(CharacterEntity character) {
+    public void playerKilledChar(CharacterEntity character) {
         character.kill();
 
-//        // TODO: reward based on level differences
-//        playerComponent.rewardMoney(new Random().nextInt(character.getBaseLevel().get()));
-//        playerComponent.rewardXP(character.getData().getRewardXP());
-//
+        int levelDiff = character.getBaseLevel().get() - player.getBaseLevel().get();
+
+        int money = (levelDiff > 0 ? levelDiff * 5 : 0) + FXGLMath.random(character.getBaseLevel().get());
+
+        showMoneyEarned(money, player.getPosition());
+
+        playerComponent.rewardMoney(money);
+        playerComponent.rewardXP(character.getData().getRewardXP());
+
         List<Pair<Integer, Integer>> drops = character.getData().getDropItems();
         drops.forEach(p -> {
             int itemID = p.getFirst();
@@ -424,14 +431,9 @@ public class ZephyriaApp extends GameApplication {
                 dropItem(itemID, character.getPosition());
             }
         });
-//
+
 //        character.getViewComponent().getView().setOnMouseClicked(null);
 //        selected.set(null);
-//
-//        character.getData().getAnimation().setAnimationChannel(CharacterAnimation.DEATH);
-//
-//        getMasterTimer().runOnceAfter(character::removeFromWorld, Duration.seconds(0.9));
-//        getMasterTimer().runOnceAfter(this::initEnemies, Duration.seconds(0.1));
     }
 
     private Text debug = new Text();
@@ -489,6 +491,26 @@ public class ZephyriaApp extends GameApplication {
 //        tt.setByX(new Random().nextInt(20) - 10);
 //        tt.setByY(10 + new Random().nextInt(10));
 //        tt.play();
+    }
+
+    public void showMoneyEarned(int money, Point2D position) {
+        Text text = new Text(money + "G");
+        text.setFont(FXGLAssets.UI_FONT.newFont(18));
+        text.setFill(Color.GOLD);
+        text.setStroke(Color.GOLD);
+
+        Entity e = Entities.builder()
+                .at(position)
+                .viewFromNode(text)
+                .with(new ExpireCleanComponent(Duration.seconds(1.2)))
+                .buildAndAttach();
+
+        Entities.animationBuilder()
+                .duration(Duration.seconds(1))
+                .translate(e)
+                .from(position)
+                .to(position.add(0, -30))
+                .buildAndPlay();
     }
 
     public void showDamage(DamageResult damage, Point2D position) {

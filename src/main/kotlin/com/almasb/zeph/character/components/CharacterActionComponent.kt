@@ -2,7 +2,6 @@ package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.app.FXGL
 import com.almasb.fxgl.entity.Entity
-import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.extra.ai.pathfinding.AStarNode
 import com.almasb.fxgl.extra.entity.state.State
 import com.almasb.fxgl.extra.entity.state.StateComponent
@@ -173,7 +172,7 @@ class CharacterActionComponent : StateComponent() {
                     char.characterComponent.resetAtkTick()
 
                     if (attackTarget!!.hp.isZero) {
-                        FXGL.getAppCast<ZephyriaApp>().kill(attackTarget!!)
+                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
                         state = IDLE
                     }
                 }

@@ -62,6 +62,8 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
         equipProperty(EquipPlace.RIGHT_HAND).addListener { _, _, newWeapon ->
             weapon.value = newWeapon as Weapon
         }
+
+        weapon.value = getRightWeapon()
     }
 
     fun rewardMoney(amount: Int) {

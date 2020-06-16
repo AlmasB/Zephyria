@@ -4,35 +4,28 @@ import com.almasb.fxgl.animation.Animation;
 import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
-import com.almasb.fxgl.asset.FXGLAssets;
+import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.entity.Entities;
+import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.RenderLayer;
 import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.entity.view.EntityView;
-import com.almasb.fxgl.extra.ai.pathfinding.AStarGrid;
-import com.almasb.fxgl.extra.ai.pathfinding.NodeState;
-import com.almasb.fxgl.extra.entity.components.ExpireCleanComponent;
 import com.almasb.fxgl.input.Input;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.pathfinding.CellState;
+import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.physics.PhysicsWorld;
-import com.almasb.fxgl.settings.GameSettings;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
-import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.character.components.PlayerComponent;
+import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
+import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.item.WeaponData;
 import com.almasb.zeph.skill.SkillComponent;
 import com.almasb.zeph.skill.SkillUseResult;
-import com.almasb.zeph.combat.GameMath;
-import com.almasb.zeph.ui.BasicInfoView;
-import com.almasb.zeph.ui.CharInfoView;
-import com.almasb.zeph.ui.EquipmentView;
-import com.almasb.zeph.ui.InventoryView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -40,6 +33,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -51,7 +45,7 @@ import kotlin.Pair;
 import java.util.List;
 import java.util.Random;
 
-import static com.almasb.fxgl.app.DSLKt.*;
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -82,21 +76,11 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        Rectangle2D bounds = Screen.getPrimary().getBounds();
-
-        boolean full = false;
-        if (full) {
-            settings.setWidth((int)bounds.getWidth());
-            settings.setHeight((int)bounds.getHeight());
-        }
-        else {
-            settings.setWidth(1280);
-            settings.setHeight(768);
-        }
+        settings.setWidth(1280);
+        settings.setHeight(768);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.0.1");
         settings.setIntroEnabled(false);
-        settings.setMenuEnabled(false);
         settings.setProfilingEnabled(true);
         settings.setCloseConfirmation(false);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
@@ -282,8 +266,8 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initBackground() {
-        Entity bg = Entities.builder()
-                .buildAndAttach(getGameWorld());
+        Entity bg = entityBuilder()
+                .buildAndAttach();
 
         Region region = new Region();
         region.setPrefSize(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
@@ -293,9 +277,9 @@ public class ZephyriaApp extends GameApplication {
 
         region.setBackground(new Background(bgImg));
 
-        bg.getViewComponent().setView(region);
+        bg.getViewComponent().addChild(region);
 
-        bg.getViewComponent().getView().setOnMouseClicked(e -> {
+        bg.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
 
             if (selectingSkillTargetArea) {
                 useAreaSkill();
@@ -313,7 +297,7 @@ public class ZephyriaApp extends GameApplication {
             player.getActionComponent().orderMove(targetX, targetY);
         });
 
-        bg.getViewComponent().setRenderLayer(new RenderLayer("BACKGROUND", 0));
+        //bg.getViewComponent().setRenderLayer(new RenderLayer("BACKGROUND", 0));
 
         spawnTree(0, 0);
         spawnTree(0, MAP_HEIGHT - 1);
@@ -322,12 +306,12 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void spawnTree(int x, int y) {
-        Entity tree = Entities.builder()
+        Entity tree = entityBuilder()
                 .at(x * TILE_SIZE, y * TILE_SIZE - 85 + 64)
-                .viewFromTexture("tree2.png")
-                .buildAndAttach(getGameWorld());
+                .view("tree2.png")
+                .buildAndAttach();
 
-        grid.setNodeState(x, y, NodeState.NOT_WALKABLE);
+        grid.get(x, y).setState(CellState.NOT_WALKABLE);
     }
 
     private void showGrid() {
@@ -415,7 +399,7 @@ public class ZephyriaApp extends GameApplication {
 
         int levelDiff = character.getBaseLevel().get() - player.getBaseLevel().get();
 
-        int money = (levelDiff > 0 ? levelDiff * 5 : 0) + FXGLMath.random(character.getBaseLevel().get());
+        int money = (levelDiff > 0 ? levelDiff * 5 : 0) + FXGLMath.random(0, character.getBaseLevel().get());
 
         showMoneyEarned(money, player.getPosition());
 
@@ -441,7 +425,7 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initUI() {
         getGameScene().setUIMouseTransparent(false);
-        getGameScene().setCursor("main.png", new Point2D(52, 10));
+        //getGameScene().setCursor("main.png", new Point2D(52, 10));
 
         debug.setTranslateX(100);
         debug.setTranslateY(300);
@@ -449,10 +433,10 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
 //                new HotbarView(player),
-                new BasicInfoView(player),
-                new CharInfoView(player),
-                new InventoryView(player, getWidth(), getHeight()),
-                new EquipmentView(player, getWidth(), getHeight())
+//                new BasicInfoView(player),
+//                new CharInfoView(player),
+//                new InventoryView(player, getAppWidth(), getAppHeight()),
+//                new EquipmentView(player, getAppWidth(), getAppHeight())
         );
     }
 
@@ -470,9 +454,9 @@ public class ZephyriaApp extends GameApplication {
 
         Entity itemEntity = spawn("item", data);
         itemEntity.setProperty("weapon", new Weapon(Data.INSTANCE.getWeapon(itemID)));
-        itemEntity.getView().setOnMouseClicked(e -> {
-            player.getActionComponent().orderPickUp(itemEntity);
-        });
+//        itemEntity.getView().setOnMouseClicked(e -> {
+//            player.getActionComponent().orderPickUp(itemEntity);
+//        });
 
 
 //        view.setTranslateX(position.getX());
@@ -494,18 +478,17 @@ public class ZephyriaApp extends GameApplication {
     }
 
     public void showMoneyEarned(int money, Point2D position) {
-        Text text = new Text(money + "G");
-        text.setFont(FXGLAssets.UI_FONT.newFont(18));
+        Text text = getUIFactoryService().newText(money + "G", 18);
         text.setFill(Color.GOLD);
         text.setStroke(Color.GOLD);
 
-        Entity e = Entities.builder()
+        Entity e = entityBuilder()
                 .at(position)
-                .viewFromNode(text)
+                .view(text)
                 .with(new ExpireCleanComponent(Duration.seconds(1.2)))
                 .buildAndAttach();
 
-        Entities.animationBuilder()
+        animationBuilder()
                 .duration(Duration.seconds(1))
                 .translate(e)
                 .from(position)
@@ -514,26 +497,26 @@ public class ZephyriaApp extends GameApplication {
     }
 
     public void showDamage(DamageResult damage, Point2D position) {
-        Text text = new Text(damage.getValue() + (damage.getCritical() ? "!" : ""));
-        text.setFill(damage.getCritical() ? Color.RED : Color.WHITE);
-        text.setFont(FXGLAssets.UI_GAME_FONT.newFont(damage.getCritical() ? 24 : 22));
-        text.setStroke(damage.getCritical() ? Color.RED : Color.WHITE);
-
-        EntityView view = new EntityView();
-        view.addNode(text);
-        view.setTranslateX(position.getX() + random(-25, 0));
-        view.setTranslateY(position.getY());
-
-        getGameScene().addGameView(view);
-
-        Animation<?> anim = translate(view, position.add(random(-25, 0), random(-40, -25)), Duration.seconds(1));
-        anim.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
-        anim.startInPlayState();
-
-        Animation<?> anim2 = fadeOut(view, Duration.seconds(1.15));
-        anim2.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
-        anim2.setOnFinished(() -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
-        anim2.startInPlayState();
+//        Text text = new Text(damage.getValue() + (damage.getCritical() ? "!" : ""));
+//        text.setFill(damage.getCritical() ? Color.RED : Color.WHITE);
+//        text.setFont(FXGLAssets.UI_GAME_FONT.newFont(damage.getCritical() ? 24 : 22));
+//        text.setStroke(damage.getCritical() ? Color.RED : Color.WHITE);
+//
+//        EntityView view = new EntityView();
+//        view.addNode(text);
+//        view.setTranslateX(position.getX() + random(-25, 0));
+//        view.setTranslateY(position.getY());
+//
+//        getGameScene().addGameView(view);
+//
+//        Animation<?> anim = translate(view, position.add(random(-25, 0), random(-40, -25)), Duration.seconds(1));
+//        anim.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
+//        anim.startInPlayState();
+//
+//        Animation<?> anim2 = fadeOut(view, Duration.seconds(1.15));
+//        anim2.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
+//        anim2.setOnFinished(() -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
+//        anim2.startInPlayState();
     }
 
     private void initPlayer() {
@@ -634,13 +617,13 @@ public class ZephyriaApp extends GameApplication {
         CharacterEntity e = (CharacterEntity) spawn("char", data);
         e.getCharacterComponent().getArmorElement().set(element);
 
-        e.getView().setOnMouseClicked(event -> {
-            player.getActionComponent().orderAttack(e);
-
-//            DamageResult dmg = player.getPlayerComponent().attack(e);
+//        e.getView().setOnMouseClicked(event -> {
+//            player.getActionComponent().orderAttack(e);
 //
-//            showDamage(dmg, e.getCenter());
-        });
+////            DamageResult dmg = player.getPlayerComponent().attack(e);
+////
+////            showDamage(dmg, e.getCenter());
+//        });
     }
 
     public static void main(String[] args) {

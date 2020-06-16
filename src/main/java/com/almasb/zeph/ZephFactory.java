@@ -1,11 +1,14 @@
 package com.almasb.zeph;
 
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.*;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.item.WeaponData;
+
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -34,9 +37,8 @@ public class ZephFactory implements EntityFactory {
 
         // TODO: this is where from [data] we parse everything related to item
 
-        return Entities.builder()
-                .from(data)
-                .viewFromTexture(weaponData.getDescription().getTextureName())
+        return entityBuilder(data)
+                .view(weaponData.getDescription().getTextureName())
                 .build();
     }
 }

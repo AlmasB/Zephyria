@@ -1,6 +1,5 @@
 package com.almasb.zeph.character.components
 
-import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Config
 import com.almasb.zeph.Data
 import com.almasb.zeph.character.*

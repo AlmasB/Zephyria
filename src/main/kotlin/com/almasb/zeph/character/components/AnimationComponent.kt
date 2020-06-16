@@ -1,6 +1,6 @@
 package com.almasb.zeph.character.components
 
-import com.almasb.fxgl.app.texture
+import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
@@ -62,17 +62,17 @@ class AnimationComponent(textureName: String) : Component() {
                 .subTexture(Rectangle2D(0.0, Config.tileSize * 20.0, Config.tileSize * 6.0, Config.tileSize * 1.0))
                 .image
 
-        channelIdle = AnimationChannel(textureName, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 10, 9 * 10)
+        channelIdle = AnimationChannel(texture(textureName).image, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 10, 9 * 10)
 
-        channelWalkDown = AnimationChannel(textureName, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 10, 9 * 10 +  9 -1)
-        channelWalkRight = AnimationChannel(textureName, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 11, 9 * 11 +  9 -1)
-        channelWalkUp = AnimationChannel(textureName, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 8, 9 * 8 +  9 -1)
-        channelWalkLeft = AnimationChannel(textureName, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 9, 9 * 9 +  9 -1)
+        channelWalkDown = AnimationChannel(texture(textureName).image, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 10, 9 * 10 +  9 -1)
+        channelWalkRight = AnimationChannel(texture(textureName).image, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 11, 9 * 11 +  9 -1)
+        channelWalkUp = AnimationChannel(texture(textureName).image, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 8, 9 * 8 +  9 -1)
+        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 9 * 9, 9 * 9 +  9 -1)
 
-        channelSlashDown = AnimationChannel(textureName, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
-        channelSlashRight = AnimationChannel(textureName, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
-        channelSlashUp = AnimationChannel(textureName, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
-        channelSlashLeft = AnimationChannel(textureName, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
+        channelSlashDown = AnimationChannel(texture(textureName).image, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
+        channelSlashRight = AnimationChannel(texture(textureName).image, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
+        channelSlashUp = AnimationChannel(texture(textureName).image, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
+        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
 
         channelDeath = AnimationChannel(imageDeath, 6, Config.tileSize, Config.tileSize, Duration.seconds(1.2), 0, 6 - 1)
 
@@ -102,7 +102,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onAdded() {
-        entity.viewComponent.setView(animatedTexture)
+        entity.viewComponent.addChild(animatedTexture)
     }
 
     fun playDeath(onFinished: Runnable) {

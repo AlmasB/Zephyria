@@ -1,10 +1,12 @@
 package com.almasb.zeph.character.components
 
-import com.almasb.fxgl.app.FXGL
+import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.entity.Entity
-import com.almasb.fxgl.extra.ai.pathfinding.AStarNode
-import com.almasb.fxgl.extra.entity.state.State
-import com.almasb.fxgl.extra.entity.state.StateComponent
+import com.almasb.fxgl.entity.component.Component
+import com.almasb.fxgl.entity.state.EntityState
+import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.pathfinding.astar.AStarCell
+import com.almasb.fxgl.pathfinding.astar.AStarPathfinder
 import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
@@ -17,36 +19,29 @@ import javafx.geometry.Point2D
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class CharacterActionComponent : StateComponent() {
+class CharacterActionComponent : Component() {
 
     private var attackTarget: CharacterEntity? = null
     private var pickUpTarget: Entity? = null
     private var moveTarget: Point2D? = null
 
+    private lateinit var state: StateComponent
     private lateinit var char: CharacterEntity
     private lateinit var animationComponent: AnimationComponent
 
-    private val IDLE: State = object : State() {
-        override fun onEnter(prevState: State?) {
+    private val IDLE: EntityState = object : EntityState() {
+        override fun onEnteredFrom(prevState: EntityState?) {
             if (prevState != null)
                 animationComponent.loopIdle()
         }
-
-        override fun onUpdate(tpf: Double) {
-
-        }
     }
 
-    private val MOVE: State = object : State() {
-        override fun onEnter(prevState: State?) {
-            //
-        }
+    private val MOVE: EntityState = object : EntityState() {
 
         private val grid = FXGL.getAppCast<ZephyriaApp>().grid
-        protected var path: MutableList<AStarNode> = arrayListOf()
+        protected var path: MutableList<AStarCell> = arrayListOf()
 
         override fun onUpdate(tpf: Double) {
-
             doMove()
 
             if (moveTarget != null) {
@@ -54,7 +49,7 @@ class CharacterActionComponent : StateComponent() {
                 moveTo(moveTarget!!.x.toInt(), moveTarget!!.y.toInt())
 
                 if (path.isEmpty()) {
-                    state = IDLE
+                    state.changeStateToIdle()
                 }
 
             } else if (attackTarget != null) {
@@ -64,7 +59,7 @@ class CharacterActionComponent : StateComponent() {
                 moveTo(x, y)
 
                 if (path.isEmpty()) {
-                    state = ATTACK
+                    state.changeState(ATTACK)
                 }
 
             } else if (pickUpTarget != null) {
@@ -82,7 +77,7 @@ class CharacterActionComponent : StateComponent() {
                     (char as PlayerEntity).inventory.addItem(weapon);
                     item.removeFromWorld()
 
-                    state = IDLE
+                    state.changeStateToIdle()
                 }
             }
         }
@@ -91,8 +86,8 @@ class CharacterActionComponent : StateComponent() {
             while (!path.isEmpty()) {
                 val node = path[0]
 
-                var dx = node.x * Config.tileSize - char.positionComponent.x
-                var dy = node.y * Config.tileSize - char.positionComponent.y
+                var dx = node.x * Config.tileSize - char.x
+                var dy = node.y * Config.tileSize - char.y
 
                 dx = Math.signum(dx)
                 dy = Math.signum(dy)
@@ -117,7 +112,7 @@ class CharacterActionComponent : StateComponent() {
                 dx *= 2.0
                 dy *= 2.0
 
-                char.positionComponent.translate(dx, dy)
+                char.translate(dx, dy)
                 break
             }
         }
@@ -153,12 +148,12 @@ class CharacterActionComponent : StateComponent() {
             val startX = char.characterComponent.getTileX()
             val startY = char.characterComponent.getTileY()
 
-            path = grid.getPath(startX, startY, x, y)
+            path = AStarPathfinder(grid).findPath(startX, startY, x, y)
         }
     }
 
-    private val ATTACK: State = object : State() {
-        override fun onEnter(prevState: State?) {
+    private val ATTACK: EntityState = object : EntityState() {
+        override fun onEnteredFrom(prevState: EntityState?) {
             animationComponent.loopAttack()
         }
 
@@ -173,18 +168,14 @@ class CharacterActionComponent : StateComponent() {
 
                     if (attackTarget!!.hp.isZero) {
                         FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
-                        state = IDLE
+                        state.changeStateToIdle()
                     }
                 }
 
             } else {
-                state = MOVE
+                state.changeState(MOVE)
             }
         }
-    }
-
-    init {
-        state = IDLE
     }
 
     override fun onAdded() {
@@ -194,7 +185,7 @@ class CharacterActionComponent : StateComponent() {
     fun orderMove(x: Int, y: Int) {
         reset()
         moveTarget = Point2D(x.toDouble(), y.toDouble())
-        state = MOVE
+        state.changeState(MOVE)
     }
 
     fun orderAttack(target: CharacterEntity) {
@@ -202,9 +193,9 @@ class CharacterActionComponent : StateComponent() {
         attackTarget = target
 
         if (char.characterComponent.isInWeaponRange(target)) {
-            state = ATTACK
+            state.changeState(ATTACK)
         } else {
-            state = MOVE
+            state.changeState(MOVE)
         }
     }
 
@@ -218,7 +209,7 @@ class CharacterActionComponent : StateComponent() {
             (char as PlayerEntity).inventory.addItem(weapon);
             item.removeFromWorld()
         } else {
-            state = MOVE
+            state.changeState(MOVE)
         }
     }
 

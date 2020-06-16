@@ -97,7 +97,6 @@ public class AttributesComponent extends Component {
     private Map<Attribute, NumberBinding> bindings = new HashMap<>();
 
     public NumberBinding totalAttributeProperty(Attribute attribute) {
-        //return attributeProperty(attribute).add(bAttributeProperty(attribute));
         return bindings.get(attribute);
     }
 

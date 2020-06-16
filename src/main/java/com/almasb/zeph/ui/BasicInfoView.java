@@ -1,6 +1,6 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.ui.InGameWindow;
+import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.character.PlayerEntity;
@@ -15,12 +15,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-public class BasicInfoView extends InGameWindow {
+public class BasicInfoView extends MDIWindow {
 
     public BasicInfoView(PlayerEntity player) {
-        super("Basic Info", WindowDecor.MINIMIZE);
+        //super("Basic Info", WindowDecor.MINIMIZE);
 
-        setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
+
+
+        //setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
         setPrefSize(340, 240);
         setCanResize(false);
 

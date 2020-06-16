@@ -101,7 +101,6 @@ public class StatsComponent extends Component {
      * @return total value for stat, including bonuses
      */
     public double getTotalStat(Stat stat) {
-        //return getBaseStat(stat) + getBonusStat(stat);
         return bindings.get(stat).doubleValue();
     }
 

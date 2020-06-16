@@ -15,18 +15,12 @@ class DescriptionBuilder(
 
 
 /**
- * Static description of an object.
+ * Static immutable description of an object.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 data class Description(
-        val id: Int = 0,
-        val name: String = "Unnamed",
+        val id: Int = -1,
+        val name: String = "Unnamed object",
         val description: String = "No description",
-        val textureName: String = "") {
-
-//    val id = SimpleIntegerProperty(id)
-//    val name = SimpleStringProperty(name)
-//    val description = SimpleStringProperty(description)
-//    val textureName = SimpleStringProperty(textureName)
-}
+        val textureName: String = "null_object.png")

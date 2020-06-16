@@ -1,23 +1,28 @@
 package com.almasb.zeph.item
 
-import com.almasb.fxgl.entity.Entity
-import com.almasb.zeph.character.PlayerEntity
-import com.almasb.zeph.combat.Element
+import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Stat
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 
+enum class WeaponType(val range: Int, val aspdFactor: Float) {
+
+    ONE_H_SWORD(2, 0.85f), ONE_H_AXE(2, 0.95f), DAGGER(1, 1.25f), SPEAR(3, 0.85f), MACE(2, 1.0f), ROD(5, 0.9f), SHIELD(0, 0.9f), // 1H, shield only left-hand
+    TWO_H_SWORD(2, 0.7f), TWO_H_AXE(2, 0.65f), KATAR(1, 0.85f), BOW(5, 0.75f);
+
+    fun isTwoHanded() = this.ordinal >= TWO_H_SWORD.ordinal
+}
+
 /**
  * Weapon item.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Weapon(data: WeaponData) : Item(data.description) {
+class Weapon(data: WeaponData) : EquipItem(data.description, data.itemLevel, data.runes) {
 
-    val refineLevel = SimpleIntegerProperty()
-    val element = SimpleObjectProperty<Element>(data.element)
+    val element = SimpleObjectProperty(data.element)
 
     val pureDamage = SimpleIntegerProperty()
 
@@ -38,37 +43,19 @@ class Weapon(data: WeaponData) : Item(data.description) {
                 .concat(description.description + "\n")
                 .concat(element.asString("Element: %s").concat("\n"))
                 .concat(pureDamage.asString("Damage: %d").concat("\n"))
-                .concat("${data.runes}")
+                .concat(runes)
         )
     }
 
-    fun onEquip(char: PlayerEntity) {
-        // TODO: dynamic runes, not data runes
-
-//        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
-//
-//        data.runes.forEach { attrs.addBonusAttribute(it.attribute, it.bonus) }
+    override fun onEquip(char: CharacterEntity) {
+        super.onEquip(char)
 
         char.stats.addBonusStat(Stat.ATK, pureDamage.value)
     }
 
-    fun onUnEquip(char: PlayerEntity) {
-//        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
-//
-//        data.runes.forEach { attrs.addBonusAttribute(it.attribute, -it.bonus) }
+    override fun onUnEquip(char: CharacterEntity) {
+        super.onUnEquip(char)
 
         char.stats.addBonusStat(Stat.ATK, -pureDamage.value)
     }
-
-    // TODO:
-//    fun refine() {
-//        if (refineLevel >= 5) {
-//            return
-//        }
-//
-//        if (GameMath.checkChance(100 - refineLevel * itemLevel.refineChanceReduction))
-//            refineLevel++
-//        else if (refineLevel > 0)
-//            refineLevel--
-//    }
 }

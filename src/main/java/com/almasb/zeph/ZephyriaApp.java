@@ -1,12 +1,9 @@
 package com.almasb.zeph;
 
-import com.almasb.fxgl.animation.Animation;
-import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
@@ -15,6 +12,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.physics.PhysicsWorld;
+import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.character.components.PlayerComponent;
@@ -26,6 +24,7 @@ import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.item.WeaponData;
 import com.almasb.zeph.skill.SkillComponent;
 import com.almasb.zeph.skill.SkillUseResult;
+import com.almasb.zeph.ui.BasicInfoView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -33,12 +32,10 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.util.Duration;
 import kotlin.Pair;
 
@@ -79,33 +76,23 @@ public class ZephyriaApp extends GameApplication {
         settings.setWidth(1280);
         settings.setHeight(768);
         settings.setTitle("Zephyria RPG");
-        settings.setVersion("0.0.1");
-        settings.setIntroEnabled(false);
-        settings.setProfilingEnabled(true);
-        settings.setCloseConfirmation(false);
+        settings.setVersion("0.1");
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
     @Override
     protected void initInput() {
-        Input input = getInput();
-
         for (int i = 1; i <= 9; i++) {
             KeyCode key = KeyCode.getKeyCode(i + "");
 
             final int index = i - 1;
 
-            input.addAction(new UserAction("Hotbar Skill " + i) {
-                @Override
-                protected void onActionBegin() {
-                    onHotbarSkill(index);
-                }
-            }, key);
+            onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
         }
 
         onKeyDown(KeyCode.K, "Spawn Dev", () -> {
-            spawnSkeletonArcher(800, 50, Element.NEUTRAL);
-            spawnSkeletonArcher(800, 100, Element.FIRE);
+            spawnCharacter(800, 50, Data.Character.INSTANCE.SKELETON_WARRIOR());
+            spawnCharacter(800, 100, Data.Character.INSTANCE.SKELETON_MAGE());
             spawnSkeletonArcher(800, 150, Element.AIR);
             spawnSkeletonArcher(800, 200, Element.WATER);
             spawnSkeletonArcher(800, 250, Element.EARTH);
@@ -235,7 +222,7 @@ public class ZephyriaApp extends GameApplication {
 
         //showGrid();
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
-        //getGameScene().getViewport().bindToEntity(player, getWidth() / 2, getHeight() / 2);
+        getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
 
 //        selected.addListener((observable, oldValue, newEntity) -> {
 //            if (oldValue != null) {
@@ -266,38 +253,34 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initBackground() {
-        Entity bg = entityBuilder()
-                .buildAndAttach();
-
         Region region = new Region();
         region.setPrefSize(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
 
-        BackgroundImage bgImg = new BackgroundImage(getAssetLoader().loadTexture("tile.png").getImage(),
+        BackgroundImage bgImg = new BackgroundImage(image("tile.png"),
                 BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 
         region.setBackground(new Background(bgImg));
 
-        bg.getViewComponent().addChild(region);
+        Entity bg = entityBuilder()
+                .zIndex(-1000)
+                .view(region)
+                .onClick(bgEntity -> {
+                    if (selectingSkillTargetArea) {
+                        useAreaSkill();
 
-        bg.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, e -> {
+                        selectingSkillTargetArea = false;
+                        selectedSkillIndex = -1;
+                        return;
+                    }
 
-            if (selectingSkillTargetArea) {
-                useAreaSkill();
+                    selected.set(null);
 
-                selectingSkillTargetArea = false;
-                selectedSkillIndex = -1;
-                return;
-            }
+                    int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
+                    int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
-            selected.set(null);
-
-            int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
-            int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
-
-            player.getActionComponent().orderMove(targetX, targetY);
-        });
-
-        //bg.getViewComponent().setRenderLayer(new RenderLayer("BACKGROUND", 0));
+                    player.getActionComponent().orderMove(targetX, targetY);
+                })
+                .buildAndAttach();
 
         spawnTree(0, 0);
         spawnTree(0, MAP_HEIGHT - 1);
@@ -425,7 +408,7 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initUI() {
         getGameScene().setUIMouseTransparent(false);
-        //getGameScene().setCursor("main.png", new Point2D(52, 10));
+        getGameScene().setCursor(image("ui/cursors/main.png"), new Point2D(52, 10));
 
         debug.setTranslateX(100);
         debug.setTranslateY(300);
@@ -433,7 +416,7 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
 //                new HotbarView(player),
-//                new BasicInfoView(player),
+                new BasicInfoView(player)
 //                new CharInfoView(player),
 //                new InventoryView(player, getAppWidth(), getAppHeight()),
 //                new EquipmentView(player, getAppWidth(), getAppHeight())
@@ -616,6 +599,22 @@ public class ZephyriaApp extends GameApplication {
 
         CharacterEntity e = (CharacterEntity) spawn("char", data);
         e.getCharacterComponent().getArmorElement().set(element);
+
+//        e.getView().setOnMouseClicked(event -> {
+//            player.getActionComponent().orderAttack(e);
+//
+////            DamageResult dmg = player.getPlayerComponent().attack(e);
+////
+////            showDamage(dmg, e.getCenter());
+//        });
+    }
+
+    private void spawnCharacter(int x, int y, CharacterData charData) {
+        SpawnData data = new SpawnData(x, y);
+
+        data.put("charData", charData);
+
+        CharacterEntity e = (CharacterEntity) spawn("char", data);
 
 //        e.getView().setOnMouseClicked(event -> {
 //            player.getActionComponent().orderAttack(e);

@@ -3,23 +3,19 @@ package com.almasb.zeph.character.components
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
+import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.Inventory
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.HPComponent
-import com.almasb.zeph.entity.character.component.SPComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
-import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.skill.SkillComponent
 import com.almasb.zeph.skill.SkillUseResult
-import com.almasb.zeph.combat.GameMath
-import com.almasb.zeph.combat.StatusEffect
-import javafx.beans.binding.Bindings.*
+import javafx.beans.binding.Bindings.createDoubleBinding
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -34,7 +30,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
 
     val baseLevel = SimpleIntegerProperty(1)
     val hp = HPComponent()
-    val sp = SPComponent()
+    val sp = HPComponent()
 
     val attributes = AttributesComponent()
     val stats = StatsComponent()

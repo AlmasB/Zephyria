@@ -1,7 +1,6 @@
 package com.almasb.zeph.item
 
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Stat
 import javafx.beans.binding.Bindings
@@ -9,14 +8,17 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 
+enum class ArmorType {
+    HELM, BODY, SHOES
+}
+
 /**
  * Armor item.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Armor(data: ArmorData) : Item(data.description) {
+class Armor(data: ArmorData) : EquipItem(data.description, data.itemLevel, data.runes) {
 
-    val refineLevel = SimpleIntegerProperty()
     val element = SimpleObjectProperty<Element>()
 
     val armor = SimpleIntegerProperty()
@@ -45,26 +47,19 @@ class Armor(data: ArmorData) : Item(data.description) {
                 .concat(element.asString("Element: %s").concat("\n"))
                 .concat(armor.asString("Armor: %d").concat("%\n"))
                 .concat(marmor.asString("MArmor: %d").concat("%\n"))
-                .concat("${data.runes}")
+                .concat(runes)
         )
     }
 
-    fun onEquip(char: PlayerEntity) {
-//        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
-//
-//        // TODO: must use actual runes not data
-//        data.runes.forEach { attrs.addBonusAttribute(it.attribute, it.bonus) }
-//
+    override fun onEquip(char: CharacterEntity) {
+        super.onEquip(char)
 
         char.stats.addBonusStat(Stat.ARM, armor.value)
         char.stats.addBonusStat(Stat.MARM, marmor.value)
     }
 
-    fun onUnEquip(char: PlayerEntity) {
-//        val attrs = entity.getComponentUnsafe(AttributesComponent::class.java)
-//
-//        data.runes.forEach { attrs.addBonusAttribute(it.attribute, -it.bonus) }
-//
+    override fun onUnEquip(char: CharacterEntity) {
+        super.onUnEquip(char)
 
         char.stats.addBonusStat(Stat.ARM, -armor.value)
         char.stats.addBonusStat(Stat.MARM, -marmor.value)

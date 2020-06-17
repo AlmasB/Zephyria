@@ -1,8 +1,6 @@
 package com.almasb.zeph.character
 
-import com.almasb.zeph.character.components.CharacterComponent
 import com.almasb.zeph.character.components.PlayerComponent
-import com.almasb.zeph.item.Item
 
 /**
  * PlayerComponent and CharacterComponent both are the same instance for this entity.

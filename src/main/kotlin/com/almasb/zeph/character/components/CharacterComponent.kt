@@ -163,7 +163,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
         val vit = attributes.totalAttributeProperty(VITALITY)
         val dex = attributes.totalAttributeProperty(DEXTERITY)
         val agi = attributes.totalAttributeProperty(AGILITY)
-        val int_ = attributes.totalAttributeProperty(INTELLECT)
+        val int = attributes.totalAttributeProperty(INTELLECT)
         val wis = attributes.totalAttributeProperty(WISDOM)
         val wil = attributes.totalAttributeProperty(WILLPOWER)
         val per = attributes.totalAttributeProperty(PERCEPTION)
@@ -177,7 +177,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
 
         stats.statProperty(MAX_SP).bind(createDoubleBinding(Callable {
             1.0 + wis() * 0.4 + wil() * 0.3 + level() * 0.25 + (wis() / 10).toDouble() + int_() * 0.3 + charClass.value.sp * level()
-        }, wis, wil, level, int_))
+        }, wis, wil, level, int))
 
         stats.statProperty(HP_REGEN).bind(createDoubleBinding(Callable{ 1 + vit() * 0.1 },
                 vit))
@@ -189,19 +189,19 @@ open class CharacterComponent(data: CharacterData) : Component() {
                 str, dex, per, luc, level))
 
         stats.statProperty(MATK).bind(createDoubleBinding(Callable{ int_() * 0.5 + wis() * 0.4 + wil() * 0.4 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 },
-                int_, dex, per, luc))
+                int, dex, per, luc))
 
         stats.statProperty(DEF).bind(createDoubleBinding(Callable{ vit() * 0.5 + per() * 0.2 + str() * 0.1 + level() * 0.25 + (vit() / 20).toDouble() },
                 vit, per, str, level))
 
         stats.statProperty(MDEF).bind(createDoubleBinding(Callable{ wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int_() * 0.1 + level() * 0.25 + (wil() / 20 * int_() / 10).toDouble() },
-                wil, wis, per, int_, level))
+                wil, wis, per, int, level))
 
         stats.statProperty(ASPD).bind(createDoubleBinding(Callable{ agi() * 0.5 + dex() * 0.2 },
                 agi, dex))
 
         stats.statProperty(MSPD).bind(createDoubleBinding(Callable{ dex() * 0.3 + wil() * 0.1 + wis() * 0.1 + int_() * 0.1 + per() * 0.1 + luc() * 0.1 },
-                dex, wil, wis, int_, per, luc))
+                dex, wil, wis, int, per, luc))
 
         stats.statProperty(CRIT_CHANCE).bind(createDoubleBinding(Callable{ luc() * 0.5 + per() * 0.1 + wis() * 0.1 },
                 luc, per, wis))
@@ -453,8 +453,6 @@ open class CharacterComponent(data: CharacterData) : Component() {
     }
 
     fun kill() {
-
-
         char.setUpdateEnabled(false)
         char.animationComponent.playDeath(Runnable { char.removeFromWorld() })
     }

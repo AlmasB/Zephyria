@@ -4,6 +4,25 @@ import com.almasb.zeph.Description
 import javafx.beans.property.DoubleProperty
 import javafx.beans.property.SimpleDoubleProperty
 
+enum class Status {
+
+    /**
+     * Stunned character is not able to perform any actions.
+     */
+    STUNNED,
+
+    /**
+     * Silenced character is not able to use any skills.
+     */
+    SILENCED,
+
+    /**
+     * Poisoned character doesn't regenerate hp/sp
+     * and loses 1% of max hp/sp instead.
+     */
+    POISONED
+}
+
 /**
  * An effect that changes status of a character for the duration.
  *
@@ -21,3 +40,9 @@ class StatusEffect(data: StatusEffectData) {
 
     fun getID() = desc.id
 }
+
+data class StatusEffectData(
+        val description: Description,
+        val status: Status,
+        val duration: Double
+)

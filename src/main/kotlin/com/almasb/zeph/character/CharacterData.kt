@@ -52,11 +52,6 @@ fun char(setup: CharacterDataBuilder.() -> Unit): CharacterData {
     return builder.build()
 }
 
-/**
- *
- *
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
 data class CharacterData(
         val description: Description,
         val type: CharacterType,

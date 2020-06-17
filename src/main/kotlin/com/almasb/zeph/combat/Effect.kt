@@ -1,5 +1,6 @@
 package com.almasb.zeph.combat
 
+import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
 
 /**
@@ -26,3 +27,10 @@ class Effect(val data: EffectData) {
 
     fun getID() = data.description.id
 }
+
+data class EffectData(
+        val description: Description,
+        val duration: Double,
+        val runes: List<Rune>,
+        val essences: List<Essence>
+)

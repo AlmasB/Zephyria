@@ -19,6 +19,7 @@ import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
+import com.almasb.zeph.item.UsableItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.item.WeaponData;
 import com.almasb.zeph.skill.SkillComponent;
@@ -96,8 +97,10 @@ public class ZephyriaApp extends GameApplication {
             spawnSkeletonArcher(800, 200, Element.WATER);
             spawnSkeletonArcher(800, 250, Element.EARTH);
 
-            dropItem(4001, new Point2D(800, 400));
-            dropItem(4001, new Point2D(800, 500));
+            spawnItem(4001, new Point2D(800, 400));
+            spawnItem(4001, new Point2D(800, 500));
+
+            spawnItem(new Point2D(800, 600), Data.UsableItem.HEALING_POTION());
         });
 
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
@@ -394,7 +397,7 @@ public class ZephyriaApp extends GameApplication {
             int chance = p.getSecond();
 
             if (GameMath.INSTANCE.checkChance(chance)) {
-                dropItem(itemID, character.getPosition());
+                spawnItem(itemID, character.getPosition());
             }
         });
 
@@ -422,7 +425,14 @@ public class ZephyriaApp extends GameApplication {
         );
     }
 
-    private void dropItem(int itemID, Point2D position) {
+    private void spawnItem(Point2D position, UsableItemData itemData) {
+        SpawnData data = new SpawnData(position);
+        data.put("itemData", itemData);
+
+        Entity itemEntity = spawn("item", data);
+    }
+
+    private void spawnItem(int itemID, Point2D position) {
 
         SpawnData data = new SpawnData(position);
 

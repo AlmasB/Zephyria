@@ -6,6 +6,7 @@ import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
+import com.almasb.zeph.item.UsableItemData;
 import com.almasb.zeph.item.WeaponData;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -33,12 +34,20 @@ public class ZephFactory implements EntityFactory {
 
     @Spawns("item")
     public Entity newItem(SpawnData data) {
-        WeaponData weaponData = data.get("weaponData");
+        Description description;
+
+        if (data.hasKey("weaponData")) {
+            WeaponData weaponData = data.get("weaponData");
+            description = weaponData.getDescription();
+        } else {
+            UsableItemData itemData = data.get("itemData");
+            description = itemData.getDescription();
+        }
 
         // TODO: this is where from [data] we parse everything related to item
 
         return entityBuilder(data)
-                .view(weaponData.getDescription().getTextureName())
+                .view(description.getTextureName())
                 .build();
     }
 }

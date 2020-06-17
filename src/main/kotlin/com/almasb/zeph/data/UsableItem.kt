@@ -13,6 +13,7 @@ class UsableItem {
             id = 9000
             name = "Healing Potion"
             description = "Restores 50 HP"
+            textureName = "items/usable/healing_potion.png"
         }
 
         beforeUseScript = {

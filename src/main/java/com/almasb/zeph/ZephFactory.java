@@ -18,16 +18,25 @@ public class ZephFactory implements EntityFactory {
     public Entity newCharacter(SpawnData data) {
         CharacterData charData = data.get("charData");
 
-        CharacterEntity entity = new CharacterEntity(charData);
-        entity.setX(data.getX());
-        entity.setY(data.getY());
-        entity.setType(EntityType.CHARACTER);
+        try {
 
-        entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.tileSize, Config.tileSize)));
+            CharacterEntity entity = new CharacterEntity(charData);
+            entity.setX(data.getX());
+            entity.setY(data.getY());
+            entity.setType(EntityType.CHARACTER);
 
-        // TODO: parse properties from [charData]
+            entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.tileSize, Config.tileSize)));
 
-        return entity;
+            // TODO: parse properties from [charData]
+
+
+            return entity;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        throw new RuntimeException("Failed to create char: " + data);
     }
 
     @Spawns("item")

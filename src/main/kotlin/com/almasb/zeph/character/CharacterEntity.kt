@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.components.AnimationComponent
 import com.almasb.zeph.character.components.CharacterActionComponent
+import com.almasb.zeph.character.components.CharacterChildViewComponent
 import com.almasb.zeph.character.components.CharacterComponent
 
 /**
@@ -38,6 +39,7 @@ open class CharacterEntity(val data: CharacterData, val characterComponent: Char
         addComponent(characterComponent)
         addComponent(animationComponent)
         addComponent(actionComponent)
+        addComponent(CharacterChildViewComponent())
     }
 
     fun kill() {

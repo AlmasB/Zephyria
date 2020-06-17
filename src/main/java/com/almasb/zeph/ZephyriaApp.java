@@ -435,6 +435,8 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void spawnCharacter(int x, int y, CharacterData charData) {
+        System.out.println("Spawning " + charData + " at " + x + "," + y);
+
         SpawnData data = new SpawnData(x, y);
         data.put("charData", charData);
 

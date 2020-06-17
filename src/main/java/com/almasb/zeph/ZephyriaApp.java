@@ -1,16 +1,18 @@
 package com.almasb.zeph;
 
+import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.GameView;
 import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.entity.components.ViewComponent;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.physics.PhysicsWorld;
+import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
@@ -20,11 +22,10 @@ import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
+import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.item.UsableItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.item.WeaponData;
-import com.almasb.zeph.skill.SkillComponent;
-import com.almasb.zeph.skill.SkillUseResult;
 import com.almasb.zeph.ui.BasicInfoView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -33,6 +34,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -92,16 +94,15 @@ public class ZephyriaApp extends GameApplication {
         }
 
         onKeyDown(KeyCode.K, "Spawn Dev", () -> {
-            spawnCharacter(800, 50, Data.Character.INSTANCE.SKELETON_WARRIOR());
-            spawnCharacter(800, 100, Data.Character.INSTANCE.SKELETON_MAGE());
-            spawnSkeletonArcher(800, 150, Element.AIR);
-            spawnSkeletonArcher(800, 200, Element.WATER);
-            spawnSkeletonArcher(800, 250, Element.EARTH);
+            spawnCharacter(800, 50, Data.Character.SKELETON_WARRIOR());
+            spawnCharacter(800, 100, Data.Character.SKELETON_MAGE());
+            spawnCharacter(800, 150, Data.Character.SKELETON_ARCHER());
+            spawnCharacter(800, 200, Data.Character.SKELETON_WARRIOR());
+            spawnCharacter(800, 250, Data.Character.SKELETON_ARCHER());
 
-            spawnItem(4001, new Point2D(800, 400));
-            spawnItem(4001, new Point2D(800, 500));
-
-            spawnItem(new Point2D(800, 600), Data.UsableItem.HEALING_POTION());
+            spawnItem(800, 500, Data.Weapon.KNIFE());
+            spawnItem(800, 550, Data.Weapon.KNIFE());
+            spawnItem(800, 600, Data.UsableItem.HEALING_POTION());
         });
 
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
@@ -287,10 +288,12 @@ public class ZephyriaApp extends GameApplication {
             int chance = p.getSecond();
 
             if (GameMath.INSTANCE.checkChance(chance)) {
-                spawnItem(itemID, character.getPosition());
+                // TODO: get item data from itemID
+                //spawnItem(character.getPosition());
             }
         });
 
+        // TODO:
 //        character.getViewComponent().getView().setOnMouseClicked(null);
 //        selected.set(null);
     }
@@ -315,48 +318,27 @@ public class ZephyriaApp extends GameApplication {
         );
     }
 
-    private void spawnItem(Point2D position, UsableItemData itemData) {
-        SpawnData data = new SpawnData(position);
+
+
+
+
+    private void spawnItem(int x, int y, ItemData itemData) {
+        SpawnData data = new SpawnData(x, y);
         data.put("itemData", itemData);
 
         Entity itemEntity = spawn("item", data);
-    }
 
-    private void spawnItem(int itemID, Point2D position) {
+        itemEntity.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            player.getActionComponent().orderPickUp(itemEntity);
+        });
 
-        SpawnData data = new SpawnData(position);
-
-        if (Data.INSTANCE.isWeapon(itemID)) {
-            WeaponData weaponData = Data.INSTANCE.getWeapon(itemID);
-            data.put("weaponData", weaponData);
-        } else if (Data.INSTANCE.isArmor(itemID)) {
-
-            // TODO:
-        }
-
-        Entity itemEntity = spawn("item", data);
-        itemEntity.setProperty("weapon", new Weapon(Data.INSTANCE.getWeapon(itemID)));
-//        itemEntity.getView().setOnMouseClicked(e -> {
-//            player.getActionComponent().orderPickUp(itemEntity);
-//        });
-
-
-//        view.setTranslateX(position.getX());
-//        view.setTranslateY(position.getY());
-//        view.setCursor(Cursor.CLOSED_HAND);
-//
-//        view.setOnMouseClicked(event -> {
-//            getGameScene().removeGameView(view);
-//            player.getInventory().addItem(item);
-//        });
-//
-//        getGameScene().addGameView(view);
-//
-//        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.3), view);
-//        tt.setInterpolator(Interpolator.EASE_IN);
-//        tt.setByX(new Random().nextInt(20) - 10);
-//        tt.setByY(10 + new Random().nextInt(10));
-//        tt.play();
+        animationBuilder()
+                .duration(Duration.seconds(0.3))
+                .interpolator(Interpolators.SMOOTH.EASE_IN())
+                .translate(itemEntity)
+                .from(itemEntity.getPosition())
+                .to(itemEntity.getPosition().add(FXGLMath.randomPoint2D().multiply(20)))
+                .buildAndPlay();
     }
 
     public void showMoneyEarned(int money, Point2D position) {
@@ -379,26 +361,30 @@ public class ZephyriaApp extends GameApplication {
     }
 
     public void showDamage(DamageResult damage, Point2D position) {
-//        Text text = new Text(damage.getValue() + (damage.getCritical() ? "!" : ""));
-//        text.setFill(damage.getCritical() ? Color.RED : Color.WHITE);
-//        text.setFont(FXGLAssets.UI_GAME_FONT.newFont(damage.getCritical() ? 24 : 22));
-//        text.setStroke(damage.getCritical() ? Color.RED : Color.WHITE);
-//
-//        EntityView view = new EntityView();
-//        view.addNode(text);
-//        view.setTranslateX(position.getX() + random(-25, 0));
-//        view.setTranslateY(position.getY());
-//
-//        getGameScene().addGameView(view);
-//
-//        Animation<?> anim = translate(view, position.add(random(-25, 0), random(-40, -25)), Duration.seconds(1));
-//        anim.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
-//        anim.startInPlayState();
-//
-//        Animation<?> anim2 = fadeOut(view, Duration.seconds(1.15));
-//        anim2.getAnimatedValue().setInterpolator(Interpolators.EXPONENTIAL.EASE_OUT());
-//        anim2.setOnFinished(() -> getGameScene().removeGameView(view, RenderLayer.DEFAULT));
-//        anim2.startInPlayState();
+        var text = getUIFactoryService().newText(
+                damage.getValue() + (damage.isCritical() ? "!" : ""),
+                damage.isCritical() ? Color.RED : Color.WHITE,
+                FontType.GAME,
+                damage.isCritical() ? 28 : 26
+        );
+        text.setStroke(damage.isCritical() ? Color.RED : Color.WHITE);
+
+        var view = new GameView(text, 100);
+
+        getGameScene().addGameView(view);
+
+        animationBuilder()
+                .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
+                .translate(text)
+                .from(new Point2D(position.getX() + random(-25, 0), position.getY()))
+                .to(position.add(random(-25, 0), random(-40, -25)))
+                .buildAndPlay();
+
+        animationBuilder()
+                .onFinished(() -> getGameScene().removeGameView(view))
+                .duration(Duration.seconds(2.15))
+                .fadeOut(text)
+                .buildAndPlay();
     }
 
     private void initPlayer() {
@@ -407,10 +393,6 @@ public class ZephyriaApp extends GameApplication {
         player.setType(EntityType.PLAYER);
         player.setPosition(TILE_SIZE * 8, TILE_SIZE * 4);
 
-
-        //player.setView(new Rectangle(40, 40, Color.BLUE));
-
-
         getGameWorld().addEntity(player);
 
 
@@ -418,11 +400,7 @@ public class ZephyriaApp extends GameApplication {
 
 //        player.addComponent(DataManager.INSTANCE.makeCharacterSubView(player));
 //        spawnCharacter(player);
-//
-//        // TODO: do something with circular references
-//        player.addControl(new PlayerActionControl());
-//        playerActionControl = player.getControlUnsafe(PlayerActionControl.class);
-//
+
 //        // TODO: TEST DATA BEGIN
 //        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
 //        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.MIGHTY_SWING()));
@@ -450,7 +428,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private Weapon newDagger(Element element) {
-        Weapon weapon = new Weapon(Data.Weapon.INSTANCE.KNIFE());
+        Weapon weapon = new Weapon(Data.Weapon.KNIFE());
         weapon.getElement().set(element);
         return weapon;
     }
@@ -461,67 +439,21 @@ public class ZephyriaApp extends GameApplication {
         //spawnCharacter(DataManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
     }
 
-    private void spawnCharacter(Entity character) {
-//        character.addComponent(new CollidableComponent(true));
-//
-//        AnimatedTexture texture = getAssetLoader()
-//                .loadTexture(character.getComponentUnsafe(Description.class).getTextureName().get())
-//                .toAnimatedTexture(CharacterAnimation.WALK_RIGHT);
-//
-//        character.getComponentUnsafe(CharacterDataComponent.class).setAnimation(texture);
-//        character.getViewComponent().setView(texture, true);
-//
-//        if (!character.getTypeComponent().isType(EntityType.PLAYER)) {
-//            //character.addControl(new AIControl());
-//
-//            character.getViewComponent().getView().setOnMouseClicked(e -> {
-//                selected.set(character);
-//            });
-//        }
-//
-//        EntityView subView = character.getComponentUnsafe(SubViewComponent.class).getValue();
-//
-//        getGameWorld().addEntity(character);
-//        getGameScene().addGameView(subView);
-//
-//        character.activeProperty().addListener((o, wasActive, isActive) -> {
-//            if (!isActive) {
-//                getGameScene().removeGameView(subView);
-//            }
-//        });
-    }
 
-    private void spawnSkeletonArcher(int x, int y, Element element) {
-        SpawnData data = new SpawnData(x, y);
-
-        data.put("charData", Data.Character.INSTANCE.SKELETON_ARCHER());
-
-        CharacterEntity e = (CharacterEntity) spawn("char", data);
-        e.getCharacterComponent().getArmorElement().set(element);
-
-//        e.getView().setOnMouseClicked(event -> {
-//            player.getActionComponent().orderAttack(e);
-//
-////            DamageResult dmg = player.getPlayerComponent().attack(e);
-////
-////            showDamage(dmg, e.getCenter());
-//        });
-    }
 
     private void spawnCharacter(int x, int y, CharacterData charData) {
         SpawnData data = new SpawnData(x, y);
-
         data.put("charData", charData);
 
         CharacterEntity e = (CharacterEntity) spawn("char", data);
 
-//        e.getView().setOnMouseClicked(event -> {
-//            player.getActionComponent().orderAttack(e);
-//
-////            DamageResult dmg = player.getPlayerComponent().attack(e);
-////
-////            showDamage(dmg, e.getCenter());
-//        });
+        e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            player.getActionComponent().orderAttack(e);
+
+            DamageResult dmg = player.getPlayerComponent().attack(e);
+
+            showDamage(dmg, e.getCenter());
+        });
     }
 
     public static void main(String[] args) {

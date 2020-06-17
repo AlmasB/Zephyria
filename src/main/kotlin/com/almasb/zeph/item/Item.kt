@@ -113,3 +113,10 @@ abstract class EquipItem(
         return false
     }
 }
+
+/**
+ * Marks a class that stores item data.
+ */
+interface ItemData {
+    val description: Description
+}

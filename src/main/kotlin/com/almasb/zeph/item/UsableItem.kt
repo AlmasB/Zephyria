@@ -9,10 +9,10 @@ import com.almasb.zeph.character.DataDSL
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class UsableItem(description: Description) : Item(description) {
+class UsableItem(val data: UsableItemData) : Item(data.description) {
 
     open fun onUse(char: CharacterEntity) {
-
+        data.onUseScript.invoke(char)
     }
 }
 
@@ -42,7 +42,7 @@ fun usableItem(setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
 }
 
 data class UsableItemData(
-        val description: Description,
+        override val description: Description,
         val beforeUseScript: (CharacterEntity) -> Boolean,
         val onUseScript: (CharacterEntity) -> Unit
-)
+) : ItemData

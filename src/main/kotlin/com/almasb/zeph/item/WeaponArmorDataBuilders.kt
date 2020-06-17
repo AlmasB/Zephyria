@@ -67,7 +67,7 @@ fun weapon(setup: WeaponDataBuilder.() -> Unit): WeaponData {
 }
 
 data class ArmorData(
-        val description: Description,
+        override val description: Description,
         val itemLevel: ItemLevel,
         val element: Element,
         val runes: List<Rune>,
@@ -75,14 +75,14 @@ data class ArmorData(
         val armorType: ArmorType,
         val armor: Int,
         val marmor: Int
-)
+) : ItemData
 
 data class WeaponData(
-        val description: Description,
+        override val description: Description,
         val itemLevel: ItemLevel,
         val element: Element,
         val runes: List<Rune>,
         val essences: List<Essence>,
         val type: WeaponType,
         val pureDamage: Int
-)
+) : ItemData

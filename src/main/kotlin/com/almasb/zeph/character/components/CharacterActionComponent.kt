@@ -11,6 +11,8 @@ import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.PlayerEntity
+import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
 import javafx.geometry.Point2D
 
@@ -72,10 +74,7 @@ class CharacterActionComponent : Component() {
                 moveTo(x, y)
 
                 if (path.isEmpty()) {
-                    val weapon = item.getObject<Weapon>("weapon")
-
-                    (char as PlayerEntity).inventory.addItem(weapon);
-                    item.removeFromWorld()
+                    pickUp(item)
 
                     state.changeStateToIdle()
                 }
@@ -204,13 +203,26 @@ class CharacterActionComponent : Component() {
         pickUpTarget = item
 
         if (char.distance(item) <= Config.tileSize) {
-            val weapon = item.getObject<Weapon>("weapon")
-
-            (char as PlayerEntity).inventory.addItem(weapon);
-            item.removeFromWorld()
+            pickUp(item)
         } else {
             state.changeState(MOVE)
         }
+    }
+
+    private fun pickUp(item: Entity) {
+        item.getPropertyOptional<Weapon>("weapon").ifPresent {
+            (char as PlayerEntity).inventory.addItem(it)
+        }
+
+        item.getPropertyOptional<Armor>("armor").ifPresent {
+            (char as PlayerEntity).inventory.addItem(it)
+        }
+
+        item.getPropertyOptional<UsableItem>("usable").ifPresent {
+            (char as PlayerEntity).inventory.addItem(it)
+        }
+
+        item.removeFromWorld()
     }
 
     private fun reset() {

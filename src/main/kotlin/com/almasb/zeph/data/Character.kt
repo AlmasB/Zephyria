@@ -30,8 +30,9 @@ class Character {
             agi = 2
         }
 
-        // drop items
-        4001 has 50
+        drops {
+            Data.Weapon.KNIFE() has 50
+        }
     }
 
     fun SKELETON_WARRIOR() = char {
@@ -53,13 +54,14 @@ class Character {
             agi = 5
         }
 
-        // drop items
-        4001 has 50
+        drops {
+            Data.Weapon.KNIFE() has 50
+        }
     }
 
     fun SKELETON_MAGE() = char {
         desc {
-            id = 2005
+            id = 2006
             name = "Skeleton Mage"
             description = "Skeleton Mage Description."
             textureName = "chars/enemies/skeleton_mage.png"

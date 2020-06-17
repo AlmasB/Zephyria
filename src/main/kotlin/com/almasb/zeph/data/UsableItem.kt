@@ -1,10 +1,14 @@
 package com.almasb.zeph.data
 
+import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.GameMath
+import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.item.usableItem
 import javafx.util.Duration
 
@@ -46,9 +50,30 @@ class UsableItem {
         }
     }
 
-    fun FIRE_MIXTURE() = usableItem {
+    fun TREASURE_BOX() = usableItem {
         desc {
             id = 6002
+            name = "Treasure Box"
+            description = "An old box that may contain valuable items. Gives a random equipment item when opened."
+            textureName = "items/usable/treasure_box.png"
+        }
+
+        onUseScript = {
+            val isWeapon = GameMath.checkChance(50)
+
+            val item =
+                    if (isWeapon)
+                        Weapon(Data.weapons.random())
+                    else
+                        Armor(Data.armors.random())
+
+            it.inventory.addItem(item)
+        }
+    }
+
+    fun FIRE_MIXTURE() = usableItem {
+        desc {
+            id = 6003
             name = "Fire Mixture"
             description = "Imbues the equipped weapon with the FIRE element for 2 minutes"
             textureName = "items/usable/fire_mixture.png"

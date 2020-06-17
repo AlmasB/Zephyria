@@ -36,8 +36,6 @@ class PlayerEntity(playerName: String, playerTextureName: String) : CharacterEnt
     val statXP = playerComponent.statXP
     val jobXP = playerComponent.jobXP
 
-    val inventory = playerComponent.inventory
-
     fun getEquip(place: EquipPlace) = playerComponent.getEquip(place)
 
     fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)

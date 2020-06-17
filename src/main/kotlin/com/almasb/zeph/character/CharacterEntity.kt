@@ -3,6 +3,7 @@ package com.almasb.zeph.character
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.components.AnimationComponent
 import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.character.components.CharacterComponent
@@ -27,6 +28,9 @@ open class CharacterEntity(val data: CharacterData, val characterComponent: Char
     val sp = characterComponent.sp
 
     val baseLevel = characterComponent.baseLevel
+
+    val inventory: Inventory
+        get() = characterComponent.inventory
 
     init {
         addComponent(StateComponent())

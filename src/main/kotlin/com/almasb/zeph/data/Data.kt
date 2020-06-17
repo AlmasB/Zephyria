@@ -9,7 +9,11 @@ import com.almasb.zeph.item.WeaponType.*
 
 
 /**
- *
+ * ID ranges:
+ * Character [2000-2999].
+ * Weapon [4000-4999].
+ * Armor [5000-5999].
+ * Usable [6000-6999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

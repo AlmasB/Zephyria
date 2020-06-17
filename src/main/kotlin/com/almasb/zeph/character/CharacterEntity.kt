@@ -1,5 +1,6 @@
 package com.almasb.zeph.character
 
+import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.zeph.character.components.AnimationComponent
@@ -29,6 +30,7 @@ open class CharacterEntity(val data: CharacterData, val characterComponent: Char
 
     init {
         addComponent(StateComponent())
+        addComponent(EffectComponent())
         addComponent(characterComponent)
         addComponent(animationComponent)
         addComponent(actionComponent)

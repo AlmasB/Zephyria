@@ -36,7 +36,7 @@ abstract class Item(val description: Description) {
      * Typically a combination of static + runtime info, such as
      * actual weapon damage, actual armor rating, etc.
      */
-    val dynamicDescription = SimpleStringProperty("")
+    val dynamicDescription = SimpleStringProperty(description.description)
 }
 
 abstract class EquipItem(

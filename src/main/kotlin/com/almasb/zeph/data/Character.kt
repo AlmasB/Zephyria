@@ -5,6 +5,7 @@ import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 
 /**
+ * Characters id range [2000-2999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

@@ -23,10 +23,9 @@ import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
 import com.almasb.zeph.item.ItemData;
-import com.almasb.zeph.item.UsableItemData;
 import com.almasb.zeph.item.Weapon;
-import com.almasb.zeph.item.WeaponData;
 import com.almasb.zeph.ui.BasicInfoView;
+import com.almasb.zeph.ui.InventoryView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -101,7 +100,7 @@ public class ZephyriaApp extends GameApplication {
             spawnCharacter(800, 250, Data.Character.SKELETON_ARCHER());
 
             spawnItem(800, 500, Data.Weapon.KNIFE());
-            spawnItem(800, 550, Data.Weapon.KNIFE());
+            spawnItem(800, 550, Data.UsableItem.MANA_POTION());
             spawnItem(800, 600, Data.UsableItem.HEALING_POTION());
         });
 
@@ -310,17 +309,13 @@ public class ZephyriaApp extends GameApplication {
         debug.setFill(Color.WHITE);
 
         getGameScene().addUINodes(
+                new BasicInfoView(player),
+                new InventoryView(player, getAppWidth(), getAppHeight())
 //                new HotbarView(player),
-                new BasicInfoView(player)
 //                new CharInfoView(player),
-//                new InventoryView(player, getAppWidth(), getAppHeight()),
 //                new EquipmentView(player, getAppWidth(), getAppHeight())
         );
     }
-
-
-
-
 
     private void spawnItem(int x, int y, ItemData itemData) {
         SpawnData data = new SpawnData(x, y);
@@ -438,8 +433,6 @@ public class ZephyriaApp extends GameApplication {
 
         //spawnCharacter(DataManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
     }
-
-
 
     private void spawnCharacter(int x, int y, CharacterData charData) {
         SpawnData data = new SpawnData(x, y);

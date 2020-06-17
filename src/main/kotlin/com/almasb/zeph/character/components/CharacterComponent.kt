@@ -13,6 +13,7 @@ import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.HPComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
+import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.SkillComponent
 import com.almasb.zeph.skill.SkillUseResult
 import javafx.beans.binding.Bindings.createDoubleBinding
@@ -135,25 +136,25 @@ open class CharacterComponent(data: CharacterData) : Component() {
         effects.add(e)
     }
 
-    private fun str()   = attributes.getTotalAttribute(STRENGTH)
+    private fun str() = attributes.getTotalAttribute(STRENGTH)
 
-    private fun vit()   = attributes.getTotalAttribute(VITALITY)
+    private fun vit() = attributes.getTotalAttribute(VITALITY)
 
-    private fun dex()   = attributes.getTotalAttribute(DEXTERITY)
+    private fun dex() = attributes.getTotalAttribute(DEXTERITY)
 
-    private fun agi()   = attributes.getTotalAttribute(AGILITY)
+    private fun agi() = attributes.getTotalAttribute(AGILITY)
 
-    private fun int()  = attributes.getTotalAttribute(INTELLECT)
+    private fun int() = attributes.getTotalAttribute(INTELLECT)
 
-    private fun wis()   = attributes.getTotalAttribute(WISDOM)
+    private fun wis() = attributes.getTotalAttribute(WISDOM)
 
-    private fun wil()   = attributes.getTotalAttribute(WILLPOWER)
+    private fun wil() = attributes.getTotalAttribute(WILLPOWER)
 
-    private fun per()   = attributes.getTotalAttribute(PERCEPTION)
+    private fun per() = attributes.getTotalAttribute(PERCEPTION)
 
-    private fun luc()   = attributes.getTotalAttribute(LUCK)
+    private fun luc() = attributes.getTotalAttribute(LUCK)
 
-    private fun level() = baseLevel.intValue()
+    private fun lvl() = baseLevel.intValue()
 
     /**
      * Bind base stats to attributes.
@@ -171,12 +172,13 @@ open class CharacterComponent(data: CharacterData) : Component() {
 
         val level = baseLevel
 
+        // TODO: recheck rounding errors and formulae
         stats.statProperty(MAX_HP).bind(createDoubleBinding(Callable {
-            1.0 + vit() * 0.5 + str() * 0.3 + level() * 0.25 + (vit() / 10) + charClass.value.hp * level()
+            1.0 + vit() * 0.5 + str() * 0.3 + lvl() * 0.25 + (vit() / 10) + charClass.value.hp * lvl()
         }, vit, str, level))
 
         stats.statProperty(MAX_SP).bind(createDoubleBinding(Callable {
-            1.0 + wis() * 0.4 + wil() * 0.3 + level() * 0.25 + (wis() / 10).toDouble() + int() * 0.3 + charClass.value.sp * level()
+            1.0 + wis() * 0.4 + wil() * 0.3 + lvl() * 0.25 + (wis() / 10).toDouble() + int() * 0.3 + charClass.value.sp * lvl()
         }, wis, wil, level, int))
 
         stats.statProperty(HP_REGEN).bind(createDoubleBinding(Callable{ 1 + vit() * 0.1 },
@@ -185,16 +187,16 @@ open class CharacterComponent(data: CharacterData) : Component() {
         stats.statProperty(SP_REGEN).bind(createDoubleBinding(Callable{ 2 + wis() * 0.1 },
                 wis))
 
-        stats.statProperty(ATK).bind(createDoubleBinding(Callable{ str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + level().toDouble() + (str() / 10 * (str() / 10 + 1)).toDouble() },
+        stats.statProperty(ATK).bind(createDoubleBinding(Callable{ str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + lvl() + (str() / 10 * (str() / 10 + 1)).toDouble() },
                 str, dex, per, luc, level))
 
         stats.statProperty(MATK).bind(createDoubleBinding(Callable{ int() * 0.5 + wis() * 0.4 + wil() * 0.4 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 },
                 int, dex, per, luc))
 
-        stats.statProperty(DEF).bind(createDoubleBinding(Callable{ vit() * 0.5 + per() * 0.2 + str() * 0.1 + level() * 0.25 + (vit() / 20).toDouble() },
+        stats.statProperty(DEF).bind(createDoubleBinding(Callable{ vit() * 0.5 + per() * 0.2 + str() * 0.1 + lvl() * 0.25 + vit() / 20 },
                 vit, per, str, level))
 
-        stats.statProperty(MDEF).bind(createDoubleBinding(Callable{ wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int() * 0.1 + level() * 0.25 + (wil() / 20 * int() / 10).toDouble() },
+        stats.statProperty(MDEF).bind(createDoubleBinding(Callable{ wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int() * 0.1 + lvl() * 0.25 + (wil() / 20 * int() / 10) },
                 wil, wis, per, int, level))
 
         stats.statProperty(ASPD).bind(createDoubleBinding(Callable{ agi() * 0.5 + dex() * 0.2 },
@@ -317,7 +319,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
      * @return damage dealt
      */
     fun attack(target: CharacterEntity): DamageResult {
-        return dealPhysicalDamage(target, stats.getTotalStat(ATK) + 2 * GameMath.random(level()), weaponElement.value)
+        return dealPhysicalDamage(target, stats.getTotalStat(ATK) + 2 * GameMath.random(lvl()), weaponElement.value)
     }
 
     /**
@@ -455,5 +457,11 @@ open class CharacterComponent(data: CharacterData) : Component() {
     fun kill() {
         char.setUpdateEnabled(false)
         char.animationComponent.playDeath(Runnable { char.removeFromWorld() })
+    }
+
+    fun useItem(item: UsableItem) {
+        // TODO: allow stacks of items
+        item.onUse(char)
+        inventory.removeItem(item)
     }
 }

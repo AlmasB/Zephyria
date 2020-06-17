@@ -11,7 +11,7 @@ import com.almasb.zeph.character.DataDSL
  */
 class UsableItem(val data: UsableItemData) : Item(data.description) {
 
-    open fun onUse(char: CharacterEntity) {
+    fun onUse(char: CharacterEntity) {
         data.onUseScript.invoke(char)
     }
 }

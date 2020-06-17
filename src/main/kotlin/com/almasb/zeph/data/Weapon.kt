@@ -4,6 +4,7 @@ import com.almasb.zeph.item.WeaponType
 import com.almasb.zeph.item.weapon
 
 /**
+ * Weapons id range [4000-4999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

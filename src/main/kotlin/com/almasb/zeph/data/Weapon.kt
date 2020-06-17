@@ -1,6 +1,10 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.item.WeaponType
+import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Element.*
+import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.item.ItemLevel.*
+import com.almasb.zeph.item.WeaponType.*
 import com.almasb.zeph.item.weapon
 
 /**
@@ -9,6 +13,10 @@ import com.almasb.zeph.item.weapon
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class Weapon {
+
+    // TODO: onAttack {}, onEquip, onUnEquip, same for Armor
+
+
     fun HANDS() = weapon {
         desc {
             id = 4000
@@ -17,7 +25,7 @@ class Weapon {
             textureName = "items/weapons/hands.png"
         }
 
-        type = WeaponType.MACE
+        type = MACE
     }
 
     fun KNIFE() = weapon {
@@ -28,7 +36,7 @@ class Weapon {
             textureName = "items/weapons/knife.png"
         }
 
-        type = WeaponType.DAGGER
+        type = DAGGER
         pureDamage = 15
     }
 
@@ -40,7 +48,45 @@ class Weapon {
             textureName = "items/weapons/iron_sword.png"
         }
 
-        type = WeaponType.ONE_H_SWORD
+        type = ONE_H_SWORD
         pureDamage = 25
+    }
+
+    fun FROSTMOURNE() = weapon {
+        desc {
+            id = 4202
+            name = "Frostmourne"
+            description = "The legendary sword of the Ice Dungeon's King."
+            textureName = "items/weapons/frostmourne.png"
+        }
+
+        itemLevel = EPIC
+        type = TWO_H_SWORD
+        pureDamage = 130
+        element = WATER
+
+        runes += Rune(STRENGTH, 3)
+        runes += Rune(DEXTERITY, 5)
+    }
+
+    // 1H AXES 4300
+
+    // 2H AXES 4400
+
+    fun SOUL_REAPER() = weapon {
+        desc {
+            id = 4400
+            name = "Soul Reaper"
+            description = "Forged in the depths of Aesmir, it is said the wielder can feel the weapon crave the souls of its enemies."
+            textureName = "items/weapons/soul_reaper.png"
+        }
+
+        itemLevel = EPIC
+        type = TWO_H_AXE
+        pureDamage = 170
+
+        runes += Rune(STRENGTH, 7)
+        runes += Rune(VITALITY, 4)
+        runes += Rune(DEXTERITY, 2)
     }
 }

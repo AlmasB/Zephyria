@@ -25,6 +25,8 @@ import com.almasb.zeph.data.Data;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.ui.BasicInfoView;
+import com.almasb.zeph.ui.CharInfoView;
+import com.almasb.zeph.ui.EquipmentView;
 import com.almasb.zeph.ui.InventoryView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -102,6 +104,8 @@ public class ZephyriaApp extends GameApplication {
             spawnItem(800, 500, Data.Weapon.KNIFE());
             spawnItem(800, 550, Data.UsableItem.MANA_POTION());
             spawnItem(800, 600, Data.UsableItem.HEALING_POTION());
+
+            spawnItem(700, 500, Data.Weapon.FROSTMOURNE());
         });
 
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
@@ -310,10 +314,10 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
                 new BasicInfoView(player),
-                new InventoryView(player, getAppWidth(), getAppHeight())
-//                new HotbarView(player),
-//                new CharInfoView(player),
-//                new EquipmentView(player, getAppWidth(), getAppHeight())
+                new CharInfoView(player),
+                new InventoryView(player, getAppWidth(), getAppHeight()),
+                new EquipmentView(player, getAppWidth(), getAppHeight())
+                // new HotbarView(player)
         );
     }
 

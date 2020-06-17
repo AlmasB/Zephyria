@@ -69,12 +69,7 @@ package com.almasb.zeph.data
 //                        .withRune(Rune(Attribute.LUCK, 1))
 //        )
 //
-//        fun FROSTMOURN() = listOf<Component>(
-//                Description(4202, "Frostmourn", "The legendary sword of the Ice Dungeon's King.", "items/weapons/frostmourn.png"),
-//                WeaponDataComponent(ItemLevel.EPIC, WeaponType.TWO_H_SWORD, 130)
-//                        .withRune(Rune(Attribute.DEXTERITY, 5))
-//                        .withRune(Rune(Attribute.STRENGTH, 3))
-//        )
+
 //
 //        fun BATTLESWORD() = listOf<Component>(
 //                Description(4203, "Battlesword", "A terrifying two-handed sword that is said to stimulate the nerves in order to kill, once it's in the wearer's hands.", "items/weapons/battlesword.png"),
@@ -89,16 +84,9 @@ package com.almasb.zeph.data
 //                        .withRune(Rune(Attribute.DEXTERITY, 2))
 //        )
 //
-//        // 1H AXES 4300
 //
-//        // 2H AXES 4400
-//        fun SOUL_REAPER() = listOf<Component>(
-//                Description(4300, "Soul Reaper", "Forged in the dephts of Aesmir, it is said the weilder can feel the weapon crave the souls of its enemies.", "items/weapons/soul_reaper.png"),
-//                WeaponDataComponent(ItemLevel.EPIC, WeaponType.TWO_H_AXE, 170)
-//                        .withRune(Rune(Attribute.STRENGTH, 7))
-//                        .withRune(Rune(Attribute.VITALITY, 4))
-//                        .withRune(Rune(Attribute.DEXTERITY, 2))
-//        )
+//
+
 //
 //        // MACES 4500
 //

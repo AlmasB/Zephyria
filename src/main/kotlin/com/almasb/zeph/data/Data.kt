@@ -1,4 +1,4 @@
-package com.almasb.zeph
+package com.almasb.zeph.data
 
 import com.almasb.zeph.character.char
 import com.almasb.zeph.combat.Element.*
@@ -23,6 +23,9 @@ object Data {
     val hat by lazy { Armor(getArmor(5000)) }
     val clothes by lazy { Armor(getArmor(5001)) }
     val shoes by lazy { Armor(getArmor(5002)) }
+
+    @JvmField
+    val UsableItem = com.almasb.zeph.data.UsableItem()
 
     init {
         Weapon.javaClass.declaredMethods.forEach {
@@ -197,24 +200,7 @@ object Data {
         }
     }
 
-    object UsableItem {
-        fun HEALING_POTION() = usableItem {
-            desc {
-                id = 9000
-                name = "Healing Potion"
-                description = "Restores 50 HP"
-            }
 
-            beforeUseScript = {
-                // everyone can use it
-                true
-            }
-
-            onUseScript = {
-                it.hp.restore(50.0)
-            }
-        }
-    }
 
 
 

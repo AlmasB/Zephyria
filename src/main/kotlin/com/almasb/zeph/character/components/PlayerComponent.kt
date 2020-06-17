@@ -1,7 +1,7 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.zeph.Config
-import com.almasb.zeph.Data
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience

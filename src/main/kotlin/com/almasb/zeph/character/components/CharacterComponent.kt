@@ -2,6 +2,7 @@ package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
+import com.almasb.fxgl.entity.components.ViewComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.CharacterClass
@@ -455,7 +456,12 @@ open class CharacterComponent(data: CharacterData) : Component() {
     }
 
     fun kill() {
-        char.setUpdateEnabled(false)
+        char.components
+                .filter { it !is AnimationComponent && it !is ViewComponent }
+                .forEach {
+                    it.pause()
+                }
+
         char.animationComponent.playDeath(Runnable { char.removeFromWorld() })
     }
 

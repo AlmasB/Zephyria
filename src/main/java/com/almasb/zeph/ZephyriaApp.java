@@ -21,6 +21,7 @@ import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
+import com.almasb.zeph.character.components.CharacterActionComponent;
 import com.almasb.zeph.character.components.PlayerComponent;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.DamageType;
@@ -117,6 +118,16 @@ public class ZephyriaApp extends GameApplication {
             spawnItem(700, 500, Data.Weapon.FROSTMOURNE());
         });
 
+//        onKeyDown(KeyCode.M, "Move Dev", () -> {
+//            getGameWorld().getRandom(EntityType.CHARACTER)
+//                    .ifPresent(e -> {
+//                        int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
+//                        int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
+//
+//                        e.getComponent(CharacterActionComponent.class).orderMove(targetX, targetY);
+//                    });
+//        });
+
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
             getGameWorld().getEntitiesInRange(new Rectangle2D(getInput().getMouseXWorld() - 20, getInput().getMouseYWorld() - 20, 40, 40))
                     .stream()
@@ -207,8 +218,6 @@ public class ZephyriaApp extends GameApplication {
 
                     int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
                     int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
-
-
 
                     player.getActionComponent().orderMove(targetX, targetY);
                 })
@@ -405,7 +414,6 @@ public class ZephyriaApp extends GameApplication {
         playerComponent = player.getPlayerComponent();
         player.setType(EntityType.PLAYER);
         player.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.spriteSize, Config.spriteSize)));
-        player.getTransformComponent().setLocalAnchor(new Point2D(Config.spriteSize / 2.0, Config.spriteSize - 10));
         player.getComponent(NewCellMoveComponent.class).setPositionToCell(25, 1);
 
         getGameWorld().addEntity(player);

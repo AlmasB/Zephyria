@@ -1,17 +1,17 @@
 package com.almasb.zeph;
 
-import com.almasb.fxgl.core.util.LazyValue;
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.*;
-import com.almasb.fxgl.pathfinding.CellMoveComponent;
-import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.EntityFactory;
+import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.Spawns;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
+import com.almasb.zeph.entity.ai.RandomWanderComponent;
 import com.almasb.zeph.item.*;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.entityBuilder;
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -31,7 +31,7 @@ public class ZephFactory implements EntityFactory {
 
             entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.spriteSize, Config.spriteSize)));
 
-
+            entity.addComponent(new RandomWanderComponent());
 
             // TODO: parse properties from [charData]
 

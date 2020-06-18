@@ -6,6 +6,7 @@
 
 package com.almasb.zeph.entity.character.component;
 
+import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.core.util.EmptyRunnable;
 import com.almasb.fxgl.core.util.LazyValue;
 import com.almasb.fxgl.entity.component.Component;
@@ -17,6 +18,7 @@ import com.almasb.fxgl.pathfinding.astar.AStarPathfinder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -89,6 +91,15 @@ public final class NewAStarMoveComponent extends Component {
 
     public void moveToDownCell() {
         getGrid().getDown(moveComponent.getCellX(), moveComponent.getCellY())
+                .ifPresent(this::moveToCell);
+    }
+
+    public void moveToRandomCell() {
+        moveToRandomCell(FXGLMath.getRandom());
+    }
+
+    public void moveToRandomCell(Random random) {
+        getGrid().getRandomCell(random, AStarCell::isWalkable)
                 .ifPresent(this::moveToCell);
     }
 

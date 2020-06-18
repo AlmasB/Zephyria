@@ -10,6 +10,16 @@ object Config {
     const val spriteSize = 64
     const val tileSize = 32
 
+    /**
+     * Pixels per seconds.
+     */
+    const val CHAR_MOVE_SPEED = tileSize * 4.0
+
+    /**
+     * How much time a char does not move (in seconds) before randomly moving.
+     */
+    const val CHAR_IDLE_TIME = 3.0
+
     val mapWidth = 40
     val mapHeight = 40
 

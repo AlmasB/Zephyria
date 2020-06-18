@@ -61,6 +61,13 @@ public final class NewAStarMoveComponent extends Component {
         return path.isEmpty();
     }
 
+    /**
+     * @return true when the path is empty and entity is no longer moving
+     */
+    public boolean isAtDestination() {
+        return !isMoving() && isPathEmpty();
+    }
+
     public AStarGrid getGrid() {
         return pathfinder.get().getGrid();
     }

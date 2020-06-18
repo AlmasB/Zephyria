@@ -38,15 +38,15 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         val barSP = makeSkillBar()
 
         barHP.translateX = 0.0
-        barHP.translateY = 80.0
-        barHP.setWidth(Config.spriteSize.toDouble())
-        barHP.setHeight(10.0)
+        barHP.translateY = 60.0
+        barHP.setWidth(Config.spriteSize * 1.0)
+        barHP.setHeight(6.0)
         barHP.isLabelVisible = false
 
         barSP.translateX = 0.0
-        barSP.translateY = 90.0
-        barSP.setWidth(Config.spriteSize.toDouble())
-        barSP.setHeight(10.0)
+        barSP.translateY = barHP.translateY + 6
+        barSP.setWidth(Config.spriteSize * 1.0)
+        barSP.setHeight(6.0)
         barSP.isLabelVisible = false
 
         barHP.maxValueProperty().bind(char.hp.maxValueProperty())
@@ -60,13 +60,27 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         text.fill = Color.WHITE
         text.textProperty().bind(SimpleStringProperty((entity as CharacterEntity).data.description.name).concat(" Lv. ").concat(char.baseLevel))
         text.translateX = Config.spriteSize.toDouble() / 2 - text.layoutBounds.width / 2
-        text.translateY = 75.0
+        text.translateY = 85.0
 
-        return Group(barHP, barSP, text)
+        return Group(barHP, barSP).also {
+            if (char !is PlayerComponent) {
+                it.children += text
+            }
+        }
     }
 
     private fun makeHPBar(): ProgressBar {
         val bar = ProgressBar(false)
+        bar.innerBar.stroke = Color.GRAY
+        bar.innerBar.arcWidthProperty().unbind()
+        bar.innerBar.arcHeightProperty().unbind()
+        bar.innerBar.arcWidthProperty().value = 0.0
+        bar.innerBar.arcHeightProperty().value = 0.0
+        bar.innerBar.heightProperty().unbind()
+        bar.innerBar.heightProperty().value = 6.0
+        bar.backgroundBar.effect = null
+        bar.backgroundBar.fill = null
+        bar.backgroundBar.strokeWidth = 0.25
 
         with(bar) {
             setHeight(25.0)
@@ -75,11 +89,24 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
             isLabelVisible = true
         }
 
+        bar.innerBar.effect = null
+
         return bar
     }
 
     private fun makeSkillBar(): ProgressBar {
         val bar = ProgressBar(false)
+
+        bar.innerBar.stroke = Color.GRAY
+        bar.innerBar.arcWidthProperty().unbind()
+        bar.innerBar.arcHeightProperty().unbind()
+        bar.innerBar.arcWidthProperty().value = 0.0
+        bar.innerBar.arcHeightProperty().value = 0.0
+        bar.innerBar.heightProperty().unbind()
+        bar.innerBar.heightProperty().value = 6.0
+        bar.backgroundBar.effect = null
+        bar.backgroundBar.fill = null
+        bar.backgroundBar.strokeWidth = 0.25
 
         with(bar) {
             setHeight(25.0)
@@ -87,6 +114,8 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
             setTraceFill(Color.BLUE)
             isLabelVisible = true
         }
+
+        bar.innerBar.effect = null
 
         return bar
     }

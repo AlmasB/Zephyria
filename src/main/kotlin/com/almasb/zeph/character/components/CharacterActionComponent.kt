@@ -1,14 +1,10 @@
 package com.almasb.zeph.character.components
 
-import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
-import com.almasb.fxgl.pathfinding.astar.AStarCell
-import com.almasb.fxgl.pathfinding.astar.AStarPathfinder
 import com.almasb.zeph.Config
-import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
@@ -35,149 +31,47 @@ class CharacterActionComponent : Component() {
     private lateinit var moveComponent: NewCellMoveComponent
     private lateinit var astar: NewAStarMoveComponent
 
-    private val IDLE: EntityState = object : EntityState() {
-        override fun onEnteredFrom(prevState: EntityState?) {
-            if (prevState != null)
-                animationComponent.loopIdle()
-        }
-    }
-
     private val MOVE: EntityState = object : EntityState() {
 
-        private val grid = FXGL.getAppCast<ZephyriaApp>().grid
-        protected var path: MutableList<AStarCell> = arrayListOf()
-
         override fun onUpdate(tpf: Double) {
-            doMove()
+            if (astar.isAtDestination) {
+                // identify why we came here
 
-            if (moveTarget != null) {
-
-                moveTo(moveTarget!!.x.toInt(), moveTarget!!.y.toInt())
-
-                if (path.isEmpty()) {
+                if (attackTarget != null) {
+                    attack(attackTarget!!)
+                } else if (pickUpTarget != null) {
+                    pickUp(pickUpTarget!!)
                     state.changeStateToIdle()
-                }
-
-            } else if (attackTarget != null) {
-                val x = attackTarget!!.characterComponent.getTileX()
-                val y = attackTarget!!.characterComponent.getTileY()
-
-                moveTo(x, y)
-
-                if (path.isEmpty()) {
-                    state.changeState(ATTACK)
-                }
-
-            } else if (pickUpTarget != null) {
-
-                val item = pickUpTarget!!
-
-                val x = item.x.toInt() / Config.spriteSize
-                val y = item.y.toInt() / Config.spriteSize
-
-                moveTo(x, y)
-
-                if (path.isEmpty()) {
-                    pickUp(item)
-
+                } else {
                     state.changeStateToIdle()
                 }
             }
-        }
-
-        private fun doMove() {
-            while (!path.isEmpty()) {
-                val node = path[0]
-
-                var dx = node.x * Config.spriteSize - char.x
-                var dy = node.y * Config.spriteSize - char.y
-
-                dx = Math.signum(dx)
-                dy = Math.signum(dy)
-
-                if (dx == 0.0 && dy == 0.0) {
-                    path.removeAt(0)
-                    continue
-                } else if (dx > 0) {
-                    //animation.setAnimationChannel(CharacterAnimation.WALK_RIGHT)
-                    onChangeDir(0)
-                } else if (dx < 0) {
-                    //animation.setAnimationChannel(CharacterAnimation.WALK_LEFT)
-                    onChangeDir(1)
-                } else if (dy > 0) {
-                    //animation.setAnimationChannel(CharacterAnimation.WALK_DOWN)
-                    onChangeDir(2)
-                } else if (dy < 0) {
-                    //animation.setAnimationChannel(CharacterAnimation.WALK_UP)
-                    onChangeDir(3)
-                }
-
-                dx *= 2.0
-                dy *= 2.0
-
-                char.translate(dx, dy)
-                break
-            }
-        }
-
-        private var currentDir = 0
-
-        private fun onChangeDir(newDir: Int) {
-            if (newDir != currentDir) {
-                currentDir = newDir
-                when (currentDir) {
-                    0 -> {
-                        animationComponent.loopWalkRight()
-                    }
-                    1 -> {
-                        animationComponent.loopWalkLeft()
-                    }
-                    2 -> {
-                        animationComponent.loopWalkDown()
-                    }
-                    3 -> {
-                        animationComponent.loopWalkUp()
-                    }
-                    else -> {}
-                }
-            }
-        }
-
-        private fun moveTo(x: Int, y: Int) {
-            if (Point2D(x.toDouble(), y.toDouble()).multiply(Config.spriteSize.toDouble()).distance(char.position) < Config.spriteSize) {
-                return
-            }
-
-            val startX = char.characterComponent.getTileX()
-            val startY = char.characterComponent.getTileY()
-
-            path = AStarPathfinder(grid).findPath(startX, startY, x, y)
         }
     }
 
     private val ATTACK: EntityState = object : EntityState() {
-        override fun onEnteredFrom(prevState: EntityState?) {
+        override fun onEnteredFrom(prevState: EntityState) {
             animationComponent.loopAttack()
         }
 
         override fun onUpdate(tpf: Double) {
-            if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
-
-                if (char.characterComponent.canAttack()) {
-                    val dmg = char.characterComponent.attack(attackTarget!!)
-                    FXGL.getAppCast<ZephyriaApp>().showDamage(dmg, attackTarget!!.center)
-
-                    char.characterComponent.resetAtkTick()
-
-                    if (attackTarget!!.hp.isZero) {
-                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
-                        state.changeStateToIdle()
-                    }
-                }
-
-            } else {
-                state.changeState(MOVE)
-            }
+//            if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
+//
+//                if (char.characterComponent.canAttack()) {
+//                    val dmg = char.characterComponent.attack(attackTarget!!)
+//                    FXGL.getAppCast<ZephyriaApp>().showDamage(dmg, attackTarget!!.center)
+//
+//                    char.characterComponent.resetAtkTick()
+//
+//                    if (attackTarget!!.hp.isZero) {
+//                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
+//                        state.changeStateToIdle()
+//                    }
+//                }
+//
+//            } else {
+//                state.changeState(MOVE)
+//            }
         }
     }
 
@@ -185,8 +79,10 @@ class CharacterActionComponent : Component() {
         char = entity as CharacterEntity
     }
 
-
     override fun onUpdate(tpf: Double) {
+        if (!state.isIn(MOVE))
+            return
+
         if (!moveComponent.isMoving) {
             animationComponent.loopIdle()
             return
@@ -200,11 +96,10 @@ class CharacterActionComponent : Component() {
         }
     }
 
-
     fun orderMove(x: Int, y: Int) {
         reset()
-        moveTarget = Point2D(x.toDouble(), y.toDouble())
         state.changeState(MOVE)
+        move(x, y)
     }
 
     fun orderAttack(target: CharacterEntity) {
@@ -212,9 +107,9 @@ class CharacterActionComponent : Component() {
         attackTarget = target
 
         if (char.characterComponent.isInWeaponRange(target)) {
-            state.changeState(ATTACK)
+            attack(attackTarget!!)
         } else {
-            state.changeState(MOVE)
+            move(attackTarget!!.characterComponent.getTileX(), attackTarget!!.characterComponent.getTileY())
         }
     }
 
@@ -225,8 +120,21 @@ class CharacterActionComponent : Component() {
         if (char.distance(item) <= Config.spriteSize) {
             pickUp(item)
         } else {
-            state.changeState(MOVE)
+            // TODO: items should have smth like ItemComponent with cellX,cellY...
+            val x = item.x.toInt() / Config.tileSize
+            val y = item.y.toInt() / Config.tileSize
+            move(x, y)
         }
+    }
+
+    private fun move(cellX: Int, cellY: Int) {
+        state.changeState(MOVE)
+        entity.getComponent(NewAStarMoveComponent::class.java).moveToCell(cellX, cellY)
+    }
+
+    private fun attack(target: CharacterEntity) {
+        // TODO:
+        state.changeState(ATTACK)
     }
 
     private fun pickUp(item: Entity) {

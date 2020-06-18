@@ -13,6 +13,7 @@ import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.HPComponent
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.SkillComponent
@@ -86,9 +87,9 @@ open class CharacterComponent(data: CharacterData) : Component() {
         sp.restorePercentageMax(100.0)
     }
 
-    fun getTileX() = entity.x.toInt() / Config.spriteSize
+    fun getTileX() = entity.getComponent(NewCellMoveComponent::class.java).cellX
 
-    fun getTileY() = entity.y.toInt() / Config.spriteSize
+    fun getTileY() = entity.getComponent(NewCellMoveComponent::class.java).cellY
 
     /**
      * @return true if [target] is in weapon range of this character

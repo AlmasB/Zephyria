@@ -88,6 +88,8 @@ public class ZephyriaApp extends GameApplication {
         settings.setHeight(768);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1");
+        settings.setManualResizeEnabled(true);
+        settings.setPreserveResizeRatio(true);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
@@ -206,9 +208,9 @@ public class ZephyriaApp extends GameApplication {
                     int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
                     int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
-                    player.getComponent(NewAStarMoveComponent.class).moveToCell(targetX, targetY);
 
-                    //player.getActionComponent().orderMove(targetX, targetY);
+
+                    player.getActionComponent().orderMove(targetX, targetY);
                 })
                 .buildAndAttach();
 
@@ -459,9 +461,9 @@ public class ZephyriaApp extends GameApplication {
         e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             player.getActionComponent().orderAttack(e);
 
-            DamageResult dmg = player.getPlayerComponent().attack(e);
-
-            showDamage(dmg, e.getCenter());
+//            DamageResult dmg = player.getPlayerComponent().attack(e);
+//
+//            showDamage(dmg, e.getCenter());
         });
     }
 

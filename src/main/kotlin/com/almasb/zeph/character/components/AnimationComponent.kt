@@ -124,7 +124,6 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     fun loopAttack() {
-        println("ATTACK")
         animatedTexture.loopAnimationChannel(channelSlashDown)
     }
 }

@@ -177,6 +177,7 @@ open class CharacterComponent(data: CharacterData) : Component() {
         val level = baseLevel
 
         // TODO: recheck rounding errors and formulae
+        // TODO: autoparse from Attribute?
         stats.statProperty(MAX_HP).bind(createDoubleBinding(Callable {
             1.0 + vit() * 0.5 + str() * 0.3 + lvl() * 0.25 + (vit() / 10) + charClass.value.hp * lvl()
         }, vit, str, level))

@@ -13,9 +13,7 @@ class Effect(val data: EffectData) {
 
     var duration = data.duration
 
-    // TODO: cast to CharacterEntity?
     fun onBegin(char: CharacterEntity) {
-
         data.runes.forEach { char.attributes.addBonusAttribute(it.attribute, it.bonus) }
         data.essences.forEach { char.stats.addBonusStat(it.stat, it.bonus) }
     }

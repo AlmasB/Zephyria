@@ -1,12 +1,10 @@
 package com.almasb.zeph.item
 
 import com.almasb.zeph.character.DataDSL
-import com.almasb.zeph.combat.Element
-import com.almasb.zeph.combat.Essence
-import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.combat.*
 
 @DataDSL
 class ArmorDataBuilder(
@@ -17,7 +15,10 @@ class ArmorDataBuilder(
         val essences: MutableList<Essence> = arrayListOf(),
         var armorType: ArmorType = ArmorType.BODY,
         var armor: Int = 0,
-        var marmor: Int = 0
+        var marmor: Int = 0,
+        var onBeingHitScript: (CharacterEntity, CharacterEntity) -> Unit = { attacker, target -> },
+        var onEquipScript: (CharacterEntity) -> Unit = { self -> },
+        var onUnEquipScript: (CharacterEntity) -> Unit = { self -> }
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -26,8 +27,16 @@ class ArmorDataBuilder(
         description = builder.build()
     }
 
+    operator fun Attribute.plus(value: Int) {
+        runes += Rune(this, value)
+    }
+
+    operator fun Stat.plus(value: Int) {
+        essences += Essence(this, value)
+    }
+
     fun build(): ArmorData {
-        return ArmorData(description, itemLevel, element, runes, essences, armorType, armor, marmor)
+        return ArmorData(description, itemLevel, element, runes, essences, armorType, armor, marmor, onBeingHitScript, onEquipScript, onUnEquipScript)
     }
 }
 
@@ -40,7 +49,9 @@ class WeaponDataBuilder(
         val essences: MutableList<Essence> = arrayListOf(),
         var type: WeaponType = WeaponType.MACE,
         var pureDamage: Int = 0,
-        var onAttackScript: (CharacterEntity, CharacterEntity) -> Unit = { _, _ -> }
+        var onAttackScript: (CharacterEntity, CharacterEntity) -> Unit = { attacker, target -> },
+        var onEquipScript: (CharacterEntity) -> Unit = { self -> },
+        var onUnEquipScript: (CharacterEntity) -> Unit = { self -> }
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -49,8 +60,16 @@ class WeaponDataBuilder(
         description = builder.build()
     }
 
+    operator fun Attribute.plus(value: Int) {
+        runes += Rune(this, value)
+    }
+
+    operator fun Stat.plus(value: Int) {
+        essences += Essence(this, value)
+    }
+
     fun build(): WeaponData {
-        return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage, onAttackScript)
+        return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage, onAttackScript, onEquipScript, onUnEquipScript)
     }
 }
 
@@ -76,7 +95,10 @@ data class ArmorData(
         val essences: List<Essence>,
         val armorType: ArmorType,
         val armor: Int,
-        val marmor: Int
+        val marmor: Int,
+        val onBeingHitScript: (CharacterEntity, CharacterEntity) -> Unit,
+        val onEquipScript: (CharacterEntity) -> Unit,
+        val onUnEquipScript: (CharacterEntity) -> Unit
 ) : ItemData
 
 data class WeaponData(
@@ -87,5 +109,7 @@ data class WeaponData(
         val essences: List<Essence>,
         val type: WeaponType,
         val pureDamage: Int,
-        val onAttackScript: (CharacterEntity, CharacterEntity) -> Unit
+        val onAttackScript: (CharacterEntity, CharacterEntity) -> Unit,
+        val onEquipScript: (CharacterEntity) -> Unit,
+        val onUnEquipScript: (CharacterEntity) -> Unit
 ) : ItemData

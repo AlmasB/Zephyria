@@ -2,7 +2,7 @@ package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Element.*
-import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.item.ItemLevel.*
 import com.almasb.zeph.item.WeaponType.*
 import com.almasb.zeph.item.weapon
@@ -13,9 +13,6 @@ import com.almasb.zeph.item.weapon
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class Weapon {
-
-    // TODO: onAttack {}, onEquip, onUnEquip, same for Armor
-
 
     fun HANDS() = weapon {
         desc {
@@ -50,6 +47,10 @@ class Weapon {
 
         type = ONE_H_SWORD
         pureDamage = 25
+
+        onEquipScript = {
+            //it.characterComponent.addEffect()
+        }
     }
 
     fun FROSTMOURNE() = weapon {
@@ -65,8 +66,8 @@ class Weapon {
         pureDamage = 130
         element = WATER
 
-        runes += Rune(STRENGTH, 3)
-        runes += Rune(DEXTERITY, 5)
+        STRENGTH +3
+        DEXTERITY +5
     }
 
     // 1H AXES 4300
@@ -91,8 +92,10 @@ class Weapon {
             attacker.sp.restore(3.0)
         }
 
-        runes += Rune(STRENGTH, 7)
-        runes += Rune(VITALITY, 4)
-        runes += Rune(DEXTERITY, 2)
+        STRENGTH +7
+        VITALITY +4
+        DEXTERITY +2
+
+        MAX_SP +20
     }
 }

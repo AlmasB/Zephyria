@@ -1,10 +1,11 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.item.ArmorType
+import com.almasb.zeph.combat.runIfChance
+import com.almasb.zeph.item.ArmorType.*
 import com.almasb.zeph.item.armor
 
 /**
- * Weapons id range [5000-5999].
+ * Armor id range [5000-5999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -17,18 +18,24 @@ class Armor {
             textureName = "items/armor/hat.png"
         }
 
-        armorType = ArmorType.HELM
+        armorType = HELM
     }
 
     fun CLOTHES() = armor {
         desc {
             id = 5001
             name = "Clothes"
-            description = "Just normal clothes, don't count on any defense."
+            description = "Just normal clothes, don't count on any defense. Chance to restore 1 HP on hit."
             textureName = "items/armor/clothes.png"
         }
 
-        armorType = ArmorType.BODY
+        armorType = BODY
+
+        onBeingHitScript = { attacker, target ->
+            runIfChance(50) {
+                target.hp.restore(1.0)
+            }
+        }
     }
 
     fun SHOES() = armor {
@@ -39,6 +46,6 @@ class Armor {
             textureName = "items/armor/shoes.png"
         }
 
-        armorType = ArmorType.SHOES
+        armorType = SHOES
     }
 }

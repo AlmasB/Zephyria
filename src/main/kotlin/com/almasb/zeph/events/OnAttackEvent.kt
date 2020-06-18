@@ -21,10 +21,10 @@ sealed class GameEvent(eventType: EventType<out GameEvent>) : Event(eventType)
 object Events {
     val ANY = EventType<GameEvent>(Event.ANY)
 
-    val ON_ITEM_USED = EventType<OnItemUsedEvent>(ANY)
+    val ON_ITEM_USED = EventType<OnItemUsedEvent>(ANY, "ON_ITEM_USED")
 
-    val ON_ATTACK = EventType<OnAttackEvent>(ANY)
-    val ON_BEING_KILLED = EventType<OnBeingKilledEvent>(ANY)
+    val ON_ATTACK = EventType<OnAttackEvent>(ANY, "ON_ATTACK")
+    val ON_BEING_KILLED = EventType<OnBeingKilledEvent>(ANY, "ON_BEING_KILLED")
 }
 
 class OnAttackEvent(

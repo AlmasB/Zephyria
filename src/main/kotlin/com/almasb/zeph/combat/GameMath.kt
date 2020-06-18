@@ -1,7 +1,5 @@
 package com.almasb.zeph.combat
 
-import com.almasb.fxgl.core.math.FXGLMath
-
 /**
  * Handles everything to do with math and calculations.
  *
@@ -32,5 +30,11 @@ object GameMath {
 
     fun checkChance(chance: Double): Boolean {
         return Math.random() * 100 + 1 <= chance
+    }
+}
+
+fun runIfChance(chance: Int, action: () -> Unit) {
+    if (GameMath.checkChance(chance)) {
+        action.invoke()
     }
 }

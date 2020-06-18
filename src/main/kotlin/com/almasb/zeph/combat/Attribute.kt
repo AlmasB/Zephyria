@@ -3,8 +3,6 @@ package com.almasb.zeph.combat
 import com.almasb.zeph.combat.Attribute.AM.*
 import com.almasb.zeph.combat.Stat.*
 
-private infix fun Stat.increase(am: Attribute.AM) = this to am
-
 /**
  * Primary attributes (9 in total) of a game character.
  *
@@ -62,20 +60,16 @@ enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
             CRIT_DMG increase (VERY_LOW),
             MCRIT_DMG increase (VERY_LOW));
 
-    /**
-     * @return attribute description
-     */
     val description: String
 
     @Suppress("UNCHECKED_CAST")
     val stats: Array<Pair<Stat, AM> > = cStats as Array<Pair<Stat, AM> >
 
     init {
-        this.description = /*"$description\n" +*/ stats.mapIndexed { i, pair -> "%12s %-5s".format(pair.first, pair.second.desc()) }
-                .joinToString("\n")
+        this.description = "$description\n" + stats.joinToString("\n") { pair -> "%12s %-5s".format(pair.first, pair.second.desc()) }
     }
 
-    override fun toString() = if (this.name.length > 3) this.name.substring(0, 3) else this.name
+    override fun toString() = this.name.substring(0, 3)
 
     /**
      * Attribute modifier.
@@ -93,7 +87,6 @@ enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
      * values of all the attributes.
      */
     class AttributeInfo {
-
         var str = 1
         var vit = 1
         var dex = 1
@@ -103,53 +96,10 @@ enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
         var wil = 1
         var per = 1
         var luc = 1
-
-        fun str(value: Int): AttributeInfo {
-            str = value
-            return this
-        }
-
-        fun vit(value: Int): AttributeInfo {
-            vit = value
-            return this
-        }
-
-        fun dex(value: Int): AttributeInfo {
-            dex = value
-            return this
-        }
-
-        fun agi(value: Int): AttributeInfo {
-            agi = value
-            return this
-        }
-
-        fun int(value: Int): AttributeInfo {
-            int = value
-            return this
-        }
-
-        fun wis(value: Int): AttributeInfo {
-            wis = value
-            return this
-        }
-
-        fun wil(value: Int): AttributeInfo {
-            wil = value
-            return this
-        }
-
-        fun per(value: Int): AttributeInfo {
-            per = value
-            return this
-        }
-
-        fun luc(value: Int): AttributeInfo {
-            luc = value
-            return this
-        }
     }
 }
+
+private infix fun Stat.increase(am: Attribute.AM) = this to am
 
 /**
  * Increases an attribute.

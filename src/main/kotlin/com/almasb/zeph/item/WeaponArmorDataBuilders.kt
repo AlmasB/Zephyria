@@ -6,6 +6,7 @@ import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
+import com.almasb.zeph.character.CharacterEntity
 
 @DataDSL
 class ArmorDataBuilder(
@@ -38,7 +39,8 @@ class WeaponDataBuilder(
         val runes: MutableList<Rune> = arrayListOf(),
         val essences: MutableList<Essence> = arrayListOf(),
         var type: WeaponType = WeaponType.MACE,
-        var pureDamage: Int = 0
+        var pureDamage: Int = 0,
+        var onAttackScript: (CharacterEntity, CharacterEntity) -> Unit = { _, _ -> }
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -48,7 +50,7 @@ class WeaponDataBuilder(
     }
 
     fun build(): WeaponData {
-        return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage)
+        return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage, onAttackScript)
     }
 }
 
@@ -84,5 +86,6 @@ data class WeaponData(
         val runes: List<Rune>,
         val essences: List<Essence>,
         val type: WeaponType,
-        val pureDamage: Int
+        val pureDamage: Int,
+        val onAttackScript: (CharacterEntity, CharacterEntity) -> Unit
 ) : ItemData

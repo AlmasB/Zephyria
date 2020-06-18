@@ -77,13 +77,19 @@ class Weapon {
         desc {
             id = 4400
             name = "Soul Reaper"
-            description = "Forged in the depths of Aesmir, it is said the wielder can feel the weapon crave the souls of its enemies."
+            description = "Forged in the depths of Aesmir, it is said the wielder can feel the weapon crave the souls of its enemies.\n" +
+                    "Steals 3 SP on attack."
             textureName = "items/weapons/soul_reaper.png"
         }
 
         itemLevel = EPIC
         type = TWO_H_AXE
         pureDamage = 170
+
+        onAttackScript = { attacker, target ->
+            target.sp.damage(3.0)
+            attacker.sp.restore(3.0)
+        }
 
         runes += Rune(STRENGTH, 7)
         runes += Rune(VITALITY, 4)

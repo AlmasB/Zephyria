@@ -120,16 +120,6 @@ public class ZephyriaApp extends GameApplication {
             spawnItem(700, 500, Data.Weapon.FROSTMOURNE());
         });
 
-//        onKeyDown(KeyCode.M, "Move Dev", () -> {
-//            getGameWorld().getRandom(EntityType.CHARACTER)
-//                    .ifPresent(e -> {
-//                        int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
-//                        int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
-//
-//                        e.getComponent(CharacterActionComponent.class).orderMove(targetX, targetY);
-//                    });
-//        });
-
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
             getGameWorld().getEntitiesInRange(new Rectangle2D(getInput().getMouseXWorld() - 20, getInput().getMouseYWorld() - 20, 40, 40))
                     .stream()
@@ -401,15 +391,6 @@ public class ZephyriaApp extends GameApplication {
                 .fadeOut(text)
                 .buildAndPlay();
     }
-
-    // TODO: add this to CellMoveComponent in FXGL
-//    public void setPositionToCell(Entity entity, int cellX, int cellY) {
-//        // cell center
-//        int cx = cellX * TILE_SIZE + TILE_SIZE / 2;
-//        int cy = cellY * TILE_SIZE + TILE_SIZE / 2;
-//
-//        entity.setAnchoredPosition(cx, cy, entity.getLocalAnchor());
-//    }
 
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");

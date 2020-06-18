@@ -9,8 +9,13 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
+import com.almasb.fxgl.pathfinding.astar.AStarGridView;
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
+import com.almasb.fxgl.physics.BoundingShape;
+import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
@@ -22,6 +27,8 @@ import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
+import com.almasb.zeph.entity.character.component.NewAStarMoveComponent;
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.ui.BasicInfoView;
@@ -50,9 +57,9 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class ZephyriaApp extends GameApplication {
 
-    private static final int TILE_SIZE = Config.tileSize;
-    private static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
-    private static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
+    public static final int TILE_SIZE = Config.spriteSize / 2;
+    public static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
+    public static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
 
     private AStarGrid grid;
 
@@ -146,6 +153,7 @@ public class ZephyriaApp extends GameApplication {
         initEnemies();
 
         //showGrid();
+
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
 
@@ -164,6 +172,12 @@ public class ZephyriaApp extends GameApplication {
 //
 //            playerActionControl.getSelected().set(newEntity);
 //        });
+    }
+
+    private void showGrid() {
+        var gridView = new AStarGridView(grid, TILE_SIZE, TILE_SIZE);
+        gridView.setMouseTransparent(true);
+        getGameScene().addUINode(gridView);
     }
 
     private void initBackground() {
@@ -192,7 +206,9 @@ public class ZephyriaApp extends GameApplication {
                     int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
                     int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
 
-                    player.getActionComponent().orderMove(targetX, targetY);
+                    player.getComponent(NewAStarMoveComponent.class).moveToCell(targetX, targetY);
+
+                    //player.getActionComponent().orderMove(targetX, targetY);
                 })
                 .buildAndAttach();
 
@@ -209,19 +225,6 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndAttach();
 
         grid.get(x, y).setState(CellState.NOT_WALKABLE);
-    }
-
-    private void showGrid() {
-        for (int y = 0; y < grid.getHeight(); y++) {
-            for (int x = 0; x < grid.getWidth(); x++) {
-                Rectangle r = new Rectangle(TILE_SIZE - 1, TILE_SIZE - 1, null);
-                r.setTranslateX(x * TILE_SIZE);
-                r.setTranslateY(y * TILE_SIZE);
-                r.setStroke(Color.RED);
-
-                getGameScene().addUINode(r);
-            }
-        }
     }
 
     @Override
@@ -386,19 +389,27 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndPlay();
     }
 
+    // TODO: add this to CellMoveComponent in FXGL
+//    public void setPositionToCell(Entity entity, int cellX, int cellY) {
+//        // cell center
+//        int cx = cellX * TILE_SIZE + TILE_SIZE / 2;
+//        int cy = cellY * TILE_SIZE + TILE_SIZE / 2;
+//
+//        entity.setAnchoredPosition(cx, cy, entity.getLocalAnchor());
+//    }
+
     private void initPlayer() {
         player = new PlayerEntity("Developer", "chars/players/player_full.png");
         playerComponent = player.getPlayerComponent();
         player.setType(EntityType.PLAYER);
-        player.setPosition(TILE_SIZE * 8, TILE_SIZE * 4);
+        player.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.spriteSize, Config.spriteSize)));
+        player.getTransformComponent().setLocalAnchor(new Point2D(Config.spriteSize / 2.0, Config.spriteSize - 10));
+        player.getComponent(NewCellMoveComponent.class).setPositionToCell(25, 1);
 
         getGameWorld().addEntity(player);
 
 
 
-
-//        player.addComponent(DataManager.INSTANCE.makeCharacterSubView(player));
-//        spawnCharacter(player);
 
 //        // TODO: TEST DATA BEGIN
 //        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
@@ -411,7 +422,6 @@ public class ZephyriaApp extends GameApplication {
 ////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
 ////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
 ////        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
-//
 
         player.getInventory().getItems().add(newDagger(Element.NEUTRAL));
         player.getInventory().getItems().add(newDagger(Element.FIRE));

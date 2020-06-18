@@ -7,9 +7,9 @@ package com.almasb.zeph
  */
 object Config {
 
-    const val tileSize = 64
-    val mapWidth = 20
-    val mapHeight = 20
+    const val spriteSize = 64
+    val mapWidth = 40
+    val mapHeight = 40
 
     // CHARACTER VALUES
 

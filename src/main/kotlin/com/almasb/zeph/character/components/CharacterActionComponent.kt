@@ -11,6 +11,8 @@ import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.PlayerEntity
+import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
@@ -30,6 +32,8 @@ class CharacterActionComponent : Component() {
     private lateinit var state: StateComponent
     private lateinit var char: CharacterEntity
     private lateinit var animationComponent: AnimationComponent
+    private lateinit var moveComponent: NewCellMoveComponent
+    private lateinit var astar: NewAStarMoveComponent
 
     private val IDLE: EntityState = object : EntityState() {
         override fun onEnteredFrom(prevState: EntityState?) {
@@ -68,8 +72,8 @@ class CharacterActionComponent : Component() {
 
                 val item = pickUpTarget!!
 
-                val x = item.x.toInt() / Config.tileSize
-                val y = item.y.toInt() / Config.tileSize
+                val x = item.x.toInt() / Config.spriteSize
+                val y = item.y.toInt() / Config.spriteSize
 
                 moveTo(x, y)
 
@@ -85,8 +89,8 @@ class CharacterActionComponent : Component() {
             while (!path.isEmpty()) {
                 val node = path[0]
 
-                var dx = node.x * Config.tileSize - char.x
-                var dy = node.y * Config.tileSize - char.y
+                var dx = node.x * Config.spriteSize - char.x
+                var dy = node.y * Config.spriteSize - char.y
 
                 dx = Math.signum(dx)
                 dy = Math.signum(dy)
@@ -140,7 +144,7 @@ class CharacterActionComponent : Component() {
         }
 
         private fun moveTo(x: Int, y: Int) {
-            if (Point2D(x.toDouble(), y.toDouble()).multiply(Config.tileSize.toDouble()).distance(char.position) < Config.tileSize) {
+            if (Point2D(x.toDouble(), y.toDouble()).multiply(Config.spriteSize.toDouble()).distance(char.position) < Config.spriteSize) {
                 return
             }
 
@@ -181,6 +185,22 @@ class CharacterActionComponent : Component() {
         char = entity as CharacterEntity
     }
 
+
+    override fun onUpdate(tpf: Double) {
+        if (!moveComponent.isMoving) {
+            animationComponent.loopIdle()
+            return
+        }
+
+        when {
+            moveComponent.isMovingDown -> animationComponent.loopWalkDown()
+            moveComponent.isMovingUp -> animationComponent.loopWalkUp()
+            moveComponent.isMovingLeft -> animationComponent.loopWalkLeft()
+            moveComponent.isMovingRight -> animationComponent.loopWalkRight()
+        }
+    }
+
+
     fun orderMove(x: Int, y: Int) {
         reset()
         moveTarget = Point2D(x.toDouble(), y.toDouble())
@@ -202,7 +222,7 @@ class CharacterActionComponent : Component() {
         reset()
         pickUpTarget = item
 
-        if (char.distance(item) <= Config.tileSize) {
+        if (char.distance(item) <= Config.spriteSize) {
             pickUp(item)
         } else {
             state.changeState(MOVE)

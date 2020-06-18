@@ -86,14 +86,14 @@ open class CharacterComponent(data: CharacterData) : Component() {
         sp.restorePercentageMax(100.0)
     }
 
-    fun getTileX() = entity.x.toInt() / Config.tileSize
+    fun getTileX() = entity.x.toInt() / Config.spriteSize
 
-    fun getTileY() = entity.y.toInt() / Config.tileSize
+    fun getTileY() = entity.y.toInt() / Config.spriteSize
 
     /**
      * @return true if [target] is in weapon range of this character
      */
-    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.tileSize
+    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.spriteSize
 
     /**
      * @param status status

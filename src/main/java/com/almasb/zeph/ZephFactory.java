@@ -1,6 +1,10 @@
 package com.almasb.zeph;
 
+import com.almasb.fxgl.core.util.LazyValue;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.*;
+import com.almasb.fxgl.pathfinding.CellMoveComponent;
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.zeph.character.CharacterData;
@@ -25,7 +29,9 @@ public class ZephFactory implements EntityFactory {
             entity.setY(data.getY());
             entity.setType(EntityType.CHARACTER);
 
-            entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.tileSize, Config.tileSize)));
+            entity.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.spriteSize, Config.spriteSize)));
+
+
 
             // TODO: parse properties from [charData]
 

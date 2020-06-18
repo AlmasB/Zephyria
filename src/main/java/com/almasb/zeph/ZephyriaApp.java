@@ -9,11 +9,9 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
-import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsWorld;
@@ -21,15 +19,15 @@ import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.PlayerEntity;
-import com.almasb.zeph.character.components.CharacterActionComponent;
 import com.almasb.zeph.character.components.PlayerComponent;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent;
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
+import com.almasb.zeph.events.EventHandlers;
+import com.almasb.zeph.events.Events;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.ui.BasicInfoView;
@@ -46,7 +44,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import kotlin.Pair;
@@ -92,6 +89,11 @@ public class ZephyriaApp extends GameApplication {
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
+    }
+
+    @Override
+    protected void onPreInit() {
+        EventHandlers.INSTANCE.initialize();
     }
 
     @Override
@@ -468,10 +470,6 @@ public class ZephyriaApp extends GameApplication {
 
         e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             player.getActionComponent().orderAttack(e);
-
-//            DamageResult dmg = player.getPlayerComponent().attack(e);
-//
-//            showDamage(dmg, e.getCenter());
         });
     }
 

@@ -1,10 +1,12 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.zeph.Config
+import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
@@ -45,33 +47,41 @@ class CharacterActionComponent : Component() {
                 } else {
                     state.changeStateToIdle()
                 }
+            } else {
+                if (attackTarget != null) {
+                    if (moveTarget!!.x.toInt() != attackTarget!!.characterComponent.getTileX()
+                            || moveTarget!!.y.toInt() != attackTarget!!.characterComponent.getTileY()) {
+                        orderAttack(attackTarget!!)
+                    }
+                }
             }
         }
     }
 
     private val ATTACK: EntityState = object : EntityState() {
         override fun onEnteredFrom(prevState: EntityState) {
+            // TODO: figure out correct attack loop
             animationComponent.loopAttack()
         }
 
         override fun onUpdate(tpf: Double) {
-//            if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
-//
-//                if (char.characterComponent.canAttack()) {
-//                    val dmg = char.characterComponent.attack(attackTarget!!)
-//                    FXGL.getAppCast<ZephyriaApp>().showDamage(dmg, attackTarget!!.center)
-//
-//                    char.characterComponent.resetAtkTick()
-//
-//                    if (attackTarget!!.hp.isZero) {
-//                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
-//                        state.changeStateToIdle()
-//                    }
-//                }
-//
-//            } else {
-//                state.changeState(MOVE)
-//            }
+            if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
+
+                if (char.characterComponent.canAttack()) {
+                    val dmg = char.characterComponent.attack(attackTarget!!)
+                    FXGL.getAppCast<ZephyriaApp>().showDamage(dmg, attackTarget!!.center)
+
+                    char.characterComponent.resetAtkTick()
+
+                    if (attackTarget!!.hp.isZero) {
+                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
+                        state.changeStateToIdle()
+                    }
+                }
+
+            } else {
+                orderAttack(attackTarget!!)
+            }
         }
     }
 
@@ -128,12 +138,12 @@ class CharacterActionComponent : Component() {
     }
 
     private fun move(cellX: Int, cellY: Int) {
+        moveTarget = Point2D(cellX.toDouble(), cellY.toDouble())
         state.changeState(MOVE)
         entity.getComponent(NewAStarMoveComponent::class.java).moveToCell(cellX, cellY)
     }
 
     private fun attack(target: CharacterEntity) {
-        // TODO:
         state.changeState(ATTACK)
     }
 

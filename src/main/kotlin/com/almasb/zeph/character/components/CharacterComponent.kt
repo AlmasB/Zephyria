@@ -1,5 +1,6 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.ViewComponent
@@ -15,6 +16,7 @@ import com.almasb.zeph.entity.character.component.AttributesComponent
 import com.almasb.zeph.entity.character.component.HPComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.entity.character.component.StatsComponent
+import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.SkillComponent
 import com.almasb.zeph.skill.SkillUseResult
@@ -321,6 +323,8 @@ open class CharacterComponent(data: CharacterData) : Component() {
      * @return damage dealt
      */
     fun attack(target: CharacterEntity): DamageResult {
+        fire(OnAttackEvent(char, target))
+
         return dealPhysicalDamage(target, stats.getTotalStat(ATK) + 2 * GameMath.random(lvl()), weaponElement.value)
     }
 

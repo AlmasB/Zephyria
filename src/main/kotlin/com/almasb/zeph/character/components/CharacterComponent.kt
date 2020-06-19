@@ -28,13 +28,16 @@ import javafx.collections.FXCollections
 import javafx.geometry.Point2D
 import java.util.concurrent.Callable
 
-open class CharacterComponent(data: CharacterData) : Component() {
+open class CharacterComponent(val data: CharacterData) : Component() {
 
     private lateinit var char: CharacterEntity
 
-    val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
+    val charClass = SimpleObjectProperty(data.charClass)
 
-    val baseLevel = SimpleIntegerProperty(1)
+    val baseLevel = SimpleIntegerProperty(data.baseLevel)
+    val statLevel = SimpleIntegerProperty(1)
+    val jobLevel = SimpleIntegerProperty(1)
+
     val hp = HealthDoubleComponent(1.0)
     val sp = ManaDoubleComponent(1.0)
 
@@ -51,8 +54,8 @@ open class CharacterComponent(data: CharacterData) : Component() {
      */
     val effects = FXCollections.observableArrayList<Effect>()
 
-    val weaponElement = SimpleObjectProperty<Element>()
-    val armorElement = SimpleObjectProperty<Element>()
+    val weaponElement = SimpleObjectProperty(data.element)
+    val armorElement = SimpleObjectProperty(data.element)
 
     val inventory = Inventory()
     val skills = FXCollections.observableArrayList<SkillComponent>()
@@ -65,13 +68,8 @@ open class CharacterComponent(data: CharacterData) : Component() {
     val attackRange: Int = data.attackRange
 
     init {
-        charClass.value = data.charClass
-
+        // TODO: ?
         //data.attributes.forEach { attribute, value ->  attributes.setAttribute(attribute, value)}
-        baseLevel.value = data.baseLevel
-
-        weaponElement.value = data.element
-        armorElement.value = data.element
     }
 
     override fun onAdded() {

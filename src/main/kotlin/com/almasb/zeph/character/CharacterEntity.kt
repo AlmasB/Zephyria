@@ -1,64 +1,65 @@
 package com.almasb.zeph.character
 
-import com.almasb.fxgl.core.util.LazyValue
-import com.almasb.fxgl.dsl.FXGL
-import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
-import com.almasb.fxgl.entity.state.StateComponent
-import com.almasb.zeph.Config
-import com.almasb.zeph.Inventory
-import com.almasb.zeph.ZephyriaApp
+import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.components.AnimationComponent
 import com.almasb.zeph.character.components.CharacterActionComponent
-import com.almasb.zeph.character.components.CharacterChildViewComponent
 import com.almasb.zeph.character.components.CharacterComponent
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
-import javafx.geometry.Point2D
-import java.util.function.Supplier
+import com.almasb.zeph.character.components.PlayerComponent
 
 /**
- * This is a convenience class and DOES NOT have any logic.
+ * This is a convenience class ONLY and DOES NOT have any logic.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-open class CharacterEntity(val data: CharacterData, val characterComponent: CharacterComponent) : Entity() {
+class CharacterEntity : Entity() {
 
-    constructor(data: CharacterData) : this(data, CharacterComponent(data))
+    /* COMPONENTS BEGIN */
 
-    val animationComponent = AnimationComponent(data.description.textureName)
-    val actionComponent = CharacterActionComponent()
+    val playerComponent: PlayerComponent?
+        get() = getComponentOptional(PlayerComponent::class.java).orElse(null)
 
-    val attributes = characterComponent.attributes
+    val characterComponent: CharacterComponent
+        get() = getComponent(CharacterComponent::class.java)
 
-    val stats = characterComponent.stats
+    val animationComponent: AnimationComponent
+        get() = getComponent(AnimationComponent::class.java)
 
-    val hp = characterComponent.hp
-    val sp = characterComponent.sp
+    val actionComponent: CharacterActionComponent
+        get() = getComponent(CharacterActionComponent::class.java)
 
-    val baseLevel = characterComponent.baseLevel
+    /* COMPONENTS END */
 
-    val inventory: Inventory
-        get() = characterComponent.inventory
+    val isPlayer get() = isType(EntityType.PLAYER)
 
-    init {
-        transformComponent.localAnchor = Point2D(Config.spriteSize / 2.0, (Config.spriteSize - 10).toDouble())
+    val data get() = characterComponent.data
 
-        addComponent(StateComponent())
-        addComponent(EffectComponent())
-        addComponent(characterComponent)
-        addComponent(animationComponent)
+    val name get() = characterComponent.data.description.name
 
-        addComponent(CharacterChildViewComponent())
+    val charClass get() = characterComponent.charClass
 
-        addComponent(NewCellMoveComponent(ZephyriaApp.TILE_SIZE, ZephyriaApp.TILE_SIZE, Config.CHAR_MOVE_SPEED))
-        addComponent(NewAStarMoveComponent(LazyValue(Supplier { FXGL.getAppCast<ZephyriaApp>().grid })))
+    val attributes get() = characterComponent.attributes
 
+    val stats get() = characterComponent.stats
 
-        addComponent(actionComponent)
-    }
+    val hp get() = characterComponent.hp
 
-    fun kill() {
-        characterComponent.kill()
-    }
+    val sp get() = characterComponent.sp
+
+    val baseLevel get() = characterComponent.baseLevel
+    val statLevel get() = characterComponent.statLevel
+    val jobLevel get() = characterComponent.jobLevel
+
+    val baseXP get() = characterComponent.baseXP
+    val statXP get() = characterComponent.statXP
+    val jobXP get() = characterComponent.jobXP
+
+    val inventory get() = characterComponent.inventory
+
+    val weaponElement get() = characterComponent.weaponElement
+    val armorElement get() = characterComponent.armorElement
+
+//    fun getEquip(place: EquipPlace) = playerComponent.getEquip(place)
+//
+//    fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)
 }

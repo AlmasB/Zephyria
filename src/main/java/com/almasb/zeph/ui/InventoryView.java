@@ -2,7 +2,7 @@ package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
-import com.almasb.zeph.character.PlayerEntity;
+import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.item.Armor;
 import com.almasb.zeph.item.Item;
 import com.almasb.zeph.item.UsableItem;
@@ -32,9 +32,9 @@ public class InventoryView extends MDIWindow {
 
     private ListChangeListener<Item> listener;
 
-    private PlayerEntity player;
+    private CharacterEntity player;
 
-    public InventoryView(PlayerEntity player, double width, double height) {
+    public InventoryView(CharacterEntity player, double width, double height) {
         //super("Inventory", WindowDecor.MINIMIZE);
 
         relocate(width - 202, height - 315);
@@ -129,7 +129,7 @@ public class InventoryView extends MDIWindow {
                 } else if (item instanceof Armor) {
                     player.getPlayerComponent().equipArmor((Armor) item);
                 } else if (item instanceof UsableItem) {
-                    player.getPlayerComponent().useItem((UsableItem) item);
+                    player.getCharacterComponent().useItem((UsableItem) item);
                 }
 
                 // TODO: other usable types

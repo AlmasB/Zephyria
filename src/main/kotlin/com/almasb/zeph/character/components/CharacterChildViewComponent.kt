@@ -3,6 +3,7 @@ package com.almasb.zeph.character.components
 import com.almasb.fxgl.dsl.components.view.ChildViewComponent
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config
+import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.CharacterEntity
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.Group
@@ -22,13 +23,10 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
     override fun onAdded() {
         super.onAdded()
 
-        char = entity.getComponentOptional(CharacterComponent::class.java)
-                .orElseGet { entity.getComponent(PlayerComponent::class.java) }
-
         val view = makeView()
         viewRoot.children += view
 
-        if (char !is PlayerComponent) {
+        if (!entity.isType(EntityType.PLAYER)) {
             viewRoot.visibleProperty().bind(entity.viewComponent.parent.hoverProperty())
         }
     }
@@ -63,7 +61,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         text.translateY = 85.0
 
         return Group(barHP, barSP).also {
-            if (char !is PlayerComponent) {
+            if (!entity.isType(EntityType.PLAYER)) {
                 it.children += text
             }
         }

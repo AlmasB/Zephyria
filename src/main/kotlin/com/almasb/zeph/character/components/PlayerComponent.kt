@@ -1,10 +1,8 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
-import com.almasb.zeph.character.CharacterClass
-import com.almasb.zeph.character.CharacterData
-import com.almasb.zeph.character.EquipPlace
-import com.almasb.zeph.character.PlayerEntity
+import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
@@ -19,13 +17,9 @@ import java.util.*
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
+class PlayerComponent : Component() {
 
-    init {
-        charClass.value = CharacterClass.NOVICE
-    }
-
-    private lateinit var player: PlayerEntity
+    private lateinit var player: CharacterEntity
 
     // TODO: set to 0 when tests are done
     val attributePoints = SimpleIntegerProperty(90)
@@ -34,13 +28,12 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     val money = SimpleIntegerProperty(Config.STARTING_MONEY)
     val weapon = SimpleObjectProperty<Weapon>()
 
-    val statLevel = SimpleIntegerProperty(1)
-    val jobLevel = SimpleIntegerProperty(1)
+
 
     override fun onAdded() {
         super.onAdded()
 
-        player = entity as PlayerEntity
+        player = entity as CharacterEntity
 
         EquipPlace.values().forEach {
 
@@ -103,9 +96,9 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
         if (attributePoints.value == 0)
             return
 
-        val value = attributes.getBaseAttribute(attribute)
+        val value = player.attributes.getBaseAttribute(attribute)
         if (value < Config.MAX_ATTRIBUTE) {
-            attributes.setAttribute(attribute, value + 1)
+            player.attributes.setAttribute(attribute, value + 1)
             attributePoints.value--
         }
     }
@@ -130,11 +123,11 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
 //        }
     }
 
-    fun expNeededForNextBaseLevel() = EXP_NEEDED_BASE[baseLevel.value - 1]
+    fun expNeededForNextBaseLevel() = EXP_NEEDED_BASE[player.baseLevel.value - 1]
 
-    fun expNeededForNextStatLevel() = EXP_NEEDED_STAT[statLevel.value - 1]
+    fun expNeededForNextStatLevel() = EXP_NEEDED_STAT[player.statLevel.value - 1]
 
-    fun expNeededForNextJobLevel()  = EXP_NEEDED_JOB[jobLevel.value - 1]
+    fun expNeededForNextJobLevel()  = EXP_NEEDED_JOB[player.jobLevel.value - 1]
 
     /**
      * Increases player's experience by [gainedXP].
@@ -144,29 +137,29 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     fun rewardXP(gainedXP: Experience): Boolean {
         var baseLevelUp = false
 
-        if (statLevel.value < Config.MAX_LEVEL_STAT) {
-            statXP.value += gainedXP.stat
+        if (player.statLevel.value < Config.MAX_LEVEL_STAT) {
+            player.statXP.value += gainedXP.stat
 
-            if (statXP.value >= expNeededForNextStatLevel()) {
-                statXP.value = 0
+            if (player.statXP.value >= expNeededForNextStatLevel()) {
+                player.statXP.value = 0
                 statLevelUp();
             }
         }
 
-        if (jobLevel.value < Config.MAX_LEVEL_JOB) {
-            jobXP.value += gainedXP.job
+        if (player.jobLevel.value < Config.MAX_LEVEL_JOB) {
+            player.jobXP.value += gainedXP.job
 
-            if (jobXP.value >= expNeededForNextJobLevel()) {
-                jobXP.value = 0
+            if (player.jobXP.value >= expNeededForNextJobLevel()) {
+                player.jobXP.value = 0
                 jobLevelUp();
             }
         }
 
-        if (baseLevel.value < Config.MAX_LEVEL_BASE) {
-            baseXP.value += gainedXP.base
+        if (player.baseLevel.value < Config.MAX_LEVEL_BASE) {
+            player.baseXP.value += gainedXP.base
 
-            if (baseXP.value >= expNeededForNextBaseLevel()) {
-                baseXP.value = 0
+            if (player.baseXP.value >= expNeededForNextBaseLevel()) {
+                player.baseXP.value = 0
                 baseLevelUp();
                 baseLevelUp = true
             }
@@ -176,19 +169,19 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     }
 
     private fun baseLevelUp() {
-        baseLevel.value++
+        player.baseLevel.value++
 
-        hp.restorePercentageMax(100.0)
-        sp.restorePercentageMax(100.0)
+        player.hp.restorePercentageMax(100.0)
+        player.sp.restorePercentageMax(100.0)
     }
 
     private fun statLevelUp() {
-        statLevel.value++
+        player.statLevel.value++
         attributePoints.value += Config.ATTRIBUTE_POINTS_PER_LEVEL
     }
 
     private fun jobLevelUp() {
-        jobLevel.value++
+        player.jobLevel.value++
         skillPoints.value++
     }
 
@@ -207,16 +200,16 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
     fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as Weapon
 
     fun equipWeapon(weapon: Weapon) {
-        inventory.removeItem(weapon)
+        player.inventory.removeItem(weapon)
 
         if (weapon.type.isTwoHanded()) {
 
-            if (30 - inventory.items.size == 1
+            if (Config.MAX_INVENTORY_SIZE - player.inventory.items.size == 1
                 && !isFree(EquipPlace.RIGHT_HAND)
                 && !isFree(EquipPlace.LEFT_HAND)) {
                 // ex case, when inventory is full and player tries to equip 2H weapon
                 // but holds two 1H weapons
-                inventory.addItem(weapon)
+                player.inventory.addItem(weapon)
                 return
             }
 
@@ -234,11 +227,11 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
         }
 
         weapon.onEquip(player)
-        weaponElement.value = weapon.element.value
+        player.weaponElement.value = weapon.element.value
     }
 
     fun equipArmor(armor: Armor) {
-        inventory.removeItem(armor)
+        player.inventory.removeItem(armor)
 
         val place = when (armor.type) {
             ArmorType.BODY -> EquipPlace.BODY
@@ -249,11 +242,11 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
         unEquipItem(place)
         setEquip(place, armor)
         armor.onEquip(player)
-        armorElement.value = armor.element.value
+        player.armorElement.value = armor.element.value
     }
 
     fun unEquipItem(place: EquipPlace) {
-        if (isFree(place) || inventory.isFull())
+        if (isFree(place) || player.inventory.isFull())
             return
 
         val item = getEquip(place)
@@ -271,7 +264,7 @@ class PlayerComponent(charData: CharacterData) : CharacterComponent(charData) {
             item.onUnEquip(player)
         }
 
-        inventory.addItem(item)
+        player.inventory.addItem(item)
 
         // replace with default
         if (place.isWeapon) {

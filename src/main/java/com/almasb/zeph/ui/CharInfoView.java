@@ -2,7 +2,7 @@ package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.ui.MDIWindow;
-import com.almasb.zeph.character.PlayerEntity;
+import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.binding.Bindings;
@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 
 public class CharInfoView extends MDIWindow {
 
-    public CharInfoView(PlayerEntity player) {
+    public CharInfoView(CharacterEntity player) {
         //super("Char Info", WindowDecor.MINIMIZE);
 
         relocate(0, 240);

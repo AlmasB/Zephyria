@@ -12,14 +12,10 @@ import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
-import com.almasb.fxgl.physics.BoundingShape;
-import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
-import com.almasb.zeph.character.PlayerEntity;
-import com.almasb.zeph.character.components.PlayerComponent;
 import com.almasb.zeph.combat.DamageResult;
 import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
@@ -60,8 +56,7 @@ public class ZephyriaApp extends GameApplication {
 
     private AStarGrid grid;
 
-    private PlayerEntity player;
-    private PlayerComponent playerComponent;
+    private CharacterEntity player;
 
     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
 
@@ -75,7 +70,7 @@ public class ZephyriaApp extends GameApplication {
         return grid;
     }
 
-    public PlayerEntity getPlayer() {
+    public CharacterEntity getPlayer() {
         return player;
     }
 
@@ -279,7 +274,7 @@ public class ZephyriaApp extends GameApplication {
      * @param character killed char
      */
     public void playerKilledChar(CharacterEntity character) {
-        character.kill();
+        character.getCharacterComponent().kill();
 
         int levelDiff = character.getBaseLevel().get() - player.getBaseLevel().get();
 
@@ -287,8 +282,8 @@ public class ZephyriaApp extends GameApplication {
 
         showMoneyEarned(money, player.getPosition());
 
-        playerComponent.rewardMoney(money);
-        playerComponent.rewardXP(character.getData().getRewardXP());
+        player.getPlayerComponent().rewardMoney(money);
+        player.getPlayerComponent().rewardXP(character.getData().getRewardXP());
 
         List<Pair<Integer, Integer>> drops = character.getData().getDropItems();
         drops.forEach(p -> {
@@ -392,16 +387,8 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void initPlayer() {
-        player = new PlayerEntity("Developer", "chars/players/player_full.png");
-        playerComponent = player.getPlayerComponent();
-        player.setType(EntityType.PLAYER);
-        player.getBoundingBoxComponent().addHitBox(new HitBox(BoundingShape.box(Config.spriteSize, Config.spriteSize)));
+        player = ZephFactoryKt.newPlayer();
         player.getComponent(NewCellMoveComponent.class).setPositionToCell(25, 1);
-
-        getGameWorld().addEntity(player);
-
-
-
 
 //        // TODO: TEST DATA BEGIN
 //        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));

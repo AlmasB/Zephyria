@@ -8,7 +8,6 @@ import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.Armor
@@ -148,15 +147,15 @@ class CharacterActionComponent : Component() {
 
     private fun pickUp(item: Entity) {
         item.getPropertyOptional<Weapon>("weapon").ifPresent {
-            (char as PlayerEntity).inventory.addItem(it)
+            char.inventory.addItem(it)
         }
 
         item.getPropertyOptional<Armor>("armor").ifPresent {
-            (char as PlayerEntity).inventory.addItem(it)
+            char.inventory.addItem(it)
         }
 
         item.getPropertyOptional<UsableItem>("usable").ifPresent {
-            (char as PlayerEntity).inventory.addItem(it)
+            char.inventory.addItem(it)
         }
 
         item.removeFromWorld()

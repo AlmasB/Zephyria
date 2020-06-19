@@ -3,7 +3,7 @@ package com.almasb.zeph.ui;
 import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
-import com.almasb.zeph.character.PlayerEntity;
+import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.Pane;
@@ -13,7 +13,7 @@ import javafx.scene.text.Text;
 
 public class BasicInfoView extends MDIWindow {
 
-    public BasicInfoView(PlayerEntity player) {
+    public BasicInfoView(CharacterEntity player) {
         //super("Basic Info", WindowDecor.MINIMIZE);
 
 

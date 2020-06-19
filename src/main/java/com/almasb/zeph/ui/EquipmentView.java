@@ -3,7 +3,7 @@ package com.almasb.zeph.ui;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.EquipPlace;
-import com.almasb.zeph.character.PlayerEntity;
+import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.item.Item;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -22,9 +22,9 @@ public final class EquipmentView extends MDIWindow {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
-    private PlayerEntity player;
+    private CharacterEntity player;
 
-    public EquipmentView(PlayerEntity player, double width, double height) {
+    public EquipmentView(CharacterEntity player, double width, double height) {
         //super("Equipment", WindowDecor.MINIMIZE);
 
         relocate(width - 202 - 202, height - 315);
@@ -42,8 +42,8 @@ public final class EquipmentView extends MDIWindow {
         groups.put(EquipPlace.RIGHT_HAND, createGroup(43, 105));
 
         for (EquipPlace place : EquipPlace.values()) {
-            setItem(place, player.getEquip(place));
-            player.equipProperty(place).addListener((obs, old, newItem) -> {
+            setItem(place, player.getPlayerComponent().getEquip(place));
+            player.getPlayerComponent().equipProperty(place).addListener((obs, old, newItem) -> {
                 setItem(place, newItem);
             });
         }

@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.character.component;
+package com.almasb.zeph.character;
 
 import com.almasb.zeph.combat.Attribute;
 import javafx.beans.binding.NumberBinding;

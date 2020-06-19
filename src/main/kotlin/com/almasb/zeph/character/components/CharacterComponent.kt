@@ -14,9 +14,9 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.entity.character.component.Attributes
+import com.almasb.zeph.character.Attributes
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
-import com.almasb.zeph.entity.character.component.Stats
+import com.almasb.zeph.character.Stats
 import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.SkillComponent

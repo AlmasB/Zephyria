@@ -1,4 +1,4 @@
-package com.almasb.zeph.entity.ai
+package com.almasb.zeph.character.ai
 
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config

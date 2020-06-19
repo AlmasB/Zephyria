@@ -2,7 +2,7 @@ package com.almasb.zeph.events
 
 import com.almasb.fxgl.dsl.onEvent
 import com.almasb.zeph.character.PlayerEntity
-import com.almasb.zeph.entity.ai.RandomWanderComponent
+import com.almasb.zeph.character.ai.RandomWanderComponent
 
 /**
  *

@@ -56,7 +56,6 @@ class ZephFactory : EntityFactory {
                 addComponent(RandomWanderComponent())
             }
 
-            // TODO: parse properties from [charData]
             return entity
         } catch (e: Exception) {
             e.printStackTrace()

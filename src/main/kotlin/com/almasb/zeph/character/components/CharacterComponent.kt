@@ -8,7 +8,6 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.ViewComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.Inventory
-import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
@@ -19,7 +18,7 @@ import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.character.Stats
 import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.item.UsableItem
-import com.almasb.zeph.skill.SkillComponent
+import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillUseResult
 import javafx.beans.binding.Bindings.createDoubleBinding
 import javafx.beans.property.SimpleIntegerProperty
@@ -58,7 +57,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val armorElement = SimpleObjectProperty(data.element)
 
     val inventory = Inventory()
-    val skills = FXCollections.observableArrayList<SkillComponent>()
+    val skills = FXCollections.observableArrayList<Skill>()
 
     // what XP does this char give on death
     val baseXP = SimpleIntegerProperty()
@@ -433,7 +432,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         return useTargetSkill(skills[index], target)
     }
 
-    fun useTargetSkill(skill: SkillComponent, target: Entity): SkillUseResult {
+    fun useTargetSkill(skill: Skill, target: Entity): SkillUseResult {
 //        if (skill.level.value == 0)
 //            return SkillUseResult.NONE
 //

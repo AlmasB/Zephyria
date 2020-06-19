@@ -1,71 +1,66 @@
 package com.almasb.zeph.skill
 
-import com.almasb.fxgl.entity.Entity
+import com.almasb.zeph.Description
+import com.almasb.zeph.DescriptionBuilder
+import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.DataDSL
+import javafx.util.Duration
 import java.util.*
 
-/**
- *
- *
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
-data class SkillData(val type: SkillType, val useType: SkillUseType, val targetTypes: EnumSet<SkillTargetType>) {
 
-    var mana = 0
-    var cooldown = 0.0
+@DataDSL
+class SkillDataBuilder(
+        var description: Description = Description(),
+        var type: SkillType = SkillType.ACTIVE,
+        var useType: SkillUseType = SkillUseType.DAMAGE,
+        var targetTypes: EnumSet<SkillTargetType> = EnumSet.of(SkillTargetType.ENEMY),
+        var manaCost: Int = 0,
+        var cooldown: Duration = Duration.ZERO,
+        var hasProjectile: Boolean = false,
+        var projectileTextureName: String = "null_object.png",
+        var soundEffectName: String = "null_object.wav",
+        var onCastScript: (CharacterEntity, CharacterEntity) -> Unit = { caster, target -> }
 
-    var areaSize = 0
+) {
 
-    fun withMana(m: Int): SkillData {
-        mana = m
-        return this
+    fun desc(setup: DescriptionBuilder.() -> Unit) {
+        val builder = DescriptionBuilder()
+        builder.setup()
+        description = builder.build()
     }
 
-    fun withCooldown(c: Double): SkillData {
-        cooldown = c
-        return this
-    }
-
-    fun withArea(size: Int): SkillData {
-        areaSize = size
-        return this
-    }
-
-    lateinit var onCast: (Entity, Entity, SkillComponent) -> SkillUseResult
-
-    fun onCast(func: (Entity, Entity, SkillComponent) -> SkillUseResult): SkillData {
-        onCast = func
-        return this
-    }
-
-//    lateinit var onPassive: (CharacterEntity, CharacterEntity, SkillEntity) -> Unit
-//
-//    fun onPassive(func: (CharacterEntity, CharacterEntity, SkillEntity) -> Unit): SkillDataComponent {
-//        onPassive = func
-//        return this
-//    }
-
-    // allows us to check if we need to create a projectile or do a simple attack
-    var hasProjectile = false
-
-    /**
-     * Projectile texture name (if applicable).
-     */
-    lateinit var textureName: String
-
-    fun withTextureName(name: String): SkillData {
-        textureName = name
-        hasProjectile = true
-        return this
-    }
-
-    // TODO: sound
-    // TODO: on skill end func?
-
-    // TODO: default noop so we can call onLearn without checks
-    lateinit var onLearn: (Entity, SkillComponent) -> Unit
-
-    fun onLearn(func: (Entity, SkillComponent) -> Unit): SkillData {
-        onLearn = func
-        return this
+    fun build(): SkillData {
+        return SkillData(
+                description,
+                type,
+                useType,
+                targetTypes,
+                manaCost,
+                cooldown,
+                hasProjectile,
+                projectileTextureName,
+                soundEffectName,
+                onCastScript
+        )
     }
 }
+
+@DataDSL
+fun skill(setup: SkillDataBuilder.() -> Unit): SkillData {
+    val builder = SkillDataBuilder()
+    builder.setup()
+    return builder.build()
+}
+
+data class SkillData(
+        val description: Description,
+        val type: SkillType,
+        val useType: SkillUseType,
+        val targetTypes: EnumSet<SkillTargetType>,
+        val manaCost: Int,
+        val cooldown: Duration,
+        val hasProjectile: Boolean,
+        val projectileTextureName: String,
+        val soundEffectName: String,
+        val onCastScript: (CharacterEntity, CharacterEntity) -> Unit
+)

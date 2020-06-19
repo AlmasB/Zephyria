@@ -23,4 +23,5 @@ data class Description(
         val id: Int = -1,
         val name: String = "Unnamed object",
         val description: String = "No description",
-        val textureName: String = "null_object.png")
+        val textureName: String = "null_object.png"
+)

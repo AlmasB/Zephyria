@@ -28,8 +28,6 @@ class PlayerComponent : Component() {
     val money = SimpleIntegerProperty(Config.STARTING_MONEY)
     val weapon = SimpleObjectProperty<Weapon>()
 
-
-
     override fun onAdded() {
         super.onAdded()
 

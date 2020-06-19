@@ -15,11 +15,11 @@ class SkillDataBuilder(
         var useType: SkillUseType = SkillUseType.DAMAGE,
         var targetTypes: EnumSet<SkillTargetType> = EnumSet.of(SkillTargetType.ENEMY),
         var manaCost: Int = 0,
-        var cooldown: Duration = Duration.ZERO,
+        var cooldown: Double = 0.0,
         var hasProjectile: Boolean = false,
         var projectileTextureName: String = "null_object.png",
         var soundEffectName: String = "null_object.wav",
-        var onCastScript: (CharacterEntity, CharacterEntity) -> Unit = { caster, target -> }
+        var onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit = { caster, target, skill -> }
 
 ) {
 
@@ -27,6 +27,14 @@ class SkillDataBuilder(
         val builder = DescriptionBuilder()
         builder.setup()
         description = builder.build()
+    }
+
+    fun Int.sec(): Duration {
+        return Duration.seconds(this.toDouble())
+    }
+
+    fun Double.sec(): Duration {
+        return Duration.seconds(this)
     }
 
     fun build(): SkillData {
@@ -58,9 +66,9 @@ data class SkillData(
         val useType: SkillUseType,
         val targetTypes: EnumSet<SkillTargetType>,
         val manaCost: Int,
-        val cooldown: Duration,
+        val cooldown: Double,
         val hasProjectile: Boolean,
         val projectileTextureName: String,
         val soundEffectName: String,
-        val onCastScript: (CharacterEntity, CharacterEntity) -> Unit
+        val onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit
 )

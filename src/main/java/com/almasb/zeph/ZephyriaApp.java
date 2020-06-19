@@ -21,14 +21,13 @@ import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
 import com.almasb.zeph.events.EventHandlers;
 import com.almasb.zeph.item.ItemData;
-import com.almasb.zeph.item.Weapon;
-import com.almasb.zeph.ui.BasicInfoView;
-import com.almasb.zeph.ui.CharInfoView;
-import com.almasb.zeph.ui.EquipmentView;
-import com.almasb.zeph.ui.InventoryView;
+import com.almasb.zeph.skill.Skill;
+import com.almasb.zeph.skill.SkillTargetType;
+import com.almasb.zeph.skill.SkillType;
+import com.almasb.zeph.skill.SkillUseResult;
+import com.almasb.zeph.ui.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -107,11 +106,11 @@ public class ZephyriaApp extends GameApplication {
             spawnCharacter(800, 200, Data.Character.SKELETON_WARRIOR());
             spawnCharacter(800, 250, Data.Character.SKELETON_ARCHER());
 
-            spawnItem(800, 500, Data.Weapon.KNIFE());
+            spawnItem(800, 500, Data.Weapons.KNIFE());
             spawnItem(800, 550, Data.UsableItem.MANA_POTION());
             spawnItem(800, 600, Data.UsableItem.HEALING_POTION());
 
-            spawnItem(700, 500, Data.Weapon.FROSTMOURNE());
+            spawnItem(700, 500, Data.Weapons.FROSTMOURNE());
         });
 
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
@@ -130,6 +129,32 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void onHotbarSkill(int index) {
+        var pc = player.getCharacterComponent();
+
+        if (index < pc.getSkills().size()) {
+            Skill skill = pc.getSkills().get(index);
+
+            if (skill.getData().getType() == SkillType.PASSIVE) {
+                // skill is passive and is always on
+                return;
+            }
+
+            if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
+
+                // use skill immediately since player is the target
+                SkillUseResult result = pc.useSelfSkill(index);
+            } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
+
+                // let player select the area
+                selectingSkillTargetArea = true;
+                selectedSkillIndex = index;
+            } else {
+
+                // let player select the target character
+                selectingSkillTargetChar = true;
+                selectedSkillIndex = index;
+            }
+        }
     }
 
     private void useAreaSkill() {
@@ -316,8 +341,8 @@ public class ZephyriaApp extends GameApplication {
                 new BasicInfoView(player),
                 new CharInfoView(player),
                 new InventoryView(player, getAppWidth(), getAppHeight()),
-                new EquipmentView(player, getAppWidth(), getAppHeight())
-                // new HotbarView(player)
+                new EquipmentView(player, getAppWidth(), getAppHeight()),
+                new HotbarView(player)
         );
     }
 
@@ -388,37 +413,6 @@ public class ZephyriaApp extends GameApplication {
 
     private void initPlayer() {
         player = ZephFactoryKt.newPlayer();
-        player.getComponent(NewCellMoveComponent.class).setPositionToCell(25, 1);
-
-//        // TODO: TEST DATA BEGIN
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.MIGHTY_SWING()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.WARRIOR_HEART()));
-//        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ARMOR_MASTERY()));
-//
-////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-////        player.getSkills().add(new SkillEntity(Data.Skill.Warrior.INSTANCE.ROAR()));
-////        player.getSkills().add(new SkillEntity(Data.Skill.Mage.INSTANCE.FIREBALL()));
-
-        player.getInventory().getItems().add(newDagger(Element.NEUTRAL));
-        player.getInventory().getItems().add(newDagger(Element.FIRE));
-        player.getInventory().getItems().add(newDagger(Element.EARTH));
-        player.getInventory().getItems().add(newDagger(Element.AIR));
-        player.getInventory().getItems().add(newDagger(Element.WATER));
-
-//        player.getInventory().addItem(new WeaponComponent(Data.Weapon.INSTANCE.GUT_RIPPER()));
-//        player.getInventory().addItem(new WeaponComponent(Data.Weapon.INSTANCE.DRAGON_CLAW()));
-//        player.getInventory().addItem(new ArmorComponent(Data.Armor.INSTANCE.CHAINMAIL()));
-
-        // TEST DATA END
-    }
-
-    private Weapon newDagger(Element element) {
-        Weapon weapon = new Weapon(Data.Weapon.KNIFE());
-        weapon.getElement().set(element);
-        return weapon;
     }
 
     private void initEnemies() {

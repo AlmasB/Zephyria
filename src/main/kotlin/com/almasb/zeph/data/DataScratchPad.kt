@@ -155,25 +155,7 @@ package com.almasb.zeph.data
 //    object Skill {
 //
 //        object Warrior {
-//            fun ROAR() = listOf<Component>(
-//                    Description(7010, "Roar", "Increases STR and VIT for the duration.", "skills/ic_skill_roar.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-//                            .onCast { caster, target, skill ->
-//
-//                                val effect = EffectEntity(listOf(
-//                                        Description(7010, "Roar", "Roar", "effects/attr_up.png"),
-//                                        EffectDataComponent(7.0)
-//                                                .withRune(Rune(Attribute.STRENGTH, 3 * skill.level.value))
-//                                                .withRune(Rune(Attribute.VITALITY, 2 * skill.level.value))
-//                                ))
-//
-//                                caster.charConrol.addEffect(effect)
-//
-//                                SkillUseResult.NONE
-//                            }
-//                            .withMana(10)
-//                            .withCooldown(14.0)
-//            )
+
 //
 //            fun MIGHTY_SWING() = listOf<Component>(
 //                    Description(7011, "Mighty Swing", "Physical attack. Damage is greater if you have more STR than your target.", "skills/ic_skill_mighty_swing.png"),

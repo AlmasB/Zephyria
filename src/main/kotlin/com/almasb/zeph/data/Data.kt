@@ -33,7 +33,7 @@ object Data {
     val UsableItem = com.almasb.zeph.data.UsableItem()
 
     @JvmField
-    val Weapon = com.almasb.zeph.data.Weapon()
+    val Weapons = Weapons()
 
     @JvmField
     val Armor = com.almasb.zeph.data.Armor()
@@ -41,10 +41,13 @@ object Data {
     @JvmField
     val Character = com.almasb.zeph.data.Character()
 
+    @JvmField
+    val Skills = Skills()
+
     init {
         // TODO: check no duplicate IDs
-        Weapon.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Weapon) as WeaponData
+        Weapons.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Weapons) as WeaponData
 
             dbWeapons[data.description.id] = data
         }

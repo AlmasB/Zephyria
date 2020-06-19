@@ -1,6 +1,5 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.char
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
@@ -32,7 +31,7 @@ class Character {
         }
 
         drops {
-            Data.Weapon.KNIFE() has 50
+            Data.Weapons.KNIFE() has 50
         }
     }
 
@@ -56,7 +55,7 @@ class Character {
         }
 
         drops {
-            Data.Weapon.KNIFE() has 50
+            Data.Weapons.KNIFE() has 50
         }
     }
 

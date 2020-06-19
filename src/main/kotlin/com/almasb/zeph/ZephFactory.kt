@@ -17,9 +17,12 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
+import com.almasb.zeph.combat.Element
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
+import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
 import java.util.function.Supplier
 
@@ -103,5 +106,27 @@ fun newPlayer(): CharacterEntity {
         charClass = CharacterClass.NOVICE
     }
 
-    return spawn("player", SpawnData(0.0, 0.0).put("charData", charData)) as CharacterEntity
+    val player = spawn("player", SpawnData(0.0, 0.0).put("charData", charData)) as CharacterEntity
+
+    // TODO: TEST DATA BEGIN
+
+    player.getComponent(NewCellMoveComponent::class.java).setPositionToCell(25, 1)
+
+    player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+
+    player.inventory.items.add(newDagger(Element.NEUTRAL))
+    player.inventory.items.add(newDagger(Element.FIRE))
+    player.inventory.items.add(newDagger(Element.EARTH))
+    player.inventory.items.add(newDagger(Element.AIR))
+    player.inventory.items.add(newDagger(Element.WATER))
+
+    // TEST DATA END
+
+    return player
+}
+
+private fun newDagger(element: Element): Weapon {
+    val weapon = Weapon(Data.Weapons.KNIFE())
+    weapon.element.set(element)
+    return weapon
 }

@@ -7,9 +7,12 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.*
+import com.almasb.zeph.skill.Skill
+import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
+import javafx.collections.FXCollections
 import java.util.*
 
 /**
@@ -105,20 +108,21 @@ class PlayerComponent : Component() {
      * Level up a skill with given skill [index].
      */
     fun increaseSkillLevel(index: Int) {
-//        if (skillPoints.value == 0)
-//            return
-//
-//        val skill = skills[index]
-//
-//        if (skill.level.value < Config.MAX_LEVEL_SKILL) {
-//            skill.level.value++
-//            skillPoints.value--
-//
-//            // apply passive skills immediately
-//            if (skill.data.type == SkillType.PASSIVE && skill.level.value == 1) {
-//                skill.data.onLearn(player, skill)
-//            }
-//        }
+        if (skillPoints.value == 0)
+            return
+
+        val skill = player.characterComponent.skills[index]
+
+        if (skill.level.value < Config.MAX_LEVEL_SKILL) {
+            skill.level.value++
+            skillPoints.value--
+
+            // apply passive skills immediately
+            if (skill.data.type == SkillType.PASSIVE && skill.level.value == 1) {
+                // TODO?
+                //skill.data.onLearn(player, skill)
+            }
+        }
     }
 
     fun expNeededForNextBaseLevel() = EXP_NEEDED_BASE[player.baseLevel.value - 1]

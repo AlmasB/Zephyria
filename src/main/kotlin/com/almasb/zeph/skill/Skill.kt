@@ -10,13 +10,16 @@ import javafx.beans.property.SimpleStringProperty
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Skill(private val data: SkillData) {
+class Skill(val data: SkillData) {
 
     val dynamicDescription = SimpleStringProperty(data.description.description)
 
     val level = SimpleIntegerProperty()
     val manaCost = level.multiply(data.manaCost)
 
+    /**
+     * In seconds.
+     */
     val currentCooldown = SimpleDoubleProperty()
 
     val isOnCooldown: Boolean
@@ -30,7 +33,7 @@ class Skill(private val data: SkillData) {
     }
 
     fun putOnCooldown() {
-        currentCooldown.value = data.cooldown.toSeconds()
+        currentCooldown.value = data.cooldown
     }
 
     fun onUpdate(tpf: Double) {
@@ -41,7 +44,7 @@ class Skill(private val data: SkillData) {
         }
     }
 
-    fun onUse(caster: CharacterEntity, target: CharacterEntity) {
-        
+    fun onCast(caster: CharacterEntity, target: CharacterEntity) {
+        data.onCastScript.invoke(caster, target, this)
     }
 }

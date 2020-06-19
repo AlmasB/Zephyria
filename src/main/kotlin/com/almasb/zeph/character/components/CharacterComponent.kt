@@ -409,21 +409,21 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     fun useSelfSkill(index: Int): SkillUseResult {
-//        val skill = skills[index]
-//
-//        if (skill.level.value == 0)
-//            return SkillUseResult.NONE
-//
-//        if (skill.currentCooldown.value > 0)
-//            return SkillUseResult.ON_COOLDOWN
-//
-//        if (skill.data.mana > sp.value)
-//            return SkillUseResult.NO_MANA
-//
-//        sp.value -= skill.data.mana
-//        skill.putOnCooldown()
-//
-//        skill.data.onCast(char, char, skill)
+        val skill = skills[index]
+
+        if (skill.level.value == 0)
+            return SkillUseResult.NONE
+
+        if (skill.currentCooldown.value > 0)
+            return SkillUseResult.ON_COOLDOWN
+
+        if (skill.manaCost.value > sp.value)
+            return SkillUseResult.NO_MANA
+
+        sp.value -= skill.manaCost.value
+        skill.putOnCooldown()
+
+        skill.onCast(char, char)
 
         return SkillUseResult.NONE
     }

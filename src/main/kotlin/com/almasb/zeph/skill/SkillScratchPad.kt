@@ -7,30 +7,7 @@ package com.almasb.zeph.skill
 
 // onHotbarSkill
 
-//        if (index < playerComponent.getSkills().size()) {
-//            SkillComponent skill = playerComponent.getSkills().get(index);
-//
-//            if (skill.getData().getType() == SkillType.PASSIVE) {
-//                // skill is passive and is always on
-//                return;
-//            }
-//
-//            if (skill.getData().getTargetTypes().contains(SkillTargetType.SELF)) {
-//
-//                // use skill immediately since player is the target
-//                SkillUseResult result = playerComponent.useSelfSkill(index);
-//            } else if (skill.getData().getTargetTypes().contains(SkillTargetType.AREA)) {
-//
-//                // let player select the area
-//                selectingSkillTargetArea = true;
-//                selectedSkillIndex = index;
-//            } else {
-//
-//                // let player select the target character
-//                selectingSkillTargetChar = true;
-//                selectedSkillIndex = index;
-//            }
-//        }
+
 
 
 // TODO: generalize to use skill or attack

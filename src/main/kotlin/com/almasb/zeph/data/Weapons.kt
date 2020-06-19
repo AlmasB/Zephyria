@@ -12,7 +12,7 @@ import com.almasb.zeph.item.weapon
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Weapon {
+class Weapons {
 
     fun HANDS() = weapon {
         desc {

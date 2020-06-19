@@ -1,9 +1,9 @@
 package com.almasb.zeph.item
 
-import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.combat.*
 
 @DataDSL

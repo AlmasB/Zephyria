@@ -1,7 +1,5 @@
 package com.almasb.zeph.skill
 
-import com.almasb.fxgl.entity.Entity
-
 /**
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)

@@ -1,5 +1,7 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.dsl.components.HealthDoubleComponent
+import com.almasb.fxgl.dsl.components.ManaDoubleComponent
 import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
@@ -12,10 +14,9 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.entity.character.component.AttributesComponent
-import com.almasb.zeph.entity.character.component.HPComponent
+import com.almasb.zeph.entity.character.component.Attributes
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
-import com.almasb.zeph.entity.character.component.StatsComponent
+import com.almasb.zeph.entity.character.component.Stats
 import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.SkillComponent
@@ -34,11 +35,11 @@ open class CharacterComponent(data: CharacterData) : Component() {
     val charClass = SimpleObjectProperty<CharacterClass>(CharacterClass.MONSTER)
 
     val baseLevel = SimpleIntegerProperty(1)
-    val hp = HPComponent()
-    val sp = HPComponent()
+    val hp = HealthDoubleComponent(1.0)
+    val sp = ManaDoubleComponent(1.0)
 
-    val attributes = AttributesComponent()
-    val stats = StatsComponent()
+    val attributes = Attributes()
+    val stats = Stats()
 
     /**
      * Statuses currently affecting this character.

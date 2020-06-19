@@ -5,15 +5,11 @@ import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.character.PlayerEntity;
 import com.almasb.zeph.combat.Stat;
-import javafx.animation.ScaleTransition;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 public class BasicInfoView extends MDIWindow {
 

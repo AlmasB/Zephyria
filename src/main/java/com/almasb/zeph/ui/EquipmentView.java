@@ -1,6 +1,5 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.EquipPlace;
@@ -17,7 +16,7 @@ import javafx.scene.text.Text;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.texture;
 
 public final class EquipmentView extends MDIWindow {
 

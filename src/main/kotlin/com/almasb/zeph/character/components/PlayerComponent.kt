@@ -1,10 +1,13 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.zeph.Config
-import com.almasb.zeph.data.Data
-import com.almasb.zeph.character.*
+import com.almasb.zeph.character.CharacterClass
+import com.almasb.zeph.character.CharacterData
+import com.almasb.zeph.character.EquipPlace
+import com.almasb.zeph.character.PlayerEntity
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.*
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty

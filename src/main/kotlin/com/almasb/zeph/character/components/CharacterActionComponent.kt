@@ -43,7 +43,6 @@ class CharacterActionComponent : Component() {
                     attack(attackTarget!!)
                 } else if (pickUpTarget != null) {
                     pickUp(pickUpTarget!!)
-                    state.changeStateToIdle()
                 } else {
                     state.changeStateToIdle()
                 }
@@ -161,6 +160,8 @@ class CharacterActionComponent : Component() {
         }
 
         item.removeFromWorld()
+
+        state.changeStateToIdle()
     }
 
     private fun reset() {

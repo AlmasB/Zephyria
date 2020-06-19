@@ -1,6 +1,8 @@
 package com.almasb.zeph.data
 
 import com.almasb.zeph.item.*
+import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.Weapon
 
 /**
  * ID ranges:

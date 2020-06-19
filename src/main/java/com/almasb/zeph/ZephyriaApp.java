@@ -27,7 +27,6 @@ import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
 import com.almasb.zeph.events.EventHandlers;
-import com.almasb.zeph.events.Events;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.item.Weapon;
 import com.almasb.zeph.ui.BasicInfoView;

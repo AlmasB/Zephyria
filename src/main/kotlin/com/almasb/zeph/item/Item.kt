@@ -4,7 +4,6 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.GameMath
 import com.almasb.zeph.combat.Rune
-import com.almasb.zeph.combat.Stat
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections

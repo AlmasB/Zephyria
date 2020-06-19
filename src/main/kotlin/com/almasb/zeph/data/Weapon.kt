@@ -1,9 +1,9 @@
 package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.Attribute.*
-import com.almasb.zeph.combat.Element.*
-import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.item.ItemLevel.*
+import com.almasb.zeph.combat.Element.WATER
+import com.almasb.zeph.combat.Stat.MAX_SP
+import com.almasb.zeph.item.ItemLevel.EPIC
 import com.almasb.zeph.item.WeaponType.*
 import com.almasb.zeph.item.weapon
 

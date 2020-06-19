@@ -11,7 +11,6 @@ import com.almasb.fxgl.core.util.EmptyRunnable;
 import com.almasb.fxgl.core.util.LazyValue;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.component.Required;
-import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarPathfinder;

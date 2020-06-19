@@ -1,6 +1,5 @@
 package com.almasb.zeph.data
 
-import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity

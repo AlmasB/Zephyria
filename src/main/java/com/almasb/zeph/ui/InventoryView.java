@@ -1,6 +1,5 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.PlayerEntity;
@@ -23,7 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGL.getAssetLoader;
+import static com.almasb.fxgl.dsl.FXGL.texture;
 
 public class InventoryView extends MDIWindow {
 

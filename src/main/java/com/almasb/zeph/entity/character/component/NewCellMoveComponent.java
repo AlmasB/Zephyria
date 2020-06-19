@@ -8,7 +8,6 @@ package com.almasb.zeph.entity.character.component;
 
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.pathfinding.Cell;
-import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 

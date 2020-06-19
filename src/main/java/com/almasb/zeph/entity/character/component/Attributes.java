@@ -1,6 +1,5 @@
 package com.almasb.zeph.entity.character.component;
 
-import com.almasb.fxgl.entity.component.Component;
 import com.almasb.zeph.combat.Attribute;
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -12,7 +11,7 @@ import java.util.Map;
 /**
  * @author Almas Baimagambetov (AlmasB) (almaslvl@gmail.com)
  */
-public class AttributesComponent extends Component {
+public class Attributes {
 
     /**
      * Contains native character attribute values
@@ -100,7 +99,7 @@ public class AttributesComponent extends Component {
         return bindings.get(attribute);
     }
 
-    public AttributesComponent() {
+    public Attributes() {
         for (Attribute attribute : Attribute.values()) {
             attributes.put(attribute, 0);
             attributeProperties.put(attribute, new ReadOnlyIntegerWrapper(0));

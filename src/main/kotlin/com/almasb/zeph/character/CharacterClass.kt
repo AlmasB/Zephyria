@@ -1,6 +1,6 @@
 package com.almasb.zeph.character
 
-import java.util.HashMap
+import java.util.*
 
 /**
  * Character classes with base hp/sp.

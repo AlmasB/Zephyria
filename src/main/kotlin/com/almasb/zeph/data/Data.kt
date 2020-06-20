@@ -1,5 +1,6 @@
 package com.almasb.zeph.data
 
+import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.item.*
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
@@ -16,9 +17,11 @@ import com.almasb.zeph.item.Weapon
 object Data {
 
     // TODO: exclude (default items) hands, hat, clothes and shoes
-    private val dbWeapons = hashMapOf<Int, WeaponData>()
-    private val dbArmors = hashMapOf<Int, ArmorData>()
-    private val dbUsableItems = hashMapOf<Int, UsableItemData>()
+    val dbWeapons = hashMapOf<Int, WeaponData>()
+    val dbArmors = hashMapOf<Int, ArmorData>()
+    val dbUsableItems = hashMapOf<Int, UsableItemData>()
+
+    val dbCharacters = hashMapOf<Int, CharacterData>()
 
     val weapons by lazy { dbWeapons.values.toList() }
     val armors by lazy { dbArmors.values.toList() }
@@ -39,7 +42,7 @@ object Data {
     val Armor = com.almasb.zeph.data.Armor()
 
     @JvmField
-    val Character = com.almasb.zeph.data.Character()
+    val Characters = Characters()
 
     @JvmField
     val Skills = Skills()
@@ -63,6 +66,14 @@ object Data {
 
             dbUsableItems[data.description.id] = data
         }
+
+        Characters.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Characters) as CharacterData
+
+            dbCharacters[data.description.id] = data
+        }
+
+        println(dbCharacters)
     }
 
     fun isWeapon(id: Int) = id.toString().startsWith("4")

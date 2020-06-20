@@ -20,10 +20,10 @@ object Config {
      */
     const val CHAR_IDLE_TIME = 3.0
 
-    const val Z_INDEX_PLAYER = 50
-
-    const val Z_INDEX_DECOR_BELOW_PLAYER = 20
-    const val Z_INDEX_DECOR_ABOVE_PLAYER = 100
+    // These must be outside of tileY values since each char's z-index = tileY
+    // We have these statically since, when parsed, a tile layer is a single entity
+    const val Z_INDEX_DECOR_BELOW_PLAYER = -50
+    const val Z_INDEX_DECOR_ABOVE_PLAYER = 5000
 
     val mapWidth = 150
     val mapHeight = 150

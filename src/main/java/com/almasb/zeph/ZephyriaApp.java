@@ -9,9 +9,11 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.tiled.Layer;
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.pathfinding.CellState;
+import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
 import com.almasb.fxgl.physics.PhysicsWorld;
@@ -31,17 +33,13 @@ import com.almasb.zeph.skill.Skill;
 import com.almasb.zeph.skill.SkillTargetType;
 import com.almasb.zeph.skill.SkillType;
 import com.almasb.zeph.skill.SkillUseResult;
-import com.almasb.zeph.ui.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -93,7 +91,9 @@ public class ZephyriaApp extends GameApplication {
     protected void onPreInit() {
         EventHandlers.INSTANCE.initialize();
 
-        loopBGM("BGM_Foggy_Woods.mp3");
+        if (isReleaseMode()) {
+            loopBGM("BGM_Foggy_Woods.mp3");
+        }
     }
 
     @Override
@@ -107,11 +107,11 @@ public class ZephyriaApp extends GameApplication {
         }
 
         onKeyDown(KeyCode.K, "Spawn Dev", () -> {
-            spawnCharacter(800, 50, Data.Character.SKELETON_WARRIOR());
-            spawnCharacter(800, 100, Data.Character.SKELETON_MAGE());
-            spawnCharacter(800, 150, Data.Character.SKELETON_ARCHER());
-            spawnCharacter(800, 200, Data.Character.SKELETON_WARRIOR());
-            spawnCharacter(800, 250, Data.Character.SKELETON_ARCHER());
+            spawnCharacter(800, 50, Data.Characters.SKELETON_WARRIOR());
+            spawnCharacter(800, 100, Data.Characters.SKELETON_MAGE());
+            spawnCharacter(800, 150, Data.Characters.SKELETON_ARCHER());
+            spawnCharacter(800, 200, Data.Characters.SKELETON_WARRIOR());
+            spawnCharacter(800, 250, Data.Characters.SKELETON_ARCHER());
 
             spawnItem(800, 500, Data.Weapons.KNIFE());
             spawnItem(800, 550, Data.UsableItem.MANA_POTION());
@@ -176,13 +176,6 @@ public class ZephyriaApp extends GameApplication {
 
         initTmx();
 
-        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.tileSize, Config.tileSize, (type) -> {
-            if (type.equals(EntityType.NAV))
-                return CellState.WALKABLE;
-
-            return CellState.NOT_WALKABLE;
-        });
-
         initPlayer();
 
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
@@ -216,6 +209,13 @@ public class ZephyriaApp extends GameApplication {
 
         getGameWorld().setLevel(level);
 
+        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.tileSize, Config.tileSize, (type) -> {
+            if (type.equals(EntityType.NAV))
+                return CellState.WALKABLE;
+
+            return CellState.NOT_WALKABLE;
+        });
+
         getGameWorld().getEntitiesFiltered(e -> e.isType("TiledMapLayer"))
                 .stream()
                 .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
@@ -224,7 +224,28 @@ public class ZephyriaApp extends GameApplication {
                     e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
                 });
 
+        // spawn mobs
+        spawnMobs(level);
+
         spawn("cellSelection");
+    }
+
+    private void spawnMobs(Level level) {
+        level.getProperties()
+                .keys()
+                .stream()
+                // a char id
+                .filter(key -> key.startsWith("2"))
+                .map(key -> Integer.parseInt(key))
+                .forEach(id -> {
+                    var numMobs = level.getProperties().getInt(id + "");
+
+                    for (int i = 0; i < numMobs; i++) {
+                        grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
+                            spawnCharacter(cell.getX() * Config.tileSize, cell.getY() * Config.tileSize, Data.INSTANCE.getDbCharacters().get(id));
+                        });
+                    }
+                });
     }
 
     private void showGrid() {

@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.zeph.Config
+import com.almasb.zeph.character.CharacterEntity
 import javafx.util.Duration
 
 /**
@@ -16,6 +17,7 @@ class AnimationComponent(textureName: String) : Component() {
 
     private val animatedTexture: AnimatedTexture
 
+    // TODO: idle up down left right
     private val channelIdle: AnimationChannel
 
     private val channelWalkDown: AnimationChannel
@@ -81,6 +83,10 @@ class AnimationComponent(textureName: String) : Component() {
 
     override fun onAdded() {
         entity.viewComponent.addChild(animatedTexture)
+    }
+
+    override fun onUpdate(tpf: Double) {
+        entity.z = (entity as CharacterEntity).characterComponent.getTileY()
     }
 
     fun playDeath(onFinished: Runnable) {

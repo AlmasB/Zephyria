@@ -9,7 +9,7 @@ import com.almasb.zeph.combat.Experience
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Character {
+class Characters {
 
     fun SKELETON_ARCHER() = char {
         desc {

@@ -13,7 +13,6 @@ import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
-import com.almasb.zeph.Config.Z_INDEX_PLAYER
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
@@ -78,7 +77,6 @@ class ZephFactory : EntityFactory {
     fun newPlayer(data: SpawnData): Entity {
         val player = newCharacter(data)
         player.type = PLAYER
-        player.z = Z_INDEX_PLAYER
         player.removeComponent(RandomWanderComponent::class.java)
         player.addComponent(PlayerComponent())
         return player

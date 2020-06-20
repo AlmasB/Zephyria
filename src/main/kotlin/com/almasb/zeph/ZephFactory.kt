@@ -3,6 +3,7 @@ package com.almasb.zeph
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.EffectComponent
+import com.almasb.fxgl.dsl.entityBuilder
 import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
@@ -12,6 +13,7 @@ import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
+import com.almasb.zeph.Config.Z_INDEX_PLAYER
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
@@ -20,6 +22,7 @@ import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
 import com.almasb.zeph.combat.Element
+import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
@@ -75,6 +78,7 @@ class ZephFactory : EntityFactory {
     fun newPlayer(data: SpawnData): Entity {
         val player = newCharacter(data)
         player.type = PLAYER
+        player.z = Z_INDEX_PLAYER
         player.removeComponent(RandomWanderComponent::class.java)
         player.addComponent(PlayerComponent())
         return player
@@ -121,6 +125,18 @@ class ZephFactory : EntityFactory {
                             .orderMove(targetX, targetY)
                 }
                 .build()
+    }
+
+    @Spawns("cellSelection")
+    fun newCellSelection(data: SpawnData): Entity {
+        val e = entityBuilder(data)
+                .view(Rectangle(Config.tileSize * 1.0, Config.tileSize * 1.0, null).also { it.stroke = Color.BLACK })
+                .with(CellSelectionComponent())
+                .build()
+
+        e.viewComponent.parent.isMouseTransparent = true
+
+        return e
     }
 }
 

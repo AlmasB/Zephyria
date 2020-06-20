@@ -92,6 +92,8 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void onPreInit() {
         EventHandlers.INSTANCE.initialize();
+
+        loopBGM("BGM_Foggy_Woods.mp3");
     }
 
     @Override
@@ -218,8 +220,11 @@ public class ZephyriaApp extends GameApplication {
                 .stream()
                 .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
                 .forEach(e -> {
+                    e.getViewComponent().getParent().setMouseTransparent(true);
                     e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
                 });
+
+        spawn("cellSelection");
     }
 
     private void showGrid() {

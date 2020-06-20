@@ -20,6 +20,9 @@ object Config {
      */
     const val CHAR_IDLE_TIME = 3.0
 
+    const val Z_INDEX_PLAYER = 50
+
+    const val Z_INDEX_DECOR_BELOW_PLAYER = 20
     const val Z_INDEX_DECOR_ABOVE_PLAYER = 100
 
     val mapWidth = 150

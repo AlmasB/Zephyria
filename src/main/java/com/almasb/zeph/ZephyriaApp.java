@@ -9,6 +9,7 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
@@ -21,6 +22,8 @@ import com.almasb.zeph.combat.DamageType;
 import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
+import com.almasb.zeph.entity.character.component.NewAStarMoveComponent;
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
 import com.almasb.zeph.events.EventHandlers;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.skill.Skill;
@@ -35,6 +38,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -167,19 +171,25 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         getGameWorld().addEntityFactory(new ZephFactory());
 
-        grid = new AStarGrid(MAP_WIDTH, MAP_HEIGHT);
+        initTmx();
 
-        initBackground();
+        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.tileSize, Config.tileSize, (type) -> {
+            if (type.equals(EntityType.NAV))
+                return CellState.WALKABLE;
 
-        selectedEffect.setInput(new Glow(0.8));
+            return CellState.NOT_WALKABLE;
+        });
 
         initPlayer();
-        initEnemies();
-
-        //showGrid();
 
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+
+        //showGrid();
+
+        //selectedEffect.setInput(new Glow(0.8));
+        //initEnemies();
+
 
 //        selected.addListener((observable, oldValue, newEntity) -> {
 //            if (oldValue != null) {
@@ -198,55 +208,16 @@ public class ZephyriaApp extends GameApplication {
 //        });
     }
 
+    private void initTmx() {
+        var level = getAssetLoader().loadLevel("tmx/test_map.tmx", new TMXLevelLoader());
+
+        getGameWorld().setLevel(level);
+    }
+
     private void showGrid() {
         var gridView = new AStarGridView(grid, TILE_SIZE, TILE_SIZE);
         gridView.setMouseTransparent(true);
         getGameScene().addUINode(gridView);
-    }
-
-    private void initBackground() {
-        Region region = new Region();
-        region.setPrefSize(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
-
-        BackgroundImage bgImg = new BackgroundImage(image("tile.png"),
-                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-
-        region.setBackground(new Background(bgImg));
-
-        Entity bg = entityBuilder()
-                .zIndex(-1000)
-                .view(region)
-                .onClick(bgEntity -> {
-                    if (selectingSkillTargetArea) {
-                        useAreaSkill();
-
-                        selectingSkillTargetArea = false;
-                        selectedSkillIndex = -1;
-                        return;
-                    }
-
-                    selected.set(null);
-
-                    int targetX = (int) (getInput().getMouseXWorld() / TILE_SIZE);
-                    int targetY = (int) (getInput().getMouseYWorld() / TILE_SIZE);
-
-                    player.getActionComponent().orderMove(targetX, targetY);
-                })
-                .buildAndAttach();
-
-        spawnTree(0, 0);
-        spawnTree(0, MAP_HEIGHT - 1);
-        spawnTree(MAP_WIDTH - 1, 0);
-        spawnTree(MAP_WIDTH - 1, MAP_HEIGHT - 1);
-    }
-
-    private void spawnTree(int x, int y) {
-        Entity tree = entityBuilder()
-                .at(x * TILE_SIZE, y * TILE_SIZE - 85 + 64)
-                .view("tree2.png")
-                .buildAndAttach();
-
-        grid.get(x, y).setState(CellState.NOT_WALKABLE);
     }
 
     @Override
@@ -337,13 +308,13 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-        getGameScene().addUINodes(
-                new BasicInfoView(player),
-                new CharInfoView(player),
-                new InventoryView(player, getAppWidth(), getAppHeight()),
-                new EquipmentView(player, getAppWidth(), getAppHeight()),
-                new HotbarView(player)
-        );
+//        getGameScene().addUINodes(
+//                new BasicInfoView(player),
+//                new CharInfoView(player),
+//                new InventoryView(player, getAppWidth(), getAppHeight()),
+//                new EquipmentView(player, getAppWidth(), getAppHeight()),
+//                new HotbarView(player)
+//        );
     }
 
     private void spawnItem(int x, int y, ItemData itemData) {
@@ -413,6 +384,10 @@ public class ZephyriaApp extends GameApplication {
 
     private void initPlayer() {
         player = ZephFactoryKt.newPlayer();
+
+        var cell = player.getComponent(NewAStarMoveComponent.class).getGrid().getWalkableCells().get(0);
+
+        player.getComponent(NewCellMoveComponent.class).setPositionToCell(cell);
     }
 
     private void initEnemies() {

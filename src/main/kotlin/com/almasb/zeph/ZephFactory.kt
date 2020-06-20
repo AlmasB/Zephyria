@@ -3,6 +3,7 @@ package com.almasb.zeph
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.EffectComponent
+import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
@@ -11,6 +12,7 @@ import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
+import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
@@ -24,6 +26,8 @@ import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
+import javafx.scene.paint.Color
+import javafx.scene.shape.Rectangle
 import java.util.function.Supplier
 
 /**
@@ -41,7 +45,7 @@ class ZephFactory : EntityFactory {
             val entity = CharacterEntity()
             entity.x = data.x
             entity.y = data.y
-            entity.type = EntityType.CHARACTER
+            entity.type = CHARACTER
             entity.localAnchor = Point2D(Config.spriteSize / 2.0, Config.spriteSize - 10.0)
             entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(Config.spriteSize.toDouble(), Config.spriteSize.toDouble())))
 
@@ -70,7 +74,7 @@ class ZephFactory : EntityFactory {
     @Spawns("player")
     fun newPlayer(data: SpawnData): Entity {
         val player = newCharacter(data)
-        player.type = EntityType.PLAYER
+        player.type = PLAYER
         player.removeComponent(RandomWanderComponent::class.java)
         player.addComponent(PlayerComponent())
         return player
@@ -92,6 +96,32 @@ class ZephFactory : EntityFactory {
                 .view(itemData.description.textureName)
                 .build()
     }
+
+    @Spawns("nav")
+    fun newWalkableCell(data: SpawnData): Entity {
+        return FXGL.entityBuilder(data)
+                .type(NAV)
+                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .view(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
+                .onClick {
+//                    if (selectingSkillTargetArea) {
+//                        useAreaSkill()
+//                        selectingSkillTargetArea = false
+//                        selectedSkillIndex = -1
+//                        return
+//                    }
+
+                    //selected.set(null)
+
+                    val targetX = (FXGL.getInput().mouseXWorld / ZephyriaApp.TILE_SIZE).toInt()
+                    val targetY = (FXGL.getInput().mouseYWorld / ZephyriaApp.TILE_SIZE).toInt()
+
+                    getGameWorld().getSingleton(PLAYER)
+                            .getComponent(CharacterActionComponent::class.java)
+                            .orderMove(targetX, targetY)
+                }
+                .build()
+    }
 }
 
 fun newPlayer(): CharacterEntity {
@@ -109,8 +139,6 @@ fun newPlayer(): CharacterEntity {
     val player = spawn("player", SpawnData(0.0, 0.0).put("charData", charData)) as CharacterEntity
 
     // TODO: TEST DATA BEGIN
-
-    player.getComponent(NewCellMoveComponent::class.java).setPositionToCell(25, 1)
 
     player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
 

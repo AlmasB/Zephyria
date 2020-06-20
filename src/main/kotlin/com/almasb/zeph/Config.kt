@@ -20,8 +20,8 @@ object Config {
      */
     const val CHAR_IDLE_TIME = 3.0
 
-    val mapWidth = 40
-    val mapHeight = 40
+    val mapWidth = 150
+    val mapHeight = 150
 
     // CHARACTER VALUES
 

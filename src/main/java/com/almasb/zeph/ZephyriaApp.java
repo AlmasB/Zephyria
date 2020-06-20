@@ -9,6 +9,7 @@ import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.level.tiled.Layer;
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
@@ -79,8 +80,8 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(1280);
-        settings.setHeight(768);
+        settings.setWidth(1700);
+        settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1");
         settings.setManualResizeEnabled(true);
@@ -212,6 +213,13 @@ public class ZephyriaApp extends GameApplication {
         var level = getAssetLoader().loadLevel("tmx/test_map.tmx", new TMXLevelLoader());
 
         getGameWorld().setLevel(level);
+
+        getGameWorld().getEntitiesFiltered(e -> e.isType("TiledMapLayer"))
+                .stream()
+                .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
+                .forEach(e -> {
+                    e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
+                });
     }
 
     private void showGrid() {

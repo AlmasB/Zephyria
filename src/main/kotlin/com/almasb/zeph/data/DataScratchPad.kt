@@ -44,16 +44,6 @@ package com.almasb.zeph.data
 //
 //        // 1H SWORDS 4100
 //
-
-//
-//        fun GETSUGA_TENSHO() = listOf<Component>(
-//                Description(4101, "Getsuga Tensho", "A powerful sword that is carved from the fangs of the moon itself and pierced through heaven.", "items/weapons/getsuga_tensho.png"),
-//                WeaponDataComponent(ItemLevel.EPIC, WeaponType.ONE_H_SWORD, 150)
-//                        .withRune(Rune(Attribute.STRENGTH, 5))
-//                        .withRune(Rune(Attribute.AGILITY, 4))
-//                        .withRune(Rune(Attribute.DEXTERITY, 4))
-//                        .withRune(Rune(Attribute.LUCK, 1))
-//        )
 //
 //        // 2H SWORDS 4200
 //
@@ -126,17 +116,6 @@ package com.almasb.zeph.data
 //                        .withRune(Rune(Attribute.WILLPOWER, 2))
 //        )
 //
-//        fun DOMOVOI() = listOf<Component>(
-//                Description(5005, "Domovoi", "Generations of guardians have bled in this armour, imbuing it with spirits of protection. Spirits that awaken when the wearers need is greatest.", "items/armor/domovoi.png"),
-//                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 15, 35)
-//                        .withRune(Rune(Attribute.WILLPOWER, 3))
-//        )
-//
-//        fun SAPPHIRE_LEGION_PLATE_ARMOR() = listOf<Component>(
-//                Description(5006, "Sapphire Legion Plate Armor", "Produced in the Jaded Forges of the Jewelled King, strictly for use by warriors who have proved their mastery of combat through decades of service.", "items/armor/sapphire_legion_plate_armor.png"),
-//                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 30, 10)
-//                        .withRune(Rune(Attribute.VITALITY, 4))
-//        )
 //
 //        fun THANATOS_BODY_ARMOR() = listOf<Component>(
 //                Description(5007, "Thanatos Body Armor", "A shattered piece of Thanatos' legendary armor. Grants its user great constitution.", "items/armor/thanatos_body_armor.png"),

@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+// TODO: UI for monsters to see attrs / stats
+
 public class BasicInfoView extends MDIWindow {
 
     public BasicInfoView(CharacterEntity player) {

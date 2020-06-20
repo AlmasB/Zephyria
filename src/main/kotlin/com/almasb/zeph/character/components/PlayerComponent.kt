@@ -2,8 +2,11 @@ package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
+import com.almasb.zeph.Config.ATTRIBUTE_POINTS_AT_LEVEL1
+import com.almasb.zeph.Config.STARTING_MONEY
 import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.*
@@ -24,11 +27,10 @@ class PlayerComponent : Component() {
 
     private lateinit var player: CharacterEntity
 
-    // TODO: set to 0 when tests are done
-    val attributePoints = SimpleIntegerProperty(90)
-    val skillPoints = SimpleIntegerProperty(90)
+    val attributePoints = SimpleIntegerProperty(ATTRIBUTE_POINTS_AT_LEVEL1)
+    val skillPoints = SimpleIntegerProperty(0)
 
-    val money = SimpleIntegerProperty(Config.STARTING_MONEY)
+    val money = SimpleIntegerProperty(STARTING_MONEY)
     val weapon = SimpleObjectProperty<Weapon>()
 
     override fun onAdded() {
@@ -253,12 +255,26 @@ class PlayerComponent : Component() {
 
         val item = getEquip(place)
 
+        // TODO: if two weapons are both elemental, which element do we use?
+
         if (item is Weapon) {
             if (item.type.isTwoHanded()) {
                 if (place == EquipPlace.RIGHT_HAND)
                     setEquip(EquipPlace.LEFT_HAND, Data.hands)
                 else
                     setEquip(EquipPlace.RIGHT_HAND, Data.hands)
+
+                player.weaponElement.value = Element.NEUTRAL
+            } else {
+                val theOtherWeapon: Weapon
+
+                if (place == EquipPlace.RIGHT_HAND) {
+                    theOtherWeapon = getEquip(EquipPlace.LEFT_HAND) as Weapon
+                } else {
+                    theOtherWeapon = getEquip(EquipPlace.RIGHT_HAND) as Weapon
+                }
+
+                player.weaponElement.value = theOtherWeapon.element.value
             }
 
             item.onUnEquip(player)
@@ -273,6 +289,8 @@ class PlayerComponent : Component() {
             setEquip(place, Data.hands)
         } else {
             setEquip(place, Data.getDefaultArmor(place.emptyID))
+
+            // TODO: check that armor unequip updates armor element
         }
     }
 

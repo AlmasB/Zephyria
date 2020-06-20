@@ -19,15 +19,12 @@ class Characters {
             textureName = "chars/enemies/skeleton_archer.png"
         }
 
-        baseLevel = 2
+        baseLevel = 1
         element = Element.EARTH
-        rewardXP = Experience(10, 3, 3)
+        rewardXP = Experience(3, 3, 3)
 
         attributes {
-            str = 5
-            vit = 30
-            dex = 3
-            agi = 2
+            dex = 1
         }
 
         drops {
@@ -43,15 +40,13 @@ class Characters {
             textureName = "chars/enemies/skeleton_warrior.png"
         }
 
-        baseLevel = 2
+        baseLevel = 1
         element = Element.EARTH
-        rewardXP = Experience(20, 5, 3)
+        rewardXP = Experience(3, 5, 3)
 
         attributes {
-            str = 12
-            vit = 11
-            dex = 8
-            agi = 5
+            str = 1
+            vit = 1
         }
 
         drops {
@@ -69,7 +64,7 @@ class Characters {
 
         baseLevel = 2
         element = Element.FIRE
-        rewardXP = Experience(15, 3, 7)
+        rewardXP = Experience(5, 3, 7)
 
         attributes {
             str = 3

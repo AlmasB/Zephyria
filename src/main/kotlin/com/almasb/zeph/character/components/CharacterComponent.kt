@@ -67,8 +67,15 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val attackRange: Int = data.attackRange
 
     init {
-        // TODO: ?
-        //data.attributes.forEach { attribute, value ->  attributes.setAttribute(attribute, value)}
+        attributes.setAttribute(STRENGTH, data.attributes.str)
+        attributes.setAttribute(VITALITY, data.attributes.vit)
+        attributes.setAttribute(DEXTERITY, data.attributes.dex)
+        attributes.setAttribute(AGILITY, data.attributes.agi)
+        attributes.setAttribute(INTELLECT, data.attributes.int)
+        attributes.setAttribute(WISDOM, data.attributes.wis)
+        attributes.setAttribute(WILLPOWER, data.attributes.wil)
+        attributes.setAttribute(PERCEPTION, data.attributes.per)
+        attributes.setAttribute(LUCK, data.attributes.luc)
     }
 
     override fun onAdded() {

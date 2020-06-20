@@ -87,15 +87,15 @@ enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
      * values of all the attributes.
      */
     class AttributeInfo {
-        var str = 1
-        var vit = 1
-        var dex = 1
-        var agi = 1
-        var int = 1
-        var wis = 1
-        var wil = 1
-        var per = 1
-        var luc = 1
+        var str = 0
+        var vit = 0
+        var dex = 0
+        var agi = 0
+        var int = 0
+        var wis = 0
+        var wil = 0
+        var per = 0
+        var luc = 0
     }
 }
 

@@ -33,6 +33,7 @@ import com.almasb.zeph.skill.Skill;
 import com.almasb.zeph.skill.SkillTargetType;
 import com.almasb.zeph.skill.SkillType;
 import com.almasb.zeph.skill.SkillUseResult;
+import com.almasb.zeph.ui.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -342,13 +343,13 @@ public class ZephyriaApp extends GameApplication {
         debug.setTranslateY(300);
         debug.setFill(Color.WHITE);
 
-//        getGameScene().addUINodes(
-//                new BasicInfoView(player),
-//                new CharInfoView(player),
-//                new InventoryView(player, getAppWidth(), getAppHeight()),
-//                new EquipmentView(player, getAppWidth(), getAppHeight()),
-//                new HotbarView(player)
-//        );
+        getGameScene().addUINodes(
+                new BasicInfoView(player),
+                new CharInfoView(player),
+                new InventoryView(player, getAppWidth(), getAppHeight()),
+                new EquipmentView(player, getAppWidth(), getAppHeight())
+                //new HotbarView(player)
+        );
     }
 
     private void spawnItem(int x, int y, ItemData itemData) {

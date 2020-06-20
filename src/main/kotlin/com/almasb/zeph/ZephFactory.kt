@@ -148,6 +148,18 @@ fun newPlayer(): CharacterEntity {
         }
 
         charClass = CharacterClass.NOVICE
+
+        attributes {
+            str = 1
+            vit = 1
+            dex = 1
+            agi = 1
+            int = 1
+            wis = 1
+            wil = 1
+            per = 1
+            luc = 1
+        }
     }
 
     val player = spawn("player", SpawnData(0.0, 0.0).put("charData", charData)) as CharacterEntity

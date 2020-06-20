@@ -45,7 +45,9 @@ object Config {
     val MAX_LEVEL_JOB = 60
     val MAX_LEVEL_SKILL = 10
     val MAX_ATTRIBUTE = 100
+
     val ATTRIBUTE_POINTS_PER_LEVEL = 3
+    val ATTRIBUTE_POINTS_AT_LEVEL1 = 3
 
     /**
      * By what value should experience needed for next level
@@ -56,6 +58,8 @@ object Config {
     val EXP_NEEDED_INC_JOB  = 2.25f;
 
     val EXP_NEEDED_FOR_LEVEL2 = 10;
+
+
 
     // GAMEPLAY
 

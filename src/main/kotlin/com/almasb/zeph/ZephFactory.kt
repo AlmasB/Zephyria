@@ -14,6 +14,7 @@ import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
+import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
@@ -31,6 +32,7 @@ import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
+import javafx.geometry.Rectangle2D
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.util.function.Supplier
@@ -131,9 +133,15 @@ class ZephFactory : EntityFactory {
 
     @Spawns("portal")
     fun newPortal(data: SpawnData): Entity {
+        val interactionCollisionBox = Rectangle2D(
+                data.x + TILE_SIZE, data.y + TILE_SIZE / 2,
+                data.get<Double>("width") - TILE_SIZE *2, data.get<Double>("height") - TILE_SIZE
+        )
+
         return entityBuilder(data)
                 .type(PORTAL)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .with("interactionCollisionBox", interactionCollisionBox)
                 .with(PortalComponent(data.get("mapName"), data.get("toCellX"), data.get("toCellY")))
                 .build()
     }

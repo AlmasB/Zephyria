@@ -5,6 +5,7 @@ import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.ZephyriaApp
+import javafx.geometry.Rectangle2D
 
 /**
  *
@@ -16,11 +17,16 @@ class PortalComponent(
         val toCellY: Int
 ) : Component() {
 
+    private lateinit var interactionCollisionBox: Rectangle2D
+
+    override fun onAdded() {
+        interactionCollisionBox = entity.getObject("interactionCollisionBox")
+    }
+
     override fun onUpdate(tpf: Double) {
+        val player = getGameWorld().getSingleton(EntityType.PLAYER)
 
-        // TODO: fix bbox size / collision
-
-        if (getGameWorld().getSingleton(EntityType.PLAYER).isColliding(entity)) {
+        if (interactionCollisionBox.contains(player.anchoredPosition)) {
             FXGL.getGameController().gotoLoading(Runnable {
                 FXGL.getAppCast<ZephyriaApp>().gotoMap(mapName, toCellX, toCellY)
             })

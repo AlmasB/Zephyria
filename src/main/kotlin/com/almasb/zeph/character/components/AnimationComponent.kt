@@ -4,7 +4,7 @@ import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
-import com.almasb.zeph.Config
+import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.character.CharacterEntity
 import javafx.util.Duration
 
@@ -17,8 +17,10 @@ class AnimationComponent(textureName: String) : Component() {
 
     private val animatedTexture: AnimatedTexture
 
-    // TODO: idle up down left right
-    private val channelIdle: AnimationChannel
+    private val channelIdleDown: AnimationChannel
+    private val channelIdleRight: AnimationChannel
+    private val channelIdleUp: AnimationChannel
+    private val channelIdleLeft: AnimationChannel
 
     private val channelWalkDown: AnimationChannel
     private val channelWalkRight: AnimationChannel
@@ -30,54 +32,37 @@ class AnimationComponent(textureName: String) : Component() {
     private val channelSlashUp: AnimationChannel
     private val channelSlashLeft: AnimationChannel
 
+    private val channelShootDown: AnimationChannel
+    private val channelShootRight: AnimationChannel
+    private val channelShootUp: AnimationChannel
+    private val channelShootLeft: AnimationChannel
+
     private val channelDeath: AnimationChannel
 
-    //    CAST_UP(0, 7),
-//    CAST_LEFT(1, 7),
-//    CAST_DOWN(2, 7),
-//    CAST_RIGHT(3, 7),
-//
-//    WALK_RIGHT(11, 9),
-//    WALK_LEFT(9, 9),
-//    WALK_UP(8, 9),
-//    WALK_DOWN(10, 9),
-//
-//    SLASH_UP(12, 6),
-//    SLASH_LEFT(13, 6),
-//    SLASH_DOWN(14, 6),
-//    SLASH_RIGHT(15, 6),
-//
-//    SHOOT_UP(16, 13),
-//    SHOOT_LEFT(17, 13),
-//    SHOOT_DOWN(18, 13),
-//    SHOOT_RIGHT(19, 13),
-//
-//    DEATH(20, 6);
-
     init {
-//        val image = texture(textureName)
-//                .subTexture(Rectangle2D(0.0, Config.tileSize * 10.0, Config.tileSize * 9.0, Config.tileSize * 1.0))
-//                .image
-//
-//        val imageDeath = texture(textureName)
-//                .subTexture(Rectangle2D(0.0, Config.tileSize * 20.0, Config.tileSize * 6.0, Config.tileSize * 1.0))
-//                .image
+        channelIdleDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
+        channelIdleRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 11, 9 * 11)
+        channelIdleUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 8, 9 * 8)
+        channelIdleLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 9, 9 * 9)
 
-        channelIdle = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
+        channelWalkDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 10, 9 * 10 +  9 -1)
+        channelWalkRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 +  9 -1)
+        channelWalkUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 8, 9 * 8 +  9 -1)
+        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 +  9 -1)
 
-        channelWalkDown = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 10, 9 * 10 +  9 -1)
-        channelWalkRight = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 +  9 -1)
-        channelWalkUp = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 8, 9 * 8 +  9 -1)
-        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 +  9 -1)
+        channelSlashDown = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
+        channelSlashRight = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
+        channelSlashUp = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
+        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
 
-        channelSlashDown = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
-        channelSlashRight = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
-        channelSlashUp = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
-        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
+        channelShootDown = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 18, 13 * 18 +  13 -1)
+        channelShootRight = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 19, 13 * 19 +  13 -1)
+        channelShootUp = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 16, 13 * 16 +  13 -1)
+        channelShootLeft = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 17, 13 * 17 +  13 -1)
 
-        channelDeath = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6*20, 6*20 + 6 -1)
+        channelDeath = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6*20, 6*20 + 6 -1)
 
-        animatedTexture = AnimatedTexture(channelWalkDown)
+        animatedTexture = AnimatedTexture(channelIdleDown)
         animatedTexture.loop()
     }
 
@@ -94,11 +79,47 @@ class AnimationComponent(textureName: String) : Component() {
         animatedTexture.onCycleFinished = onFinished
     }
 
-    fun loopIdle() {
-        if (animatedTexture.animationChannel === channelIdle)
+    internal val isFacingUp: Boolean
+        get() = isIn(channelIdleUp, channelShootUp, channelSlashUp, channelWalkUp)
+
+    internal val isFacingDown: Boolean
+        get() = isIn(channelIdleDown, channelShootDown, channelSlashDown, channelWalkDown)
+
+    internal val isFacingRight: Boolean
+        get() = isIn(channelIdleRight, channelShootRight, channelSlashRight, channelWalkRight)
+
+    internal val isFacingLeft: Boolean
+        get() = isIn(channelIdleLeft, channelShootLeft, channelSlashLeft, channelWalkLeft)
+
+    private fun isIn(vararg channels: AnimationChannel) = channels.any { it === animatedTexture.animationChannel }
+
+    // TODO: move to loopNoOverride()
+    fun loopIdleUp() {
+        if (animatedTexture.animationChannel === channelIdleUp)
             return
 
-        animatedTexture.loopAnimationChannel(channelIdle)
+        animatedTexture.loopAnimationChannel(channelIdleUp)
+    }
+
+    fun loopIdleDown() {
+        if (animatedTexture.animationChannel === channelIdleDown)
+            return
+
+        animatedTexture.loopAnimationChannel(channelIdleDown)
+    }
+
+    fun loopIdleRight() {
+        if (animatedTexture.animationChannel === channelIdleRight)
+            return
+
+        animatedTexture.loopAnimationChannel(channelIdleRight)
+    }
+
+    fun loopIdleLeft() {
+        if (animatedTexture.animationChannel === channelIdleLeft)
+            return
+
+        animatedTexture.loopAnimationChannel(channelIdleLeft)
     }
 
     fun loopWalkUp() {

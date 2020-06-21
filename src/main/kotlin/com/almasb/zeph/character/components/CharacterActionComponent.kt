@@ -89,8 +89,15 @@ class CharacterActionComponent : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        if (!state.isIn(MOVE))
+        if (state.isIdle) {
+            when {
+                animationComponent.isFacingLeft -> animationComponent.loopIdleLeft()
+                animationComponent.isFacingRight -> animationComponent.loopIdleRight()
+                animationComponent.isFacingUp -> animationComponent.loopIdleUp()
+                animationComponent.isFacingDown -> animationComponent.loopIdleDown()
+            }
             return
+        }
 
         when {
             moveComponent.isMovingDown -> animationComponent.loopWalkDown()

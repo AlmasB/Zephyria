@@ -4,3 +4,4 @@
 - Sounds - [An amazing soundtrack composed by ARFO: itch.io](https://bakudas.itch.io/generic-rpg-pack)
 - Trees - https://opengameart.org/content/trees-bushes
 - Textures - https://opengameart.org/content/2d-lost-garden-zelda-style-tiles-resized-to-32x32-with-additions
+- Portals - https://opengameart.org/content/teleporter-circle

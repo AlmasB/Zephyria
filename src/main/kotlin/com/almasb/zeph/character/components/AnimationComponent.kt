@@ -63,19 +63,19 @@ class AnimationComponent(textureName: String) : Component() {
 //                .subTexture(Rectangle2D(0.0, Config.tileSize * 20.0, Config.tileSize * 6.0, Config.tileSize * 1.0))
 //                .image
 
-        channelIdle = AnimationChannel(texture(textureName).image, 9, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 9 * 10, 9 * 10)
+        channelIdle = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
 
-        channelWalkDown = AnimationChannel(texture(textureName).image, 9, Config.spriteSize, Config.spriteSize, Duration.seconds(0.5), 9 * 10, 9 * 10 +  9 -1)
-        channelWalkRight = AnimationChannel(texture(textureName).image, 9, Config.spriteSize, Config.spriteSize, Duration.seconds(0.5), 9 * 11, 9 * 11 +  9 -1)
-        channelWalkUp = AnimationChannel(texture(textureName).image, 9, Config.spriteSize, Config.spriteSize, Duration.seconds(0.5), 9 * 8, 9 * 8 +  9 -1)
-        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, Config.spriteSize, Config.spriteSize, Duration.seconds(0.5), 9 * 9, 9 * 9 +  9 -1)
+        channelWalkDown = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 10, 9 * 10 +  9 -1)
+        channelWalkRight = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 +  9 -1)
+        channelWalkUp = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 8, 9 * 8 +  9 -1)
+        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 +  9 -1)
 
-        channelSlashDown = AnimationChannel(texture(textureName).image, 6, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
-        channelSlashRight = AnimationChannel(texture(textureName).image, 6, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
-        channelSlashUp = AnimationChannel(texture(textureName).image, 6, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
-        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
+        channelSlashDown = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
+        channelSlashRight = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
+        channelSlashUp = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
+        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
 
-        channelDeath = AnimationChannel(texture(textureName).image, 6, Config.spriteSize, Config.spriteSize, Duration.seconds(1.2), 6*20, 6*20 + 6 -1)
+        channelDeath = AnimationChannel(texture(textureName).image, 6, Config.SPRITE_SIZE, Config.SPRITE_SIZE, Duration.seconds(1.2), 6*20, 6*20 + 6 -1)
 
         animatedTexture = AnimatedTexture(channelWalkDown)
         animatedTexture.loop()

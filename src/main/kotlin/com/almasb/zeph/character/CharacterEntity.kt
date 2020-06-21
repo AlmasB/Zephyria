@@ -6,6 +6,8 @@ import com.almasb.zeph.character.components.AnimationComponent
 import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.character.components.CharacterComponent
 import com.almasb.zeph.character.components.PlayerComponent
+import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
@@ -51,7 +53,7 @@ class CharacterEntity : Entity() {
     val jobLevel get() = characterComponent.jobLevel
 
     val baseXP get() = characterComponent.baseXP
-    val statXP get() = characterComponent.statXP
+    val attrXP get() = characterComponent.attrXP
     val jobXP get() = characterComponent.jobXP
 
     val inventory get() = characterComponent.inventory
@@ -62,4 +64,8 @@ class CharacterEntity : Entity() {
 //    fun getEquip(place: EquipPlace) = playerComponent.getEquip(place)
 //
 //    fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)
+
+    fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
+
+    fun moveToCell(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
 }

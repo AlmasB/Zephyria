@@ -10,12 +10,10 @@ import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.*
-import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
-import javafx.collections.FXCollections
 import java.util.*
 
 /**
@@ -73,7 +71,7 @@ class PlayerComponent : Component() {
      * Holds experience needed for each level
      */
     private val EXP_NEEDED_BASE = IntArray(Config.MAX_LEVEL_BASE)
-    private val EXP_NEEDED_STAT = IntArray(Config.MAX_LEVEL_STAT)
+    private val EXP_NEEDED_STAT = IntArray(Config.MAX_LEVEL_ATTR)
     private val EXP_NEEDED_JOB = IntArray(Config.MAX_LEVEL_JOB)
 
     init {
@@ -141,11 +139,11 @@ class PlayerComponent : Component() {
     fun rewardXP(gainedXP: Experience): Boolean {
         var baseLevelUp = false
 
-        if (player.statLevel.value < Config.MAX_LEVEL_STAT) {
-            player.statXP.value += gainedXP.stat
+        if (player.statLevel.value < Config.MAX_LEVEL_ATTR) {
+            player.attrXP.value += gainedXP.stat
 
-            if (player.statXP.value >= expNeededForNextStatLevel()) {
-                player.statXP.value = 0
+            if (player.attrXP.value >= expNeededForNextStatLevel()) {
+                player.attrXP.value = 0
                 statLevelUp();
             }
         }

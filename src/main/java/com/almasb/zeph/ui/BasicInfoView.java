@@ -72,7 +72,7 @@ public class BasicInfoView extends MDIWindow {
         barXPStat.setTranslateX(120);
         barXPStat.setTranslateY(110);
         barXPStat.setMaxValue(player.getPlayerComponent().expNeededForNextStatLevel());
-        barXPStat.currentValueProperty().bind(player.getStatXP());
+        barXPStat.currentValueProperty().bind(player.getAttrXP());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);

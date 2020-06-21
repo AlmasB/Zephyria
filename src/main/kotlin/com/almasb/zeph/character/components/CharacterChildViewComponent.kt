@@ -37,13 +37,13 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
 
         barHP.translateX = 0.0
         barHP.translateY = 60.0
-        barHP.setWidth(Config.spriteSize * 1.0)
+        barHP.setWidth(Config.SPRITE_SIZE * 1.0)
         barHP.setHeight(6.0)
         barHP.isLabelVisible = false
 
         barSP.translateX = 0.0
         barSP.translateY = barHP.translateY + 6
-        barSP.setWidth(Config.spriteSize * 1.0)
+        barSP.setWidth(Config.SPRITE_SIZE * 1.0)
         barSP.setHeight(6.0)
         barSP.isLabelVisible = false
 
@@ -57,7 +57,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         text.font = Font.font(14.0)
         text.fill = Color.WHITE
         text.textProperty().bind(SimpleStringProperty((entity as CharacterEntity).data.description.name).concat(" Lv. ").concat(char.baseLevel))
-        text.translateX = Config.spriteSize.toDouble() / 2 - text.layoutBounds.width / 2
+        text.translateX = Config.SPRITE_SIZE.toDouble() / 2 - text.layoutBounds.width / 2
         text.translateY = 85.0
 
         return Group(barHP, barSP).also {

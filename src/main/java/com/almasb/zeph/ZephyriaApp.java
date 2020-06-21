@@ -50,12 +50,9 @@ import java.util.List;
 import java.util.Random;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.zeph.Config.*;
 
 public class ZephyriaApp extends GameApplication {
-
-    public static final int TILE_SIZE = Config.spriteSize / 2;
-    public static final int MAP_WIDTH = Config.INSTANCE.getMapWidth();
-    public static final int MAP_HEIGHT = Config.INSTANCE.getMapHeight();
 
     private AStarGrid grid;
 
@@ -175,9 +172,11 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         getGameWorld().addEntityFactory(new ZephFactory());
 
-        initTmx();
+        player = ZephFactoryKt.newPlayer();
 
-        initPlayer();
+        gotoMap("test_map.tmx", 2, 6);
+
+        spawn("cellSelection");
 
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
@@ -186,7 +185,6 @@ public class ZephyriaApp extends GameApplication {
 
         //selectedEffect.setInput(new Glow(0.8));
         //initEnemies();
-
 
 //        selected.addListener((observable, oldValue, newEntity) -> {
 //            if (oldValue != null) {
@@ -203,50 +201,6 @@ public class ZephyriaApp extends GameApplication {
 //
 //            playerActionControl.getSelected().set(newEntity);
 //        });
-    }
-
-    private void initTmx() {
-        var level = getAssetLoader().loadLevel("tmx/test_map.tmx", new TMXLevelLoader());
-
-        getGameWorld().setLevel(level);
-
-        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.tileSize, Config.tileSize, (type) -> {
-            if (type.equals(EntityType.NAV))
-                return CellState.WALKABLE;
-
-            return CellState.NOT_WALKABLE;
-        });
-
-        getGameWorld().getEntitiesFiltered(e -> e.isType("TiledMapLayer"))
-                .stream()
-                .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
-                .forEach(e -> {
-                    e.getViewComponent().getParent().setMouseTransparent(true);
-                    e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
-                });
-
-        // spawn mobs
-        spawnMobs(level);
-
-        spawn("cellSelection");
-    }
-
-    private void spawnMobs(Level level) {
-        level.getProperties()
-                .keys()
-                .stream()
-                // a char id
-                .filter(key -> key.startsWith("2"))
-                .map(key -> Integer.parseInt(key))
-                .forEach(id -> {
-                    var numMobs = level.getProperties().getInt(id + "");
-
-                    for (int i = 0; i < numMobs; i++) {
-                        grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
-                            spawnCharacter(cell.getX() * Config.tileSize, cell.getY() * Config.tileSize, Data.INSTANCE.getDbCharacters().get(id));
-                        });
-                    }
-                });
     }
 
     private void showGrid() {
@@ -344,10 +298,10 @@ public class ZephyriaApp extends GameApplication {
         debug.setFill(Color.WHITE);
 
         getGameScene().addUINodes(
-                new BasicInfoView(player),
-                new CharInfoView(player),
-                new InventoryView(player, getAppWidth(), getAppHeight()),
-                new EquipmentView(player, getAppWidth(), getAppHeight())
+//                new BasicInfoView(player),
+//                new CharInfoView(player),
+//                new InventoryView(player, getAppWidth(), getAppHeight()),
+//                new EquipmentView(player, getAppWidth(), getAppHeight())
                 //new HotbarView(player)
         );
     }
@@ -417,20 +371,6 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndPlay();
     }
 
-    private void initPlayer() {
-        player = ZephFactoryKt.newPlayer();
-
-        var cell = player.getComponent(NewAStarMoveComponent.class).getGrid().getWalkableCells().get(0);
-
-        player.getComponent(NewCellMoveComponent.class).setPositionToCell(cell);
-    }
-
-    private void initEnemies() {
-        Random random = new Random();
-
-        //spawnCharacter(DataManager.INSTANCE.createCharacter(Data.Character.INSTANCE.SKELETON_ARCHER(), random.nextInt(15), random.nextInt(10)));
-    }
-
     private void spawnCharacter(int x, int y, CharacterData charData) {
         System.out.println("Spawning " + charData + " at " + x + "," + y);
 
@@ -442,6 +382,53 @@ public class ZephyriaApp extends GameApplication {
         e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             player.getActionComponent().orderAttack(e);
         });
+    }
+
+    public void gotoMap(String mapName, int toCellX, int toCellY) {
+        var level = getAssetLoader().loadLevel("tmx/" + mapName, new TMXLevelLoader());
+
+        getGameWorld().setLevel(level);
+
+        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.TILE_SIZE, Config.TILE_SIZE, (type) -> {
+            if (type.equals(EntityType.NAV) || type.equals(EntityType.PORTAL))
+                return CellState.WALKABLE;
+
+            return CellState.NOT_WALKABLE;
+        });
+
+        getGameWorld().getEntitiesFiltered(e -> e.isType("TiledMapLayer"))
+                .stream()
+                .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
+                .forEach(e -> {
+                    e.getViewComponent().getParent().setMouseTransparent(true);
+                    e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
+                });
+
+        spawnMobs(level);
+
+        player.removeComponent(NewAStarMoveComponent.class);
+        player.addComponent(new NewAStarMoveComponent(grid));
+
+        player.getActionComponent().orderIdle();
+        player.setPositionToCell(toCellX, toCellY);
+    }
+
+    private void spawnMobs(Level level) {
+        level.getProperties()
+                .keys()
+                .stream()
+                // a char id
+                .filter(key -> key.startsWith("2"))
+                .map(key -> Integer.parseInt(key))
+                .forEach(id -> {
+                    var numMobs = level.getProperties().getInt(id + "");
+
+                    for (int i = 0; i < numMobs; i++) {
+                        grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
+                            spawnCharacter(cell.getX() * Config.TILE_SIZE, cell.getY() * Config.TILE_SIZE, Data.INSTANCE.getDbCharacters().get(id));
+                        });
+                    }
+                });
     }
 
     public static void main(String[] args) {

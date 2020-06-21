@@ -61,7 +61,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
     // what XP does this char give on death
     val baseXP = SimpleIntegerProperty()
-    val statXP = SimpleIntegerProperty()
+    val attrXP = SimpleIntegerProperty()
     val jobXP = SimpleIntegerProperty()
 
     val attackRange: Int = data.attackRange
@@ -101,7 +101,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     /**
      * @return true if [target] is in weapon range of this character
      */
-    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.spriteSize
+    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
 
     /**
      * @param status status

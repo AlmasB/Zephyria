@@ -13,13 +13,13 @@ import javafx.geometry.Point2D
 class CellSelectionComponent : Component() {
 
     override fun onUpdate(tpf: Double) {
-        val cellX = (FXGL.getInput().mouseXWorld / ZephyriaApp.TILE_SIZE).toInt()
-        val cellY = (FXGL.getInput().mouseYWorld / ZephyriaApp.TILE_SIZE).toInt()
+        val cellX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
+        val cellY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
 
         val cell = FXGL.getAppCast<ZephyriaApp>().grid.get(cellX, cellY)
 
         if (cell.isWalkable) {
-            entity.position = Point2D(cellX * Config.tileSize.toDouble(), cellY * Config.tileSize.toDouble())
+            entity.position = Point2D(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
         }
     }
 }

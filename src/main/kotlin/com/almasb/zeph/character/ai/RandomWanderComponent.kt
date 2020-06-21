@@ -26,6 +26,7 @@ class RandomWanderComponent : Component() {
             time += tpf
 
             if (time >= nextMoveTime) {
+                // TODO: check logic for identifying where a char is
                 val cellX = (entity as CharacterEntity).characterComponent.getTileX()
                 val cellY = (entity as CharacterEntity).characterComponent.getTileY()
 

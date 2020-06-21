@@ -10,9 +10,11 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.Spawns
+import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
+import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
@@ -22,6 +24,7 @@ import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.components.CellSelectionComponent
+import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
@@ -47,14 +50,14 @@ class ZephFactory : EntityFactory {
             val entity = CharacterEntity()
             entity.x = data.x
             entity.y = data.y
-            entity.type = CHARACTER
-            entity.localAnchor = Point2D(Config.spriteSize / 2.0, Config.spriteSize - 10.0)
-            entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(Config.spriteSize.toDouble(), Config.spriteSize.toDouble())))
+            entity.type = MONSTER
+            entity.localAnchor = Point2D(Config.SPRITE_SIZE / 2.0, Config.SPRITE_SIZE - 10.0)
+            entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(Config.SPRITE_SIZE.toDouble(), Config.SPRITE_SIZE.toDouble())))
 
             with(entity) {
                 addComponent(StateComponent())
                 addComponent(EffectComponent())
-                addComponent(NewCellMoveComponent(Config.tileSize, Config.tileSize, Config.CHAR_MOVE_SPEED))
+                addComponent(NewCellMoveComponent(Config.TILE_SIZE, Config.TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 addComponent(NewAStarMoveComponent(LazyValue(Supplier { FXGL.getAppCast<ZephyriaApp>().grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
@@ -79,6 +82,7 @@ class ZephFactory : EntityFactory {
         player.type = PLAYER
         player.removeComponent(RandomWanderComponent::class.java)
         player.addComponent(PlayerComponent())
+        player.addComponent(IrremovableComponent())
         return player
     }
 
@@ -101,7 +105,7 @@ class ZephFactory : EntityFactory {
 
     @Spawns("nav")
     fun newWalkableCell(data: SpawnData): Entity {
-        return FXGL.entityBuilder(data)
+        return entityBuilder(data)
                 .type(NAV)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
                 .view(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
@@ -115,8 +119,8 @@ class ZephFactory : EntityFactory {
 
                     //selected.set(null)
 
-                    val targetX = (FXGL.getInput().mouseXWorld / ZephyriaApp.TILE_SIZE).toInt()
-                    val targetY = (FXGL.getInput().mouseYWorld / ZephyriaApp.TILE_SIZE).toInt()
+                    val targetX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
+                    val targetY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
 
                     getGameWorld().getSingleton(PLAYER)
                             .getComponent(CharacterActionComponent::class.java)
@@ -125,11 +129,22 @@ class ZephFactory : EntityFactory {
                 .build()
     }
 
+    @Spawns("portal")
+    fun newPortal(data: SpawnData): Entity {
+        return entityBuilder(data)
+                .type(PORTAL)
+                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .with(PortalComponent(data.get("mapName"), data.get("toCellX"), data.get("toCellY")))
+                .build()
+    }
+
     @Spawns("cellSelection")
     fun newCellSelection(data: SpawnData): Entity {
         val e = entityBuilder(data)
-                .view(Rectangle(Config.tileSize * 1.0, Config.tileSize * 1.0, null).also { it.stroke = Color.BLACK })
+                .view(Rectangle(Config.TILE_SIZE * 1.0, Config.TILE_SIZE * 1.0, null).also { it.stroke = Color.BLACK })
+                .zIndex(Z_INDEX_CELL_SELECTION)
                 .with(CellSelectionComponent())
+                .with(IrremovableComponent())
                 .build()
 
         e.viewComponent.parent.isMouseTransparent = true

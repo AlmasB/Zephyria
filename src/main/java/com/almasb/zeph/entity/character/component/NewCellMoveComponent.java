@@ -119,6 +119,12 @@ public final class NewCellMoveComponent extends Component {
         int cy = cellY * cellHeight + cellHeight / 2;
 
         entity.setAnchoredPosition(cx, cy, entity.getLocalAnchor());
+
+        isMovingProp.setValue(false);
+        isMovingUp = false;
+        isMovingDown = false;
+        isMovingLeft = false;
+        isMovingRight = false;
     }
 
     public void moveToCell(Cell cell) {

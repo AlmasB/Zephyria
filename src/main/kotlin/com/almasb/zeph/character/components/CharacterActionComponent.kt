@@ -17,7 +17,6 @@ import javafx.geometry.Point2D
 
 /**
  *
- *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class CharacterActionComponent : Component() {
@@ -30,7 +29,9 @@ class CharacterActionComponent : Component() {
     private lateinit var char: CharacterEntity
     private lateinit var animationComponent: AnimationComponent
     private lateinit var moveComponent: NewCellMoveComponent
-    private lateinit var astar: NewAStarMoveComponent
+
+    private val astar: NewAStarMoveComponent
+        get() = entity.getComponent(NewAStarMoveComponent::class.java)
 
     private val MOVE: EntityState = object : EntityState() {
 
@@ -91,11 +92,6 @@ class CharacterActionComponent : Component() {
         if (!state.isIn(MOVE))
             return
 
-        if (!moveComponent.isMoving) {
-            animationComponent.loopIdle()
-            return
-        }
-
         when {
             moveComponent.isMovingDown -> animationComponent.loopWalkDown()
             moveComponent.isMovingUp -> animationComponent.loopWalkUp()
@@ -125,14 +121,18 @@ class CharacterActionComponent : Component() {
         reset()
         pickUpTarget = item
 
-        if (char.distance(item) <= Config.spriteSize) {
+        if (char.distance(item) <= Config.SPRITE_SIZE) {
             pickUp(item)
         } else {
             // TODO: items should have smth like ItemComponent with cellX,cellY...
-            val x = item.x.toInt() / Config.tileSize
-            val y = item.y.toInt() / Config.tileSize
+            val x = item.x.toInt() / Config.TILE_SIZE
+            val y = item.y.toInt() / Config.TILE_SIZE
             move(x, y)
         }
+    }
+
+    fun orderIdle() {
+        state.changeStateToIdle()
     }
 
     private fun move(cellX: Int, cellY: Int) {

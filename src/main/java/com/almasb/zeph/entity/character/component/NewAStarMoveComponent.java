@@ -73,6 +73,11 @@ public final class NewAStarMoveComponent extends Component {
         return pathfinder.get().getGrid();
     }
 
+    public void stopMovementAt(int cellX, int cellY) {
+        path.clear();
+        moveComponent.setPositionToCell(cellX, cellY);
+    }
+
     public void moveToRightCell() {
         getGrid().getRight(moveComponent.getCellX(), moveComponent.getCellY())
                 .ifPresent(this::moveToCell);

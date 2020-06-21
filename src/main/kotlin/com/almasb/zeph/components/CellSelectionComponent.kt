@@ -16,6 +16,10 @@ class CellSelectionComponent : Component() {
         val cellX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
         val cellY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
 
+        if (!FXGL.getAppCast<ZephyriaApp>().grid.isWithin(cellX, cellY)) {
+            return
+        }
+
         val cell = FXGL.getAppCast<ZephyriaApp>().grid.get(cellX, cellY)
 
         if (cell.isWalkable) {

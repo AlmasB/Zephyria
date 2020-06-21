@@ -1327,3 +1327,43 @@ package com.almasb.zeph.data
 //        }, Duration.seconds(0.8))
 //    }
 //}
+
+
+
+//    @Spawns("island")
+//    fun newIsland(data: SpawnData): Entity {
+//        val size = TILE_SIZE / 16
+//
+//        val group = Group()
+//
+//        val W = data.get<Double>("width").toInt() / size
+//        val H = data.get<Double>("height").toInt() / size
+//
+//        val map = Grid(BiomeData::class.java, W, H, BiomeMapGenerator(W, H, 2.4))
+//
+//        map.forEach { cell: BiomeData ->
+//            val texture = if (cell.elevation < 0.2) {
+//                // water
+//                ColoredTexture(size, size, Color.rgb(99, 155, 255))
+//            } else if (cell.elevation < 0.8) {
+//                // grass
+//                ColoredTexture(size, size, Color.rgb(77, 146, 98, 0.85))
+//            } else {
+//                // in-land grass / mud?
+//                ColoredTexture(size, size, Color.rgb(194, 152, 109, 0.5))
+//            }
+//
+//            texture.translateX = cell.x * size.toDouble()
+//            texture.translateY = cell.y * size.toDouble()
+//
+//            group.children += texture
+//        }
+//
+//        group.clip = Ellipse(W * 1.0, H * 1.0, W * 1.0, H * 1.0)
+//
+//        val view = ImageView(toImage(group))
+//
+//        return entityBuilder(data)
+//                .view(view)
+//                .build()
+//    }

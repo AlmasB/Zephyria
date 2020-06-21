@@ -1,19 +1,24 @@
 package com.almasb.zeph
 
+import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
-import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.EffectComponent
-import com.almasb.fxgl.dsl.entityBuilder
-import com.almasb.fxgl.dsl.getGameWorld
-import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.pathfinding.Cell
+import com.almasb.fxgl.pathfinding.Grid
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
+import com.almasb.fxgl.procedural.HeightMapGenerator
+import com.almasb.fxgl.texture.ColoredTexture
+import com.almasb.fxgl.texture.toImage
+import com.almasb.zeph.Config.MAP_HEIGHT
+import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.EntityType.*
@@ -33,9 +38,14 @@ import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
+import javafx.scene.Group
+import javafx.scene.image.ImageView
+import javafx.scene.image.WritableImage
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.util.function.Supplier
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Creates all entities.
@@ -107,10 +117,9 @@ class ZephFactory : EntityFactory {
 
     @Spawns("nav")
     fun newWalkableCell(data: SpawnData): Entity {
-        return entityBuilder(data)
+        val e = entityBuilder(data)
                 .type(NAV)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
-                .view(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
                 .onClick {
 //                    if (selectingSkillTargetArea) {
 //                        useAreaSkill()
@@ -129,6 +138,54 @@ class ZephFactory : EntityFactory {
                             .orderMove(targetX, targetY)
                 }
                 .build()
+
+        // Dynamic patches on tiles
+
+//        val size = TILE_SIZE / 16
+//
+//        val W = data.get<Double>("width").toInt() / size
+//        val H = data.get<Double>("height").toInt() / size
+//
+//        val buffer = WritableImage(size * W, size * H)
+//
+//        val map = Grid(HeightMapGenerator.HeightData::class.java, W, H, CustomHeightMapGenerator(0, e.x, e.y, W, H))
+//
+//        map.forEach { cell: HeightMapGenerator.HeightData ->
+//
+//            val maxDistance =  (W / 2 + H / 2)
+//            val opacity = (1 - cell.distance(W / 2, H / 2) * 1.0 / maxDistance) * 0.4
+//
+//            // data.get<Color>("color")
+//            var color = if (data.hasKey("color")) Color.rgb(77, 146, 98) else Color.rgb(194, 152, 109)
+//
+//            color = Color.color(color.red, color.green, color.blue, opacity)
+//
+//            val texture = if (cell.height < 0.2) {
+//                // water
+//                ColoredTexture(size, size, Color.TRANSPARENT)
+//            } else if (cell.height < 0.5) {
+//                // grass
+//                ColoredTexture(size, size, color.darker())
+//            } else if (cell.height < 0.7) {
+//                // grass
+//                ColoredTexture(size, size, color)
+//            } else {
+//                // in-land grass / mud?
+//                ColoredTexture(size, size, color.brighter())
+//            }
+//
+//            buffer.pixelWriter.setPixels(cell.x * size, cell.y * size, size, size, texture.image.pixelReader, 0, 0)
+//        }
+//
+//        e.viewComponent.addChild(ImageView(buffer))
+
+        e.viewComponent.addChild(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
+
+        return e
+    }
+
+    private fun Cell.distance(cellX: Int, cellY: Int): Int {
+        return Math.abs(x - cellX) + Math.abs(y - cellY)
     }
 
     @Spawns("portal")
@@ -158,6 +215,33 @@ class ZephFactory : EntityFactory {
         e.viewComponent.parent.isMouseTransparent = true
 
         return e
+    }
+}
+
+private class CustomHeightMapGenerator(val seed: Int, val tx: Double, val ty: Double, width: Int, height: Int) : HeightMapGenerator(width, height) {
+
+    private val random = FXGLMath.getRandom(seed.toLong())
+
+    private val multiplier = random.nextInt(19000) + 1
+
+    override fun apply(x: Int, y: Int): HeightData {
+        val nx = tx / (MAP_WIDTH * TILE_SIZE) + x * 1.0 / width - 0.5
+        val ny = ty / (MAP_HEIGHT * TILE_SIZE) + y * 1.0 / height - 0.5
+
+        var noiseValue = (FXGLMath.noise2D(nx, ny)
+                + 0.5 * FXGLMath.noise2D(20 * nx, 20 * ny))
+
+        noiseValue *= noiseValue
+
+        if (noiseValue < 0) {
+            noiseValue = 0.0
+        }
+
+        if (noiseValue > 1) {
+            noiseValue = 1.0
+        }
+
+        return HeightData(x, y, noiseValue)
     }
 }
 

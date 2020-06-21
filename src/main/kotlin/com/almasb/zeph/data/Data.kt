@@ -4,6 +4,7 @@ import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.item.*
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
+import com.almasb.zeph.skill.SkillData
 
 /**
  * ID ranges:
@@ -11,41 +12,50 @@ import com.almasb.zeph.item.Weapon
  * Weapon [4000-4999].
  * Armor [5000-5999].
  * Usable [6000-6999].
+ * Skill [7000-7999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 object Data {
 
+    private val dbSkills = hashMapOf<Int, SkillData>()
     // TODO: exclude (default items) hands, hat, clothes and shoes
-    val dbWeapons = hashMapOf<Int, WeaponData>()
-    val dbArmors = hashMapOf<Int, ArmorData>()
-    val dbUsableItems = hashMapOf<Int, UsableItemData>()
+    private val dbWeapons = hashMapOf<Int, WeaponData>()
+    private val dbArmors = hashMapOf<Int, ArmorData>()
+    private val dbUsableItems = hashMapOf<Int, UsableItemData>()
 
-    val dbCharacters = hashMapOf<Int, CharacterData>()
-
-    val weapons by lazy { dbWeapons.values.toList() }
-    val armors by lazy { dbArmors.values.toList() }
-
-    // There is ever only one of these
-    val hands by lazy { Weapon(getWeapon(4000)) }
-    val hat by lazy { Armor(getArmor(5000)) }
-    val clothes by lazy { Armor(getArmor(5001)) }
-    val shoes by lazy { Armor(getArmor(5002)) }
+    private val dbCharacters = hashMapOf<Int, CharacterData>()
 
     @JvmField
-    val UsableItem = com.almasb.zeph.data.UsableItem()
+    val Skills = Skills()
+
+    @JvmField
+    val UsableItems = UsableItems()
 
     @JvmField
     val Weapons = Weapons()
 
     @JvmField
-    val Armor = com.almasb.zeph.data.Armor()
+    val Armors = Armors()
 
     @JvmField
     val Characters = Characters()
 
-    @JvmField
-    val Skills = Skills()
+    val allSkillData by lazy { dbSkills.values.toList() }
+    val allWeaponData by lazy { dbWeapons.values.toList() }
+    val allArmorData by lazy { dbArmors.values.toList() }
+    val allCharacterData by lazy { dbCharacters.values.toList() }
+
+
+
+
+
+
+    // There is ever only one of these
+    val hands by lazy { Weapon(getWeaponData(4000)) }
+    val hat by lazy { Armor(getArmorData(5000)) }
+    val clothes by lazy { Armor(getArmorData(5001)) }
+    val shoes by lazy { Armor(getArmorData(5002)) }
 
     init {
         // TODO: check no duplicate IDs
@@ -55,14 +65,14 @@ object Data {
             dbWeapons[data.description.id] = data
         }
 
-        Armor.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Armor) as ArmorData
+        Armors.javaClass.declaredMethods.forEach {
+            val data = it.invoke(Armors) as ArmorData
 
             dbArmors[data.description.id] = data
         }
 
-        UsableItem.javaClass.declaredMethods.forEach {
-            val data = it.invoke(UsableItem) as UsableItemData
+        UsableItems.javaClass.declaredMethods.forEach {
+            val data = it.invoke(UsableItems) as UsableItemData
 
             dbUsableItems[data.description.id] = data
         }
@@ -72,17 +82,20 @@ object Data {
 
             dbCharacters[data.description.id] = data
         }
-
-        println(dbCharacters)
     }
 
+    fun isCharacter(id: Int) = id.toString().startsWith("2")
     fun isWeapon(id: Int) = id.toString().startsWith("4")
     fun isArmor(id: Int) = id.toString().startsWith("5")
 
-    fun getWeapon(id: Int) = dbWeapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
-    fun getArmor(id: Int) = dbArmors[id] ?: throw IllegalArgumentException("No armor found: $id")
+    fun getSkillData(id: Int) = dbSkills[id] ?: throw IllegalArgumentException("No skill found: $id")
+    fun getCharacterData(id: Int) = dbCharacters[id] ?: throw IllegalArgumentException("No character found: $id")
+    fun getWeaponData(id: Int) = dbWeapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
+    fun getArmorData(id: Int) = dbArmors[id] ?: throw IllegalArgumentException("No armor found: $id")
+    fun getUsableItemData(id: Int) = dbUsableItems[id] ?: throw IllegalArgumentException("No usable item found: $id")
+    fun getItemData(id: Int): ItemData = dbWeapons[id] ?: dbArmors[id] ?: dbUsableItems[id] ?: throw IllegalArgumentException("No weapon/armor/usable item found: $id")
 
-    fun getDefaultArmor(id: Int): com.almasb.zeph.item.Armor {
+    fun getDefaultArmor(id: Int): Armor {
         return when (id) {
             5000 -> hat
             5001 -> clothes

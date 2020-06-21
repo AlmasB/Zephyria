@@ -41,12 +41,12 @@ class PlayerComponent : Component() {
             val item: Item
 
             if (it.isWeapon) {
-                val weapon = Weapon(Data.getWeapon(it.emptyID))
+                val weapon = Weapon(Data.getWeaponData(it.emptyID))
                 weapon.onEquip(player)
 
                 item = weapon
             } else {
-                val armor = Armor(Data.getArmor(it.emptyID))
+                val armor = Armor(Data.getArmorData(it.emptyID))
                 armor.onEquip(player)
 
                 item = armor

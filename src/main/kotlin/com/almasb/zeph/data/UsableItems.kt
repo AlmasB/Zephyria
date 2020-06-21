@@ -16,7 +16,7 @@ import javafx.util.Duration
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class UsableItem {
+class UsableItems {
 
     fun HEALING_POTION() = usableItem {
         desc {
@@ -62,9 +62,9 @@ class UsableItem {
 
             val item =
                     if (isWeapon)
-                        Weapon(Data.weapons.random())
+                        Weapon(Data.allWeaponData.random())
                     else
-                        Armor(Data.armors.random())
+                        Armor(Data.allArmorData.random())
 
             it.inventory.addItem(item)
         }

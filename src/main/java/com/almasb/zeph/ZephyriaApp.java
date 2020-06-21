@@ -26,14 +26,12 @@ import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.data.Data;
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent;
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent;
 import com.almasb.zeph.events.EventHandlers;
 import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.skill.Skill;
 import com.almasb.zeph.skill.SkillTargetType;
 import com.almasb.zeph.skill.SkillType;
 import com.almasb.zeph.skill.SkillUseResult;
-import com.almasb.zeph.ui.*;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -47,7 +45,6 @@ import javafx.util.Duration;
 import kotlin.Pair;
 
 import java.util.List;
-import java.util.Random;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.zeph.Config.*;
@@ -112,8 +109,8 @@ public class ZephyriaApp extends GameApplication {
             spawnCharacter(800, 250, Data.Characters.SKELETON_ARCHER());
 
             spawnItem(800, 500, Data.Weapons.KNIFE());
-            spawnItem(800, 550, Data.UsableItem.MANA_POTION());
-            spawnItem(800, 600, Data.UsableItem.HEALING_POTION());
+            spawnItem(800, 550, Data.UsableItems.MANA_POTION());
+            spawnItem(800, 600, Data.UsableItems.HEALING_POTION());
 
             spawnItem(700, 500, Data.Weapons.FROSTMOURNE());
         });
@@ -389,7 +386,7 @@ public class ZephyriaApp extends GameApplication {
 
         getGameWorld().setLevel(level);
 
-        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, Config.TILE_SIZE, Config.TILE_SIZE, (type) -> {
+        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, TILE_SIZE, TILE_SIZE, (type) -> {
             if (type.equals(EntityType.NAV) || type.equals(EntityType.PORTAL))
                 return CellState.WALKABLE;
 
@@ -401,7 +398,7 @@ public class ZephyriaApp extends GameApplication {
                 .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
                 .forEach(e -> {
                     e.getViewComponent().getParent().setMouseTransparent(true);
-                    e.setZ(Config.Z_INDEX_DECOR_ABOVE_PLAYER);
+                    e.setZ(Z_INDEX_DECOR_ABOVE_PLAYER);
                 });
 
         spawnMobs(level);
@@ -425,7 +422,7 @@ public class ZephyriaApp extends GameApplication {
 
                     for (int i = 0; i < numMobs; i++) {
                         grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
-                            spawnCharacter(cell.getX() * Config.TILE_SIZE, cell.getY() * Config.TILE_SIZE, Data.INSTANCE.getDbCharacters().get(id));
+                            spawnCharacter(cell.getX() * TILE_SIZE, cell.getY() * TILE_SIZE, Data.INSTANCE.getCharacterData(id));
                         });
                     }
                 });

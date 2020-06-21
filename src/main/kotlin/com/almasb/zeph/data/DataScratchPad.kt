@@ -204,12 +204,7 @@ package com.almasb.zeph.data
 //
 //        object Crusader {
 //
-//            fun HOLY_LIGHT() = listOf<Component>(
-//                    Description(7110, "Holy Light", "Heals and increases VIT for the duration.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.RESTORE, EnumSet.of(SkillTargetType.ALLY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 //
 //            fun FAITH() = listOf<Component>(
 //                    Description(7111, "Faith", "Further increases bonus given by Heart of a Warrior skill.", "skills/ic_skill_bash.png"),
@@ -241,12 +236,7 @@ package com.almasb.zeph.data
 //        }
 //
 //        object Gladiator {
-//            fun BASH() = listOf<Component>(
-//                    Description(7210, "Bash", "A powerful physical attack that stuns the target for 5 seconds", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 //
 //            fun ENDURANCE() = listOf<Component>(
 //                    Description(7211, "Endurance", "Takes less damage and regenerates HP faster for the duration.", "skills/ic_skill_bash.png"),
@@ -515,26 +505,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Gladiator.BASH, "Bash", Desc.Skill.Gladiator.BASH, true, 15.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 2177640389884854474L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 5 + level * 3;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                float dmg = (1 + (15 + 5*level) / 100.0f) * caster.getTotalStat(Stat.ATK);
-//    ////                int d = caster.dealPhysicalDamage(target, dmg);
-//    ////                target.addStatusEffect(new StatusEffect(Status.STUNNED, 5.0f));
-//    ////
-//    ////                useResult = new SkillUseResult(GameMath.normalizeDamage(d) + ",STUNNED");
-//    ////            }
-//    ////        });
+
 //    ////
 //
 //    ////
@@ -931,28 +902,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Crusader.HOLY_LIGHT, "Holy Light", Desc.Skill.Crusader.HOLY_LIGHT, true, 20.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 5685022402103377679L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 3 + level*4;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                target.setHP(Math.min(target.getHP() + 30 + level*10, (int)target.getTotalStat(Stat.MAX_HP)));
-//    ////                target.addEffect(new Effect(20.0f, ID.Skill.Crusader.HOLY_LIGHT, new Rune[] {
-//    ////                        new Rune(Attribute.VITALITY, level*2)
-//    ////                },
-//    ////                new Essence[] {}));
-//    ////
-//    ////                useResult = new SkillUseResult("VIT +" + level*2);
-//    ////            }
-//    ////        });
+
 //    ////
 //    ////        addSkill(new Skill(ID.Skill.Crusader.PRECISION_STRIKE, "Precision Strike", Desc.Skill.Crusader.PRECISION_STRIKE, true, 20.0f) {
 //    ////            /**
@@ -1272,30 +1222,11 @@ package com.almasb.zeph.data
 //    //    }
 
 
-//package com.almasb.zeph.entity.ai
-//
-//import com.almasb.fxgl.ecs.AbstractControl
-//import com.almasb.fxgl.ecs.Entity
-//import com.almasb.fxgl.app.FXGL
-//import com.almasb.fxgl.entity.Entities
-//import com.almasb.fxgl.entity.GameEntity
-//import com.almasb.fxgl.entity.component.CollidableComponent
-//import com.almasb.fxgl.entity.control.OffscreenCleanControl
-//import com.almasb.fxgl.entity.control.ProjectileControl
-//import com.almasb.fxgl.texture.AnimatedTexture
-//import com.almasb.zeph.CharacterAnimation
-//import com.almasb.zeph.Config
-//import com.almasb.zeph.EntityType
-//import com.almasb.zeph.entity.character.CharacterEntity
-//import com.almasb.zeph.item.component.OwnerComponent
-//import javafx.beans.property.SimpleObjectProperty
-//import javafx.util.Duration
-//
-///**
-// *
-// *
-// * @author Almas Baimagambetov (almaslvl@gmail.com)
-// */
+
+
+
+
+
 //class AttackControl : AbstractControl() {
 //
 //    var enabled = true

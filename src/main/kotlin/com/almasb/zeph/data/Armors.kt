@@ -9,7 +9,7 @@ import com.almasb.zeph.item.armor
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Armor {
+class Armors {
     fun HAT() = armor {
         desc {
             id = 5000

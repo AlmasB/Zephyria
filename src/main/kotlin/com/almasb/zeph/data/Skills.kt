@@ -24,7 +24,7 @@ class Skills {
     val Crusader = Crusader()
 
     @JvmField
-    val Paladin = Gladiator()
+    val Gladiator = Gladiator()
 
     @JvmField
     val Mage = Mage()

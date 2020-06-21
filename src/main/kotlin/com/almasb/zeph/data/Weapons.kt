@@ -14,7 +14,21 @@ import com.almasb.zeph.item.weapon
  */
 class Weapons {
 
-    fun HANDS() = weapon {
+    val Maces = Maces()
+    val OneHandedSwords = OneHandedSwords()
+    val OneHandedAxes = OneHandedAxes()
+    val Daggers = Daggers()
+    val Spears = Spears()
+    val Rods = Rods()
+    val Shields = Shields()
+    val TwoHandedSwords = TwoHandedSwords()
+    val TwoHandedAxes = TwoHandedAxes()
+    val Katars = Katars()
+    val Bows = Bows()
+}
+
+class Maces {
+    val HANDS = weapon {
         desc {
             id = 4000
             name = "Hands"
@@ -24,20 +38,10 @@ class Weapons {
 
         type = MACE
     }
+}
 
-    fun KNIFE() = weapon {
-        desc {
-            id = 4001
-            name = "Knife"
-            description = "A simple knife with poor blade."
-            textureName = "items/weapons/knife.png"
-        }
-
-        type = DAGGER
-        pureDamage = 15
-    }
-
-    fun IRON_SWORD() = weapon {
+class OneHandedSwords {
+    val IRON_SWORD = weapon {
         desc {
             id = 4100
             name = "Iron Sword"
@@ -52,8 +56,40 @@ class Weapons {
             //it.characterComponent.addEffect()
         }
     }
+}
 
-    fun FROSTMOURNE() = weapon {
+class OneHandedAxes {
+    // 1H AXES 4300
+}
+
+class Daggers {
+    val KNIFE = weapon {
+        desc {
+            id = 4001
+            name = "Knife"
+            description = "A simple knife with poor blade."
+            textureName = "items/weapons/knife.png"
+        }
+
+        type = DAGGER
+        pureDamage = 15
+    }
+}
+
+class Spears {
+
+}
+
+class Rods {
+
+}
+
+class Shields {
+
+}
+
+class TwoHandedSwords {
+    val FROSTMOURNE = weapon {
         desc {
             id = 4202
             name = "Frostmourne"
@@ -69,12 +105,12 @@ class Weapons {
         STRENGTH +3
         DEXTERITY +5
     }
+}
 
-    // 1H AXES 4300
-
+class TwoHandedAxes {
     // 2H AXES 4400
 
-    fun SOUL_REAPER() = weapon {
+    val SOUL_REAPER = weapon {
         desc {
             id = 4400
             name = "Soul Reaper"
@@ -98,4 +134,12 @@ class Weapons {
 
         MAX_SP +20
     }
+}
+
+class Katars {
+
+}
+
+class Bows {
+
 }

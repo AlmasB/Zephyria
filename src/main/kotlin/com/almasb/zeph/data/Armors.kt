@@ -1,6 +1,7 @@
 package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.runIfChance
+import com.almasb.zeph.item.ArmorType
 import com.almasb.zeph.item.ArmorType.*
 import com.almasb.zeph.item.armor
 
@@ -10,7 +11,19 @@ import com.almasb.zeph.item.armor
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class Armors {
-    fun HAT() = armor {
+
+    @JvmField
+    val Helm = Helm()
+
+    @JvmField
+    val Body = Body()
+
+    @JvmField
+    val Shoes = Shoes()
+}
+
+class Helm {
+    val HAT = armor {
         desc {
             id = 5000
             name = "Hat"
@@ -20,8 +33,10 @@ class Armors {
 
         armorType = HELM
     }
+}
 
-    fun CLOTHES() = armor {
+class Body {
+    val CLOTHES = armor {
         desc {
             id = 5001
             name = "Clothes"
@@ -37,8 +52,10 @@ class Armors {
             }
         }
     }
+}
 
-    fun SHOES() = armor {
+class Shoes {
+    val SIMPLE_SHOES = armor {
         desc {
             id = 5002
             name = "Shoes"

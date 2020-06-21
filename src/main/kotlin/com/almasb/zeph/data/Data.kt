@@ -1,10 +1,14 @@
 package com.almasb.zeph.data
 
+import com.almasb.fxgl.core.reflect.ReflectionUtils
+import com.almasb.fxgl.logging.Logger
+import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.item.*
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.skill.SkillData
+import java.lang.Exception
 
 /**
  * ID ranges:
@@ -17,6 +21,8 @@ import com.almasb.zeph.skill.SkillData
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 object Data {
+
+    private val log = Logger.get(javaClass)
 
     private val dbSkills = hashMapOf<Int, SkillData>()
     // TODO: exclude (default items) hands, hat, clothes and shoes
@@ -58,29 +64,81 @@ object Data {
     val shoes by lazy { Armor(getArmorData(5002)) }
 
     init {
-        // TODO: check no duplicate IDs
-        Weapons.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Weapons) as WeaponData
+        try {
+            populate(dbWeapons, Weapons.Maces)
+            populate(dbWeapons, Weapons.OneHandedSwords)
+            populate(dbWeapons, Weapons.OneHandedAxes)
+            populate(dbWeapons, Weapons.Daggers)
+            populate(dbWeapons, Weapons.Spears)
+            populate(dbWeapons, Weapons.Rods)
+            populate(dbWeapons, Weapons.Shields)
+            populate(dbWeapons, Weapons.TwoHandedSwords)
+            populate(dbWeapons, Weapons.TwoHandedAxes)
+            populate(dbWeapons, Weapons.Katars)
+            populate(dbWeapons, Weapons.Bows)
 
-            dbWeapons[data.description.id] = data
+            populate(dbArmors, Armors.Helm)
+            populate(dbArmors, Armors.Body)
+            populate(dbArmors, Armors.Shoes)
+
+            populate(dbUsableItems, UsableItems)
+
+            populate(dbSkills, Skills.Warrior)
+            populate(dbSkills, Skills.Crusader)
+            populate(dbSkills, Skills.Gladiator)
+            populate(dbSkills, Skills.Mage)
+            populate(dbSkills, Skills.Wizard)
+            populate(dbSkills, Skills.Enchanter)
+            populate(dbSkills, Skills.Scout)
+            populate(dbSkills, Skills.Rogue)
+            populate(dbSkills, Skills.Ranger)
+
+            populate(dbCharacters, Characters)
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
 
-        Armors.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Armors) as ArmorData
+        println("Done")
 
-            dbArmors[data.description.id] = data
-        }
 
-        UsableItems.javaClass.declaredMethods.forEach {
-            val data = it.invoke(UsableItems) as UsableItemData
+//        // TODO: check no duplicate IDs
+//        Weapons.javaClass.declaredMethods.forEach {
+//            val data = it.invoke(Weapons) as WeaponData
+//
+//            dbWeapons[data.description.id] = data
+//        }
+//
+//        Armors.javaClass.declaredMethods.forEach {
+//            val data = it.invoke(Armors) as ArmorData
+//
+//            dbArmors[data.description.id] = data
+//        }
+//
+//        UsableItems.javaClass.declaredMethods.forEach {
+//            val data = it.invoke(UsableItems) as UsableItemData
+//
+//            dbUsableItems[data.description.id] = data
+//        }
+//
+//        Characters.javaClass.declaredMethods.forEach {
+//            val data = it.invoke(Characters) as CharacterData
+//
+//            dbCharacters[data.description.id] = data
+//        }
+    }
 
-            dbUsableItems[data.description.id] = data
-        }
+    private fun <T> populate(db: MutableMap<Int, T>, dataObject: Any) {
+        dataObject.javaClass.declaredFields.forEach {
+            it.isAccessible = true
 
-        Characters.javaClass.declaredMethods.forEach {
-            val data = it.invoke(Characters) as CharacterData
+            val data = it.get(dataObject)
 
-            dbCharacters[data.description.id] = data
+            println(data.javaClass)
+
+            val fieldDesc = ReflectionUtils.findFieldsByTypeRecursive(data, Description::class.java)[0].also { it.isAccessible = true }
+            val desc = fieldDesc.get(data) as Description
+
+            db[desc.id] = data as T
         }
     }
 

@@ -101,20 +101,6 @@ public class ZephyriaApp extends GameApplication {
             onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
         }
 
-        onKeyDown(KeyCode.K, "Spawn Dev", () -> {
-            spawnCharacter(800, 50, Data.Characters.SKELETON_WARRIOR());
-            spawnCharacter(800, 100, Data.Characters.SKELETON_MAGE());
-            spawnCharacter(800, 150, Data.Characters.SKELETON_ARCHER());
-            spawnCharacter(800, 200, Data.Characters.SKELETON_WARRIOR());
-            spawnCharacter(800, 250, Data.Characters.SKELETON_ARCHER());
-
-            spawnItem(800, 500, Data.Weapons.KNIFE());
-            spawnItem(800, 550, Data.UsableItems.MANA_POTION());
-            spawnItem(800, 600, Data.UsableItems.HEALING_POTION());
-
-            spawnItem(700, 500, Data.Weapons.FROSTMOURNE());
-        });
-
         onKeyDown(KeyCode.J, "Kill Dev", () -> {
             getGameWorld().getEntitiesInRange(new Rectangle2D(getInput().getMouseXWorld() - 20, getInput().getMouseYWorld() - 20, 40, 40))
                     .stream()

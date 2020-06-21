@@ -18,7 +18,7 @@ import javafx.util.Duration
  */
 class UsableItems {
 
-    fun HEALING_POTION() = usableItem {
+    val HEALING_POTION = usableItem {
         desc {
             id = 6000
             name = "Healing Potion"
@@ -36,7 +36,7 @@ class UsableItems {
         }
     }
 
-    fun MANA_POTION() = usableItem {
+    val MANA_POTION = usableItem {
         desc {
             id = 6001
             name = "Mana Potion"
@@ -49,7 +49,7 @@ class UsableItems {
         }
     }
 
-    fun TREASURE_BOX() = usableItem {
+    val TREASURE_BOX = usableItem {
         desc {
             id = 6002
             name = "Treasure Box"
@@ -70,7 +70,7 @@ class UsableItems {
         }
     }
 
-    fun FIRE_MIXTURE() = usableItem {
+    val FIRE_MIXTURE = usableItem {
         desc {
             id = 6003
             name = "Fire Mixture"

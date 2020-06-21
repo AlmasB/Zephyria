@@ -195,7 +195,7 @@ fun newPlayer(): CharacterEntity {
 }
 
 private fun newDagger(element: Element): Weapon {
-    val weapon = Weapon(Data.Weapons.KNIFE())
+    val weapon = Weapon(Data.Weapons.Daggers.KNIFE)
     weapon.element.set(element)
     return weapon
 }

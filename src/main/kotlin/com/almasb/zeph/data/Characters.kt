@@ -11,7 +11,7 @@ import com.almasb.zeph.combat.Experience
  */
 class Characters {
 
-    fun SKELETON_ARCHER() = char {
+    val SKELETON_ARCHER = char {
         desc {
             id = 2004
             name = "Skeleton-Archer"
@@ -28,11 +28,11 @@ class Characters {
         }
 
         drops {
-            Data.Weapons.KNIFE() has 50
+            Data.Weapons.Daggers.KNIFE has 50
         }
     }
 
-    fun SKELETON_WARRIOR() = char {
+    val SKELETON_WARRIOR = char {
         desc {
             id = 2005
             name = "Skeleton Warrior"
@@ -50,11 +50,11 @@ class Characters {
         }
 
         drops {
-            Data.Weapons.KNIFE() has 50
+            Data.Weapons.Daggers.KNIFE has 50
         }
     }
 
-    fun SKELETON_MAGE() = char {
+    val SKELETON_MAGE = char {
         desc {
             id = 2006
             name = "Skeleton Mage"

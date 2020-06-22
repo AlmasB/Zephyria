@@ -1,7 +1,6 @@
 package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.runIfChance
-import com.almasb.zeph.item.ArmorType
 import com.almasb.zeph.item.ArmorType.*
 import com.almasb.zeph.item.armor
 

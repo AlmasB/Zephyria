@@ -1,20 +1,14 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.combat.Attribute
-import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Attribute.STRENGTH
+import com.almasb.zeph.combat.Attribute.VITALITY
 import com.almasb.zeph.combat.Effect
-import com.almasb.zeph.combat.Stat
-import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.combat.effect
-import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillTargetType.*
-import com.almasb.zeph.skill.SkillType
-import com.almasb.zeph.skill.SkillType.*
-import com.almasb.zeph.skill.SkillUseType
+import com.almasb.zeph.skill.SkillType.ACTIVE
 import com.almasb.zeph.skill.SkillUseType.*
 import com.almasb.zeph.skill.skill
-import java.util.*
-import java.util.EnumSet.*
+import java.util.EnumSet.of
 
 /**
  * Skills id range [7000..7999].

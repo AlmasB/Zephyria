@@ -1,5 +1,6 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.core.collection.PropertyMap
 import com.almasb.fxgl.dsl.components.HealthDoubleComponent
 import com.almasb.fxgl.dsl.components.ManaDoubleComponent
 import com.almasb.fxgl.dsl.fire
@@ -13,14 +14,13 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.character.Attributes
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
-import com.almasb.zeph.character.Stats
 import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillUseResult
 import javafx.beans.binding.Bindings.createDoubleBinding
+import javafx.beans.property.IntegerProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -40,8 +40,8 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val hp = HealthDoubleComponent(1.0)
     val sp = ManaDoubleComponent(1.0)
 
-    val attributes = Attributes()
-    val stats = Stats()
+    private val attributes = PropertyMap()
+    private val stats = PropertyMap()
 
     val weaponElement = SimpleObjectProperty(data.element)
     val armorElement = SimpleObjectProperty(data.element)
@@ -57,15 +57,26 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val attackRange: Int = data.attackRange
 
     init {
-        attributes.setAttribute(STRENGTH, data.attributes.str)
-        attributes.setAttribute(VITALITY, data.attributes.vit)
-        attributes.setAttribute(DEXTERITY, data.attributes.dex)
-        attributes.setAttribute(AGILITY, data.attributes.agi)
-        attributes.setAttribute(INTELLECT, data.attributes.int)
-        attributes.setAttribute(WISDOM, data.attributes.wis)
-        attributes.setAttribute(WILLPOWER, data.attributes.wil)
-        attributes.setAttribute(PERCEPTION, data.attributes.per)
-        attributes.setAttribute(LUCK, data.attributes.luc)
+        setBase(STRENGTH, data.attributes.str)
+        setBase(VITALITY, data.attributes.vit)
+        setBase(DEXTERITY, data.attributes.dex)
+        setBase(AGILITY, data.attributes.agi)
+        setBase(INTELLECT, data.attributes.int)
+        setBase(WISDOM, data.attributes.wis)
+        setBase(WILLPOWER, data.attributes.wil)
+        setBase(PERCEPTION, data.attributes.per)
+        setBase(LUCK, data.attributes.luc)
+
+        Stat.values().forEach { setBase(it, 0) }
+        
+        Attribute.values().forEach { 
+            setBonus(it, 0) 
+            initTotal(it)
+        }
+        Stat.values().forEach { 
+            setBonus(it, 0) 
+            initTotal(it)
+        }
     }
 
     override fun onAdded() {
@@ -77,12 +88,63 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     private fun init() {
         bindStats()
 
-        hp.maxValueProperty().bind(stats.totalStatProperty(MAX_HP))
+        hp.maxValueProperty().bind(totalProperty(MAX_HP))
         hp.restorePercentageMax(100.0)
 
-        sp.maxValueProperty().bind(stats.totalStatProperty(MAX_SP))
+        sp.maxValueProperty().bind(totalProperty(MAX_SP))
         sp.restorePercentageMax(100.0)
     }
+
+    fun setBase(attribute: Attribute, value: Int) {
+        attributes.setValue("base$attribute", value)
+    }
+
+    fun setBase(stat: Stat, value: Int) {
+        stats.setValue("base$stat", value)
+    }
+
+    private fun setBonus(attribute: Attribute, value: Int) {
+        attributes.setValue("bonus$attribute", value)
+    }
+
+    private fun setBonus(stat: Stat, value: Int) {
+        stats.setValue("bonus$stat", value)
+    }
+
+    private fun initTotal(attribute: Attribute) {
+        attributes.setValue("total$attribute", 0)
+        totalProperty(attribute).bind(baseProperty(attribute).add(bonusProperty(attribute)))
+    }
+
+    private fun initTotal(stat: Stat) {
+        stats.setValue("total$stat", 0)
+        totalProperty(stat).bind(baseProperty(stat).add(bonusProperty(stat)))
+    }
+
+    fun getBase(attribute: Attribute): Int = baseProperty(attribute).value
+    fun getBase(stat: Stat): Int = baseProperty(stat).value
+    fun getTotal(attribute: Attribute): Int = totalProperty(attribute).value
+    fun getTotal(stat: Stat): Int = totalProperty(stat).value
+
+    fun addBonus(attribute: Attribute, value: Int) {
+        attributes.increment("bonus$attribute", value)
+    }
+
+    fun addBonus(stat: Stat, value: Int) {
+        stats.increment("bonus$stat", value)
+    }
+
+    fun baseProperty(attribute: Attribute): IntegerProperty = attributes.intProperty("base$attribute")
+    fun baseProperty(stat: Stat): IntegerProperty = stats.intProperty("base$stat")
+    fun bonusProperty(attribute: Attribute): IntegerProperty = attributes.intProperty("bonus$attribute")
+    fun bonusProperty(stat: Stat): IntegerProperty = stats.intProperty("bonus$stat")
+    fun totalProperty(attribute: Attribute): IntegerProperty = attributes.intProperty("total$attribute")
+    fun totalProperty(stat: Stat): IntegerProperty = stats.intProperty("total$stat")
+
+
+
+
+
 
     fun getTileX() = entity.getComponent(NewCellMoveComponent::class.java).cellX
 
@@ -93,23 +155,23 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      */
     fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
 
-    private fun str() = attributes.getTotalAttribute(STRENGTH)
+    private fun str() = getTotal(STRENGTH)
 
-    private fun vit() = attributes.getTotalAttribute(VITALITY)
+    private fun vit() = getTotal(VITALITY)
 
-    private fun dex() = attributes.getTotalAttribute(DEXTERITY)
+    private fun dex() = getTotal(DEXTERITY)
 
-    private fun agi() = attributes.getTotalAttribute(AGILITY)
+    private fun agi() = getTotal(AGILITY)
 
-    private fun int() = attributes.getTotalAttribute(INTELLECT)
+    private fun int() = getTotal(INTELLECT)
 
-    private fun wis() = attributes.getTotalAttribute(WISDOM)
+    private fun wis() = getTotal(WISDOM)
 
-    private fun wil() = attributes.getTotalAttribute(WILLPOWER)
+    private fun wil() = getTotal(WILLPOWER)
 
-    private fun per() = attributes.getTotalAttribute(PERCEPTION)
+    private fun per() = getTotal(PERCEPTION)
 
-    private fun luc() = attributes.getTotalAttribute(LUCK)
+    private fun luc() = getTotal(LUCK)
 
     private fun lvl() = baseLevel.intValue()
 
@@ -117,62 +179,63 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      * Bind base stats to attributes.
      */
     private fun bindStats() {
-        val str = attributes.totalAttributeProperty(STRENGTH)
-        val vit = attributes.totalAttributeProperty(VITALITY)
-        val dex = attributes.totalAttributeProperty(DEXTERITY)
-        val agi = attributes.totalAttributeProperty(AGILITY)
-        val int = attributes.totalAttributeProperty(INTELLECT)
-        val wis = attributes.totalAttributeProperty(WISDOM)
-        val wil = attributes.totalAttributeProperty(WILLPOWER)
-        val per = attributes.totalAttributeProperty(PERCEPTION)
-        val luc = attributes.totalAttributeProperty(LUCK)
+        val str = totalProperty(STRENGTH)
+        val vit = totalProperty(VITALITY)
+        val dex = totalProperty(DEXTERITY)
+        val agi = totalProperty(AGILITY)
+        val int = totalProperty(INTELLECT)
+        val wis = totalProperty(WISDOM)
+        val wil = totalProperty(WILLPOWER)
+        val per = totalProperty(PERCEPTION)
+        val luc = totalProperty(LUCK)
 
         val level = baseLevel
 
         // TODO: recheck rounding errors and formulae
         // TODO: autoparse from Attribute?
-        stats.statProperty(MAX_HP).bind(createDoubleBinding(Callable {
+        
+        baseProperty(MAX_HP).bind(createDoubleBinding(Callable {
             1.0 + vit() * 0.5 + str() * 0.3 + lvl() * 0.25 + (vit() / 10) + charClass.value.hp * lvl()
         }, vit, str, level))
 
-        stats.statProperty(MAX_SP).bind(createDoubleBinding(Callable {
+        baseProperty(MAX_SP).bind(createDoubleBinding(Callable {
             1.0 + wis() * 0.4 + wil() * 0.3 + lvl() * 0.25 + (wis() / 10).toDouble() + int() * 0.3 + charClass.value.sp * lvl()
         }, wis, wil, level, int))
 
-        stats.statProperty(HP_REGEN).bind(createDoubleBinding(Callable{ 1 + vit() * 0.1 },
+        baseProperty(HP_REGEN).bind(createDoubleBinding(Callable{ 1 + vit() * 0.1 },
                 vit))
 
-        stats.statProperty(SP_REGEN).bind(createDoubleBinding(Callable{ 2 + wis() * 0.1 },
+        baseProperty(SP_REGEN).bind(createDoubleBinding(Callable{ 2 + wis() * 0.1 },
                 wis))
 
-        stats.statProperty(ATK).bind(createDoubleBinding(Callable{ str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + lvl() + (str() / 10 * (str() / 10 + 1)).toDouble() },
+        baseProperty(ATK).bind(createDoubleBinding(Callable{ str() * 0.5 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 + lvl() + (str() / 10 * (str() / 10 + 1)).toDouble() },
                 str, dex, per, luc, level))
 
-        stats.statProperty(MATK).bind(createDoubleBinding(Callable{ int() * 0.5 + wis() * 0.4 + wil() * 0.4 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 },
+        baseProperty(MATK).bind(createDoubleBinding(Callable{ int() * 0.5 + wis() * 0.4 + wil() * 0.4 + dex() * 0.3 + per() * 0.2 + luc() * 0.1 },
                 int, dex, per, luc))
 
-        stats.statProperty(DEF).bind(createDoubleBinding(Callable{ vit() * 0.5 + per() * 0.2 + str() * 0.1 + lvl() * 0.25 + vit() / 20 },
+        baseProperty(DEF).bind(createDoubleBinding(Callable{ vit() * 0.5 + per() * 0.2 + str() * 0.1 + lvl() * 0.25 + vit() / 20 },
                 vit, per, str, level))
 
-        stats.statProperty(MDEF).bind(createDoubleBinding(Callable{ wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int() * 0.1 + lvl() * 0.25 + (wil() / 20 * int() / 10) },
+        baseProperty(MDEF).bind(createDoubleBinding(Callable{ wil() * 0.5 + wis() * 0.3 + per() * 0.2 + int() * 0.1 + lvl() * 0.25 + (wil() / 20 * int() / 10) },
                 wil, wis, per, int, level))
 
-        stats.statProperty(ASPD).bind(createDoubleBinding(Callable{ agi() * 0.5 + dex() * 0.2 },
+        baseProperty(ASPD).bind(createDoubleBinding(Callable{ agi() * 0.5 + dex() * 0.2 },
                 agi, dex))
 
-        stats.statProperty(MSPD).bind(createDoubleBinding(Callable{ dex() * 0.3 + wil() * 0.1 + wis() * 0.1 + int() * 0.1 + per() * 0.1 + luc() * 0.1 },
+        baseProperty(MSPD).bind(createDoubleBinding(Callable{ dex() * 0.3 + wil() * 0.1 + wis() * 0.1 + int() * 0.1 + per() * 0.1 + luc() * 0.1 },
                 dex, wil, wis, int, per, luc))
 
-        stats.statProperty(CRIT_CHANCE).bind(createDoubleBinding(Callable{ luc() * 0.5 + per() * 0.1 + wis() * 0.1 },
+        baseProperty(CRIT_CHANCE).bind(createDoubleBinding(Callable{ luc() * 0.5 + per() * 0.1 + wis() * 0.1 },
                 luc, per, wis))
 
-        stats.statProperty(MCRIT_CHANCE).bind(createDoubleBinding(Callable{ luc() * 0.5 + wil() * 0.2 + per() * 0.1 },
+        baseProperty(MCRIT_CHANCE).bind(createDoubleBinding(Callable{ luc() * 0.5 + wil() * 0.2 + per() * 0.1 },
                 luc, wil, per))
 
-        stats.statProperty(CRIT_DMG).bind(createDoubleBinding(Callable{ 2 + luc() * 0.01 },
+        baseProperty(CRIT_DMG).bind(createDoubleBinding(Callable{ 2 + luc() * 0.01 },
                 luc))
 
-        stats.statProperty(MCRIT_DMG).bind(createDoubleBinding(Callable{ 2 + luc() * 0.01 },
+        baseProperty(MCRIT_DMG).bind(createDoubleBinding(Callable{ 2 + luc() * 0.01 },
                 luc))
     }
 
@@ -187,8 +250,8 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         if (regenTick >= Config.REGEN_INTERVAL) {
 
             if (!char.hasStatus(Status.POISONED)) {
-                hp.restore(stats.getTotalStat(HP_REGEN))
-                sp.restore(stats.getTotalStat(SP_REGEN))
+                hp.restore(getTotal(HP_REGEN).toDouble())
+                sp.restore(getTotal(SP_REGEN).toDouble())
             } else {
                 hp.damagePercentageMax(1.0)
                 sp.damagePercentageMax(1.0)
@@ -242,7 +305,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      * @return if character is ready to perform basic attack based on his ASPD
      */
     open fun canAttack() =
-            atkTick >= Config.SLOWEST_ATTACK_INTERVAL - stats.getTotalStat(ASPD) / 100.0
+            atkTick >= Config.SLOWEST_ATTACK_INTERVAL - getTotal(ASPD) / 100.0
 
     /**
      * Performs basic attack with equipped weapon on the [target].
@@ -253,7 +316,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     fun attack(target: CharacterEntity): DamageResult {
         fire(OnAttackEvent(char, target))
 
-        return dealPhysicalDamage(target, stats.getTotalStat(ATK) + 2 * GameMath.random(lvl()), weaponElement.value)
+        return dealPhysicalDamage(target, getTotal(ATK).toDouble() + 2 * GameMath.random(lvl()), weaponElement.value)
     }
 
     /**
@@ -268,14 +331,14 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         var crit = false
 
-        if (GameMath.checkChance(stats.getTotalStat(CRIT_CHANCE))) {
-            baseDamage *= stats.getTotalStat(CRIT_DMG)
+        if (GameMath.checkChance(getTotal(CRIT_CHANCE))) {
+            baseDamage *= getTotal(CRIT_DMG)
             crit = true
         }
 
         val elementalDamageModifier = element.getDamageModifierAgainst(target.characterComponent.armorElement.value);
 
-        val damageAfterReduction = (100 - target.stats.getTotalStat(ARM)) * baseDamage / 100.0 - target.stats.getTotalStat(DEF)
+        val damageAfterReduction = (100 - target.getTotal(ARM)) * baseDamage / 100.0 - target.getTotal(DEF)
 
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
@@ -304,14 +367,14 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 //
 //        var crit = false
 //
-//        if (GameMath.checkChance(stats.getTotalStat(MCRIT_CHANCE))) {
-//            baseDamage *= stats.getTotalStat(MCRIT_DMG)
+//        if (GameMath.checkChance(getTotal(MCRIT_CHANCE))) {
+//            baseDamage *= getTotal(MCRIT_DMG)
 //            crit = true
 //        }
 //
 //        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
 //
-//        val damageAfterReduction = (100 - target.stats.getTotalStat(MARM)) * baseDamage / 100.0 - target.stats.getTotalStat(MDEF)
+//        val damageAfterReduction = (100 - target.getTotal(MARM)) * baseDamage / 100.0 - target.getTotal(MDEF)
 //
 //        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
 //        target.hp.damage(totalDamage.toDouble())

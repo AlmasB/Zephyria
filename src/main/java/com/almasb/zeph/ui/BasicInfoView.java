@@ -30,7 +30,7 @@ public class BasicInfoView extends MDIWindow {
         barHPUI.setWidth(100);
         barHPUI.setHeight(15);
         barHPUI.setLabelPosition(Position.RIGHT);
-        barHPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_HP));
+        barHPUI.maxValueProperty().bind(player.getCharacterComponent().totalProperty(Stat.MAX_HP));
         barHPUI.currentValueProperty().bind(player.getHp().valueProperty());
 
         ProgressBar barSPUI = ProgressBar.makeSkillBar();
@@ -39,7 +39,7 @@ public class BasicInfoView extends MDIWindow {
         barSPUI.setWidth(100);
         barSPUI.setHeight(15);
         barSPUI.setLabelPosition(Position.RIGHT);
-        barSPUI.maxValueProperty().bind(player.getStats().totalStatProperty(Stat.MAX_SP));
+        barSPUI.maxValueProperty().bind(player.getCharacterComponent().totalProperty(Stat.MAX_SP));
         barSPUI.currentValueProperty().bind(player.getSp().valueProperty());
 
         Text textPlayerName = new Text();

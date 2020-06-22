@@ -2,7 +2,6 @@ package com.almasb.zeph.character.ai
 
 import com.almasb.fxgl.dsl.random
 import com.almasb.fxgl.entity.component.Component
-import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.components.CharacterActionComponent

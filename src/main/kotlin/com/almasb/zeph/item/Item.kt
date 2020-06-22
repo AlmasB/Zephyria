@@ -84,13 +84,13 @@ abstract class EquipItem(
     open fun onEquip(char: CharacterEntity) {
         equippedCharacter = char
 
-        runes.forEach { char.attributes.addBonusAttribute(it.attribute, it.bonus) }
+        runes.forEach { char.addBonus(it.attribute, it.bonus) }
     }
 
     open fun onUnEquip(char: CharacterEntity) {
         equippedCharacter = null
 
-        runes.forEach { char.attributes.addBonusAttribute(it.attribute, -it.bonus) }
+        runes.forEach { char.addBonus(it.attribute, -it.bonus) }
     }
 
     /**

@@ -4,8 +4,6 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
-import com.almasb.zeph.item.ArmorData
-import com.almasb.zeph.item.ArmorDataBuilder
 
 enum class Status {
 
@@ -44,13 +42,13 @@ class Effect(val data: EffectData) {
     var duration = data.duration
 
     fun onBegin(char: CharacterEntity) {
-        data.runes.forEach { char.attributes.addBonusAttribute(it.attribute, it.bonus) }
-        data.essences.forEach { char.stats.addBonusStat(it.stat, it.bonus) }
+        data.runes.forEach { char.characterComponent.addBonus(it.attribute, it.bonus) }
+        data.essences.forEach { char.characterComponent.addBonus(it.stat, it.bonus) }
     }
 
     fun onEnd(char: CharacterEntity) {
-        data.runes.forEach { char.attributes.addBonusAttribute(it.attribute, -it.bonus) }
-        data.essences.forEach { char.stats.addBonusStat(it.stat, -it.bonus) }
+        data.runes.forEach { char.characterComponent.addBonus(it.attribute, -it.bonus) }
+        data.essences.forEach { char.characterComponent.addBonus(it.stat, -it.bonus) }
     }
 }
 

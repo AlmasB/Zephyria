@@ -2,8 +2,8 @@ package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
-import com.almasb.zeph.character.EquipPlace;
 import com.almasb.zeph.character.CharacterEntity;
+import com.almasb.zeph.character.EquipPlace;
 import com.almasb.zeph.item.Item;
 import javafx.scene.Cursor;
 import javafx.scene.Group;

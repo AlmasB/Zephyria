@@ -54,14 +54,14 @@ class Armor(data: ArmorData) : EquipItem(data.description, data.itemLevel, data.
     override fun onEquip(char: CharacterEntity) {
         super.onEquip(char)
 
-        char.stats.addBonusStat(Stat.ARM, armor.value)
-        char.stats.addBonusStat(Stat.MARM, marmor.value)
+        char.addBonus(Stat.ARM, armor.value)
+        char.addBonus(Stat.MARM, marmor.value)
     }
 
     override fun onUnEquip(char: CharacterEntity) {
         super.onUnEquip(char)
 
-        char.stats.addBonusStat(Stat.ARM, -armor.value)
-        char.stats.addBonusStat(Stat.MARM, -marmor.value)
+        char.addBonus(Stat.ARM, -armor.value)
+        char.addBonus(Stat.MARM, -marmor.value)
     }
 }

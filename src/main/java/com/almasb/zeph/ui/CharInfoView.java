@@ -42,7 +42,7 @@ public class CharInfoView extends MDIWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            text.textProperty().bind(player.getAttributes().attributeProperty(attr).asString(attr.toString() + ": %-3d"));
+            text.textProperty().bind(player.getCharacterComponent().baseProperty(attr).asString(attr.toString() + ": %-3d"));
 
             Text tooltipText = new Text(attr.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -57,9 +57,9 @@ public class CharInfoView extends MDIWindow {
             Text bText = new Text();
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
-            bText.visibleProperty().bind(player.getAttributes().bAttributeProperty(attr).greaterThan(0));
-            bText.textProperty().bind(player.getAttributes().bAttributeProperty(attr).asString("+%d ")
-                    .concat(player.getAttributes().totalAttributeProperty(attr).asString("(%d)")));
+            bText.visibleProperty().bind(player.getCharacterComponent().bonusProperty(attr).greaterThan(0));
+            bText.textProperty().bind(player.getCharacterComponent().bonusProperty(attr).asString("+%d ")
+                    .concat(player.getCharacterComponent().totalProperty(attr).asString("(%d)")));
 
             Text btn = new Text("+");
             btn.setCursor(Cursor.HAND);
@@ -67,7 +67,7 @@ public class CharInfoView extends MDIWindow {
             btn.setStrokeWidth(3);
             btn.setFont(font);
             btn.visibleProperty().bind(player.getPlayerComponent().getAttributePoints().greaterThan(0)
-                    .and(player.getAttributes().attributeProperty(attr).lessThan(100)));
+                    .and(player.getCharacterComponent().baseProperty(attr).lessThan(100)));
 
             btn.setOnMouseClicked(event -> {
                 player.getPlayerComponent().increaseAttribute(attr);
@@ -98,7 +98,7 @@ public class CharInfoView extends MDIWindow {
             text.setFont(font);
             text.setFill(Color.WHITE);
             text.setCursor(cursorQuestion);
-            text.textProperty().bind(player.getStats().statProperty(stat).asString(stat.toString() + ": %d"));
+            text.textProperty().bind(player.getCharacterComponent().baseProperty(stat).asString(stat.toString() + ": %d"));
 
             Text tooltipText = new Text(stat.getDescription());
             tooltipText.setFill(Color.WHITE);
@@ -114,9 +114,9 @@ public class CharInfoView extends MDIWindow {
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
 
-            StringBinding textBinding = Bindings.when(player.getStats().bStatProperty(stat).greaterThan(0))
-                .then(player.getStats().bStatProperty(stat).asString("+%d ")
-                        .concat(player.getStats().statProperty(stat).add(player.getStats().bStatProperty(stat)).asString("(%d)"))
+            StringBinding textBinding = Bindings.when(player.getCharacterComponent().bonusProperty(stat).greaterThan(0))
+                .then(player.getCharacterComponent().bonusProperty(stat).asString("+%d ")
+                        .concat(player.getCharacterComponent().baseProperty(stat).add(player.getCharacterComponent().bonusProperty(stat)).asString("(%d)"))
                         .concat(stat.getMeasureUnit()))
                 .otherwise(stat.getMeasureUnit());
 

@@ -50,12 +50,12 @@ class Weapon(data: WeaponData) : EquipItem(data.description, data.itemLevel, dat
     override fun onEquip(char: CharacterEntity) {
         super.onEquip(char)
 
-        char.stats.addBonusStat(Stat.ATK, pureDamage.value)
+        char.addBonus(Stat.ATK, pureDamage.value)
     }
 
     override fun onUnEquip(char: CharacterEntity) {
         super.onUnEquip(char)
 
-        char.stats.addBonusStat(Stat.ATK, -pureDamage.value)
+        char.addBonus(Stat.ATK, -pureDamage.value)
     }
 }

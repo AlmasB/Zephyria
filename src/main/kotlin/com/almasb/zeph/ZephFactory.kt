@@ -2,8 +2,10 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
-import com.almasb.fxgl.dsl.*
-import com.almasb.fxgl.dsl.components.EffectComponent
+import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.entityBuilder
+import com.almasb.fxgl.dsl.getGameWorld
+import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
@@ -11,12 +13,9 @@ import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
-import com.almasb.fxgl.pathfinding.Grid
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
 import com.almasb.fxgl.procedural.HeightMapGenerator
-import com.almasb.fxgl.texture.ColoredTexture
-import com.almasb.fxgl.texture.toImage
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.SPRITE_SIZE
@@ -39,14 +38,9 @@ import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
-import javafx.scene.Group
-import javafx.scene.image.ImageView
-import javafx.scene.image.WritableImage
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.util.function.Supplier
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Creates all entities.
@@ -91,12 +85,18 @@ class ZephFactory : EntityFactory {
 
     @Spawns("player")
     fun newPlayer(data: SpawnData): Entity {
-        val player = newCharacter(data)
-        player.type = PLAYER
-        player.removeComponent(RandomWanderComponent::class.java)
-        player.addComponent(PlayerComponent())
-        player.addComponent(IrremovableComponent())
-        return player
+        try {
+            val player = newCharacter(data)
+            player.type = PLAYER
+            player.removeComponent(RandomWanderComponent::class.java)
+            player.addComponent(PlayerComponent())
+            player.addComponent(IrremovableComponent())
+            return player
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        throw RuntimeException("Failed to create player: $data")
     }
 
     @Spawns("item")

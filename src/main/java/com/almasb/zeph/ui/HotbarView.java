@@ -1,11 +1,9 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.texture.Texture;
 import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.CharacterEntity;
-import com.almasb.zeph.character.components.PlayerComponent;
 import com.almasb.zeph.skill.Skill;
 import javafx.animation.StrokeTransition;
 import javafx.collections.ListChangeListener;

@@ -5,10 +5,7 @@ import com.almasb.fxgl.logging.Logger
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.item.*
-import com.almasb.zeph.item.Armor
-import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.skill.SkillData
-import java.lang.Exception
 
 /**
  * ID ranges:

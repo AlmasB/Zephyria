@@ -5,7 +5,8 @@ import com.almasb.zeph.Config
 import com.almasb.zeph.Config.ATTRIBUTE_POINTS_AT_LEVEL1
 import com.almasb.zeph.Config.SKILL_POINTS_AT_LEVEL1
 import com.almasb.zeph.Config.STARTING_MONEY
-import com.almasb.zeph.character.*
+import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.EquipPlace
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
@@ -98,9 +99,9 @@ class PlayerComponent : Component() {
         if (attributePoints.value == 0)
             return
 
-        val value = player.attributes.getBaseAttribute(attribute)
+        val value = player.characterComponent.getBase(attribute)
         if (value < Config.MAX_ATTRIBUTE) {
-            player.attributes.setAttribute(attribute, value + 1)
+            player.characterComponent.setBase(attribute, value + 1)
             attributePoints.value--
         }
     }

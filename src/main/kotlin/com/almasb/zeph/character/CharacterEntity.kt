@@ -3,10 +3,11 @@ package com.almasb.zeph.character
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.components.*
+import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Effect
+import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.combat.Status
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
@@ -42,10 +43,6 @@ class CharacterEntity : Entity() {
 
     val charClass get() = characterComponent.charClass
 
-    val attributes get() = characterComponent.attributes
-
-    val stats get() = characterComponent.stats
-
     val hp get() = characterComponent.hp
 
     val sp get() = characterComponent.sp
@@ -77,4 +74,15 @@ class CharacterEntity : Entity() {
     fun removeEffect(effect: Effect) = effectComponent.removeEffect(effect)
 
 
+
+    fun addBonus(attribute: Attribute, value: Int) {
+        characterComponent.addBonus(attribute, value)
+    }
+
+    fun addBonus(stat: Stat, value: Int) {
+        characterComponent.addBonus(stat, value)
+    }
+
+    fun getTotal(attribute: Attribute): Int = characterComponent.getTotal(attribute)
+    fun getTotal(stat: Stat): Int = characterComponent.getTotal(stat)
 }

@@ -106,7 +106,7 @@ public class HotbarView extends MDIWindow {
         btn.setStroke(Color.YELLOWGREEN.brighter());
         btn.setStrokeWidth(3);
         btn.setFont(Font.font(16));
-        btn.visibleProperty().bind(player.getPlayerComponent().getSkillPoints().greaterThan(0).and(skill.getLevel().lessThan(10)));
+        btn.visibleProperty().bind(player.getPlayerComponent().getSkillPoints().greaterThan(0).and(skill.getLevelProperty().lessThan(10)));
 
         final int skillIndex = index;
         btn.setOnMouseClicked(event -> {

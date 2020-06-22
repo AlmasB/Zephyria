@@ -1,12 +1,18 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.combat.Attribute.STRENGTH
-import com.almasb.zeph.combat.Attribute.VITALITY
-import com.almasb.zeph.combat.Effect
+import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.Element.*
+import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.combat.Stat.*
+import com.almasb.zeph.combat.Status
+import com.almasb.zeph.combat.Status.*
 import com.almasb.zeph.combat.effect
 import com.almasb.zeph.skill.SkillTargetType.*
 import com.almasb.zeph.skill.SkillType.ACTIVE
+import com.almasb.zeph.skill.SkillType.PASSIVE
 import com.almasb.zeph.skill.SkillUseType.*
+import com.almasb.zeph.skill.passiveSkill
 import com.almasb.zeph.skill.skill
 import java.util.EnumSet.of
 
@@ -64,14 +70,12 @@ class Warrior {
 
         onCastScript = { caster, target, skill ->
 
-            caster.addEffect(Effect(effect {
-                description = this@skill.description
-
+            caster.addEffect(effect(this) {
                 duration = 7.0
 
-                STRENGTH + 3*skill.level.value
-                VITALITY + 2*skill.level.value
-            }))
+                STRENGTH + 3*skill.level
+                VITALITY + 2*skill.level
+            })
         }
     }
 }
@@ -94,17 +98,13 @@ class Crusader {
         cooldown = 15.0
 
         onCastScript = { caster, target, skill ->
-            target.hp.restore(30 + skill.level.value*10.0)
+            target.hp.restore(30 + skill.level*10.0)
 
-            // 20 seconds with new Rune(Attribute.VITALITY, level*2)
-
-            caster.addEffect(Effect(effect {
-                description = this@skill.description
-
+            caster.addEffect(effect(this) {
                 duration = 20.0
 
-                VITALITY + 2*skill.level.value
-            }))
+                VITALITY + 2*skill.level
+            })
         }
     }
 
@@ -124,26 +124,79 @@ class Gladiator {
         useType = DAMAGE
         targetTypes = of(ENEMY)
 
-        manaCost = 35
+        manaCost = 40
         cooldown = 15.0
 
         onCastScript = { caster, target, skill ->
+            val dmg = (1 + (15 + 5*skill.level) / 100.0) * caster.getTotal(ATK)
+            val result = caster.characterComponent.dealPhysicalDamage(target, dmg)
 
-//            float dmg = (1 + (15 + 5*level) / 100.0f) * caster.getTotalStat(Stat.ATK);
-//            int d = caster.dealPhysicalDamage(target, dmg);
-//            target.addStatusEffect(new StatusEffect(Status.STUNNED, 5.0f));
-//
+            target.addEffect(effect(this) {
+                status = STUNNED
+                duration = 5.0
+            })
+
 //            useResult = new SkillUseResult(GameMath.normalizeDamage(d) + ",STUNNED");
         }
     }
 }
 
 class Mage {
+    val EARTH_BOULDER = skill {
+        desc {
+            id = 7023
+            name = "Earth Boulder"
+            description = "Deals magic damage with EARTH element."
+            textureName = "skills/ic_skill_earth_boulder.png"
+        }
 
+        type = ACTIVE
+        useType = DAMAGE
+        targetTypes = of(ENEMY)
+
+        manaCost = 25
+        cooldown = 7.0
+
+        onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(MATK) + skill.level * 25.0
+            val result = caster.characterComponent.dealMagicalDamage(target, dmg, EARTH)
+        }
+    }
+
+
+    //        addSkill(new Skill(ID.Skill.Mage.EARl.Mage.EARTH_BOULDER, true, 15.0f) {
+    //            /**
+    //             *
+    //             */
+    //            private static final long serialVersionUID = 1871962939560471153L;
+    //
+    //            @Override
+    //            public int getManaCost() {
+    //                return 5 + level * 5;
+    //            }
+    //
+    //            @Override
+    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
+    //                float dmg = caster.getTotalStat(Stat.MATK) + level *25;
+    //                int d = caster.dealMagicalDamage(target, dmg, Element.EARTH);
+    //
+    //                useResult = new SkillUseResult(d);
+    //            }
+    //        });
 }
 
 class Wizard {
 
+    val MAGIC_MASTERY = passiveSkill {
+        desc {
+            id = 7120
+            name = "Magic Mastery"
+            description = "Passively increases INT and WIL."
+        }
+
+        INTELLECT +2
+        WILLPOWER +2
+    }
 }
 
 class Enchanter {

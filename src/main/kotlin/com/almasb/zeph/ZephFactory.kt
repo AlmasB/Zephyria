@@ -275,6 +275,7 @@ fun newPlayer(): CharacterEntity {
     // TODO: TEST DATA BEGIN
 
     player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+    player.characterComponent.skills += Skill(Data.Skills.Wizard.MAGIC_MASTERY)
 
     player.inventory.items.add(newDagger(Element.NEUTRAL))
     player.inventory.items.add(newDagger(Element.FIRE))

@@ -4,6 +4,10 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Essence
+import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.combat.Stat
 import javafx.util.Duration
 import java.util.*
 
@@ -19,7 +23,10 @@ class SkillDataBuilder(
         var hasProjectile: Boolean = false,
         var projectileTextureName: String = "null_object.png",
         var soundEffectName: String = "null_object.wav",
-        var onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit = { caster, target, skill -> }
+        var passiveRunes: MutableList<Rune> = arrayListOf(),
+        var passiveEssences: MutableList<Essence> = arrayListOf(),
+        var onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit = { caster, target, skill -> },
+        var onLearnScript: (CharacterEntity, Skill) -> Unit = { char, skill -> }
 
 ) {
 
@@ -29,12 +36,12 @@ class SkillDataBuilder(
         description = builder.build()
     }
 
-    fun Int.sec(): Duration {
-        return Duration.seconds(this.toDouble())
+    operator fun Attribute.plus(value: Int) {
+        passiveRunes.add(Rune(this, value))
     }
 
-    fun Double.sec(): Duration {
-        return Duration.seconds(this)
+    operator fun Stat.plus(value: Int) {
+        passiveEssences.add(Essence(this, value))
     }
 
     fun build(): SkillData {
@@ -48,7 +55,10 @@ class SkillDataBuilder(
                 hasProjectile,
                 projectileTextureName,
                 soundEffectName,
-                onCastScript
+                passiveRunes,
+                passiveEssences,
+                onCastScript,
+                onLearnScript
         )
     }
 }
@@ -57,6 +67,14 @@ class SkillDataBuilder(
 fun skill(setup: SkillDataBuilder.() -> Unit): SkillData {
     val builder = SkillDataBuilder()
     builder.setup()
+    return builder.build()
+}
+
+@DataDSL
+fun passiveSkill(setup: SkillDataBuilder.() -> Unit): SkillData {
+    val builder = SkillDataBuilder()
+    builder.setup()
+    builder.type = SkillType.PASSIVE
     return builder.build()
 }
 
@@ -70,5 +88,10 @@ data class SkillData(
         val hasProjectile: Boolean,
         val projectileTextureName: String,
         val soundEffectName: String,
-        val onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit
+
+        // these passives ones are per level
+        val passiveRunes: List<Rune>,
+        val passiveEssences: List<Essence>,
+        val onCastScript: (CharacterEntity, CharacterEntity, Skill) -> Unit,
+        val onLearnScript: (CharacterEntity, Skill) -> Unit
 )

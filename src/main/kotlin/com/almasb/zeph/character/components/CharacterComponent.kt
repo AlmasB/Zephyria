@@ -403,7 +403,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     fun useSelfSkill(index: Int): SkillUseResult {
         val skill = skills[index]
 
-        if (skill.level.value == 0)
+        if (skill.levelProperty.value == 0)
             return SkillUseResult.NONE
 
         if (skill.currentCooldown.value > 0)

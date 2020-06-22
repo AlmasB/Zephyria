@@ -14,8 +14,11 @@ class Skill(val data: SkillData) {
 
     val dynamicDescription = SimpleStringProperty(data.description.description)
 
-    val level = SimpleIntegerProperty()
-    val manaCost = level.multiply(data.manaCost)
+    val levelProperty = SimpleIntegerProperty()
+    val manaCost = levelProperty.multiply(data.manaCost)
+
+    val level: Int
+        get() = levelProperty.value
 
     /**
      * In seconds.
@@ -28,7 +31,7 @@ class Skill(val data: SkillData) {
     init {
         dynamicDescription.bind(SimpleStringProperty(data.description.name).concat("\n")
                 .concat(data.description.description + "\n")
-                .concat(level.asString("Level: %d\n"))
+                .concat(levelProperty.asString("Level: %d\n"))
                 .concat(manaCost.asString("Mana Cost: %d\n")))
     }
 
@@ -42,6 +45,19 @@ class Skill(val data: SkillData) {
         } else if (currentCooldown.value < 0) {
             currentCooldown.value = 0.0
         }
+    }
+
+    /**
+     * Called on each level up of this skill.
+     */
+    fun onLearn(caster: CharacterEntity) {
+        // apply passive bonuses per level
+        if (data.type == SkillType.PASSIVE) {
+            data.passiveRunes.forEach { caster.addBonus(it.attribute, it.bonus) }
+            data.passiveEssences.forEach { caster.addBonus(it.stat, it.bonus) }
+        }
+
+        data.onLearnScript.invoke(caster, this)
     }
 
     fun onCast(caster: CharacterEntity, target: CharacterEntity) {

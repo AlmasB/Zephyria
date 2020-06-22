@@ -115,15 +115,11 @@ class PlayerComponent : Component() {
 
         val skill = player.characterComponent.skills[index]
 
-        if (skill.level.value < Config.MAX_LEVEL_SKILL) {
-            skill.level.value++
+        if (skill.levelProperty.value < Config.MAX_LEVEL_SKILL) {
+            skill.levelProperty.value++
             skillPoints.value--
 
-            // apply passive skills immediately
-            if (skill.data.type == SkillType.PASSIVE && skill.level.value == 1) {
-                // TODO?
-                //skill.data.onLearn(player, skill)
-            }
+            skill.onLearn(player)
         }
     }
 

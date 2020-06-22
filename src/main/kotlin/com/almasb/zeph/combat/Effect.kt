@@ -4,6 +4,7 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.skill.SkillDataBuilder
 
 enum class Status {
 
@@ -81,10 +82,11 @@ class EffectDataBuilder(
 }
 
 @DataDSL
-fun effect(setup: EffectDataBuilder.() -> Unit): EffectData {
+fun effect(skillDataBuilder: SkillDataBuilder, setup: EffectDataBuilder.() -> Unit): Effect {
     val builder = EffectDataBuilder()
+    builder.description = skillDataBuilder.description
     builder.setup()
-    return builder.build()
+    return Effect(builder.build())
 }
 
 data class EffectData(

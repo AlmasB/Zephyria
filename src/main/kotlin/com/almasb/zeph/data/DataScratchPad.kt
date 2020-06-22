@@ -296,22 +296,12 @@ package com.almasb.zeph.data
 //                            .withCooldown(15.0)
 //            )
 //
-//            fun EARTH_BOULDER() = listOf<Component>(
-//                    Description(7023, "Earth Boulder", "Deals magic damage with earth element.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 //        }
 //
 //        object Wizard {
 //
-//            fun MAGIC_MASTERY() = listOf<Component>(
-//                    Description(7120, "Magic Mastery", "Passively increases INT and WIL.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 //
 //            fun AMPLIFY_MAGIC() = listOf<Component>(
 //                    Description(7121, "Amplify Magic", "Increases MATK for the duration.", "skills/ic_skill_bash.png"),
@@ -659,25 +649,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Mage.EARTH_BOULDER, "Earth Boulder", Desc.Skill.Mage.EARTH_BOULDER, true, 15.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 1871962939560471153L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 5 + level * 5;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                float dmg = caster.getTotalStat(Stat.MATK) + level *25;
-//    ////                int d = caster.dealMagicalDamage(target, dmg, Element.EARTH);
-//    ////
-//    ////                useResult = new SkillUseResult(d);
-//    ////            }
-//    ////        });
+
 //    ////
 //
 //    ////
@@ -701,28 +673,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Wizard.MAGIC_MASTERY, "Magic Mastery", Desc.Skill.Wizard.MAGIC_MASTERY, false, 0.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 9020149732268399438L;
-//    ////
-//    ////            private int value = 0;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 0;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                caster.addBonusAttribute(Attribute.INTELLECT, -value);
-//    ////                caster.addBonusAttribute(Attribute.WILLPOWER, -value);
-//    ////                value = level * 2;
-//    ////                caster.addBonusAttribute(Attribute.INTELLECT, value);
-//    ////                caster.addBonusAttribute(Attribute.WILLPOWER, value);
-//    ////            }
-//    ////        });
+
 //    ////
 //    ////        addSkill(new Skill(ID.Skill.Enchanter.MAGIC_SHIELD, "Magic Shield", Desc.Skill.Enchanter.MAGIC_SHIELD, true, 60.0f) {
 //    ////            /**

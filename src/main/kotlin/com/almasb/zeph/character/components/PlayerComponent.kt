@@ -3,6 +3,7 @@ package com.almasb.zeph.character.components
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
 import com.almasb.zeph.Config.ATTRIBUTE_POINTS_AT_LEVEL1
+import com.almasb.zeph.Config.SKILL_POINTS_AT_LEVEL1
 import com.almasb.zeph.Config.STARTING_MONEY
 import com.almasb.zeph.character.*
 import com.almasb.zeph.combat.Attribute
@@ -26,7 +27,7 @@ class PlayerComponent : Component() {
     private lateinit var player: CharacterEntity
 
     val attributePoints = SimpleIntegerProperty(ATTRIBUTE_POINTS_AT_LEVEL1)
-    val skillPoints = SimpleIntegerProperty(0)
+    val skillPoints = SimpleIntegerProperty(SKILL_POINTS_AT_LEVEL1)
 
     val money = SimpleIntegerProperty(STARTING_MONEY)
     val weapon = SimpleObjectProperty<Weapon>()

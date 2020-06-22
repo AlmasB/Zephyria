@@ -43,16 +43,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val attributes = Attributes()
     val stats = Stats()
 
-    /**
-     * Statuses currently affecting this character.
-     */
-    val statuses = FXCollections.observableArrayList<StatusEffect>()
-
-    /**
-     * Effects currently placed on this character.
-     */
-    val effects = FXCollections.observableArrayList<Effect>()
-
     val weaponElement = SimpleObjectProperty(data.element)
     val armorElement = SimpleObjectProperty(data.element)
 
@@ -102,48 +92,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      * @return true if [target] is in weapon range of this character
      */
     fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
-
-    /**
-     * @param status status
-     *
-     * @return true if character is under status, false otherwise
-     */
-    fun hasStatus(status: Status): Boolean {
-        return false
-
-        // TODO:
-        //return statuses.any { it.data.status == status }
-    }
-
-    /**
-     * Apply status effect.
-     *
-     * @param e effect
-     */
-    fun addStatusEffect(e: StatusEffect) {
-        statuses.add(e)
-    }
-
-    /**
-     * Applies an effect to this character. If the effect comes from the same
-     * source, e.g. skill, the effect will be re-applied (will reset its timer).
-     *
-     * @param e effect
-     */
-    fun addEffect(e: Effect) {
-        val it = effects.iterator()
-        while (it.hasNext()) {
-            val eff = it.next()
-            if (eff.getID() == e.getID()) {
-                eff.onEnd(char)
-                it.remove()
-                break
-            }
-        }
-
-        e.onBegin(char)
-        effects.add(e)
-    }
 
     private fun str() = attributes.getTotalAttribute(STRENGTH)
 
@@ -238,7 +186,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         if (regenTick >= Config.REGEN_INTERVAL) {
 
-            if (!hasStatus(Status.POISONED)) {
+            if (!char.hasStatus(Status.POISONED)) {
                 hp.restore(stats.getTotalStat(HP_REGEN))
                 sp.restore(stats.getTotalStat(SP_REGEN))
             } else {
@@ -268,29 +216,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         }
     }
 
-    private fun updateEffects(tpf: Double) {
-        val it = effects.iterator()
-        while (it.hasNext()) {
-            val e = it.next()
-            e.duration -= tpf
-            if (e.duration <= 0) {
-                e.onEnd(char)
-                it.remove()
-            }
-        }
-    }
-
-    private fun updateStatusEffects(tpf: Double) {
-        val it = statuses.iterator()
-        while (it.hasNext()) {
-            val e = it.next()
-            e.duration.value -= tpf
-            if (e.duration.value <= 0) {
-                it.remove()
-            }
-        }
-    }
-
     override fun onUpdate(tpf: Double) {
         if (hp.isZero)
             return
@@ -301,9 +226,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
             atkTick += tpf
 
         updateSkills(tpf)
-        // check buffs
-        updateEffects(tpf)
-        updateStatusEffects(tpf)
     }
 
     /**

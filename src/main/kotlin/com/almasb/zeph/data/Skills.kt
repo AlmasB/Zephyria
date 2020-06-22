@@ -1,5 +1,11 @@
 package com.almasb.zeph.data
 
+import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Effect
+import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.combat.Stat.*
+import com.almasb.zeph.combat.effect
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillTargetType.*
 import com.almasb.zeph.skill.SkillType
@@ -64,16 +70,14 @@ class Warrior {
 
         onCastScript = { caster, target, skill ->
 
-            println("Cast $caster on $target. Skill $skill")
+            caster.addEffect(Effect(effect {
+                description = this@skill.description
 
-            //                                val effect = EffectEntity(listOf(
-//                                        Description(7010, "Roar", "Roar", "effects/attr_up.png"),
-//                                        EffectDataComponent(7.0)
-//                                                .withRune(Rune(Attribute.STRENGTH, 3 * skill.level.value))
-//                                                .withRune(Rune(Attribute.VITALITY, 2 * skill.level.value))
-//                                ))
+                duration = 7.0
 
-            //caster.characterComponent.addEffect()
+                STRENGTH + 3*skill.level.value
+                VITALITY + 2*skill.level.value
+            }))
         }
     }
 }
@@ -99,6 +103,14 @@ class Crusader {
             target.hp.restore(30 + skill.level.value*10.0)
 
             // 20 seconds with new Rune(Attribute.VITALITY, level*2)
+
+            caster.addEffect(Effect(effect {
+                description = this@skill.description
+
+                duration = 20.0
+
+                VITALITY + 2*skill.level.value
+            }))
         }
     }
 

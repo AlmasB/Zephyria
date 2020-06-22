@@ -19,6 +19,7 @@ import com.almasb.fxgl.texture.ColoredTexture
 import com.almasb.fxgl.texture.toImage
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
+import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.EntityType.*
@@ -63,13 +64,13 @@ class ZephFactory : EntityFactory {
             entity.x = data.x
             entity.y = data.y
             entity.type = MONSTER
-            entity.localAnchor = Point2D(Config.SPRITE_SIZE / 2.0, Config.SPRITE_SIZE - 10.0)
-            entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(Config.SPRITE_SIZE.toDouble(), Config.SPRITE_SIZE.toDouble())))
+            entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
+            entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
 
             with(entity) {
                 addComponent(StateComponent())
-                addComponent(EffectComponent())
-                addComponent(NewCellMoveComponent(Config.TILE_SIZE, Config.TILE_SIZE, Config.CHAR_MOVE_SPEED))
+                addComponent(CharacterEffectComponent())
+                addComponent(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 addComponent(NewAStarMoveComponent(LazyValue(Supplier { FXGL.getAppCast<ZephyriaApp>().grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
@@ -130,8 +131,8 @@ class ZephFactory : EntityFactory {
 
                     //selected.set(null)
 
-                    val targetX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
-                    val targetY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
+                    val targetX = (FXGL.getInput().mouseXWorld / TILE_SIZE).toInt()
+                    val targetY = (FXGL.getInput().mouseYWorld / TILE_SIZE).toInt()
 
                     getGameWorld().getSingleton(PLAYER)
                             .getComponent(CharacterActionComponent::class.java)
@@ -206,7 +207,7 @@ class ZephFactory : EntityFactory {
     @Spawns("cellSelection")
     fun newCellSelection(data: SpawnData): Entity {
         val e = entityBuilder(data)
-                .view(Rectangle(Config.TILE_SIZE * 1.0, Config.TILE_SIZE * 1.0, null).also { it.stroke = Color.BLACK })
+                .view(Rectangle(TILE_SIZE * 1.0, TILE_SIZE * 1.0, null).also { it.stroke = Color.BLACK })
                 .zIndex(Z_INDEX_CELL_SELECTION)
                 .with(CellSelectionComponent())
                 .with(IrremovableComponent())

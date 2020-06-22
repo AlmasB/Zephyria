@@ -2,10 +2,9 @@ package com.almasb.zeph.character
 
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.EntityType
-import com.almasb.zeph.character.components.AnimationComponent
-import com.almasb.zeph.character.components.CharacterActionComponent
-import com.almasb.zeph.character.components.CharacterComponent
-import com.almasb.zeph.character.components.PlayerComponent
+import com.almasb.zeph.character.components.*
+import com.almasb.zeph.combat.Effect
+import com.almasb.zeph.combat.Status
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 
@@ -29,6 +28,9 @@ class CharacterEntity : Entity() {
 
     val actionComponent: CharacterActionComponent
         get() = getComponent(CharacterActionComponent::class.java)
+
+    val effectComponent: CharacterEffectComponent
+        get() = getComponent(CharacterEffectComponent::class.java)
 
     /* COMPONENTS END */
 
@@ -68,4 +70,11 @@ class CharacterEntity : Entity() {
     fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 
     fun moveToCell(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
+
+    fun hasStatus(status: Status) = effectComponent.hasStatus(status)
+
+    fun addEffect(effect: Effect) = effectComponent.addEffect(effect)
+    fun removeEffect(effect: Effect) = effectComponent.removeEffect(effect)
+
+
 }

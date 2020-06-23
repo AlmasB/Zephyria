@@ -88,20 +88,3 @@ package com.almasb.zeph.skill
 
 
 
-//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.CHARACTER) {
-//            @Override
-//            protected void onCollisionBegin(Entity proj, Entity target) {
-//                SkillEntity skill = (SkillEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
-//
-//                proj.removeFromWorld();
-//
-//                CharacterEntity character = (CharacterEntity) target;
-//
-//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
-//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
-//
-//                if (character.getHp().getValue() <= 0) {
-//                    playerKilledChar(character);
-//                }
-//            }
-//        });

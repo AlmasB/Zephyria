@@ -268,19 +268,7 @@ package com.almasb.zeph.data
 //        }
 //
 //        object Mage {
-//            fun FIREBALL() = listOf<Component>(
-//                    Description(7020, "Fireball", "Deals magic damage with fire element.", "skills/ic_skill_fireball.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .onCast { caster, target, skill ->
-//
-//                                val dmg = caster.stats.getTotalStat(Stat.MATK) + skill.level.value * 20
-//
-//                                SkillUseResult(caster.charConrol.dealMagicalDamage(target, dmg, Element.FIRE))
-//                            }
-//                            .withTextureName("projectiles/fireball.png")
-//                            .withMana(5)
-//                            .withCooldown(15.0)
-//            )
+
 //
 //            fun ICE_SHARD() = listOf<Component>(
 //                    Description(7021, "Ice Shard", "Deals magic damage with water element.", "skills/ic_skill_bash.png"),
@@ -303,12 +291,6 @@ package com.almasb.zeph.data
 //
 
 //
-//            fun AMPLIFY_MAGIC() = listOf<Component>(
-//                    Description(7121, "Amplify Magic", "Increases MATK for the duration.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
 //
 //            fun MENTAL_STRIKE() = listOf<Component>(
 //                    Description(7122, "Mental Strike", "Deals pure damage based on MATK.", "skills/ic_skill_bash.png"),
@@ -599,34 +581,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Wizard.AMPLIFY_MAGIC, "Amplify Magic", Desc.Skill.Wizard.AMPLIFY_MAGIC, true, 30.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = -6423702278665617928L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 5 + level * 5;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                caster.addEffect(new Effect((15.0f), ID.Skill.Wizard.AMPLIFY_MAGIC,
-//    ////                        new Rune[] {},
-//    ////                        new Essence[] {
-//    ////                        new Essence(Stat.MATK, 10*level)
-//    ////                }
-//    ////                        ));
-//    ////
-//    ////                useResult = new SkillUseResult("MATK +" + 10*level);
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            public boolean isSelfTarget() {
-//    ////                return true;
-//    ////            }
-//    ////        });
+
 //    ////
 //    ////        addSkill(new Skill(ID.Skill.Enchanter.ASTRAL_PROTECTION, "Astral Protection", Desc.Skill.Enchanter.ASTRAL_PROTECTION, false, 0.0f) {
 //    ////            /**

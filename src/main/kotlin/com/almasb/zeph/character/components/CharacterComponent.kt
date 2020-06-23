@@ -363,24 +363,26 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      * @return damage dealt
      */
     fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
-//        var baseDamage = baseDamage
-//
-//        var crit = false
-//
-//        if (GameMath.checkChance(getTotal(MCRIT_CHANCE))) {
-//            baseDamage *= getTotal(MCRIT_DMG)
-//            crit = true
-//        }
-//
-//        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
-//
-//        val damageAfterReduction = (100 - target.getTotal(MARM)) * baseDamage / 100.0 - target.getTotal(MDEF)
-//
-//        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
-//        target.hp.damage(totalDamage.toDouble())
-//
-//        return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
-        return DamageResult.NONE
+        var baseDamage = baseDamage
+
+        var crit = false
+
+        if (GameMath.checkChance(getTotal(MCRIT_CHANCE))) {
+            baseDamage *= getTotal(MCRIT_DMG)
+            crit = true
+        }
+
+        val elementalDamageModifier = element.getDamageModifierAgainst(target.armorElement.value);
+
+        val damageAfterReduction = (100 - target.getTotal(MARM)) * baseDamage / 100.0 - target.getTotal(MDEF)
+
+        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
+        target.hp.damage(totalDamage.toDouble())
+
+        return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
+
+
+        //return DamageResult.NONE
     }
 
     /**
@@ -420,26 +422,26 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         return SkillUseResult.NONE
     }
 
-    fun useTargetSkill(index: Int, target: Entity): SkillUseResult {
+    fun useTargetSkill(index: Int, target: CharacterEntity): SkillUseResult {
         return useTargetSkill(skills[index], target)
     }
 
-    fun useTargetSkill(skill: Skill, target: Entity): SkillUseResult {
-//        if (skill.level.value == 0)
-//            return SkillUseResult.NONE
-//
-//        if (skill.currentCooldown.value > 0)
-//            return SkillUseResult.ON_COOLDOWN
-//
-//        if (skill.data.mana > sp.value)
-//            return SkillUseResult.NO_MANA
-//
-//        // TODO: do these checks before using skills
-//
-//        sp.value -= skill.manaCost.intValue()
-//        skill.putOnCooldown()
-//
-//        return skill.data.onCast(char, target, skill)
+    fun useTargetSkill(skill: Skill, target: CharacterEntity): SkillUseResult {
+        if (skill.level == 0)
+            return SkillUseResult.NONE
+
+        if (skill.currentCooldown.value > 0)
+            return SkillUseResult.ON_COOLDOWN
+
+        if (skill.manaCost.value > sp.value)
+            return SkillUseResult.NO_MANA
+
+        // TODO: do these checks before using skills
+
+        sp.value -= skill.manaCost.intValue()
+        skill.putOnCooldown()
+
+        skill.onCast(char, target)
 
         return SkillUseResult.NONE
     }

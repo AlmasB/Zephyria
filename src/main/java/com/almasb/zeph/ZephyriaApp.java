@@ -16,6 +16,7 @@ import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
+import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.fxgl.ui.FontType;
 import com.almasb.zeph.character.CharacterData;
@@ -235,6 +236,30 @@ public class ZephyriaApp extends GameApplication {
 ////                }
 //            }
 //        });
+
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
+            @Override
+            protected void onCollisionBegin(Entity proj, Entity target) {
+                if (proj.getObject("target") != target) {
+                    return;
+                }
+
+                proj.removeFromWorld();
+
+                CharacterEntity character = (CharacterEntity) target;
+
+                player.getCharacterComponent().useTargetSkill(selectedSkillIndex, character);
+
+                // TODO: show damage
+
+//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
+//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
+
+                if (character.getHp().isZero()) {
+                    playerKilledChar(character);
+                }
+            }
+        });
     }
 
     /**
@@ -364,7 +389,25 @@ public class ZephyriaApp extends GameApplication {
         CharacterEntity e = (CharacterEntity) spawn("char", data);
 
         e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            player.getActionComponent().orderAttack(e);
+
+            // TODO: check for skill range
+
+            if (selectingSkillTargetChar) {
+                var skill = player.getCharacterComponent().getSkills().get(selectedSkillIndex);
+                var projTextureName = skill.getData().getProjectileTextureName();
+
+                var direction = e.getPosition().subtract(player.getPosition());
+
+                spawn("skillProjectile",
+                        new SpawnData(player.getPosition())
+                                .put("projectileTextureName", projTextureName)
+                                .put("target", e)
+                                .put("dir", direction)
+                );
+
+            } else {
+                player.getActionComponent().orderAttack(e);
+            }
         });
     }
 

@@ -50,7 +50,7 @@ object Config {
 
     const val ATTRIBUTE_POINTS_PER_LEVEL = 3
     const val ATTRIBUTE_POINTS_AT_LEVEL1 = 3
-    const val SKILL_POINTS_AT_LEVEL1 = 1
+    const val SKILL_POINTS_AT_LEVEL1 = 3
 
     /**
      * By what value should experience needed for next level
@@ -69,4 +69,6 @@ object Config {
     const val STARTING_MONEY = 100
 
     const val MAX_INVENTORY_SIZE = 30
+
+    const val SKILL_PROJECTILE_SPEED = 1000.0
 }

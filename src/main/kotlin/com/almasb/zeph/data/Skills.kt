@@ -142,6 +142,32 @@ class Gladiator {
 }
 
 class Mage {
+
+    val FIREBALL = skill {
+        desc {
+            id = 7020
+            name = "Fireball"
+            description = "Deals magic damage with FIRE element."
+            textureName = "skills/ic_skill_fireball.png"
+        }
+
+        useType = DAMAGE
+        targetTypes = of(ENEMY)
+
+        manaCost = 1
+        cooldown = 1.0
+
+        projectileTextureName = "projectiles/fireball.png"
+
+        onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(MATK) + skill.level * 20.0
+
+            caster.characterComponent.dealMagicalDamage(target, dmg, FIRE)
+
+            // SkillUseResult(caster.charConrol.dealMagicalDamage(target, dmg, Element.FIRE))
+        }
+    }
+
     val EARTH_BOULDER = skill {
         desc {
             id = 7023
@@ -160,29 +186,10 @@ class Mage {
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) + skill.level * 25.0
             val result = caster.characterComponent.dealMagicalDamage(target, dmg, EARTH)
+
+            // useResult = new SkillUseResult(d);
         }
     }
-
-
-    //        addSkill(new Skill(ID.Skill.Mage.EARl.Mage.EARTH_BOULDER, true, 15.0f) {
-    //            /**
-    //             *
-    //             */
-    //            private static final long serialVersionUID = 1871962939560471153L;
-    //
-    //            @Override
-    //            public int getManaCost() {
-    //                return 5 + level * 5;
-    //            }
-    //
-    //            @Override
-    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    //                float dmg = caster.getTotalStat(Stat.MATK) + level *25;
-    //                int d = caster.dealMagicalDamage(target, dmg, Element.EARTH);
-    //
-    //                useResult = new SkillUseResult(d);
-    //            }
-    //        });
 }
 
 class Wizard {
@@ -197,6 +204,36 @@ class Wizard {
         INTELLECT +2
         WILLPOWER +2
     }
+
+    val AMPLIFY_MAGIC = skill {
+        desc {
+            id = 7121
+            name = "Amplify Magic"
+            description = "Increases MATK for the duration."
+            //textureName =
+        }
+
+        targetTypes = of(SELF)
+
+        manaCost = 1
+        cooldown = 1.0
+
+        onCastScript = { caster, target, skill ->
+            caster.addEffect(effect(this) {
+
+                duration = 10.0
+
+                MATK +10*skill.level
+            })
+
+            //                useResult = new SkillUseResult("MATK +" + 10*level);
+        }
+    }
+
+
+
+
+
 }
 
 class Enchanter {

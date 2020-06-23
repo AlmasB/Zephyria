@@ -3,6 +3,7 @@ package com.almasb.zeph
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.dsl.entityBuilder
 import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.dsl.spawn
@@ -10,6 +11,7 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.Spawns
+import com.almasb.fxgl.entity.components.CollidableComponent
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
@@ -18,6 +20,7 @@ import com.almasb.fxgl.physics.HitBox
 import com.almasb.fxgl.procedural.HeightMapGenerator
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
+import com.almasb.zeph.Config.SKILL_PROJECTILE_SPEED
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
@@ -62,6 +65,7 @@ class ZephFactory : EntityFactory {
             entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
 
             with(entity) {
+                addComponent(CollidableComponent(true))
                 addComponent(StateComponent())
                 addComponent(CharacterEffectComponent())
                 addComponent(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
@@ -217,6 +221,16 @@ class ZephFactory : EntityFactory {
 
         return e
     }
+
+    @Spawns("skillProjectile")
+    fun newSkillProjectile(data: SpawnData): Entity {
+        return entityBuilder(data)
+                .type(SKILL_PROJECTILE)
+                .viewWithBBox(data.get<String>("projectileTextureName"))
+                .collidable()
+                .with(ProjectileComponent(data.get("dir"), SKILL_PROJECTILE_SPEED))
+                .build()
+    }
 }
 
 private class CustomHeightMapGenerator(val seed: Int, val tx: Double, val ty: Double, width: Int, height: Int) : HeightMapGenerator(width, height) {
@@ -275,7 +289,8 @@ fun newPlayer(): CharacterEntity {
     // TODO: TEST DATA BEGIN
 
     player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-    player.characterComponent.skills += Skill(Data.Skills.Wizard.MAGIC_MASTERY)
+    player.characterComponent.skills += Skill(Data.Skills.Wizard.AMPLIFY_MAGIC)
+    player.characterComponent.skills += Skill(Data.Skills.Mage.FIREBALL)
 
     player.inventory.items.add(newDagger(Element.NEUTRAL))
     player.inventory.items.add(newDagger(Element.FIRE))

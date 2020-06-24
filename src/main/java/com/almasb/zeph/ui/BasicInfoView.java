@@ -1,60 +1,34 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.ui.MDIWindow;
-import com.almasb.fxgl.ui.Position;
 import com.almasb.fxgl.ui.ProgressBar;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.Stat;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 // TODO: UI for monsters to see attrs / stats
 
-public class BasicInfoView extends MDIWindow {
+public class BasicInfoView extends Region {
+
+    private CharInfoView infoView;
 
     public BasicInfoView(CharacterEntity player) {
-        //super("Basic Info", WindowDecor.MINIMIZE);
+        getStyleClass().add("dev-pane");
+        setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
-
-
-        //setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(340, 240);
-        setCanResize(false);
-
-        ProgressBar barHPUI = ProgressBar.makeHPBar();
-        barHPUI.setTranslateX(160);
-        barHPUI.setTranslateY(5);
-        barHPUI.setWidth(100);
-        barHPUI.setHeight(15);
-        barHPUI.setLabelPosition(Position.RIGHT);
-        barHPUI.maxValueProperty().bind(player.getCharacterComponent().totalProperty(Stat.MAX_HP));
-        barHPUI.currentValueProperty().bind(player.getHp().valueProperty());
-
-        ProgressBar barSPUI = ProgressBar.makeSkillBar();
-        barSPUI.setTranslateX(160);
-        barSPUI.setTranslateY(25);
-        barSPUI.setWidth(100);
-        barSPUI.setHeight(15);
-        barSPUI.setLabelPosition(Position.RIGHT);
-        barSPUI.maxValueProperty().bind(player.getCharacterComponent().totalProperty(Stat.MAX_SP));
-        barSPUI.currentValueProperty().bind(player.getSp().valueProperty());
-
-        Text textPlayerName = new Text();
-        textPlayerName.setTranslateX(15);
-        textPlayerName.setTranslateY(15);
-        textPlayerName.setFont(Font.font(18));
-        textPlayerName.setFill(Color.WHITESMOKE);
-        textPlayerName.textProperty().bind(
-                player.getCharClass().asString(player.getName() + "\n%s")
-        );
+        infoView = new CharInfoView(player);
 
         Text textLevels = new Text();
         textLevels.setTranslateX(15);
-        textLevels.setTranslateY(100);
-        textLevels.setFont(Font.font(16));
+        textLevels.setTranslateY(20);
+        textLevels.setFont(Font.font(14));
         textLevels.setFill(Color.WHITESMOKE);
         textLevels.textProperty().bind(new SimpleStringProperty("Base Lv. ").concat(player.getBaseLevel())
                 .concat("\nAttr Lv. ").concat(player.getStatLevel())
@@ -63,30 +37,34 @@ public class BasicInfoView extends MDIWindow {
         ProgressBar barXPBase = new ProgressBar();
         barXPBase.setWidth(150);
         barXPBase.setTranslateX(120);
-        barXPBase.setTranslateY(90);
+        barXPBase.setTranslateY(10);
         barXPBase.setMaxValue(player.getPlayerComponent().expNeededForNextBaseLevel());
         barXPBase.currentValueProperty().bind(player.getBaseXP());
 
         ProgressBar barXPStat = new ProgressBar();
         barXPStat.setWidth(150);
         barXPStat.setTranslateX(120);
-        barXPStat.setTranslateY(110);
+        barXPStat.setTranslateY(barXPBase.getTranslateY() + 20);
         barXPStat.setMaxValue(player.getPlayerComponent().expNeededForNextStatLevel());
         barXPStat.currentValueProperty().bind(player.getAttrXP());
 
         ProgressBar barXPJob = new ProgressBar();
         barXPJob.setWidth(150);
         barXPJob.setTranslateX(120);
-        barXPJob.setTranslateY(130);
+        barXPJob.setTranslateY(barXPStat.getTranslateY() + 20);
         barXPJob.setMaxValue(player.getPlayerComponent().expNeededForNextJobLevel());
         barXPJob.currentValueProperty().bind(player.getJobXP());
 
         Text textMoney = new Text("");
         textMoney.setTranslateX(200);
-        textMoney.setTranslateY(180);
+        textMoney.setTranslateY(90);
         textMoney.setFont(Font.font(14));
         textMoney.setFill(Color.WHITESMOKE);
         textMoney.textProperty().bind(new SimpleStringProperty("Money: ").concat(player.getPlayerComponent().getMoney()).concat("G"));
+
+        Button btnInfo = new Button("Info");
+        btnInfo.setTranslateX(15);
+        btnInfo.setTranslateY(80);
 
         player.getBaseLevel().addListener((obs, old, newValue) -> {
             barXPBase.setMaxValue(player.getPlayerComponent().expNeededForNextBaseLevel());
@@ -100,14 +78,42 @@ public class BasicInfoView extends MDIWindow {
             barXPJob.setMaxValue(player.getPlayerComponent().expNeededForNextJobLevel());
         });
 
+        var separator = new Separator();
+
         Pane uiPane = new Pane();
-        uiPane.setPrefSize(350, 200);
-        uiPane.getChildren().addAll(textPlayerName, textLevels, textMoney, barHPUI, barSPUI, barXPBase, barXPStat, barXPJob);
+        uiPane.setPrefSize(350, 110);
+        uiPane.getChildren().addAll(textLevels, textMoney, barXPBase, barXPStat, barXPJob, btnInfo);
 
-        setContentPane(uiPane);
+        var root = new VBox(5);
+        root.getChildren().addAll(uiPane, separator);
+
+        btnInfo.setOnAction(e -> {
+            if (root.getChildren().contains(infoView)) {
+                root.getChildren().remove(infoView);
+            } else {
+                root.getChildren().add(infoView);
+            }
+        });
+
+        var pane = new TitledPane("", root);
+        pane.textProperty().bind(
+                player.getCharClass().asString("%s    ")
+                        .concat(new SimpleStringProperty("Lv. ").concat(player.getBaseLevel().asString("%d    ")))
+                        .concat(player.getHp().valueProperty().asString("HP: %.0f/"))
+                        .concat(player.getCharacterComponent().totalProperty(Stat.MAX_HP).asString("%d    "))
+                        .concat(player.getSp().valueProperty().asString("SP: %.0f/"))
+                        .concat(player.getCharacterComponent().totalProperty(Stat.MAX_SP).asString("%d    "))
+        );
+
+        Accordion accordion = new Accordion();
+        accordion.getPanes().add(pane);
+
+        getChildren().add(accordion);
+    }
+}
 
 
-        // TODO: if effects are added constantly we need to optimize
+// TODO: if effects are added constantly we need to optimize
 //        player.getCharConrol().getEffects().addListener((ListChangeListener<? super EffectEntity>) c -> {
 //            while (c.next()) {
 //                if (c.wasAdded()) {
@@ -129,16 +135,3 @@ public class BasicInfoView extends MDIWindow {
 //                }
 //            }
 //        });
-
-
-//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-//        getRightIcons().get(0).setOnAction(e -> {
-//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), uiPane);
-//            st.setFromY(isMinimized() ? 0 : 1);
-//            st.setToY(isMinimized() ? 1 : 0);
-//            st.play();
-//
-//            handler.handle(e);
-//        });
-    }
-}

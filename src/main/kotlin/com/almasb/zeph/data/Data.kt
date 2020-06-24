@@ -95,7 +95,6 @@ object Data {
             e.printStackTrace()
         }
 
-        println("Done")
 
 
 //        // TODO: check no duplicate IDs
@@ -129,8 +128,6 @@ object Data {
             it.isAccessible = true
 
             val data = it.get(dataObject)
-
-            println(data.javaClass)
 
             val fieldDesc = ReflectionUtils.findFieldsByTypeRecursive(data, Description::class.java)[0].also { it.isAccessible = true }
             val desc = fieldDesc.get(data) as Description

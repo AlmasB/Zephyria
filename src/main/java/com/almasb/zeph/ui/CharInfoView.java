@@ -1,7 +1,6 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.Attribute;
 import com.almasb.zeph.combat.Stat;
@@ -13,23 +12,15 @@ import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class CharInfoView extends MDIWindow {
+public class CharInfoView extends Region {
 
     public CharInfoView(CharacterEntity player) {
-        //super("Char Info", WindowDecor.MINIMIZE);
-
-        relocate(0, 240);
-
-        //setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(340, 340);
-        setCanResize(false);
+        setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         Font font = Font.font("Lucida Console", 14);
         Font largerFont = Font.font("Lucida Console", 16);
@@ -125,18 +116,6 @@ public class CharInfoView extends MDIWindow {
             statBox.getChildren().add(new HBox(5, text, bText));
         }
 
-        Pane root = new Pane(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox));
-
-        setContentPane(root);
-
-//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-//        getRightIcons().get(0).setOnAction(e -> {
-//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
-//            st.setFromY(isMinimized() ? 0 : 1);
-//            st.setToY(isMinimized() ? 1 : 0);
-//            st.play();
-//
-//            handler.handle(e);
-//        });
+        getChildren().add(new HBox(10, attrBox, new Separator(Orientation.VERTICAL), statBox));
     }
 }

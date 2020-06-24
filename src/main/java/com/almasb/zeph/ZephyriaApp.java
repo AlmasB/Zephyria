@@ -166,7 +166,7 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
-        
+
         //showGrid();
 
         //selectedEffect.setInput(new Glow(0.8));
@@ -310,10 +310,9 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
                 new BasicInfoView(player),
-                //new CharInfoView(player),
-                new InventoryView(player, getAppWidth(), getAppHeight()),
-                new EquipmentView(player, getAppWidth(), getAppHeight())
-                //new HotbarView(player)
+//                new InventoryView(player, getAppWidth(), getAppHeight()),
+//                new EquipmentView(player, getAppWidth(), getAppHeight()),
+                new HotbarView(player)
         );
     }
 

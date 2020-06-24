@@ -1,82 +1,144 @@
 package com.almasb.zeph.ui;
 
-import com.almasb.fxgl.dsl.FXGL;
-import com.almasb.fxgl.texture.Texture;
-import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.skill.Skill;
-import javafx.animation.StrokeTransition;
 import javafx.collections.ListChangeListener;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Pane;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.util.stream.Collectors;
+
+import static com.almasb.fxgl.dsl.FXGL.*;
 
 /**
  * Hotbar skills UI.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-public class HotbarView extends MDIWindow {
+public class HotbarView extends Parent {
+
+    private static final int BG_WIDTH = 767;
+    private static final int BG_HEIGHT = 110;
 
     private CharacterEntity player;
 
-    private Pane root = new Pane();
-    private Pane skillsRoot = new Pane();
-    private Pane framesRoot = new Pane();
+    private HBox framesRoot = new HBox();
+
+    private boolean isMinimized = false;
 
     public HotbarView(CharacterEntity player) {
-        //super("Hotbar", WindowDecor.MINIMIZE);
-
         this.player = player;
 
-        initMinimizeAnimation();
-        initWindow();
+        initView();
         initSkillFrames();
         initSkillListener();
     }
 
-    private void initMinimizeAnimation() {
-//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-//        getRightIcons().get(0).setOnAction(e -> {
-//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), root);
-//            st.setFromY(isMinimized() ? 0 : 1);
-//            st.setToY(isMinimized() ? 1 : 0);
-//            st.play();
-//
-//            handler.handle(e);
-//        });
-    }
+    private void initView() {
+        setLayoutX(getAppWidth() / 2.0 - BG_WIDTH  / 2.0);
+        setLayoutY(getAppHeight() - BG_HEIGHT + 5);
 
-    private void initWindow() {
-        root.getChildren().addAll(skillsRoot, framesRoot);
+        var btn = new Rectangle(30, 20);
+        btn.setStroke(Color.WHITE);
+        btn.setLayoutX(368);
+        btn.setLayoutY(-22);
+        btn.setOnMouseClicked(e -> {
+            animationBuilder()
+                    .duration(Duration.seconds(0.33))
+                    .translate(this)
+                    .from(isMinimized ? new Point2D(0.0, BG_HEIGHT) : new Point2D(0.0, 0.0))
+                    .to(isMinimized ? new Point2D(0.0, 0.0) : new Point2D(0.0, BG_HEIGHT))
+                    .buildAndPlay();
 
-        relocate(340, 0);
+            isMinimized = !isMinimized;
+        });
 
-        //setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(70 * 9, 56 + 70);
-        setCanResize(false);
-        setContentPane(root);
+        Rectangle border = new Rectangle(BG_WIDTH, BG_HEIGHT);
+        border.setStrokeWidth(2);
+        border.setArcWidth(10);
+        border.setArcHeight(10);
+
+        Shape borderShape = Shape.union(border, new Circle(BG_WIDTH / 2.0, 0.0, 30));
+        borderShape.setFill(Color.rgb(25, 25, 25, 0.8));
+        borderShape.setStroke(Color.WHITE);
+
+        framesRoot.setLayoutX(1);
+        getChildren().addAll(borderShape, framesRoot, btn);
     }
 
     private void initSkillFrames() {
-        for (int i = 0; i < 9; i++) {
+        framesRoot.getChildren().addAll(
+                new ItemView(KeyCode.Q),
+                new ItemView(KeyCode.W)
+        );
+
+        for (int i = 1; i <= 9; i++) {
+            var view = new SkillView(i);
+
+            framesRoot.getChildren().addAll(view);
+        }
+
+        framesRoot.getChildren().addAll(
+                new ItemView(KeyCode.E),
+                new ItemView(KeyCode.R)
+        );
+
+        //framesRoot.setMouseTransparent(true);
+        framesRoot.setAlignment(Pos.BASELINE_CENTER);
+    }
+
+
+    private static class SkillView extends VBox {
+        private StackPane stack = new StackPane();
+        private Skill skill = null;
+
+        SkillView(int index) {
+            super(5);
+
             Rectangle frame = new Rectangle(64, 64, null);
-            frame.setArcWidth(25);
-            frame.setArcHeight(25);
-            frame.setTranslateX(1 + i * 69);
-            frame.setTranslateY(30);
             frame.setStroke(Color.AQUAMARINE.darker());
             frame.setStrokeWidth(5);
 
-            framesRoot.getChildren().addAll(frame);
+            stack.getChildren().addAll(frame, new Rectangle());
+
+            var text = getUIFactoryService().newText(index + "", Color.WHITE, 16.0);
+
+            setAlignment(Pos.BASELINE_CENTER);
+
+            getChildren().addAll(stack, text);
         }
 
-        framesRoot.setMouseTransparent(true);
+        public void setSkill(Skill skill) {
+            this.skill = skill;
+
+            stack.getChildren().set(1, texture(skill.getData().getDescription().getTextureName(), 64, 64));
+        }
+    }
+
+    private static class ItemView extends VBox {
+        ItemView(KeyCode key) {
+            super(5);
+
+            var frame = new Rectangle(34, 34, null);
+            frame.setStroke(Color.YELLOW.darker());
+            frame.setStrokeWidth(2.0);
+
+            setAlignment(Pos.BASELINE_CENTER);
+
+            getChildren().addAll(frame, getUIFactoryService().newText(key.toString(), Color.WHITE, 16.0));
+        }
     }
 
     private void initSkillListener() {
@@ -97,48 +159,46 @@ public class HotbarView extends MDIWindow {
     private int index = 0;
 
     private void addSkill(Skill skill) {
-        var desc = skill.getData().getDescription();
+        SkillView frame = (SkillView) framesRoot.getChildren().stream().filter(v -> v instanceof SkillView).collect(Collectors.toList()).get(index);
+        frame.setSkill(skill);
+
+        var bg = new Rectangle(64, 64, Color.color(0, 0, 0, 0.5));
 
         Text btn = new Text("+");
-        btn.setTranslateX(25 + index * 69);
-        btn.setTranslateY(20);
         btn.setCursor(Cursor.HAND);
         btn.setStroke(Color.YELLOWGREEN.brighter());
         btn.setStrokeWidth(3);
         btn.setFont(Font.font(16));
-        btn.visibleProperty().bind(player.getPlayerComponent().getSkillPoints().greaterThan(0).and(skill.getLevelProperty().lessThan(10)));
+
+
+        var stack = new StackPane(bg, btn);
+        stack.visibleProperty().bind(player.getPlayerComponent().getSkillPoints().greaterThan(0).and(skill.getLevelProperty().lessThan(10)));
+
+        frame.stack.getChildren().add(stack);
 
         final int skillIndex = index;
         btn.setOnMouseClicked(event -> {
             player.getPlayerComponent().increaseSkillLevel(skillIndex);
 
-            Rectangle frame = (Rectangle) framesRoot.getChildren().get(skillIndex);
-
-            StrokeTransition st = new StrokeTransition(Duration.seconds(1), frame, Color.YELLOW, Color.AQUAMARINE.darker());
-            st.play();
+//            StrokeTransition st = new StrokeTransition(Duration.seconds(1), frame, Color.YELLOW, Color.AQUAMARINE.darker());
+//            st.play();
         });
 
-        Texture view = FXGL.getAssetLoader().loadTexture(desc.getTextureName());
-        view.setFitWidth(62);
-        view.setFitHeight(62);
-        view.setTranslateX(2 + index * 69);
-        view.setTranslateY(30);
-        view.setCursor(Cursor.HAND);
-        view.visibleProperty().bind(player.getSp().valueProperty().greaterThan(skill.getManaCost())
-                .and(skill.getCurrentCooldown().lessThanOrEqualTo(0)));
-
-        Tooltip tooltip = new Tooltip();
-
-        Text text = new Text();
-        text.setFont(Font.font(20));
-        text.setFill(Color.WHITE);
-        text.setWrappingWidth(200);
-        text.textProperty().bind(skill.getDynamicDescription());
-
-        tooltip.setGraphic(text);
-        Tooltip.install(view, tooltip);
-
-        skillsRoot.getChildren().addAll(view, btn);
+//        Texture view = getAssetLoader().loadTexture(desc.getTextureName(), 62, 62);
+//        view.setCursor(Cursor.HAND);
+//        view.visibleProperty().bind(player.getSp().valueProperty().greaterThan(skill.getManaCost())
+//                .and(skill.getCurrentCooldown().lessThanOrEqualTo(0)));
+//
+//        Tooltip tooltip = new Tooltip();
+//
+//        Text text = new Text();
+//        text.setFont(Font.font(20));
+//        text.setFill(Color.WHITE);
+//        text.setWrappingWidth(200);
+//        text.textProperty().bind(skill.getDynamicDescription());
+//
+//        tooltip.setGraphic(text);
+//        Tooltip.install(view, tooltip);
 
         index++;
     }

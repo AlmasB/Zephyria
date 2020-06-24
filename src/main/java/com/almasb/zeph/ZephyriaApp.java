@@ -165,6 +165,7 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+        getGameScene().getViewport().setZoom(1.5);
 
         //showGrid();
 

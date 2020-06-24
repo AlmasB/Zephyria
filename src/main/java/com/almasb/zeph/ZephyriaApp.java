@@ -394,18 +394,9 @@ public class ZephyriaApp extends GameApplication {
             // TODO: check for skill range
 
             if (selectingSkillTargetChar) {
-                var skill = player.getCharacterComponent().getSkills().get(selectedSkillIndex);
-                var projTextureName = skill.getData().getProjectileTextureName();
+                selectingSkillTargetChar = false;
 
-                var direction = e.getPosition().subtract(player.getPosition());
-
-                spawn("skillProjectile",
-                        new SpawnData(player.getPosition())
-                                .put("projectileTextureName", projTextureName)
-                                .put("target", e)
-                                .put("dir", direction)
-                );
-
+                player.getActionComponent().orderSkillCast(selectedSkillIndex, e);
             } else {
                 player.getActionComponent().orderAttack(e);
             }

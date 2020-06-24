@@ -27,6 +27,11 @@ class AnimationComponent(textureName: String) : Component() {
     private val channelWalkUp: AnimationChannel
     private val channelWalkLeft: AnimationChannel
 
+    private val channelCastDown: AnimationChannel
+    private val channelCastRight: AnimationChannel
+    private val channelCastUp: AnimationChannel
+    private val channelCastLeft: AnimationChannel
+
     private val channelSlashDown: AnimationChannel
     private val channelSlashRight: AnimationChannel
     private val channelSlashUp: AnimationChannel
@@ -49,6 +54,11 @@ class AnimationComponent(textureName: String) : Component() {
         channelWalkRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 +  9 -1)
         channelWalkUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 8, 9 * 8 +  9 -1)
         channelWalkLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 +  9 -1)
+
+        channelCastDown = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 2, 7 * 2 +  7 -1)
+        channelCastRight = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 3, 7 * 3 +  7 -1)
+        channelCastUp = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 0, 7 * 0 +  7 -1)
+        channelCastLeft = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 1, 7 * 1 +  7 -1)
 
         channelSlashDown = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
         channelSlashRight = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
@@ -80,18 +90,38 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     internal val isFacingUp: Boolean
-        get() = isIn(channelIdleUp, channelShootUp, channelSlashUp, channelWalkUp)
+        get() = isIn(channelIdleUp, channelShootUp, channelSlashUp, channelWalkUp, channelCastUp)
 
     internal val isFacingDown: Boolean
-        get() = isIn(channelIdleDown, channelShootDown, channelSlashDown, channelWalkDown)
+        get() = isIn(channelIdleDown, channelShootDown, channelSlashDown, channelWalkDown, channelCastDown)
 
     internal val isFacingRight: Boolean
-        get() = isIn(channelIdleRight, channelShootRight, channelSlashRight, channelWalkRight)
+        get() = isIn(channelIdleRight, channelShootRight, channelSlashRight, channelWalkRight, channelCastRight)
 
     internal val isFacingLeft: Boolean
-        get() = isIn(channelIdleLeft, channelShootLeft, channelSlashLeft, channelWalkLeft)
+        get() = isIn(channelIdleLeft, channelShootLeft, channelSlashLeft, channelWalkLeft, channelCastLeft)
 
     private fun isIn(vararg channels: AnimationChannel) = channels.any { it === animatedTexture.animationChannel }
+
+    fun playCastUp(onFinished: Runnable) {
+        animatedTexture.playAnimationChannel(channelCastUp)
+        animatedTexture.onCycleFinished = onFinished
+    }
+
+    fun playCastDown(onFinished: Runnable) {
+        animatedTexture.playAnimationChannel(channelCastDown)
+        animatedTexture.onCycleFinished = onFinished
+    }
+
+    fun playCastRight(onFinished: Runnable) {
+        animatedTexture.playAnimationChannel(channelCastRight)
+        animatedTexture.onCycleFinished = onFinished
+    }
+
+    fun playCastLeft(onFinished: Runnable) {
+        animatedTexture.playAnimationChannel(channelCastLeft)
+        animatedTexture.onCycleFinished = onFinished
+    }
 
     // TODO: move to loopNoOverride()
     fun loopIdleUp() {

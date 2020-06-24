@@ -8,6 +8,7 @@ import com.almasb.zeph.combat.Effect
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.combat.Status
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
@@ -64,9 +65,15 @@ class CharacterEntity : Entity() {
 //
 //    fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)
 
+    val cellX: Int
+        get() = getComponent(NewCellMoveComponent::class.java).cellX
+
+    val cellY: Int
+        get() = getComponent(NewCellMoveComponent::class.java).cellY
+
     fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 
-    fun moveToCell(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
+    fun orderMove(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
 
     fun hasStatus(status: Status) = effectComponent.hasStatus(status)
 

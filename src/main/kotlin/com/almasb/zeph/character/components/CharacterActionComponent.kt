@@ -1,7 +1,9 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
+import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
@@ -13,6 +15,7 @@ import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
+import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
 
 /**
@@ -21,6 +24,7 @@ import javafx.geometry.Point2D
  */
 class CharacterActionComponent : Component() {
 
+    private var skillCastTarget: CharacterEntity? = null
     private var attackTarget: CharacterEntity? = null
     private var pickUpTarget: Entity? = null
     private var moveTarget: Point2D? = null
@@ -32,6 +36,10 @@ class CharacterActionComponent : Component() {
 
     private val astar: NewAStarMoveComponent
         get() = entity.getComponent(NewAStarMoveComponent::class.java)
+
+    private val CASTING: EntityState = object : EntityState() {
+
+    }
 
     private val MOVE: EntityState = object : EntityState() {
 
@@ -120,7 +128,56 @@ class CharacterActionComponent : Component() {
         if (char.characterComponent.isInWeaponRange(target)) {
             attack(attackTarget!!)
         } else {
-            move(attackTarget!!.characterComponent.getTileX(), attackTarget!!.characterComponent.getTileY())
+            move(attackTarget!!.cellX, attackTarget!!.cellY)
+        }
+    }
+
+    fun orderSkillCast(skillIndex: Int, target: CharacterEntity) {
+        reset()
+        skillCastTarget = target
+
+        // TODO: if char in cast range ...
+        val isInCastRange = true
+
+        if (isInCastRange) {
+            val skill: Skill = char.characterComponent.skills[skillIndex]
+
+            castSkill(skill, target)
+
+        } else {
+            move(target.cellX, target.cellY)
+        }
+    }
+
+    private fun castSkill(skill: Skill, target: CharacterEntity) {
+        state.changeState(CASTING)
+
+        val castCallback = Runnable {
+            if (!state.isIn(CASTING))
+                return@Runnable
+
+            state.changeStateToIdle()
+
+            val projTextureName = skill.data.projectileTextureName
+
+            val direction: Point2D = target.position.subtract(char.position)
+
+            spawn("skillProjectile",
+                    SpawnData(char.position)
+                            .put("projectileTextureName", projTextureName)
+                            .put("target", target)
+                            .put("dir", direction)
+            )
+        }
+
+        if (target.cellX > char.cellX) {
+            animationComponent.playCastRight(castCallback)
+        } else if (target.cellX < char.cellX) {
+            animationComponent.playCastLeft(castCallback)
+        } else if (target.cellY < char.cellY) {
+            animationComponent.playCastUp(castCallback)
+        } else {
+            animationComponent.playCastDown(castCallback)
         }
     }
 
@@ -171,6 +228,7 @@ class CharacterActionComponent : Component() {
     }
 
     private fun reset() {
+        skillCastTarget = null
         attackTarget = null
         pickUpTarget = null
         moveTarget = null

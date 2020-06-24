@@ -66,11 +66,6 @@ class CharacterActionComponent : Component() {
     }
 
     private val ATTACK: EntityState = object : EntityState() {
-        override fun onEnteredFrom(prevState: EntityState) {
-            // TODO: figure out correct attack loop
-            animationComponent.loopAttack()
-        }
-
         override fun onUpdate(tpf: Double) {
             if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
 
@@ -207,6 +202,16 @@ class CharacterActionComponent : Component() {
 
     private fun attack(target: CharacterEntity) {
         state.changeState(ATTACK)
+
+        if (target.cellX > char.cellX) {
+            animationComponent.loopAttackRight()
+        } else if (target.cellX < char.cellX) {
+            animationComponent.loopAttackLeft()
+        } else if (target.cellY < char.cellY) {
+            animationComponent.loopAttackUp()
+        } else {
+            animationComponent.loopAttackDown()
+        }
     }
 
     private fun pickUp(item: Entity) {

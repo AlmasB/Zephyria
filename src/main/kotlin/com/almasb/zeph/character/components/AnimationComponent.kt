@@ -60,10 +60,10 @@ class AnimationComponent(textureName: String) : Component() {
         channelCastUp = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 0, 7 * 0 +  7 -1)
         channelCastLeft = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 1, 7 * 1 +  7 -1)
 
-        channelSlashDown = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 14, 6 * 14 +  6 -1)
-        channelSlashRight = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 15, 6 * 15 +  6 -1)
-        channelSlashUp = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 12, 6 * 12 +  6 -1)
-        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 13, 6 * 13 +  6 -1)
+        channelSlashDown = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 14, 6 * 14 +  6 -1)
+        channelSlashRight = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 15, 6 * 15 +  6 -1)
+        channelSlashUp = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 12, 6 * 12 +  6 -1)
+        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 13, 6 * 13 +  6 -1)
 
         channelShootDown = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 18, 13 * 18 +  13 -1)
         channelShootRight = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 19, 13 * 19 +  13 -1)
@@ -180,7 +180,19 @@ class AnimationComponent(textureName: String) : Component() {
         animatedTexture.loopAnimationChannel(channelWalkLeft)
     }
 
-    fun loopAttack() {
+    fun loopAttackUp() {
+        animatedTexture.loopAnimationChannel(channelSlashUp)
+    }
+
+    fun loopAttackDown() {
         animatedTexture.loopAnimationChannel(channelSlashDown)
+    }
+
+    fun loopAttackRight() {
+        animatedTexture.loopAnimationChannel(channelSlashRight)
+    }
+
+    fun loopAttackLeft() {
+        animatedTexture.loopAnimationChannel(channelSlashLeft)
     }
 }

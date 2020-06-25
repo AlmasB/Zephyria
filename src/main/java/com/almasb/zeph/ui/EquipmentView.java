@@ -1,15 +1,18 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.texture.Texture;
-import com.almasb.fxgl.ui.MDIWindow;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.character.EquipPlace;
 import com.almasb.zeph.item.Item;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -18,21 +21,13 @@ import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.texture;
 
-public final class EquipmentView extends MDIWindow {
+public final class EquipmentView extends Parent {
 
     private Map<EquipPlace, Group> groups = new HashMap<>();
 
     private CharacterEntity player;
 
-    public EquipmentView(CharacterEntity player, double width, double height) {
-        //super("Equipment", WindowDecor.MINIMIZE);
-
-        relocate(width - 202 - 202, height - 315);
-
-        //setBackgroundColor(Color.rgb(25, 25, 133, 0.4));
-        setPrefSize(202, 315);
-        setCanResize(false);
-
+    public EquipmentView(CharacterEntity player) {
         this.player = player;
 
         groups.put(EquipPlace.HELM, createGroup(88, 60));
@@ -48,23 +43,17 @@ public final class EquipmentView extends MDIWindow {
             });
         }
 
-        Pane pane = new Pane();
-
         Texture background = texture("ui/inventory_left.png");
-        pane.getChildren().add(background);
-        pane.getChildren().addAll(groups.values());
 
-        setContentPane(pane);
+        Rectangle border = new Rectangle(200, 240);
+        border.setStrokeWidth(2);
+        border.setArcWidth(10);
+        border.setArcHeight(10);
+        border.setFill(Color.rgb(25, 25, 25, 0.8));
+        border.setStroke(Color.WHITE);
 
-//        EventHandler<ActionEvent> handler = getRightIcons().get(0).getOnAction();
-//        getRightIcons().get(0).setOnAction(e -> {
-//            ScaleTransition st = new ScaleTransition(Duration.seconds(0.2), pane);
-//            st.setFromY(isMinimized() ? 0 : 1);
-//            st.setToY(isMinimized() ? 1 : 0);
-//            st.play();
-//
-//            handler.handle(e);
-//        });
+        getChildren().addAll(background);
+        getChildren().addAll(groups.values());
     }
 
     private Group createGroup(int x, int y) {

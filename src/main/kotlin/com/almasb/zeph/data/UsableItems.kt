@@ -6,8 +6,9 @@ import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.combat.Element
-import com.almasb.zeph.combat.GameMath
+import com.almasb.zeph.combat.*
+import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.item.usableItem
@@ -85,13 +86,14 @@ class UsableItems {
         }
     }
 
+    // TODO: mixtures 6004-6006
+
     val TELEPORTATION_STONE = usableItem {
         desc {
-            id = 6004
+            id = 6007
             name = "Teleportation Stone"
-
-            // TODO:
-            textureName = "items/usable/fire_mixture.png"
+            description = "Teleports the stone user to a random location on the map"
+            textureName = "items/usable/teleportation_stone.png"
         }
 
         onUseScript = {
@@ -101,6 +103,146 @@ class UsableItems {
 
             it.actionComponent.orderIdle();
             it.setPositionToCell(cell.x, cell.y)
+        }
+    }
+
+    val MUSHROOM = usableItem {
+        desc {
+            id = 6008
+            name = "Mushroom"
+            description = "WIL +2 for 60 seconds"
+            textureName = "items/usable/mushroom.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                WILLPOWER +2
+            })
+        }
+    }
+
+    val BANANA = usableItem {
+        desc {
+            id = 6009
+            name = "Banana"
+            description = "VIT +1, ATK +3 for 60 seconds"
+            textureName = "items/usable/banana.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                VITALITY +1
+                ATK +3
+            })
+        }
+    }
+
+    val LEMON = usableItem {
+        desc {
+            id = 6010
+            name = "Lemon"
+            description = "DEX +1, AGI +1 for 60 seconds"
+            textureName = "items/usable/lemon.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                DEXTERITY +1
+                AGILITY +1
+            })
+        }
+    }
+
+    val PINEAPPLE = usableItem {
+        desc {
+            id = 6011
+            name = "Pineapple"
+            description = "STR +2 for 60 seconds"
+            textureName = "items/usable/pineapple.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                STRENGTH +2
+            })
+        }
+    }
+
+    val WATERMELON = usableItem {
+        desc {
+            id = 6012
+            name = "Watermelon"
+            description = "WIS +1, PER +1 for 60 seconds"
+            textureName = "items/usable/watermelon.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                WISDOM +1
+                PERCEPTION +1
+            })
+        }
+    }
+
+    val CHEESE = usableItem {
+        desc {
+            id = 6013
+            name = "Cheese"
+            description = "INT +1, MAX SP +5 for 60 seconds"
+            textureName = "items/usable/cheese.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                INTELLECT +1
+                MAX_SP +5
+            })
+        }
+    }
+
+    val CARROT = usableItem {
+        desc {
+            id = 6014
+            name = "Carrot"
+            description = "PER +2 for 60 seconds"
+            textureName = "items/usable/carrot.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                PERCEPTION +2
+            })
+        }
+    }
+
+    val STRAWBERRY = usableItem {
+        desc {
+            id = 6015
+            name = "Strawberry"
+            description = "LUC +2 for 60 seconds"
+            textureName = "items/usable/strawberry.png"
+        }
+
+        onUseScript = {
+            it.addEffect(effect(description) {
+                duration = 1.0 * 60
+
+                LUCK +2
+            })
         }
     }
 }

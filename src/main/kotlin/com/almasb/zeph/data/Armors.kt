@@ -1,5 +1,7 @@
 package com.almasb.zeph.data
 
+import com.almasb.zeph.combat.Attribute
+import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.runIfChance
 import com.almasb.zeph.item.ArmorType.*
 import com.almasb.zeph.item.armor
@@ -63,5 +65,18 @@ class Shoes {
         }
 
         armorType = SHOES
+    }
+
+    val LUCKY_SHOES = armor {
+        desc {
+            id = 5003
+            name = "Lucky Shoes"
+            description = "It is said that the wearer gains immense luck."
+            textureName = "items/armor/lucky_shoes.png"
+        }
+
+        armorType = SHOES
+
+        LUCK +5
     }
 }

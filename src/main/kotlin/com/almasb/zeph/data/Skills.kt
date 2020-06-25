@@ -70,7 +70,7 @@ class Warrior {
 
         onCastScript = { caster, target, skill ->
 
-            caster.addEffect(effect(this) {
+            caster.addEffect(effect(description) {
                 duration = 7.0
 
                 STRENGTH + 3*skill.level
@@ -100,7 +100,7 @@ class Crusader {
         onCastScript = { caster, target, skill ->
             target.hp.restore(30 + skill.level*10.0)
 
-            caster.addEffect(effect(this) {
+            caster.addEffect(effect(description) {
                 duration = 20.0
 
                 VITALITY + 2*skill.level
@@ -131,7 +131,7 @@ class Gladiator {
             val dmg = (1 + (15 + 5*skill.level) / 100.0) * caster.getTotal(ATK)
             val result = caster.characterComponent.dealPhysicalDamage(target, dmg)
 
-            target.addEffect(effect(this) {
+            target.addEffect(effect(description) {
                 status = STUNNED
                 duration = 5.0
             })
@@ -219,7 +219,7 @@ class Wizard {
         cooldown = 1.0
 
         onCastScript = { caster, target, skill ->
-            caster.addEffect(effect(this) {
+            caster.addEffect(effect(description) {
 
                 duration = 10.0
 

@@ -82,9 +82,9 @@ class EffectDataBuilder(
 }
 
 @DataDSL
-fun effect(skillDataBuilder: SkillDataBuilder, setup: EffectDataBuilder.() -> Unit): Effect {
+fun effect(desc: Description, setup: EffectDataBuilder.() -> Unit): Effect {
     val builder = EffectDataBuilder()
-    builder.description = skillDataBuilder.description
+    builder.description = desc
     builder.setup()
     return Effect(builder.build())
 }

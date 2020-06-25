@@ -1,8 +1,10 @@
 package com.almasb.zeph.data
 
+import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
+import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.GameMath
@@ -80,6 +82,25 @@ class UsableItems {
 
         onUseScript = {
             it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.FIRE, Duration.minutes(2.0)))
+        }
+    }
+
+    val TELEPORTATION_STONE = usableItem {
+        desc {
+            id = 6004
+            name = "Teleportation Stone"
+
+            // TODO:
+            textureName = "items/usable/fire_mixture.png"
+        }
+
+        onUseScript = {
+            val grid = FXGL.getAppCast<ZephyriaApp>().grid
+
+            val cell = grid.getRandomCell { it.isWalkable }.get()
+
+            it.actionComponent.orderIdle();
+            it.setPositionToCell(cell.x, cell.y)
         }
     }
 }

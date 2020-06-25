@@ -298,6 +298,10 @@ fun newPlayer(): CharacterEntity {
     player.inventory.items.add(newDagger(Element.AIR))
     player.inventory.items.add(newDagger(Element.WATER))
 
+    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+
     // TEST DATA END
 
     return player

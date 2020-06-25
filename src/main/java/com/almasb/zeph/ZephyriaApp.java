@@ -310,7 +310,7 @@ public class ZephyriaApp extends GameApplication {
 
         getGameScene().addUINodes(
                 new BasicInfoView(player),
-//                new InventoryView(player, getAppWidth(), getAppHeight()),
+                new InventoryView(player, getAppWidth(), getAppHeight()),
 //                new EquipmentView(player, getAppWidth(), getAppHeight()),
                 new HotbarView(player)
         );

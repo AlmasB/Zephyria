@@ -138,6 +138,7 @@ public class InventoryView extends Parent {
         view.setUserData(new Pair<>(item, index));
         view.setTranslateX((index % 5) * 40 + 3);
         view.setTranslateY((index / 5) * 40 + 3);
+        view.setPickOnBounds(true);
         view.setOnMouseClicked(event -> {
 
             if (event.getButton() == MouseButton.PRIMARY) {

@@ -73,6 +73,7 @@ class AnimationComponent(textureName: String) : Component() {
         channelDeath = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6*20, 6*20 + 6 -1)
 
         animatedTexture = AnimatedTexture(channelIdleDown)
+        animatedTexture.isPickOnBounds = true
         animatedTexture.loop()
     }
 

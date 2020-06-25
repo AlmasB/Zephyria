@@ -110,12 +110,6 @@ public class ZephyriaApp extends GameApplication {
                     .map(e -> (CharacterEntity) e)
                     .forEach(this::playerKilledChar);
         });
-
-        onKeyDown(KeyCode.O, "Show Damage", () -> {
-            DamageResult dmg = new DamageResult(DamageType.PHYSICAL, Element.NEUTRAL, random(1, 15), false);
-
-            showDamage(dmg, getInput().getMousePositionWorld());
-        });
     }
 
     @Override
@@ -353,33 +347,6 @@ public class ZephyriaApp extends GameApplication {
                 .translate(e)
                 .from(position)
                 .to(position.add(0, -30))
-                .buildAndPlay();
-    }
-
-    public void showDamage(DamageResult damage, Point2D position) {
-        var text = getUIFactoryService().newText(
-                damage.getValue() + (damage.isCritical() ? "!" : ""),
-                damage.isCritical() ? Color.RED : Color.WHITE,
-                FontType.GAME,
-                damage.isCritical() ? 28 : 26
-        );
-        text.setStroke(damage.isCritical() ? Color.RED : Color.WHITE);
-
-        var view = new GameView(text, 100);
-
-        getGameScene().addGameView(view);
-
-        animationBuilder()
-                .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
-                .translate(text)
-                .from(new Point2D(position.getX() + random(-25, 0), position.getY()))
-                .to(position.add(random(-25, 0), random(-40, -25)))
-                .buildAndPlay();
-
-        animationBuilder()
-                .onFinished(() -> getGameScene().removeGameView(view))
-                .duration(Duration.seconds(2.15))
-                .fadeOut(text)
                 .buildAndPlay();
     }
 

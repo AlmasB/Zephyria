@@ -71,7 +71,6 @@ class CharacterActionComponent : Component() {
 
                 if (char.characterComponent.canAttack()) {
                     val dmg = char.characterComponent.attack(attackTarget!!)
-                    FXGL.getAppCast<ZephyriaApp>().showDamage(dmg, attackTarget!!.center)
 
                     char.characterComponent.resetAtkTick()
 

@@ -76,6 +76,7 @@ public final class EquipmentView extends Parent {
 
     private void setItem(EquipPlace place, Item item) {
         Texture view = texture(item.getDescription().getTextureName());
+        view.setPickOnBounds(true);
         view.setOnMouseClicked(event -> player.getPlayerComponent().unEquipItem(place));
         view.setCursor(Cursor.HAND);
 

@@ -16,6 +16,7 @@ import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.events.OnAttackEvent
+import com.almasb.zeph.events.OnPhysicalDamageDealtEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillUseResult
@@ -308,6 +309,16 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     /**
+     * Deals physical [baseDamage] of type NEUTRAL to [target].
+     * The damage is reduced by target's armor and DEF.
+     *
+     * @return damage dealt
+     */
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
+        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL)
+    }
+
+    /**
      * Deals physical damage with [baseDamage] amount to [target].
      * The damage is reduced by armor and defense.
      * The damage will be of [element] element.
@@ -331,17 +342,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
-        return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
-    }
+        fire(OnPhysicalDamageDealtEvent(char, target, totalDamage, crit))
 
-    /**
-     * Deals physical [baseDamage] of type NEUTRAL to [target].
-     * The damage is reduced by target's armor and DEF.
-     *
-     * @return damage dealt
-     */
-    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
-        return dealPhysicalDamage(target, baseDamage, Element.NEUTRAL)
+        return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
     }
 
     /**

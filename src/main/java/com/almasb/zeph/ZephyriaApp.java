@@ -47,9 +47,11 @@ import javafx.util.Duration;
 import kotlin.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.zeph.Config.*;
+import static com.almasb.zeph.Vars.*;
 
 public class ZephyriaApp extends GameApplication {
 
@@ -60,8 +62,6 @@ public class ZephyriaApp extends GameApplication {
     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
 
     private boolean selectingSkillTargetArea = false;
-    private boolean selectingSkillTargetChar = false;
-    private int selectedSkillIndex = -1;
 
     private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
 
@@ -118,6 +118,14 @@ public class ZephyriaApp extends GameApplication {
         });
     }
 
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        // TODO: DSL String operator = ...
+
+        vars.put(IS_SELECTING_SKILL_TARGET_CHAR, false);
+        vars.put(SELECTED_SKILL_INDEX, -1);
+    }
+
     private void onHotbarSkill(int index) {
         var pc = player.getCharacterComponent();
 
@@ -137,12 +145,13 @@ public class ZephyriaApp extends GameApplication {
 
                 // let player select the area
                 selectingSkillTargetArea = true;
-                selectedSkillIndex = index;
+
+                set(SELECTED_SKILL_INDEX, index);
             } else {
 
                 // let player select the target character
-                selectingSkillTargetChar = true;
-                selectedSkillIndex = index;
+                set(IS_SELECTING_SKILL_TARGET_CHAR, true);
+                set(SELECTED_SKILL_INDEX, index);
             }
         }
     }
@@ -157,7 +166,7 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         getGameWorld().addEntityFactory(new ZephFactory());
 
-        player = ZephFactoryKt.newPlayer();
+        player = (CharacterEntity) spawn("player");
 
         gotoMap("test_map.tmx", 2, 6);
 
@@ -238,29 +247,29 @@ public class ZephyriaApp extends GameApplication {
 //            }
 //        });
 
-        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
-            @Override
-            protected void onCollisionBegin(Entity proj, Entity target) {
-                if (proj.getObject("target") != target) {
-                    return;
-                }
-
-                proj.removeFromWorld();
-
-                CharacterEntity character = (CharacterEntity) target;
-
-                player.getCharacterComponent().useTargetSkill(selectedSkillIndex, character);
-
-                // TODO: show damage
-
-//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
-//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
-
-                if (character.getHp().isZero()) {
-                    playerKilledChar(character);
-                }
-            }
-        });
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                if (proj.getObject("target") != target) {
+//                    return;
+//                }
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                player.getCharacterComponent().useTargetSkill(selectedSkillIndex, character);
+//
+//                // TODO: show damage
+//
+////                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
+////                showDamage(result.getDamage(), character.getPositionComponent().getValue());
+//
+//                if (character.getHp().isZero()) {
+//                    playerKilledChar(character);
+//                }
+//            }
+//        });
     }
 
     /**
@@ -296,17 +305,11 @@ public class ZephyriaApp extends GameApplication {
 //        selected.set(null);
     }
 
-    private Text debug = new Text();
-
     @Override
     protected void initUI() {
         getGameScene().setBackgroundColor(Color.GRAY);
         getGameScene().setUIMouseTransparent(false);
         getGameScene().setCursor(image("ui/cursors/main.png"), new Point2D(52, 10));
-
-        debug.setTranslateX(100);
-        debug.setTranslateY(300);
-        debug.setFill(Color.WHITE);
 
         getGameScene().addUINodes(
                 new BasicInfoView(player),
@@ -381,28 +384,6 @@ public class ZephyriaApp extends GameApplication {
                 .buildAndPlay();
     }
 
-    private void spawnCharacter(int x, int y, CharacterData charData) {
-        System.out.println("Spawning " + charData + " at " + x + "," + y);
-
-        SpawnData data = new SpawnData(x, y);
-        data.put("charData", charData);
-
-        CharacterEntity e = (CharacterEntity) spawn("char", data);
-
-        e.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-
-            // TODO: check for skill range
-
-            if (selectingSkillTargetChar) {
-                selectingSkillTargetChar = false;
-
-                player.getActionComponent().orderSkillCast(selectedSkillIndex, e);
-            } else {
-                player.getActionComponent().orderAttack(e);
-            }
-        });
-    }
-
     public void gotoMap(String mapName, int toCellX, int toCellY) {
         var level = getAssetLoader().loadLevel("tmx/" + mapName, new TMXLevelLoader());
 
@@ -444,10 +425,19 @@ public class ZephyriaApp extends GameApplication {
 
                     for (int i = 0; i < numMobs; i++) {
                         grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
-                            spawnCharacter(cell.getX() * TILE_SIZE, cell.getY() * TILE_SIZE, Data.INSTANCE.getCharacterData(id));
+                            spawnCharacter(cell.getX(), cell.getY(), Data.INSTANCE.getCharacterData(id));
                         });
                     }
                 });
+    }
+
+    private void spawnCharacter(int cellX, int cellY, CharacterData charData) {
+        SpawnData data = new SpawnData(0, 0);
+        data.put("cellX", cellX);
+        data.put("cellY", cellY);
+        data.put("charData", charData);
+
+        CharacterEntity e = (CharacterEntity) spawn("char", data);
     }
 
     public static void main(String[] args) {

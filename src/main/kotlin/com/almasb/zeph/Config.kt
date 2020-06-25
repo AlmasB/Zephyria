@@ -72,3 +72,10 @@ object Config {
 
     const val SKILL_PROJECTILE_SPEED = 1000.0
 }
+
+object Vars {
+    const val IS_SELECTING_SKILL_TARGET_CHAR = "IS_SELECTING_SKILL_TARGET_CHAR"
+
+    const val SELECTED_SKILL_INDEX = "SELECTED_SKILL_INDEX"
+
+}

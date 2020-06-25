@@ -2,11 +2,8 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
-import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ProjectileComponent
-import com.almasb.fxgl.dsl.entityBuilder
-import com.almasb.fxgl.dsl.getGameWorld
-import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
@@ -25,6 +22,8 @@ import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.EntityType.*
+import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
+import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
@@ -39,8 +38,10 @@ import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
+import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
+import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import java.util.function.Supplier
@@ -57,12 +58,14 @@ class ZephFactory : EntityFactory {
         val charData = data.get<CharacterData>("charData")
 
         try {
+            val cellX = data.get<Int>("cellX")
+            val cellY = data.get<Int>("cellY")
+
             val entity = CharacterEntity()
-            entity.x = data.x
-            entity.y = data.y
             entity.type = MONSTER
             entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
             entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
+            entity.setAnchoredPosition(cellX * TILE_SIZE.toDouble(), cellY * TILE_SIZE.toDouble())
 
             with(entity) {
                 addComponent(CollidableComponent(true))
@@ -79,6 +82,21 @@ class ZephFactory : EntityFactory {
                 addComponent(RandomWanderComponent())
             }
 
+            // TODO: convenience methods on mouse click
+            entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+
+                val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
+
+                // TODO: check for skill range
+                if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
+                    set(IS_SELECTING_SKILL_TARGET_CHAR, false)
+
+                    player.actionComponent.orderSkillCast(geti(SELECTED_SKILL_INDEX), entity)
+                } else {
+                    player.actionComponent.orderAttack(entity)
+                }
+            })
+
             return entity
         } catch (e: Exception) {
             e.printStackTrace()
@@ -90,11 +108,57 @@ class ZephFactory : EntityFactory {
     @Spawns("player")
     fun newPlayer(data: SpawnData): Entity {
         try {
-            val player = newCharacter(data)
+            val charData = char {
+                desc {
+                    id = 1
+                    name = "Developer"
+                    description = "It's you! $name"
+                    textureName = "chars/players/player_full.png"
+                }
+
+                charClass = CharacterClass.NOVICE
+
+                attributes {
+                    str = 1
+                    vit = 1
+                    dex = 1
+                    agi = 1
+                    int = 1
+                    wis = 1
+                    wil = 1
+                    per = 1
+                    luc = 1
+                }
+            }
+
+            data.put("cellX", 0)
+            data.put("cellY", 0)
+            data.put("charData", charData)
+
+            val player = newCharacter(data) as CharacterEntity
             player.type = PLAYER
             player.removeComponent(RandomWanderComponent::class.java)
             player.addComponent(PlayerComponent())
             player.addComponent(IrremovableComponent())
+
+            // TODO: TEST DATA BEGIN
+
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+            player.characterComponent.skills += Skill(Data.Skills.Wizard.AMPLIFY_MAGIC)
+            player.characterComponent.skills += Skill(Data.Skills.Mage.FIREBALL)
+
+            player.inventory.items.add(newDagger(Element.NEUTRAL))
+            player.inventory.items.add(newDagger(Element.FIRE))
+            player.inventory.items.add(newDagger(Element.EARTH))
+            player.inventory.items.add(newDagger(Element.AIR))
+            player.inventory.items.add(newDagger(Element.WATER))
+
+            player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+
+            // TEST DATA END
+
             return player
         } catch (e: Exception) {
             e.printStackTrace()
@@ -258,53 +322,6 @@ private class CustomHeightMapGenerator(val seed: Int, val tx: Double, val ty: Do
 
         return HeightData(x, y, noiseValue)
     }
-}
-
-fun newPlayer(): CharacterEntity {
-    val charData = char {
-        desc {
-            id = 1
-            name = "Developer"
-            description = "It's you! $name"
-            textureName = "chars/players/player_full.png"
-        }
-
-        charClass = CharacterClass.NOVICE
-
-        attributes {
-            str = 1
-            vit = 1
-            dex = 1
-            agi = 1
-            int = 1
-            wis = 1
-            wil = 1
-            per = 1
-            luc = 1
-        }
-    }
-
-    val player = spawn("player", SpawnData(0.0, 0.0).put("charData", charData)) as CharacterEntity
-
-    // TODO: TEST DATA BEGIN
-
-    player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-    player.characterComponent.skills += Skill(Data.Skills.Wizard.AMPLIFY_MAGIC)
-    player.characterComponent.skills += Skill(Data.Skills.Mage.FIREBALL)
-
-    player.inventory.items.add(newDagger(Element.NEUTRAL))
-    player.inventory.items.add(newDagger(Element.FIRE))
-    player.inventory.items.add(newDagger(Element.EARTH))
-    player.inventory.items.add(newDagger(Element.AIR))
-    player.inventory.items.add(newDagger(Element.WATER))
-
-    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-    player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-
-    // TEST DATA END
-
-    return player
 }
 
 private fun newDagger(element: Element): Weapon {

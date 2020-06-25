@@ -26,8 +26,8 @@ class RandomWanderComponent : Component() {
 
             if (time >= nextMoveTime) {
                 // TODO: check logic for identifying where a char is
-                val cellX = (entity as CharacterEntity).characterComponent.getTileX()
-                val cellY = (entity as CharacterEntity).characterComponent.getTileY()
+                val cellX = (entity as CharacterEntity).cellX
+                val cellY = (entity as CharacterEntity).cellY
 
                 astar.grid
                         .getRandomCell { it.isWalkable && it.distance(astar.grid.get(cellX, cellY)) < 5 }

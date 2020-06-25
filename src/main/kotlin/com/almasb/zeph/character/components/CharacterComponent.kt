@@ -141,20 +141,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     fun totalProperty(attribute: Attribute): IntegerProperty = attributes.intProperty("total$attribute")
     fun totalProperty(stat: Stat): IntegerProperty = stats.intProperty("total$stat")
 
-
-
-
-
-
-    fun getTileX() = entity.getComponent(NewCellMoveComponent::class.java).cellX
-
-    fun getTileY() = entity.getComponent(NewCellMoveComponent::class.java).cellY
-
-    /**
-     * @return true if [target] is in weapon range of this character
-     */
-    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
-
     private fun str() = getTotal(STRENGTH)
 
     private fun vit() = getTotal(VITALITY)
@@ -239,6 +225,18 @@ open class CharacterComponent(val data: CharacterData) : Component() {
                 luc))
     }
 
+    override fun onUpdate(tpf: Double) {
+        if (hp.isZero)
+            return
+
+        updateRegen(tpf)
+
+        if (!canAttack())
+            atkTick += tpf
+
+        updateSkills(tpf)
+    }
+
     private var regenTick = 0.0
 
     /**
@@ -273,23 +271,13 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     private fun updateSkills(tpf: Double) {
         skills.forEach {
             it.onUpdate(tpf)
-            //if (it.data.type == SkillType.PASSIVE) {
-                //it.data.onCast(char, char, it.level.value)
-            //}
         }
     }
 
-    override fun onUpdate(tpf: Double) {
-        if (hp.isZero)
-            return
-
-        updateRegen(tpf)
-
-        if (!canAttack())
-            atkTick += tpf
-
-        updateSkills(tpf)
-    }
+    /**
+     * @return true if [target] is in weapon range of this character
+     */
+    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
 
     /**
      * Attack tick that decides if character can attack.

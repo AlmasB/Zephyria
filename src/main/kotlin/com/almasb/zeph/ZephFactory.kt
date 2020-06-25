@@ -1,5 +1,6 @@
 package com.almasb.zeph
 
+import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
@@ -65,7 +66,6 @@ class ZephFactory : EntityFactory {
             entity.type = MONSTER
             entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
             entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
-            entity.setAnchoredPosition(cellX * TILE_SIZE.toDouble(), cellY * TILE_SIZE.toDouble())
 
             with(entity) {
                 addComponent(CollidableComponent(true))
@@ -81,6 +81,8 @@ class ZephFactory : EntityFactory {
                 addComponent(CharacterChildViewComponent())
                 addComponent(RandomWanderComponent())
             }
+
+            entity.setPositionToCell(cellX, cellY)
 
             // TODO: convenience methods on mouse click
             entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
@@ -274,8 +276,20 @@ class ZephFactory : EntityFactory {
 
     @Spawns("cellSelection")
     fun newCellSelection(data: SpawnData): Entity {
+        val view = Rectangle(TILE_SIZE * 1.0, TILE_SIZE * 1.0, null)
+        view.stroke = Color.BLACK
+
+        animationBuilder()
+                .repeatInfinitely()
+                .autoReverse(true)
+                .interpolator(Interpolators.CIRCULAR.EASE_OUT())
+                .animate(view.strokeProperty())
+                .from(Color.color(0.0, 0.0, 0.0, 0.7))
+                .to(Color.color(1.0, 0.84313726, 0.0, 0.7))
+                .buildAndPlay()
+
         val e = entityBuilder(data)
-                .view(Rectangle(TILE_SIZE * 1.0, TILE_SIZE * 1.0, null).also { it.stroke = Color.BLACK })
+                .view(view)
                 .zIndex(Z_INDEX_CELL_SELECTION)
                 .with(CellSelectionComponent())
                 .with(IrremovableComponent())

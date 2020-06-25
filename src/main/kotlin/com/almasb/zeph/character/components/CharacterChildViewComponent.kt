@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.components.view.ChildViewComponent
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config
 import com.almasb.zeph.EntityType
+import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterEntity
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.Group
@@ -26,7 +27,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         val view = makeView()
         viewRoot.children += view
 
-        if (!entity.isType(EntityType.PLAYER)) {
+        if ((entity as CharacterEntity).data.charClass == CharacterClass.MONSTER) {
             viewRoot.visibleProperty().bind(entity.viewComponent.parent.hoverProperty())
         }
     }
@@ -36,7 +37,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         val barSP = makeSkillBar()
 
         barHP.translateX = 0.0
-        barHP.translateY = 60.0
+        barHP.translateY = 55.0
         barHP.setWidth(Config.SPRITE_SIZE * 1.0)
         barHP.setHeight(6.0)
         barHP.isLabelVisible = false
@@ -61,7 +62,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         text.translateY = 85.0
 
         return Group(barHP, barSP).also {
-            if (!entity.isType(EntityType.PLAYER)) {
+            if ((entity as CharacterEntity).data.charClass == CharacterClass.MONSTER) {
                 it.children += text
             }
         }

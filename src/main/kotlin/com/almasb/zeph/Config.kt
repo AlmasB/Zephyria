@@ -22,10 +22,14 @@ object Config {
 
     // These must be outside of cellY values since each char's z-index = cellY
     // We have these statically since, when parsed, a tile layer is a single entity
-    const val Z_INDEX_DECOR_BELOW_PLAYER = -50
-    const val Z_INDEX_DECOR_ABOVE_PLAYER = 5000
 
-    const val Z_INDEX_CELL_SELECTION = 5100
+    // Background has z-index of 0
+
+    // for chars on a map z-index ranges [5000..5150]
+    const val Z_INDEX_DECOR_BELOW_PLAYER = 4000
+    const val Z_INDEX_DECOR_ABOVE_PLAYER = 6000
+
+    const val Z_INDEX_CELL_SELECTION = 3500
 
     const val MAP_WIDTH = 150
     const val MAP_HEIGHT = 150

@@ -81,7 +81,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        entity.z = (entity as CharacterEntity).characterComponent.getTileY()
+        entity.z = (entity as CharacterEntity).cellY + 5000
     }
 
     fun playDeath(onFinished: Runnable) {

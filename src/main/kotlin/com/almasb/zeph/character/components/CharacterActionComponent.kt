@@ -56,8 +56,8 @@ class CharacterActionComponent : Component() {
                 }
             } else {
                 if (attackTarget != null) {
-                    if (moveTarget!!.x.toInt() != attackTarget!!.characterComponent.getTileX()
-                            || moveTarget!!.y.toInt() != attackTarget!!.characterComponent.getTileY()) {
+                    if (moveTarget!!.x.toInt() != attackTarget!!.cellX
+                            || moveTarget!!.y.toInt() != attackTarget!!.cellY) {
                         orderAttack(attackTarget!!)
                     }
                 }

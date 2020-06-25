@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.EntityType
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import javafx.geometry.Rectangle2D
 
@@ -28,7 +29,7 @@ class PortalComponent(
 
         if (interactionCollisionBox.contains(player.anchoredPosition)) {
             FXGL.getGameController().gotoLoading(Runnable {
-                FXGL.getAppCast<ZephyriaApp>().gotoMap(mapName, toCellX, toCellY)
+                Gameplay.gotoMap(mapName, toCellX, toCellY)
             })
         }
     }

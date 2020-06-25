@@ -72,7 +72,7 @@ class ZephFactory : EntityFactory {
                 addComponent(StateComponent())
                 addComponent(CharacterEffectComponent())
                 addComponent(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                addComponent(NewAStarMoveComponent(LazyValue(Supplier { FXGL.getAppCast<ZephyriaApp>().grid })))
+                addComponent(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
                 addComponent(CharacterComponent(charData))

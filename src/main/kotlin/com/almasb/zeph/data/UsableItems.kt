@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.entity.Entity
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
@@ -97,7 +98,7 @@ class UsableItems {
         }
 
         onUseScript = {
-            val grid = FXGL.getAppCast<ZephyriaApp>().grid
+            val grid = Gameplay.getCurrentMap().grid
 
             val cell = grid.getRandomCell { it.isWalkable }.get()
 

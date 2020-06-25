@@ -84,4 +84,5 @@ object Vars {
 
     const val SELECTED_SKILL_INDEX = "SELECTED_SKILL_INDEX"
 
+    const val GAME_MAP = "GAME_MAP"
 }

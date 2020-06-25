@@ -1273,3 +1273,29 @@ package com.almasb.zeph.data
 //                .view(view)
 //                .build()
 //    }
+
+
+
+
+
+// TODO: char selection indicator
+//     private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
+//
+//    private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
+//        selected.addListener((observable, oldValue, newEntity) -> {
+//            if (oldValue != null) {
+//                oldValue.getComponent(ViewComponent.class).ifPresent(c -> {
+//                    c.getView().setEffect(null);
+//                });
+//            }
+//
+//            if (newEntity != null) {
+//                newEntity.getComponent(ViewComponent.class).ifPresent(c -> {
+//                    c.getView().setEffect(selectedEffect);
+//                });
+//            }
+//
+//            playerActionControl.getSelected().set(newEntity);
+//        });
+//        character.getViewComponent().getView().setOnMouseClicked(null);
+//        selected.set(null);

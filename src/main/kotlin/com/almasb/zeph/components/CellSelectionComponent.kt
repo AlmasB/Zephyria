@@ -3,6 +3,7 @@ package com.almasb.zeph.components
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import javafx.geometry.Point2D
 
@@ -16,11 +17,13 @@ class CellSelectionComponent : Component() {
         val cellX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
         val cellY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
 
-        if (!FXGL.getAppCast<ZephyriaApp>().grid.isWithin(cellX, cellY)) {
+        val grid = Gameplay.getCurrentMap().grid
+
+        if (!grid.isWithin(cellX, cellY)) {
             return
         }
 
-        val cell = FXGL.getAppCast<ZephyriaApp>().grid.get(cellX, cellY)
+        val cell = grid.get(cellX, cellY)
 
         if (cell.isWalkable) {
             entity.position = Point2D(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())

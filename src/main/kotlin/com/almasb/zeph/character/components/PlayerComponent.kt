@@ -1,5 +1,6 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
 import com.almasb.zeph.Config.ATTRIBUTE_POINTS_AT_LEVEL1
@@ -11,6 +12,7 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.events.OnMoneyReceivedEvent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
@@ -67,6 +69,8 @@ class PlayerComponent : Component() {
 
     fun rewardMoney(amount: Int) {
         money.value += amount
+
+        fire(OnMoneyReceivedEvent(player, amount))
     }
 
     /**

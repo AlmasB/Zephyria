@@ -22,5 +22,9 @@ object EventHandlers {
         onEvent(Events.ON_PHYSICAL_DAMAGE_DEALT) {
             Gameplay.showDamage(it.damage, it.isCritical, it.target.center)
         }
+
+        onEvent(Events.ON_MONEY_RECEIVED) {
+            Gameplay.showMoneyEarned(it.amount, it.receiver.position)
+        }
     }
 }

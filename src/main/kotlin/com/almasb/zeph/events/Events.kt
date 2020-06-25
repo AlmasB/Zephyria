@@ -2,10 +2,13 @@ package com.almasb.zeph.events
 
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.events.Events.ON_ATTACK
 import com.almasb.zeph.events.Events.ON_BEING_KILLED
 import com.almasb.zeph.events.Events.ON_ITEM_USED
+import com.almasb.zeph.events.Events.ON_MONEY_RECEIVED
 import com.almasb.zeph.events.Events.ON_PHYSICAL_DAMAGE_DEALT
+import com.almasb.zeph.events.Events.ON_XP_RECEIVED
 import javafx.event.Event
 import javafx.event.EventType
 
@@ -27,9 +30,8 @@ object Events {
      */
     val ON_ITEM_USED = EventType<OnItemUsedEvent>(ANY, "ON_ITEM_USED")
 
-    // TODO:
-    //val ON_XP_RECEIVED = EventType<OnItemUsedEvent>(ANY, "ON_XP_RECEIVED")
-    //val ON_MONEY_RECEIVED = EventType<OnItemUsedEvent>(ANY, "ON_MONEY_RECEIVED")
+    val ON_XP_RECEIVED = EventType<OnXPReceivedEvent>(ANY, "ON_XP_RECEIVED")
+    val ON_MONEY_RECEIVED = EventType<OnMoneyReceivedEvent>(ANY, "ON_MONEY_RECEIVED")
 
     val ON_ATTACK = EventType<OnAttackEvent>(ANY, "ON_ATTACK")
 
@@ -62,3 +64,13 @@ class OnPhysicalDamageDealtEvent(
         val damage: Int,
         val isCritical: Boolean
 ) : GameEvent(ON_PHYSICAL_DAMAGE_DEALT)
+
+class OnMoneyReceivedEvent(
+        val receiver: CharacterEntity,
+        val amount: Int
+) : GameEvent(ON_MONEY_RECEIVED)
+
+class OnXPReceivedEvent(
+        val receiver: CharacterEntity,
+        val xp: Experience
+) : GameEvent(ON_XP_RECEIVED)

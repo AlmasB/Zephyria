@@ -1,49 +1,25 @@
 package com.almasb.zeph;
 
-import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.app.scene.GameView;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.dsl.components.ExpireCleanComponent;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.SpawnData;
-import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.tiled.Layer;
-import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
-import com.almasb.fxgl.pathfinding.CellState;
-import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarGridView;
-import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
-import com.almasb.fxgl.ui.FontType;
-import com.almasb.zeph.character.CharacterData;
 import com.almasb.zeph.character.CharacterEntity;
-import com.almasb.zeph.combat.DamageResult;
-import com.almasb.zeph.combat.DamageType;
-import com.almasb.zeph.combat.Element;
 import com.almasb.zeph.combat.GameMath;
-import com.almasb.zeph.data.Data;
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent;
 import com.almasb.zeph.events.EventHandlers;
-import com.almasb.zeph.item.ItemData;
 import com.almasb.zeph.skill.Skill;
 import com.almasb.zeph.skill.SkillTargetType;
 import com.almasb.zeph.skill.SkillType;
 import com.almasb.zeph.skill.SkillUseResult;
-import com.almasb.zeph.ui.*;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import com.almasb.zeph.ui.BasicInfoView;
+import com.almasb.zeph.ui.HotbarView;
+import com.almasb.zeph.ui.InventoryView;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 import kotlin.Pair;
 
 import java.util.List;
@@ -51,23 +27,14 @@ import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.almasb.zeph.Config.*;
-import static com.almasb.zeph.Vars.*;
+import static com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR;
+import static com.almasb.zeph.Vars.SELECTED_SKILL_INDEX;
 
 public class ZephyriaApp extends GameApplication {
 
-    private AStarGrid grid;
-
     private CharacterEntity player;
 
-    private ObjectProperty<Entity> selected = new SimpleObjectProperty<>();
-
     private boolean selectingSkillTargetArea = false;
-
-    private DropShadow selectedEffect = new DropShadow(20, Color.WHITE);
-
-    public AStarGrid getGrid() {
-        return grid;
-    }
 
     public CharacterEntity getPlayer() {
         return player;
@@ -102,14 +69,6 @@ public class ZephyriaApp extends GameApplication {
 
             onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
         }
-
-        onKeyDown(KeyCode.J, "Kill Dev", () -> {
-            getGameWorld().getEntitiesInRange(new Rectangle2D(getInput().getMouseXWorld() - 20, getInput().getMouseYWorld() - 20, 40, 40))
-                    .stream()
-                    .filter(e -> e instanceof CharacterEntity)
-                    .map(e -> (CharacterEntity) e)
-                    .forEach(this::playerKilledChar);
-        });
     }
 
     @Override
@@ -150,19 +109,11 @@ public class ZephyriaApp extends GameApplication {
         }
     }
 
-    private void useAreaSkill() {
-    }
-
-    private void useTargetSkill(Entity target) {
-    }
-
     @Override
     protected void initGame() {
         getGameWorld().addEntityFactory(new ZephFactory());
 
         player = (CharacterEntity) spawn("player");
-
-        gotoMap("test_map.tmx", 2, 6);
 
         spawn("cellSelection");
 
@@ -170,32 +121,7 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
 
-        //showGrid();
-
-        //selectedEffect.setInput(new Glow(0.8));
-        //initEnemies();
-
-//        selected.addListener((observable, oldValue, newEntity) -> {
-//            if (oldValue != null) {
-//                oldValue.getComponent(ViewComponent.class).ifPresent(c -> {
-//                    c.getView().setEffect(null);
-//                });
-//            }
-//
-//            if (newEntity != null) {
-//                newEntity.getComponent(ViewComponent.class).ifPresent(c -> {
-//                    c.getView().setEffect(selectedEffect);
-//                });
-//            }
-//
-//            playerActionControl.getSelected().set(newEntity);
-//        });
-    }
-
-    private void showGrid() {
-        var gridView = new AStarGridView(grid, TILE_SIZE, TILE_SIZE);
-        gridView.setMouseTransparent(true);
-        getGameScene().addUINode(gridView);
+        Gameplay.INSTANCE.gotoMap("test_map.tmx", 2, 6);
     }
 
     @Override
@@ -278,8 +204,6 @@ public class ZephyriaApp extends GameApplication {
 
         int money = (levelDiff > 0 ? levelDiff * 5 : 0) + FXGLMath.random(0, character.getBaseLevel().get());
 
-        showMoneyEarned(money, player.getPosition());
-
         player.getPlayerComponent().rewardMoney(money);
         player.getPlayerComponent().rewardXP(character.getData().getRewardXP());
 
@@ -293,15 +217,10 @@ public class ZephyriaApp extends GameApplication {
                 //spawnItem(character.getPosition());
             }
         });
-
-        // TODO:
-//        character.getViewComponent().getView().setOnMouseClicked(null);
-//        selected.set(null);
     }
 
     @Override
     protected void initUI() {
-        getGameScene().setBackgroundColor(Color.GRAY);
         getGameScene().setUIMouseTransparent(false);
         getGameScene().setCursor(image("ui/cursors/main.png"), new Point2D(52, 10));
 
@@ -310,100 +229,6 @@ public class ZephyriaApp extends GameApplication {
                 new InventoryView(player),
                 new HotbarView(player)
         );
-    }
-
-    private void spawnItem(int x, int y, ItemData itemData) {
-        SpawnData data = new SpawnData(x, y);
-        data.put("itemData", itemData);
-
-        Entity itemEntity = spawn("item", data);
-
-        itemEntity.getViewComponent().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            player.getActionComponent().orderPickUp(itemEntity);
-        });
-
-        animationBuilder()
-                .duration(Duration.seconds(0.3))
-                .interpolator(Interpolators.SMOOTH.EASE_IN())
-                .translate(itemEntity)
-                .from(itemEntity.getPosition())
-                .to(itemEntity.getPosition().add(FXGLMath.randomPoint2D().multiply(20)))
-                .buildAndPlay();
-    }
-
-    public void showMoneyEarned(int money, Point2D position) {
-        Text text = getUIFactoryService().newText(money + "G", 18);
-        text.setFill(Color.GOLD);
-        text.setStroke(Color.GOLD);
-
-        Entity e = entityBuilder()
-                .at(position)
-                .view(text)
-                .with(new ExpireCleanComponent(Duration.seconds(1.2)))
-                .buildAndAttach();
-
-        animationBuilder()
-                .duration(Duration.seconds(1))
-                .translate(e)
-                .from(position)
-                .to(position.add(0, -30))
-                .buildAndPlay();
-    }
-
-    public void gotoMap(String mapName, int toCellX, int toCellY) {
-        var level = getAssetLoader().loadLevel("tmx/" + mapName, new TMXLevelLoader());
-
-        getGameWorld().setLevel(level);
-
-        grid = AStarGrid.fromWorld(getGameWorld(), 150, 150, TILE_SIZE, TILE_SIZE, (type) -> {
-            if (type.equals(EntityType.NAV) || type.equals(EntityType.PORTAL))
-                return CellState.WALKABLE;
-
-            return CellState.NOT_WALKABLE;
-        });
-
-        getGameWorld().getEntitiesFiltered(e -> e.isType("TiledMapLayer"))
-                .stream()
-                .filter(e -> e.<Layer>getObject("layer").getName().equals("Decor_above_player"))
-                .forEach(e -> {
-                    e.getViewComponent().getParent().setMouseTransparent(true);
-                    e.setZ(Z_INDEX_DECOR_ABOVE_PLAYER);
-                });
-
-        spawnMobs(level);
-
-        player.removeComponent(NewAStarMoveComponent.class);
-        player.addComponent(new NewAStarMoveComponent(grid));
-
-        player.getActionComponent().orderIdle();
-        player.setPositionToCell(toCellX, toCellY);
-    }
-
-    private void spawnMobs(Level level) {
-        level.getProperties()
-                .keys()
-                .stream()
-                // a char id
-                .filter(key -> key.startsWith("2"))
-                .map(key -> Integer.parseInt(key))
-                .forEach(id -> {
-                    var numMobs = level.getProperties().getInt(id + "");
-
-                    for (int i = 0; i < numMobs; i++) {
-                        grid.getRandomCell(AStarCell::isWalkable).ifPresent(cell -> {
-                            spawnCharacter(cell.getX(), cell.getY(), Data.INSTANCE.getCharacterData(id));
-                        });
-                    }
-                });
-    }
-
-    private void spawnCharacter(int cellX, int cellY, CharacterData charData) {
-        SpawnData data = new SpawnData(0, 0);
-        data.put("cellX", cellX);
-        data.put("cellY", cellY);
-        data.put("charData", charData);
-
-        CharacterEntity e = (CharacterEntity) spawn("char", data);
     }
 
     public static void main(String[] args) {

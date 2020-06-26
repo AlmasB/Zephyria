@@ -3,6 +3,7 @@
  <properties>
   <property name="2004" type="int" value="30"/>
   <property name="2005" type="int" value="25"/>
+  <property name="2500" value="10,9"/>
  </properties>
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>

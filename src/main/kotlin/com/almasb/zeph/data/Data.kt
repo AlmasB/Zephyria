@@ -4,13 +4,15 @@ import com.almasb.fxgl.core.reflect.ReflectionUtils
 import com.almasb.fxgl.logging.Logger
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterData
+import com.almasb.zeph.character.npc.NPCData
 import com.almasb.zeph.item.*
 import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.SkillData
 
 /**
  * ID ranges:
- * Character [2000-2999].
+ * Character [2000-2499].
+ * NPCs [2500-2999].
  * Weapon [4000-4999].
  * Armor [5000-5999].
  * Usable [6000-6499].
@@ -30,7 +32,8 @@ object Data {
     private val dbArmors = hashMapOf<Int, ArmorData>()
     private val dbUsableItems = hashMapOf<Int, UsableItemData>()
 
-    private val dbCharacters = hashMapOf<Int, CharacterData>()
+    private val dbMonsters = hashMapOf<Int, CharacterData>()
+    private val dbNPCs = hashMapOf<Int, NPCData>()
 
     private val dbQuests = hashMapOf<Int, QuestData>()
 
@@ -50,12 +53,15 @@ object Data {
     val Characters = Characters()
 
     @JvmField
+    val NPCs = NPCs()
+
+    @JvmField
     val Quests = Quests()
 
     val allSkillData by lazy { dbSkills.values.toList() }
     val allWeaponData by lazy { dbWeapons.values.toList() }
     val allArmorData by lazy { dbArmors.values.toList() }
-    val allCharacterData by lazy { dbCharacters.values.toList() }
+    val allCharacterData by lazy { dbMonsters.values.toList() }
     val allQuestData by lazy { dbQuests.values.toList() }
 
     // There is ever only one of these
@@ -96,7 +102,9 @@ object Data {
             populate(dbSkills, Skills.Rogue)
             populate(dbSkills, Skills.Ranger)
 
-            populate(dbCharacters, Characters)
+            populate(dbMonsters, Characters)
+
+            populate(dbNPCs, NPCs)
 
             populate(dbQuests, Quests)
         } catch (e: Exception) {
@@ -124,12 +132,14 @@ object Data {
         }
     }
 
-    fun isCharacter(id: Int) = id.toString().startsWith("2")
+    fun isMonster(id: Int) = id in 2000..2499
+    fun isNPC(id: Int) = id in 2500..2999
     fun isWeapon(id: Int) = id.toString().startsWith("4")
     fun isArmor(id: Int) = id.toString().startsWith("5")
 
     fun getSkillData(id: Int) = dbSkills[id] ?: throw IllegalArgumentException("No skill found: $id")
-    fun getCharacterData(id: Int) = dbCharacters[id] ?: throw IllegalArgumentException("No character found: $id")
+    fun getCharacterData(id: Int) = dbMonsters[id] ?: throw IllegalArgumentException("No character found: $id")
+    fun getNPCData(id: Int) = dbNPCs[id] ?: throw IllegalArgumentException("No NPC found: $id")
     fun getWeaponData(id: Int) = dbWeapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
     fun getArmorData(id: Int) = dbArmors[id] ?: throw IllegalArgumentException("No armor found: $id")
     fun getUsableItemData(id: Int) = dbUsableItems[id] ?: throw IllegalArgumentException("No usable item found: $id")

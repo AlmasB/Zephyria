@@ -6,6 +6,7 @@ import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import javafx.util.Duration
 
 /**
@@ -82,7 +83,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        entity.z = (entity as CharacterEntity).cellY + 5000
+        entity.z = entity.getComponent(NewCellMoveComponent::class.java).cellY + 5000
     }
 
     fun playDeath(onFinished: Runnable) {

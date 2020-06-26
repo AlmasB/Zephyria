@@ -1,7 +1,5 @@
 package com.almasb.zeph
 
-import com.almasb.fxgl.animation.Interpolators
-import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityWorldListener
@@ -9,22 +7,16 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.level.Level
 import com.almasb.fxgl.entity.level.tiled.Layer
 import com.almasb.fxgl.pathfinding.CellState
-import com.almasb.fxgl.pathfinding.astar.AStarCell
 import com.almasb.fxgl.pathfinding.astar.AStarGrid
-import com.almasb.fxgl.pathfinding.astar.AStarGridView
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.data.Data.getCharacterData
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.item.ItemData
-import javafx.event.EventHandler
-import javafx.scene.input.MouseEvent
-import javafx.util.Duration
-import java.util.function.Consumer
+import java.lang.RuntimeException
 import java.util.function.Predicate
 
 /**
@@ -47,15 +39,30 @@ class GameMap(private val level: Level) {
      */
     private val monsters = hashMapOf<Int, MutableList<CharacterEntity>>()
 
+    private val npcs = hashMapOf<Int, Pair<Int, Int>>()
+
     init {
         level.properties
-                .keys() // a char id
+                .keys()
+                // monster or NPC id
                 .filter { key: String -> key.startsWith("2") }
                 .map { key: String -> key.toInt() }
                 .forEach { id: Int ->
-                    val numMobs = level.properties.getInt(id.toString())
+                    if (Data.isMonster(id)) {
+                        val numMobs = level.properties.getInt(id.toString())
 
-                    spawnIDs[id] = numMobs
+                        spawnIDs[id] = numMobs
+                    } else if (Data.isNPC(id)) {
+
+                        val tokens = level.properties.getString(id.toString()).split(',')
+                        val cellX = tokens[0].toInt()
+                        val cellY = tokens[1].toInt()
+
+                        npcs[id] = cellX to cellY
+
+                    } else {
+                        throw RuntimeException("Map has invalid data (not monster or NPC): $id")
+                    }
                 }
 
         spawnIDs.forEach { id, _ ->
@@ -105,31 +112,37 @@ class GameMap(private val level: Level) {
                 }
 
         spawnMobs(level)
+        spawnNPCs()
     }
-
-    fun onUpdate(tpf: Double) {
-
-    }
-
     private fun spawnMobs(level: Level) {
         spawnIDs.forEach { id, numMobs ->
             for (i in 0 until numMobs) {
                 grid.getRandomCell { it.isWalkable }
-                        .ifPresent { spawnCharacter(it.x, it.y, getCharacterData(id)) }
+                        .ifPresent { spawnMonster(it.x, it.y, getCharacterData(id)) }
             }
         }
     }
 
-    private fun spawnCharacter(cellX: Int, cellY: Int, charData: CharacterData) {
+    private fun spawnMonster(cellX: Int, cellY: Int, charData: CharacterData) {
         val data = SpawnData(0.0, 0.0)
         data.put("cellX", cellX)
         data.put("cellY", cellY)
         data.put("charData", charData)
 
-        val e = spawn("char", data) as CharacterEntity
+        val e = spawn("monster", data) as CharacterEntity
     }
 
+    private fun spawnNPCs() {
+        npcs.forEach { id, (cellX, cellY) ->
 
+            val data = SpawnData(0.0, 0.0)
+            data.put("cellX", cellX)
+            data.put("cellY", cellY)
+            data.put("npcData", Data.getNPCData(id))
+
+            spawn("npc", data)
+        }
+    }
 
     // TODO:
 //    private fun spawnItem(x: Int, y: Int, itemData: ItemData) {

@@ -31,6 +31,7 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
+import com.almasb.zeph.character.npc.NPCData
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.components.PortalComponent
@@ -54,8 +55,34 @@ import java.util.function.Supplier
  */
 class ZephFactory : EntityFactory {
 
-    @Spawns("char")
-    fun newCharacter(data: SpawnData): Entity {
+    @Spawns("npc")
+    fun newNPC(data: SpawnData): Entity {
+        val cellX = data.get<Int>("cellX")
+        val cellY = data.get<Int>("cellY")
+
+        val npcData = data.get<NPCData>("npcData")
+
+        val entity = entityBuilder()
+                .type(NPC)
+                .with(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
+                .with(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
+                .with(AnimationComponent(npcData.description.textureName))
+                .build()
+
+        entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
+        entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
+
+        entity.getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
+
+        entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+            // TODO: order player to move/talk to NPC
+        })
+
+        return entity
+    }
+
+    @Spawns("monster")
+    fun newMonster(data: SpawnData): Entity {
         val charData = data.get<CharacterData>("charData")
 
         try {
@@ -137,7 +164,8 @@ class ZephFactory : EntityFactory {
             data.put("cellY", 0)
             data.put("charData", charData)
 
-            val player = newCharacter(data) as CharacterEntity
+            // TODO: separate newMonster to newCharacter?
+            val player = newMonster(data) as CharacterEntity
             player.type = PLAYER
             player.removeComponent(RandomWanderComponent::class.java)
             player.addComponent(PlayerComponent())

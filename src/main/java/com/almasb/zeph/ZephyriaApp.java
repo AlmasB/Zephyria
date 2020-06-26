@@ -113,6 +113,8 @@ public class ZephyriaApp extends GameApplication {
     protected void initGame() {
         getGameWorld().addEntityFactory(new ZephFactory());
 
+        // TODO: player can target himself?
+        // TODO: check collision with teleport ...
         player = (CharacterEntity) spawn("player");
 
         spawn("cellSelection");

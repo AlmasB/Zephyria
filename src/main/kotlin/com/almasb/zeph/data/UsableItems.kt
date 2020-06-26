@@ -107,6 +107,7 @@ class UsableItems {
         }
     }
 
+    // TODO: possibly generate description from effect data?
     val MUSHROOM = usableItem {
         desc {
             id = 6008

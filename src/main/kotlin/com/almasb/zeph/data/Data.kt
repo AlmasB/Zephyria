@@ -5,6 +5,7 @@ import com.almasb.fxgl.logging.Logger
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.item.*
+import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.SkillData
 
 /**
@@ -12,8 +13,10 @@ import com.almasb.zeph.skill.SkillData
  * Character [2000-2999].
  * Weapon [4000-4999].
  * Armor [5000-5999].
- * Usable [6000-6999].
- * Skill [7000-7999].
+ * Usable [6000-6499].
+ * Misc [6500-6999].
+ * Skill [7000-7499].
+ * Quests [7500-7999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -28,6 +31,8 @@ object Data {
     private val dbUsableItems = hashMapOf<Int, UsableItemData>()
 
     private val dbCharacters = hashMapOf<Int, CharacterData>()
+
+    private val dbQuests = hashMapOf<Int, QuestData>()
 
     @JvmField
     val Skills = Skills()
@@ -44,10 +49,14 @@ object Data {
     @JvmField
     val Characters = Characters()
 
+    @JvmField
+    val Quests = Quests()
+
     val allSkillData by lazy { dbSkills.values.toList() }
     val allWeaponData by lazy { dbWeapons.values.toList() }
     val allArmorData by lazy { dbArmors.values.toList() }
     val allCharacterData by lazy { dbCharacters.values.toList() }
+    val allQuestData by lazy { dbQuests.values.toList() }
 
     // There is ever only one of these
     val hands by lazy { Weapon(Weapons.Maces.HANDS) }
@@ -88,6 +97,8 @@ object Data {
             populate(dbSkills, Skills.Ranger)
 
             populate(dbCharacters, Characters)
+
+            populate(dbQuests, Quests)
         } catch (e: Exception) {
             e.printStackTrace()
         }

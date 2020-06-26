@@ -42,7 +42,7 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(1700);
+        settings.setWidth(1200);
         settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1");

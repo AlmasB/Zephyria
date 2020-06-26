@@ -3,6 +3,9 @@ package com.almasb.zeph
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
+import com.almasb.fxgl.cutscene.Cutscene
+import com.almasb.fxgl.cutscene.dialogue.DialogueGraphSerializer
+import com.almasb.fxgl.cutscene.dialogue.SerializableGraph
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
@@ -40,12 +43,14 @@ import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
+import javafx.util.Duration
 import java.util.function.Supplier
 
 /**
@@ -76,6 +81,25 @@ class ZephFactory : EntityFactory {
 
         entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
             // TODO: order player to move/talk to NPC
+
+            val fullTexture = texture(npcData.textureNameFull, 948.0 * 0.25, 1920.0 * 0.25).outline(Color.BLACK, 2)
+
+            addUINode(fullTexture, getAppWidth() - fullTexture.width, getAppHeight() - fullTexture.height)
+
+            runOnce({
+                removeUINode(fullTexture)
+            }, Duration.seconds(0.05))
+
+
+            // TODO: store this in FXGL assets dialogue ...
+            getAssetLoader().getStream("/assets/${npcData.dialogueName}").use {
+                val serializedGraph = jacksonObjectMapper().readValue(it, SerializableGraph::class.java)
+
+                val graph = DialogueGraphSerializer.fromSerializable(serializedGraph)
+
+                // TODO: add callback on finished?
+                getCutsceneService().startDialogueScene(graph)
+            }
         })
 
         return entity

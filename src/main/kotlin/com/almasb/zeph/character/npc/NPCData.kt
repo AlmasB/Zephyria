@@ -12,7 +12,8 @@ import com.almasb.zeph.character.DataDSL
 @DataDSL
 class NPCDataBuilder(
         var description: Description = Description(),
-        var dialogueName: String = ""
+        var dialogueName: String = "",
+        var textureNameFull: String = ""
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -22,7 +23,15 @@ class NPCDataBuilder(
     }
 
     fun build(): NPCData {
-        return NPCData(description, dialogueName)
+        if (textureNameFull.isEmpty()) {
+            textureNameFull = description.textureName.replace(".png", "_full.png")
+        }
+
+        return NPCData(
+                description,
+                dialogueName,
+                textureNameFull
+        )
     }
 }
 
@@ -35,5 +44,6 @@ fun npc(setup: NPCDataBuilder.() -> Unit): NPCData {
 
 data class NPCData(
         val description: Description,
-        val dialogueName: String
+        val dialogueName: String,
+        val textureNameFull: String
 )

@@ -5,3 +5,16 @@
 - Trees - https://opengameart.org/content/trees-bushes
 - Textures - https://opengameart.org/content/2d-lost-garden-zelda-style-tiles-resized-to-32x32-with-additions
 - Portals - https://opengameart.org/content/teleporter-circle
+
+## NPCs
+
+- Full size images: Modifications created by LunaLucid/Namastaii. 
+If you use this sprite, please credit Konett.
+
+Konett: https://konett.itch.io/
+
+Konett's Lemma Soft thread: https://lemmasoft.renai.us/forums/viewtopic.php?f=52&t=28840&hilit=konett
+
+https://lunalucid.itch.io/
+                    
+- ...

@@ -94,4 +94,8 @@ object Gameplay {
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {
         getCurrentMap().spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }
+
+    fun spawnItem(id: Int, cellX: Int, cellY: Int) {
+        getCurrentMap().spawnItem(cellX, cellY, Data.getItemData(id))
+    }
 }

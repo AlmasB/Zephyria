@@ -17,6 +17,7 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.components.TiledMapLayerOptimizerComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.data.Data.getCharacterData
+import com.almasb.zeph.item.ItemData
 import javafx.geometry.Rectangle2D
 import javafx.scene.image.ImageView
 import java.lang.RuntimeException
@@ -80,7 +81,7 @@ class GameMap(private val level: Level) {
 
                 val monster = e as CharacterEntity
 
-                monsters[monster.data.description.id]!! += monster
+                monsters[monster.data.description.id]?.add(monster)
             }
 
             override fun onEntityRemoved(e: Entity) {
@@ -90,7 +91,7 @@ class GameMap(private val level: Level) {
 
                 val monster = e as CharacterEntity
 
-                monsters[monster.data.description.id]!! -= monster
+                monsters[monster.data.description.id]?.remove(monster)
 
                 // TODO: spawn a new one ...
             }
@@ -113,9 +114,6 @@ class GameMap(private val level: Level) {
                 }
                 .filter { it.getObject<Layer>("layer").name == "Decor_above_player" }
                 .forEach {
-
-                    //it.isVisible = false
-
                     it.viewComponent.parent.isMouseTransparent = true
                     it.z = Z_INDEX_DECOR_ABOVE_PLAYER
                 }
@@ -154,21 +152,12 @@ class GameMap(private val level: Level) {
         }
     }
 
-    // TODO:
-//    private fun spawnItem(x: Int, y: Int, itemData: ItemData) {
-//        val data = SpawnData(x.toDouble(), y.toDouble())
-//        data.put("itemData", itemData)
-//        val itemEntity = FXGL.spawn("item", data)
-//        itemEntity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler { event: MouseEvent? -> player.actionComponent.orderPickUp(itemEntity) })
-//
-//        animationBuilder()
-//                .duration(Duration.seconds(0.3))
-//                .interpolator(Interpolators.SMOOTH.EASE_IN())
-//                .translate(itemEntity)
-//                .from(itemEntity.position)
-//                .to(itemEntity.position.add(FXGLMath.randomPoint2D().multiply(20.0)))
-//                .buildAndPlay()
-//    }
+    fun spawnItem(cellX: Int, cellY: Int, itemData: ItemData) {
+        val data = SpawnData(cellX * TILE_SIZE * 1.0, cellY * TILE_SIZE * 1.0)
+        data.put("itemData", itemData)
+
+        val itemEntity = spawn("item", data)
+    }
 
     // TODO: showGrid() add a check box to DevPane
 //    private fun showGrid() {

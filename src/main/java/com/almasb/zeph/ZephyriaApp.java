@@ -118,7 +118,6 @@ public class ZephyriaApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new ZephFactory());
 
-        // TODO: player can target himself?
         // TODO: check collision with teleport ...
         player = (CharacterEntity) spawn("player");
 
@@ -220,8 +219,7 @@ public class ZephyriaApp extends GameApplication {
             int chance = p.getSecond();
 
             if (GameMath.INSTANCE.checkChance(chance)) {
-                // TODO: get item data from itemID
-                //spawnItem(character.getPosition());
+                Gameplay.INSTANCE.spawnItem(itemID, character.getCellX(), character.getCellY());
             }
         });
     }

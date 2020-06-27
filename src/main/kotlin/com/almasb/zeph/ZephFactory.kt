@@ -25,6 +25,7 @@ import com.almasb.zeph.Config.SKILL_PROJECTILE_SPEED
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
+import com.almasb.zeph.Config.Z_INDEX_DECOR_BELOW_PLAYER
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
@@ -140,6 +141,10 @@ class ZephFactory : EntityFactory {
 
                 val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
 
+                // TODO: handle differently?
+                if (player === entity)
+                    return@EventHandler
+
                 // TODO: check for skill range
                 if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
                     set(IS_SELECTING_SKILL_TARGET_CHAR, false)
@@ -149,6 +154,10 @@ class ZephFactory : EntityFactory {
                     player.actionComponent.orderAttack(entity)
                 }
             })
+
+            animationBuilder()
+                    .fadeIn(entity)
+                    .buildAndPlay()
 
             return entity
         } catch (e: Exception) {
@@ -238,9 +247,32 @@ class ZephFactory : EntityFactory {
         } else if (itemData is ArmorData) {
             data.put("armor", Armor(itemData))
         }
-        return FXGL.entityBuilder(data)
+
+        val e = entityBuilder(data)
                 .view(itemData.description.textureName)
+                .zIndex(Z_INDEX_DECOR_BELOW_PLAYER)
                 .build()
+
+        e.viewComponent.parent.isPickOnBounds = true
+
+        e.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+
+            val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
+
+            player.actionComponent.orderPickUp(e)
+        })
+
+        animationBuilder()
+                .repeat(2)
+                .autoReverse(true)
+                .duration(Duration.seconds(0.3))
+                .interpolator(Interpolators.SMOOTH.EASE_IN())
+                .translate(e)
+                .from(e.position)
+                .to(e.position.add(0.0, -25.0))
+                .buildAndPlay()
+
+        return e
     }
 
     @Spawns("nav")

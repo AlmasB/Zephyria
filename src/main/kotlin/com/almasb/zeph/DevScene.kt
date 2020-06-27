@@ -33,6 +33,7 @@ class DevScene : SubScene() {
                 handleCommand(field.text)
             } catch (e: Exception) {
                 log.warning("Failed to handle command ${field.text}", e)
+                e.printStackTrace()
             }
 
             FXGL.getSceneService().popSubScene()
@@ -59,6 +60,14 @@ class DevScene : SubScene() {
                 val cellY = tokens[3].toInt()
 
                 Gameplay.spawnMob(mobID, cellX, cellY)
+            }
+
+            "SPAWN_ITEM" -> {
+                val itemID = tokens[1].toInt()
+                val cellX = tokens[2].toInt()
+                val cellY = tokens[3].toInt()
+
+                Gameplay.spawnItem(itemID, cellX, cellY)
             }
 
             else -> {

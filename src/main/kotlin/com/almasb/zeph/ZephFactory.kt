@@ -166,7 +166,7 @@ class ZephFactory : EntityFactory {
                     id = 1
                     name = "Developer"
                     description = "It's you! $name"
-                    textureName = "chars/players/player_full.png"
+                    textureName = "chars/players/dev_player.png"
                 }
 
                 charClass = CharacterClass.NOVICE

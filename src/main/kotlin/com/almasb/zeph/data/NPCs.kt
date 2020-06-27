@@ -18,4 +18,14 @@ class NPCs {
 
         dialogueName = "dialogues/rosie.json"
     }
+
+    val CHARLES = npc {
+        desc {
+            id = 2501
+            name = "Charles"
+            textureName = "chars/npcs/charles.png"
+        }
+
+        dialogueName = "dialogues/charles.json"
+    }
 }

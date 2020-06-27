@@ -1,0 +1,61 @@
+{
+  "uniqueID" : 4,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Hmph..."
+    },
+    "1" : {
+      "type" : "END",
+      "text" : "[Stares at the horizon]"
+    },
+    "2" : {
+      "type" : "TEXT",
+      "text" : "Oh, I didn't notice you. I was just talking to myself..."
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "Interesting...",
+      "options" : {
+        "0" : "What is?",
+        "1" : "[Leave]"
+      }
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 3
+  }, {
+    "sourceID" : 2,
+    "targetID" : 1
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 2
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 1
+  } ],
+  "uiMetadata" : {
+    "0" : {
+      "x" : 50.0,
+      "y" : 450.0
+    },
+    "1" : {
+      "x" : 1230.0,
+      "y" : 450.0
+    },
+    "2" : {
+      "x" : 831.5,
+      "y" : 245.0
+    },
+    "3" : {
+      "x" : 556.0,
+      "y" : 399.0
+    }
+  }
+}

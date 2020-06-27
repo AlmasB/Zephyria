@@ -43,10 +43,9 @@ public class ZephyriaApp extends GameApplication {
         settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1");
-
-        // TODO: check javafx crash issue when resize + zoom
-//        settings.setManualResizeEnabled(true);
-//        settings.setPreserveResizeRatio(true);
+        //settings.setManualResizeEnabled(true);
+        //settings.setPreserveResizeRatio(true);
+        //settings.setProfilingEnabled(true);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 

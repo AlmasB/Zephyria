@@ -14,8 +14,11 @@ import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.components.TiledMapLayerOptimizerComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.data.Data.getCharacterData
+import javafx.geometry.Rectangle2D
+import javafx.scene.image.ImageView
 import java.lang.RuntimeException
 import java.util.function.Predicate
 
@@ -105,8 +108,14 @@ class GameMap(private val level: Level) {
         }
 
         getGameWorld().getEntitiesFiltered(Predicate { it.isType("TiledMapLayer") })
+                .onEach {
+                    it.addComponent(TiledMapLayerOptimizerComponent())
+                }
                 .filter { it.getObject<Layer>("layer").name == "Decor_above_player" }
                 .forEach {
+
+                    //it.isVisible = false
+
                     it.viewComponent.parent.isMouseTransparent = true
                     it.z = Z_INDEX_DECOR_ABOVE_PLAYER
                 }

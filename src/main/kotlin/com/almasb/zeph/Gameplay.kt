@@ -9,6 +9,7 @@ import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
@@ -88,5 +89,9 @@ object Gameplay {
                 .from(position)
                 .to(position.add(0.0, -30.0))
                 .buildAndPlay()
+    }
+
+    fun spawnMob(id: Int, cellX: Int, cellY: Int) {
+        getCurrentMap().spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }
 }

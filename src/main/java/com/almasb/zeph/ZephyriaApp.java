@@ -32,6 +32,7 @@ public class ZephyriaApp extends GameApplication {
     private CharacterEntity player;
 
     private boolean selectingSkillTargetArea = false;
+    private DevScene devScene;
 
     public CharacterEntity getPlayer() {
         return player;
@@ -66,6 +67,10 @@ public class ZephyriaApp extends GameApplication {
             final int index = i - 1;
 
             onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
+        }
+
+        if (!isReleaseMode()) {
+            onKeyDown(KeyCode.ENTER, () -> getSceneService().pushSubScene(devScene));
         }
     }
 
@@ -109,6 +114,8 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGame() {
+        devScene = new DevScene();
+
         getGameWorld().addEntityFactory(new ZephFactory());
 
         // TODO: player can target himself?

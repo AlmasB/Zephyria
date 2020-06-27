@@ -123,6 +123,7 @@ class GameMap(private val level: Level) {
         spawnMobs(level)
         spawnNPCs()
     }
+
     private fun spawnMobs(level: Level) {
         spawnIDs.forEach { id, numMobs ->
             for (i in 0 until numMobs) {
@@ -132,7 +133,7 @@ class GameMap(private val level: Level) {
         }
     }
 
-    private fun spawnMonster(cellX: Int, cellY: Int, charData: CharacterData) {
+    fun spawnMonster(cellX: Int, cellY: Int, charData: CharacterData) {
         val data = SpawnData(0.0, 0.0)
         data.put("cellX", cellX)
         data.put("cellY", cellY)

@@ -4,6 +4,7 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.emptyDescription
 import com.almasb.zeph.skill.SkillDataBuilder
 
 enum class Status {
@@ -55,7 +56,7 @@ class Effect(val data: EffectData) {
 
 @DataDSL
 class EffectDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var duration: Double = 0.0,
         var status: Status? = null,
         var runes: MutableList<Rune> = arrayListOf(),

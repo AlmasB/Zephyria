@@ -214,6 +214,8 @@ class ZephFactory : EntityFactory {
 
             player.inventory.items.add(Armor(Data.Armors.Shoes.LUCKY_SHOES))
 
+            player.inventory.items.add(MiscItem(Data.MiscItems.SKELETON_BONE))
+
             // TEST DATA END
 
             return player

@@ -5,10 +5,11 @@ import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.combat.*
+import com.almasb.zeph.emptyDescription
 
 @DataDSL
 class ArmorDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var itemLevel: ItemLevel = ItemLevel.NORMAL,
         var element: Element = Element.NEUTRAL,
         val runes: MutableList<Rune> = arrayListOf(),
@@ -42,7 +43,7 @@ class ArmorDataBuilder(
 
 @DataDSL
 class WeaponDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var itemLevel: ItemLevel = ItemLevel.NORMAL,
         var element: Element = Element.NEUTRAL,
         val runes: MutableList<Rune> = arrayListOf(),

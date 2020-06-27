@@ -3,6 +3,7 @@ package com.almasb.zeph.character.npc
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.emptyDescription
 
 /**
  *
@@ -11,7 +12,7 @@ import com.almasb.zeph.character.DataDSL
 
 @DataDSL
 class NPCDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var dialogueName: String = "",
         var textureNameFull: String = ""
 ) {

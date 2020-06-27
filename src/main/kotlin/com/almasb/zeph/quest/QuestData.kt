@@ -6,6 +6,7 @@ import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.combat.*
+import com.almasb.zeph.emptyDescription
 import com.almasb.zeph.item.*
 
 /**
@@ -17,7 +18,7 @@ import com.almasb.zeph.item.*
 
 @DataDSL
 class QuestDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var rewardMoney: Int = 0,
         var rewardXP: Experience = Experience(0, 0, 0),
         val rewardItems: MutableList<ItemData> = arrayListOf(),

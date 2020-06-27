@@ -2,6 +2,13 @@ package com.almasb.zeph
 
 import com.almasb.zeph.character.DataDSL
 
+val emptyDescription = Description(
+        -1,
+        "",
+        "",
+        ""
+)
+
 @DataDSL
 class DescriptionBuilder(
         var id: Int = 0,
@@ -13,15 +20,14 @@ class DescriptionBuilder(
     fun build(): Description = Description(id, name, description, textureName)
 }
 
-
 /**
  * Static immutable description of an object.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 data class Description(
-        val id: Int = -1,
-        val name: String = "Unnamed object",
-        val description: String = "No description",
-        val textureName: String = "null_object.png"
+        val id: Int,
+        val name: String,
+        val description: String,
+        val textureName: String
 )

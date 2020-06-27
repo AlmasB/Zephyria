@@ -5,6 +5,7 @@ import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.emptyDescription
 import com.almasb.zeph.item.ItemData
 
 @DslMarker
@@ -12,7 +13,7 @@ annotation class DataDSL
 
 @DataDSL
 class CharacterDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var type: CharacterType = CharacterType.NORMAL,
         var charClass: CharacterClass = CharacterClass.MONSTER,
         var baseLevel: Int = 1,

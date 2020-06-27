@@ -4,9 +4,6 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
-import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.pathfinding.astar.AStarGrid;
-import com.almasb.fxgl.pathfinding.astar.AStarGridView;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.GameMath;
@@ -42,12 +39,14 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(1200);
+        settings.setWidth(1700);
         settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1");
-        settings.setManualResizeEnabled(true);
-        settings.setPreserveResizeRatio(true);
+
+        // TODO: check javafx crash issue when resize + zoom
+//        settings.setManualResizeEnabled(true);
+//        settings.setPreserveResizeRatio(true);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 

@@ -31,6 +31,7 @@ object Data {
     private val dbWeapons = hashMapOf<Int, WeaponData>()
     private val dbArmors = hashMapOf<Int, ArmorData>()
     private val dbUsableItems = hashMapOf<Int, UsableItemData>()
+    private val dbMiscItems = hashMapOf<Int, MiscItemData>()
 
     private val dbMonsters = hashMapOf<Int, CharacterData>()
     private val dbNPCs = hashMapOf<Int, NPCData>()
@@ -42,6 +43,9 @@ object Data {
 
     @JvmField
     val UsableItems = UsableItems()
+
+    @JvmField
+    val MiscItems = MiscItems()
 
     @JvmField
     val Weapons = Weapons()
@@ -71,8 +75,6 @@ object Data {
     val shoes by lazy { Armor(Armors.Shoes.SIMPLE_SHOES) }
 
     init {
-        // TODO: check no duplicate IDs
-
         try {
             populate(dbWeapons, Weapons.Maces)
             populate(dbWeapons, Weapons.OneHandedSwords)
@@ -91,6 +93,7 @@ object Data {
             populate(dbArmors, Armors.Shoes)
 
             populate(dbUsableItems, UsableItems)
+            populate(dbMiscItems, MiscItems)
 
             populate(dbSkills, Skills.Warrior)
             populate(dbSkills, Skills.Crusader)
@@ -128,7 +131,11 @@ object Data {
             val fieldDesc = ReflectionUtils.findFieldsByTypeRecursive(data, Description::class.java)[0].also { it.isAccessible = true }
             val desc = fieldDesc.get(data) as Description
 
-            db[desc.id] = data as T
+            if (db.containsKey(desc.id)) {
+                throw RuntimeException("$desc has the same id as ${db[desc.id]}")
+            } else {
+                db[desc.id] = data as T
+            }
         }
     }
 
@@ -143,7 +150,14 @@ object Data {
     fun getWeaponData(id: Int) = dbWeapons[id] ?: throw IllegalArgumentException("No weapon found: $id")
     fun getArmorData(id: Int) = dbArmors[id] ?: throw IllegalArgumentException("No armor found: $id")
     fun getUsableItemData(id: Int) = dbUsableItems[id] ?: throw IllegalArgumentException("No usable item found: $id")
-    fun getItemData(id: Int): ItemData = dbWeapons[id] ?: dbArmors[id] ?: dbUsableItems[id] ?: throw IllegalArgumentException("No weapon/armor/usable item found: $id")
+    fun getMiscItemData(id: Int) = dbMiscItems[id] ?: throw IllegalArgumentException("No misc item found: $id")
+
+    fun getItemData(id: Int): ItemData =
+            dbWeapons[id]
+            ?: dbArmors[id]
+            ?: dbUsableItems[id]
+            ?: dbMiscItems[id]
+            ?: throw IllegalArgumentException("No weapon/armor/usable/misc item found: $id")
 
     fun getDefaultWeapon(id: Int): Weapon {
         return hands

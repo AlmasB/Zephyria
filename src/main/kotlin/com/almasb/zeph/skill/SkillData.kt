@@ -8,13 +8,14 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.Rune
 import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.emptyDescription
 import javafx.util.Duration
 import java.util.*
 
 
 @DataDSL
 class SkillDataBuilder(
-        var description: Description = Description(),
+        var description: Description = emptyDescription,
         var type: SkillType = SkillType.ACTIVE,
         var useType: SkillUseType = SkillUseType.DAMAGE,
         var targetTypes: EnumSet<SkillTargetType> = EnumSet.of(SkillTargetType.ENEMY),

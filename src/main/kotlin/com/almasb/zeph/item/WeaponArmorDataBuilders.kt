@@ -37,6 +37,12 @@ class ArmorDataBuilder(
     }
 
     fun build(): ArmorData {
+        if (description.textureName.isEmpty()) {
+            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
+
+            description = description.copy(textureName = "items/armor/$fileName")
+        }
+
         return ArmorData(description, itemLevel, element, runes, essences, armorType, armor, marmor, onBeingHitScript, onEquipScript, onUnEquipScript)
     }
 }
@@ -70,6 +76,12 @@ class WeaponDataBuilder(
     }
 
     fun build(): WeaponData {
+        if (description.textureName.isEmpty()) {
+            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
+
+            description = description.copy(textureName = "items/weapons/$fileName")
+        }
+
         return WeaponData(description, itemLevel, element, runes, essences, type, pureDamage, onAttackScript, onEquipScript, onUnEquipScript)
     }
 }

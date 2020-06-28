@@ -218,7 +218,7 @@ class ZephFactory : EntityFactory {
 
             player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
             player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.items.add(UsableItem(Data.UsableItems.BANANA))
+            player.inventory.items.add(Weapon(Data.Weapons.OneHandedSwords.STEEL_SWORD))
             player.inventory.items.add(UsableItem(Data.UsableItems.TREASURE_BOX))
 
             player.inventory.items.add(Armor(Data.Armors.Shoes.LUCKY_SHOES))
@@ -338,6 +338,9 @@ class ZephFactory : EntityFactory {
 //        }
 //
 //        e.viewComponent.addChild(ImageView(buffer))
+
+        // TODO: this is not necessary if we make all layers but 1 UI transparent and use
+        // the only layer to handle movement clicks
 
         e.viewComponent.addChild(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
 

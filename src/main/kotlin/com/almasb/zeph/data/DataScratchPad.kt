@@ -1,91 +1,8 @@
 package com.almasb.zeph.data
 
-/**
- *
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
-
 
 //
-//    fun getItem(id: Int): Entity {
-//        if (weapons.containsKey(id))
-//            return getWeapon(id)
-//
-//        if (armor.containsKey(id))
-//            return getArmor(id)
-//
-//        throw IllegalArgumentException("ID $id not found in the database")
-//    }
-//
 
-
-
-
-//
-//        // DAGGERS 4000+
-//
-
-//
-//        fun GUT_RIPPER() = listOf<Component>(
-//                Description(4003, "The Gut Ripper", "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows.", "items/weapons/gut_ripper.png"),
-//                WeaponDataComponent(ItemLevel.EPIC, WeaponType.DAGGER, 100)
-//                        .withRune(Rune(Attribute.AGILITY, 4))
-//                        .withRune(Rune(Attribute.DEXTERITY, 4))
-//                        .withRune(Rune(Attribute.LUCK, 1))
-//        )
-//
-//        //        public static final String PRACTICE_SWORD = "A basic one-handed sword";
-//        //        public static final String HALLSTATT_SWORD = "A sword favored by gladiators, it is especially designed for battles against armored enemies";
-//        //        public static final String KAMPILAN_SWORD = "A thin sword designed to be easily bent, light, and very elastic";
-//        //        public static final String MACHETE = "A strong cleaver-like sword";
-//        //        public static final String TEGA_SWORD = "A ceremonial sword used by gravekeeper's to lead the dead to the great beyond";
-//        //        public static final String SCHIAVONA_SWORD = "A popular sword among mercenary soldiers";
-//        //        public static final String COLICHERMARDE_SWORD = "Small sword with good parrying characteristics";
-//
-//        // 1H SWORDS 4100
-//
-//
-//        // 2H SWORDS 4200
-//
-//        fun CLAYMORE() = listOf<Component>(
-//                Description(4200, "Claymore", "Large, double-edged broad sword that was used by the Scottish highlanders.", "items/weapons/claymore.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 35)
-//                        .withRune(Rune(Attribute.STRENGTH, 1))
-//        )
-//
-//        fun BROADSWORD() = listOf<Component>(
-//                Description(4201, "Broadsword", "A sword with a wide, double sided blade.", "items/weapons/broadsword.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 28)
-//                        .withRune(Rune(Attribute.LUCK, 1))
-//        )
-//
-
-//
-//        fun BATTLESWORD() = listOf<Component>(
-//                Description(4203, "Battlesword", "A terrifying two-handed sword that is said to stimulate the nerves in order to kill, once it's in the wearer's hands.", "items/weapons/battlesword.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 44)
-//                        .withRune(Rune(Attribute.STRENGTH, 2))
-//        )
-//
-//        fun LONGSWORD() = listOf<Component>(
-//                Description(4204, "Longsword", "A two-handed sword with straight double-edged blade.", "items/weapons/longsword.png"),
-//                WeaponDataComponent(ItemLevel.NORMAL, WeaponType.TWO_H_SWORD, 33)
-//                        .withRune(Rune(Attribute.AGILITY, 1))
-//                        .withRune(Rune(Attribute.DEXTERITY, 2))
-//        )
-//
-//
-//
-
-//
-//        // MACES 4500
-//
-//        // KATARS 4600
-//
-//        // SPEARS 4700
-//
-//        // BOWS 4800
-//
 //        fun DRAGON_CLAW() = listOf<Component>(
 //                Description(4800, "Dragon's Claw", "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master.", "items/weapons/dragon_claw.png"),
 //                WeaponDataComponent(ItemLevel.EPIC, WeaponType.BOW, 130)
@@ -95,7 +12,7 @@ package com.almasb.zeph.data
 //                        .withElement(Element.FIRE)
 //        )
 //
-//        // RODS 4900
+//
 //    }
 //
 

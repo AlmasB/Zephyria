@@ -27,6 +27,7 @@ class Weapons {
     val Bows = Bows()
 }
 
+// MACES 4500?
 class Maces {
     val HANDS = weapon {
         desc {
@@ -40,21 +41,59 @@ class Maces {
     }
 }
 
+//        public static final String HALLSTATT_SWORD = "A sword favored by gladiators, it is especially designed for battles against armored enemies";
+//        public static final String KAMPILAN_SWORD = "A thin sword designed to be easily bent, light, and very elastic";
+//        public static final String MACHETE = "A strong cleaver-like sword";
+//        public static final String TEGA_SWORD = "A ceremonial sword used by gravekeeper's to lead the dead to the great beyond";
+//        public static final String SCHIAVONA_SWORD = "A popular sword among mercenary soldiers";
+//        public static final String COLICHERMARDE_SWORD = "S";
+
 class OneHandedSwords {
-    val IRON_SWORD = weapon {
+    val PRACTICE_SWORD = weapon {
         desc {
             id = 4100
+            name = "Practice Sword"
+            description = "A basic one-handed sword."
+        }
+
+        type = ONE_H_SWORD
+        pureDamage = 15
+    }
+
+    val IRON_SWORD = weapon {
+        desc {
+            id = 4101
             name = "Iron Sword"
-            description = "A standard warrior's sword with decent attack damage."
-            textureName = "items/weapons/iron_sword.png"
+            description = "A standard warrior's sword."
         }
 
         type = ONE_H_SWORD
         pureDamage = 25
+    }
 
-        onEquipScript = {
-            //it.characterComponent.addEffect()
+    val SCIMITAR = weapon {
+        desc {
+            id = 4102
+            name = "Scimitar"
+            description = "A balanced sword with good parrying characteristics."
         }
+
+        type = ONE_H_SWORD
+        pureDamage = 35
+
+        AGILITY +1
+        DEXTERITY +1
+    }
+
+    val STEEL_SWORD = weapon {
+        desc {
+            id = 4103
+            name = "Steel Sword"
+            description = "A swords made of strongest steel."
+        }
+
+        type = ONE_H_SWORD
+        pureDamage = 38
     }
 }
 
@@ -68,18 +107,35 @@ class Daggers {
             id = 4001
             name = "Knife"
             description = "A simple knife with poor blade."
-            textureName = "items/weapons/knife.png"
         }
 
         type = DAGGER
-        pureDamage = 15
+        pureDamage = 10
+    }
+
+    val GUT_RIPPER = weapon {
+        desc {
+            id = 4050
+            name = "Gut Ripper"
+            description = "A fierce weapon that punctures and ruptures enemies with vicious and lightning fast blows."
+        }
+
+        type = DAGGER
+        itemLevel = EPIC
+        pureDamage = 100
+
+        AGILITY +4
+        DEXTERITY +4
+        LUCK +1
     }
 }
 
+// SPEARS 4700
 class Spears {
 
 }
 
+// RODS 4900
 class Rods {
 
 }
@@ -89,9 +145,67 @@ class Shields {
 }
 
 class TwoHandedSwords {
-    val FROSTMOURNE = weapon {
+    val CLAYMORE = weapon {
+        desc {
+            id = 4200
+            name = "Claymore"
+            description = "Large, double-edged broad sword"
+        }
+
+        type = TWO_H_SWORD
+        pureDamage = 35
+
+        STRENGTH +1
+    }
+
+    val BROADSWORD = weapon {
+        desc {
+            id = 4201
+            name = "Broadsword"
+            description = "A sword with a wide, double sided blade."
+        }
+
+        type = TWO_H_SWORD
+        pureDamage = 28
+
+        LUCK +1
+    }
+
+    val BATTLESWORD = weapon {
         desc {
             id = 4202
+            name = "Battlesword"
+            description = "A terrifying two-handed sword that is said to stimulate the nerves in order to kill, once it's in the wearer's hands."
+        }
+
+        type = TWO_H_SWORD
+        pureDamage = 44
+
+        STRENGTH +2
+        VITALITY +1
+    }
+
+    val LONGSWORD = weapon {
+        desc {
+            id = 4203
+            name = "Longsword"
+            description = "A two-handed sword with straight double-edged blade."
+        }
+
+        type = TWO_H_SWORD
+        pureDamage = 33
+
+        AGILITY +1
+        DEXTERITY +2
+    }
+
+
+
+
+
+    val FROSTMOURNE = weapon {
+        desc {
+            id = 4250
             name = "Frostmourne"
             description = "The legendary sword of the Ice Dungeon's King."
             textureName = "items/weapons/frostmourne.png"
@@ -136,10 +250,14 @@ class TwoHandedAxes {
     }
 }
 
+// KATARS 4600
 class Katars {
 
 }
 
+
+
+// BOWS 4800
 class Bows {
 
 }

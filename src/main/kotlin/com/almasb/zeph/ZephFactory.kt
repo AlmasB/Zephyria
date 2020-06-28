@@ -48,6 +48,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
+import javafx.scene.ImageCursor
 import javafx.scene.input.MouseEvent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
@@ -79,6 +80,8 @@ class ZephFactory : EntityFactory {
         entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
 
         entity.getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
+
+        entity.viewComponent.parent.cursor = ImageCursor(image("ui/chat.png"), 16.0, 16.0)
 
         entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
             // TODO: order player to move/talk to NPC

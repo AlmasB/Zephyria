@@ -2,6 +2,7 @@ package com.almasb.zeph.events
 
 import com.almasb.fxgl.dsl.onEvent
 import com.almasb.zeph.EntityType
+import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.character.ai.RandomWanderComponent
 
@@ -13,9 +14,13 @@ object EventHandlers {
 
     fun initialize() {
         onEvent(Events.ON_ATTACK) {
-            if (!it.target.isType(EntityType.PLAYER)) {
+            if (!it.target.isType(PLAYER)) {
                 it.target.actionComponent.orderAttack(it.attacker)
                 it.target.getComponent(RandomWanderComponent::class.java).pause()
+            }
+
+            if (it.attacker.isType(PLAYER)) {
+                it.attacker.playerComponent!!.weapon.value.onAttack(it.attacker, it.target)
             }
         }
 

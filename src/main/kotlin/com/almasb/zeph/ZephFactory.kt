@@ -221,7 +221,7 @@ class ZephFactory : EntityFactory {
 
             player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
             player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.items.add(Weapon(Data.Weapons.Daggers.DEMONIC_BLADE))
+            player.inventory.items.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
             player.inventory.items.add(UsableItem(Data.UsableItems.TREASURE_BOX))
 
             player.inventory.items.add(Armor(Data.Armors.Shoes.LUCKY_SHOES))

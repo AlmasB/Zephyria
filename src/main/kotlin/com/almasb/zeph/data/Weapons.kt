@@ -4,6 +4,8 @@ import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Element.WATER
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.combat.Stat.*
+import com.almasb.zeph.combat.effect
+import com.almasb.zeph.combat.runIfChance
 import com.almasb.zeph.item.ItemLevel.EPIC
 import com.almasb.zeph.item.WeaponType.*
 import com.almasb.zeph.item.weapon
@@ -90,11 +92,31 @@ class OneHandedSwords {
         desc {
             id = 4103
             name = "Steel Sword"
-            description = "A swords made of strongest steel."
+            description = "A sword made of strongest steel."
         }
 
         type = ONE_H_SWORD
         pureDamage = 38
+    }
+
+    val GUARD_SWORD = weapon {
+        desc {
+            id = 4104
+            name = "Guard Sword"
+            description = "A long sword typically used by royal guards. On attack has 10% chance to increase ATK by 15 for 3 seconds"
+        }
+
+        type = ONE_H_SWORD
+        pureDamage = 35
+
+        onAttackScript = { attacker, _ ->
+            runIfChance(80) {
+                attacker.addEffect(effect(description) {
+                    duration = 3.0
+                    ATK +15
+                })
+            }
+        }
     }
 }
 

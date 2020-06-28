@@ -20,7 +20,7 @@ enum class WeaponType(val range: Int, val aspdFactor: Float) {
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Weapon(data: WeaponData) : EquipItem(data.description, data.itemLevel, data.runes, data.essences) {
+class Weapon(private val data: WeaponData) : EquipItem(data.description, data.itemLevel, data.runes, data.essences) {
 
     val element = SimpleObjectProperty(data.element)
 
@@ -46,6 +46,10 @@ class Weapon(data: WeaponData) : EquipItem(data.description, data.itemLevel, dat
                 .concat(runes)
                 .concat(essences)
         )
+    }
+
+    fun onAttack(attacker: CharacterEntity, target: CharacterEntity) {
+        data.onAttackScript.invoke(attacker, target)
     }
 
     override fun onEquip(char: CharacterEntity) {

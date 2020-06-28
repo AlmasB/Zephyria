@@ -105,7 +105,7 @@ public class CharInfoView extends Region {
             bText.setFont(font);
             bText.setFill(Color.YELLOW);
 
-            StringBinding textBinding = Bindings.when(player.getCharacterComponent().bonusProperty(stat).greaterThan(0))
+            StringBinding textBinding = Bindings.when(player.getCharacterComponent().bonusProperty(stat).isNotEqualTo(0))
                 .then(player.getCharacterComponent().bonusProperty(stat).asString("+%d ")
                         .concat(player.getCharacterComponent().baseProperty(stat).add(player.getCharacterComponent().bonusProperty(stat)).asString("(%d)"))
                         .concat(stat.getMeasureUnit()))

@@ -2,7 +2,8 @@ package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Element.WATER
-import com.almasb.zeph.combat.Stat.MAX_SP
+import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.item.ItemLevel.EPIC
 import com.almasb.zeph.item.WeaponType.*
 import com.almasb.zeph.item.weapon
@@ -127,6 +128,21 @@ class Daggers {
         AGILITY +4
         DEXTERITY +4
         LUCK +1
+    }
+
+    val DEMONIC_BLADE = weapon {
+        desc {
+            id = 4051
+            name = "Demonic Blade"
+            description = "A dagger that once belonged to a demonic prince. Significantly increases critical chance at the cost of defense."
+        }
+
+        type = DAGGER
+        itemLevel = EPIC
+        pureDamage = 50
+
+        DEF -50
+        CRIT_CHANCE +100
     }
 }
 

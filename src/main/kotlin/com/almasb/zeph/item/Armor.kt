@@ -17,7 +17,7 @@ enum class ArmorType {
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class Armor(data: ArmorData) : EquipItem(data.description, data.itemLevel, data.runes) {
+class Armor(data: ArmorData) : EquipItem(data.description, data.itemLevel, data.runes, data.essences) {
 
     val element = SimpleObjectProperty<Element>()
 
@@ -48,6 +48,7 @@ class Armor(data: ArmorData) : EquipItem(data.description, data.itemLevel, data.
                 .concat(armor.asString("Armor: %d").concat("%\n"))
                 .concat(marmor.asString("MArmor: %d").concat("%\n"))
                 .concat(runes)
+                .concat(essences)
         )
     }
 

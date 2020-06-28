@@ -2,6 +2,7 @@ package com.almasb.zeph.item
 
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.GameMath
 import com.almasb.zeph.combat.Rune
 import javafx.beans.property.SimpleIntegerProperty
@@ -41,10 +42,12 @@ abstract class Item(val description: Description) {
 abstract class EquipItem(
         description: Description,
         val itemLevel: ItemLevel,
-        dataRunes: List<Rune>
+        dataRunes: List<Rune>,
+        dataEssences: List<Essence>
 ) : Item(description) {
 
     val runes = FXCollections.observableArrayList(dataRunes)
+    val essences = FXCollections.observableArrayList(dataEssences)
     var equippedCharacter: CharacterEntity? = null
 
     val refineLevel = SimpleIntegerProperty(0)
@@ -53,7 +56,7 @@ abstract class EquipItem(
      * @return whether rune addition succeeded
      */
     fun addRune(rune: Rune): Boolean {
-        if (runes.size == itemLevel.maxRunes)
+        if (runes.size >= itemLevel.maxRunes)
             return false
 
         equippedCharacter?.let {
@@ -81,16 +84,20 @@ abstract class EquipItem(
         }
     }
 
+    // TODO: addEssence
+
     open fun onEquip(char: CharacterEntity) {
         equippedCharacter = char
 
         runes.forEach { char.addBonus(it.attribute, it.bonus) }
+        essences.forEach { char.addBonus(it.stat, it.bonus) }
     }
 
     open fun onUnEquip(char: CharacterEntity) {
         equippedCharacter = null
 
         runes.forEach { char.addBonus(it.attribute, -it.bonus) }
+        essences.forEach { char.addBonus(it.stat, -it.bonus) }
     }
 
     /**

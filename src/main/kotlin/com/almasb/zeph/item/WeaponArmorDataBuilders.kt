@@ -67,6 +67,14 @@ class WeaponDataBuilder(
         description = builder.build()
     }
 
+    operator fun Attribute.minus(value: Int) {
+        runes += Rune(this, -value)
+    }
+
+    operator fun Stat.minus(value: Int) {
+        essences += Essence(this, -value)
+    }
+
     operator fun Attribute.plus(value: Int) {
         runes += Rune(this, value)
     }

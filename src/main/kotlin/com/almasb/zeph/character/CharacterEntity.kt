@@ -1,6 +1,7 @@
 package com.almasb.zeph.character
 
 import com.almasb.fxgl.entity.Entity
+import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.components.*
 import com.almasb.zeph.combat.Attribute
@@ -8,7 +9,6 @@ import com.almasb.zeph.combat.Effect
 import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.combat.Status
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
@@ -66,10 +66,10 @@ class CharacterEntity : Entity() {
 //    fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)
 
     val cellX: Int
-        get() = getComponent(NewCellMoveComponent::class.java).cellX
+        get() = getComponent(CellMoveComponent::class.java).cellX
 
     val cellY: Int
-        get() = getComponent(NewCellMoveComponent::class.java).cellY
+        get() = getComponent(CellMoveComponent::class.java).cellY
 
     fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 

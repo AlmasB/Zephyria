@@ -2,11 +2,11 @@ package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.entity.component.Component
+import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import javafx.util.Duration
 import java.lang.RuntimeException
 
@@ -52,9 +52,9 @@ class AnimationComponent(textureName: String) : Component() {
         channelIdleUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 8, 9 * 8)
         channelIdleLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 9, 9 * 9)
 
-        channelWalkDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 10, 9 * 10 + 9 - 1)
+        channelWalkDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 10, 9 * 10 + 9 - 1)
         channelWalkRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 + 9 - 1)
-        channelWalkUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 8, 9 * 8 + 9 - 1)
+        channelWalkUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 8, 9 * 8 + 9 - 1)
         channelWalkLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 + 9 - 1)
 
         channelCastDown = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 2, 7 * 2 + 7 - 1)
@@ -84,7 +84,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        entity.z = entity.getComponent(NewCellMoveComponent::class.java).cellY + 5000
+        entity.z = entity.getComponent(CellMoveComponent::class.java).cellY + 5000
     }
 
     fun playDeath(onFinished: Runnable) {

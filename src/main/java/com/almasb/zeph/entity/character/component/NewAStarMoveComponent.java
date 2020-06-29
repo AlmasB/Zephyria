@@ -11,6 +11,7 @@ import com.almasb.fxgl.core.util.EmptyRunnable;
 import com.almasb.fxgl.core.util.LazyValue;
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.component.Required;
+import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarPathfinder;
@@ -22,10 +23,10 @@ import java.util.Random;
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-@Required(NewCellMoveComponent.class)
+@Required(CellMoveComponent.class)
 public final class NewAStarMoveComponent extends Component {
 
-    private NewCellMoveComponent moveComponent;
+    private CellMoveComponent moveComponent;
 
     private LazyValue<AStarPathfinder> pathfinder;
 
@@ -46,8 +47,8 @@ public final class NewAStarMoveComponent extends Component {
 
     @Override
     public void onAdded() {
-        moveComponent.movingProperty().addListener((o, wasMoving, isMoving) -> {
-            if (!isMoving) {
+        moveComponent.atDestinationProperty().addListener((o, old, isAtDestination) -> {
+            if (isAtDestination) {
                 delayedPathCalc.run();
                 delayedPathCalc = EmptyRunnable.INSTANCE;
             }
@@ -122,11 +123,11 @@ public final class NewAStarMoveComponent extends Component {
     }
 
     /**
-     * Entity's anchored position  is used to position it in the cell.
+     * Entity's anchored position is used to position it in the cell.
      * This can be used to explicitly specify the start X and Y of the entity.
      */
     public void moveToCell(int startX, int startY, int targetX, int targetY) {
-        if (!moveComponent.isMoving()) {
+        if (moveComponent.isAtDestination()) {
             path = pathfinder.get().findPath(startX, startY, targetX, targetY);
         } else {
             delayedPathCalc = () -> {
@@ -137,11 +138,12 @@ public final class NewAStarMoveComponent extends Component {
 
     @Override
     public void onUpdate(double tpf) {
-        if (path.isEmpty() || moveComponent.isMoving())
+        if (path.isEmpty() || !moveComponent.isAtDestination())
             return;
 
         var next = path.remove(0);
 
+        // move to next adjacent cell
         moveComponent.moveToCell(next.getX(), next.getY());
     }
 }

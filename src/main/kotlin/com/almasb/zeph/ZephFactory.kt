@@ -16,6 +16,7 @@ import com.almasb.fxgl.entity.components.CollidableComponent
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
+import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
 import com.almasb.fxgl.procedural.HeightMapGenerator
@@ -41,7 +42,6 @@ import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -71,7 +71,7 @@ class ZephFactory : EntityFactory {
 
         val entity = entityBuilder()
                 .type(NPC)
-                .with(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
+                .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 .with(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
                 .with(AnimationComponent(npcData.description.textureName))
                 .build()
@@ -126,7 +126,7 @@ class ZephFactory : EntityFactory {
                 addComponent(CollidableComponent(true))
                 addComponent(StateComponent())
                 addComponent(CharacterEffectComponent())
-                addComponent(NewCellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
+                addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 addComponent(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
@@ -206,6 +206,8 @@ class ZephFactory : EntityFactory {
             player.removeComponent(RandomWanderComponent::class.java)
             player.addComponent(PlayerComponent())
             player.addComponent(IrremovableComponent())
+
+            player.viewComponent.parent.isMouseTransparent = true
 
             // TODO: TEST DATA BEGIN
 

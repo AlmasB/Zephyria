@@ -110,7 +110,7 @@ class OneHandedSwords {
         pureDamage = 35
 
         onAttackScript = { attacker, _ ->
-            runIfChance(80) {
+            runIfChance(10) {
                 attacker.addEffect(effect(description) {
                     duration = 3.0
                     ATK +15

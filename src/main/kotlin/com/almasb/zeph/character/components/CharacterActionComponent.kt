@@ -7,11 +7,11 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
-import com.almasb.zeph.entity.character.component.NewCellMoveComponent
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
@@ -32,7 +32,7 @@ class CharacterActionComponent : Component() {
     private lateinit var state: StateComponent
     private lateinit var char: CharacterEntity
     private lateinit var animationComponent: AnimationComponent
-    private lateinit var moveComponent: NewCellMoveComponent
+    private lateinit var moveComponent: CellMoveComponent
 
     private val astar: NewAStarMoveComponent
         get() = entity.getComponent(NewAStarMoveComponent::class.java)

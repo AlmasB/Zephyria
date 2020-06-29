@@ -54,6 +54,13 @@ class DevScene : SubScene() {
         val cmd = tokens[0]
 
         when (cmd) {
+            "TP" -> {
+                val cellX = tokens[1].toInt()
+                val cellY = tokens[2].toInt()
+
+                Gameplay.goto(cellX, cellY)
+            }
+
             "SPAWN_MOB" -> {
                 val mobID = tokens[1].toInt()
                 val cellX = tokens[2].toInt()

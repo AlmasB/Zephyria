@@ -124,7 +124,8 @@ public class ZephyriaApp extends GameApplication {
         spawn("cellSelection");
 
         // TODO: bounds should consider zoom
-        getGameScene().getViewport().setBounds(0, 0, (int)(MAP_WIDTH * TILE_SIZE * 1.5), (int)(MAP_HEIGHT * TILE_SIZE * 1.5));
+        // maxX and width should be recomputed because of zoom
+        getGameScene().getViewport().setBounds(0, 0, (int)(MAP_WIDTH * TILE_SIZE * 1.13 - 64), (int)(MAP_HEIGHT * TILE_SIZE * 1.07 - 32));
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
 

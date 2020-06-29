@@ -29,6 +29,13 @@ object Gameplay {
         return geto(GAME_MAP)
     }
 
+    fun goto(toCellX: Int, toCellY: Int) {
+        val player = getPlayer()
+
+        player.actionComponent.orderIdle()
+        player.setPositionToCell(toCellX, toCellY)
+    }
+
     fun gotoMap(mapName: String, toCellX: Int, toCellY: Int) {
         val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
 

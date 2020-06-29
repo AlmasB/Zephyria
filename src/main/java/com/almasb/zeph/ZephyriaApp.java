@@ -46,7 +46,7 @@ public class ZephyriaApp extends GameApplication {
         settings.setVersion("0.1");
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
-        //settings.setProfilingEnabled(true);
+        settings.setProfilingEnabled(true);
         settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
@@ -125,11 +125,11 @@ public class ZephyriaApp extends GameApplication {
 
         // TODO: bounds should consider zoom
         // maxX and width should be recomputed because of zoom
-        getGameScene().getViewport().setBounds(0, 0, (int)(MAP_WIDTH * TILE_SIZE * 1.13 - 64), (int)(MAP_HEIGHT * TILE_SIZE * 1.07 - 32));
+        getGameScene().getViewport().setBounds(0, 0, (int)(500 * TILE_SIZE * 1.13 - 64), (int)(500 * TILE_SIZE * 1.07 - 32));
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
 
-        Gameplay.INSTANCE.gotoMap("test_map.tmx", 2, 6);
+        Gameplay.INSTANCE.gotoMap("test_map3.tmx", 2, 6);
     }
 
     @Override

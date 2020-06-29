@@ -6,6 +6,7 @@ import com.almasb.fxgl.entity.EntityWorldListener
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.level.Level
 import com.almasb.fxgl.entity.level.tiled.Layer
+import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.CellState
 import com.almasb.fxgl.pathfinding.astar.AStarGrid
 import com.almasb.zeph.Config.MAP_HEIGHT
@@ -28,6 +29,8 @@ import java.util.function.Predicate
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class GameMap(private val level: Level) {
+
+    private val log = Logger.get(javaClass)
 
     lateinit var grid: AStarGrid
 
@@ -108,8 +111,11 @@ class GameMap(private val level: Level) {
             CellState.NOT_WALKABLE
         }
 
+        log.info("Entered map: ${grid.walkableCells.size} walkable cells")
+
         getGameWorld().getEntitiesFiltered(Predicate { it.isType("TiledMapLayer") })
                 .onEach {
+                    //it.viewComponent.isVisible = false
                     it.addComponent(TiledMapLayerOptimizerComponent())
                 }
                 .filter { it.getObject<Layer>("layer").name == "Decor_above_player" }

@@ -3,12 +3,10 @@ package com.almasb.zeph;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.zeph.character.CharacterEntity;
-import com.almasb.zeph.combat.GameMath;
 import com.almasb.zeph.events.EventHandlers;
 import com.almasb.zeph.skill.Skill;
 import com.almasb.zeph.skill.SkillTargetType;
@@ -19,9 +17,7 @@ import com.almasb.zeph.ui.HotbarView;
 import com.almasb.zeph.ui.InventoryView;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
-import kotlin.Pair;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -31,14 +27,8 @@ import static com.almasb.zeph.Vars.SELECTED_SKILL_INDEX;
 
 public class ZephyriaApp extends GameApplication {
 
-    private CharacterEntity player;
-
     private boolean selectingSkillTargetArea = false;
     private DevScene devScene;
-
-    public CharacterEntity getPlayer() {
-        return player;
-    }
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -85,7 +75,7 @@ public class ZephyriaApp extends GameApplication {
     }
 
     private void onHotbarSkill(int index) {
-        var pc = player.getCharacterComponent();
+        var pc = Gameplay.INSTANCE.getPlayer().getCharacterComponent();
 
         if (index < pc.getSkills().size()) {
             Skill skill = pc.getSkills().get(index);
@@ -121,7 +111,7 @@ public class ZephyriaApp extends GameApplication {
         getGameWorld().addEntityFactory(new ZephFactory());
 
         // TODO: check collision with teleport ...
-        player = (CharacterEntity) spawn("player");
+        var player = (CharacterEntity) spawn("player");
 
         spawn("cellSelection");
 
@@ -149,11 +139,6 @@ public class ZephyriaApp extends GameApplication {
 //                CharacterEntity character = (CharacterEntity) target;
 //
 //                DamageResult damage = player.getPlayerControl().attack(character);
-//                showDamage(damage, character.getPositionComponent().getValue());
-//
-//                if (character.getHp().getValue() <= 0) {
-//                    playerKilledChar(character);
-//                }
 //            }
 //        });
 //
@@ -169,11 +154,6 @@ public class ZephyriaApp extends GameApplication {
 //                CharacterEntity character = (CharacterEntity) target;
 //
 //                DamageResult damage = attacker.getCharConrol().attack(character);
-//                showDamage(damage, character.getPositionComponent().getValue());
-//
-////                if (character.getHp().getValue() <= 0) {
-////                    playerKilledChar(character);
-////                }
 //            }
 //        });
 
@@ -186,7 +166,7 @@ public class ZephyriaApp extends GameApplication {
 
                 proj.removeFromWorld();
 
-                player.getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), (CharacterEntity) target);
+                Gameplay.INSTANCE.getPlayer().getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), (CharacterEntity) target);
             }
         });
     }
@@ -195,6 +175,8 @@ public class ZephyriaApp extends GameApplication {
     protected void initUI() {
         getGameScene().setUIMouseTransparent(false);
         getGameScene().setCursor(image("ui/cursors/main.png"), new Point2D(52, 10));
+
+        var player = Gameplay.INSTANCE.getPlayer();
 
         getGameScene().addUINodes(
                 new BasicInfoView(player),

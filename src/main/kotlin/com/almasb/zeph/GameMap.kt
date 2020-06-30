@@ -28,7 +28,7 @@ import java.util.function.Predicate
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class GameMap(private val level: Level) {
+class GameMap(private val level: Level) : EntityWorldListener {
 
     private val log = Logger.get(javaClass)
 
@@ -75,33 +75,36 @@ class GameMap(private val level: Level) {
         spawnIDs.forEach { id, _ ->
             monsters[id] = arrayListOf()
         }
+    }
 
-        getGameWorld().addWorldListener(object : EntityWorldListener {
-            override fun onEntityAdded(e: Entity) {
-                if (!e.isType(EntityType.MONSTER)) {
-                    return
-                }
+    override fun onEntityAdded(e: Entity) {
+        if (!e.isType(EntityType.MONSTER)) {
+            return
+        }
 
-                val monster = e as CharacterEntity
+        val monster = e as CharacterEntity
 
-                monsters[monster.data.description.id]?.add(monster)
-            }
+        monsters[monster.data.description.id]?.add(monster)
+    }
 
-            override fun onEntityRemoved(e: Entity) {
-                if (!e.isType(EntityType.MONSTER)) {
-                    return
-                }
+    override fun onEntityRemoved(e: Entity) {
+        if (!e.isType(EntityType.MONSTER)) {
+            return
+        }
 
-                val monster = e as CharacterEntity
+        val monster = e as CharacterEntity
+        val id = monster.data.description.id
 
-                monsters[monster.data.description.id]?.remove(monster)
+        if (monsters.containsKey(id)) {
+            val entities = monsters[id]!!
 
-                // TODO: spawn a new one ...
-            }
-        })
+            entities.remove(monster)
+        }
     }
 
     fun enter() {
+        getGameWorld().addWorldListener(this)
+
         getGameWorld().setLevel(level)
 
         grid = AStarGrid.fromWorld(FXGL.getGameWorld(), MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, TILE_SIZE) { type: Any ->
@@ -128,6 +131,19 @@ class GameMap(private val level: Level) {
         spawnNPCs()
     }
 
+    fun exit() {
+        getGameWorld().removeWorldListener(this)
+    }
+
+    fun onUpdate(tpf: Double) {
+        monsters.forEach { id, entities ->
+            if (entities.size < spawnIDs[id]!!) {
+                grid.getRandomCell { it.isWalkable }
+                        .ifPresent { spawnMonster(it.x, it.y, getCharacterData(id)) }
+            }
+        }
+    }
+
     private fun spawnMobs(level: Level) {
         spawnIDs.forEach { id, numMobs ->
             for (i in 0 until numMobs) {
@@ -138,6 +154,8 @@ class GameMap(private val level: Level) {
     }
 
     fun spawnMonster(cellX: Int, cellY: Int, charData: CharacterData) {
+        log.debug("spawnMonster ${charData.description.name} (${charData.description.id}) at $cellX,$cellY")
+
         val data = SpawnData(0.0, 0.0)
         data.put("cellX", cellX)
         data.put("cellY", cellY)
@@ -159,6 +177,8 @@ class GameMap(private val level: Level) {
     }
 
     fun spawnItem(cellX: Int, cellY: Int, itemData: ItemData) {
+        log.debug("spawnItem ${itemData.description.name} (${itemData.description.id}) at $cellX,$cellY")
+
         val data = SpawnData(cellX * TILE_SIZE * 1.0, cellY * TILE_SIZE * 1.0)
         data.put("itemData", itemData)
 

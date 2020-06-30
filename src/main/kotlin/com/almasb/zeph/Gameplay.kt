@@ -6,6 +6,7 @@ import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
+import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
@@ -21,6 +22,8 @@ import javafx.util.Duration
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 object Gameplay : FunctionCallHandler {
+
+    private val log = Logger.get(javaClass)
 
     fun getPlayer(): CharacterEntity {
         return getGameWorld().getSingleton(EntityType.PLAYER) as CharacterEntity
@@ -40,15 +43,19 @@ object Gameplay : FunctionCallHandler {
     fun gotoMap(mapName: String, toCellX: Int, toCellY: Int) {
         val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
 
-        val map = GameMap(level)
-        map.enter()
+        if (FXGL.getWorldProperties().exists(GAME_MAP)) {
+            getCurrentMap().exit()
+        }
 
-        set(GAME_MAP, map)
+        val newMap = GameMap(level)
+        newMap.enter()
+
+        set(GAME_MAP, newMap)
 
         val player = getPlayer()
 
         player.removeComponent(NewAStarMoveComponent::class.java)
-        player.addComponent(NewAStarMoveComponent(map.grid))
+        player.addComponent(NewAStarMoveComponent(newMap.grid))
 
         player.actionComponent.orderIdle()
         player.setPositionToCell(toCellX, toCellY)
@@ -109,6 +116,8 @@ object Gameplay : FunctionCallHandler {
     }
 
     override fun handle(functionName: String, args: Array<String>): Any {
+        log.debug("Function call: $functionName ${args.toList()}")
+
         val cmd = functionName.toLowerCase()
 
         when (cmd) {
@@ -136,7 +145,7 @@ object Gameplay : FunctionCallHandler {
             }
 
             else -> {
-                println("Unrecognized command: $cmd")
+                log.warning("Unrecognized command: $cmd")
             }
         }
 

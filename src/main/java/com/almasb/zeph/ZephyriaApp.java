@@ -49,7 +49,7 @@ public class ZephyriaApp extends GameApplication {
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
         settings.setProfilingEnabled(true);
-        settings.setApplicationMode(ApplicationMode.DEVELOPER);
+        settings.setApplicationMode(ApplicationMode.DEBUG);
     }
 
     @Override
@@ -233,6 +233,11 @@ public class ZephyriaApp extends GameApplication {
                 new InventoryView(player),
                 new HotbarView(player)
         );
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+        Gameplay.INSTANCE.getCurrentMap().onUpdate(tpf);
     }
 
     public static void main(String[] args) {

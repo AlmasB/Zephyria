@@ -15,6 +15,7 @@ import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.events.OnAttackEvent
+import com.almasb.zeph.events.OnMagicalDamageDealtEvent
 import com.almasb.zeph.events.OnPhysicalDamageDealtEvent
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill
@@ -345,6 +346,13 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     /**
+     * Deal magical [baseDamage] of type NEUTRAL to [target].
+     */
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
+        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL)
+    }
+
+    /**
      * Deal magical [baseDamage] of type [element] to [target].
      * The damage is reduced by target's magical armor and MDEF.
      *
@@ -367,17 +375,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
+        fire(OnMagicalDamageDealtEvent(char, target, totalDamage, crit))
+
         return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
-
-
-        //return DamageResult.NONE
-    }
-
-    /**
-     * Deal magical [baseDamage] of type NEUTRAL to [target].
-     */
-    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double): DamageResult {
-        return dealMagicalDamage(target, baseDamage, Element.NEUTRAL)
     }
 
     /**

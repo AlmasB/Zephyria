@@ -32,6 +32,13 @@ object EventHandlers {
             )
         }
 
+        onEvent(Events.ON_MAGICAL_DAMAGE_DEALT) {
+            Gameplay.showDamage(
+                    it.damage, it.isCritical, it.target.center,
+                    if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
+            )
+        }
+
         onEvent(Events.ON_MONEY_RECEIVED) {
             Gameplay.showMoneyEarned(it.amount, it.receiver.position)
         }

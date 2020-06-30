@@ -6,6 +6,7 @@ import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.events.Events.ON_ATTACK
 import com.almasb.zeph.events.Events.ON_BEING_KILLED
 import com.almasb.zeph.events.Events.ON_ITEM_USED
+import com.almasb.zeph.events.Events.ON_MAGICAL_DAMAGE_DEALT
 import com.almasb.zeph.events.Events.ON_MONEY_RECEIVED
 import com.almasb.zeph.events.Events.ON_PHYSICAL_DAMAGE_DEALT
 import com.almasb.zeph.events.Events.ON_XP_RECEIVED
@@ -36,6 +37,7 @@ object Events {
     val ON_ATTACK = EventType<OnAttackEvent>(ANY, "ON_ATTACK")
 
     val ON_PHYSICAL_DAMAGE_DEALT = EventType<OnPhysicalDamageDealtEvent>(ANY, "ON_PHYSICAL_DAMAGE_DEALT")
+    val ON_MAGICAL_DAMAGE_DEALT = EventType<OnMagicalDamageDealtEvent>(ANY, "ON_MAGICAL_DAMAGE_DEALT")
 
     /**
      * Fired just before a character is killed.
@@ -64,6 +66,13 @@ class OnPhysicalDamageDealtEvent(
         val damage: Int,
         val isCritical: Boolean
 ) : GameEvent(ON_PHYSICAL_DAMAGE_DEALT)
+
+class OnMagicalDamageDealtEvent(
+        val attacker: CharacterEntity,
+        val target: CharacterEntity,
+        val damage: Int,
+        val isCritical: Boolean
+) : GameEvent(ON_MAGICAL_DAMAGE_DEALT)
 
 class OnMoneyReceivedEvent(
         val receiver: CharacterEntity,

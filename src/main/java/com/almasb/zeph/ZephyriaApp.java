@@ -4,6 +4,8 @@ import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.core.math.FXGLMath;
+import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.combat.GameMath;
@@ -175,29 +177,29 @@ public class ZephyriaApp extends GameApplication {
 //            }
 //        });
 
-//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
-//            @Override
-//            protected void onCollisionBegin(Entity proj, Entity target) {
-//                if (proj.getObject("target") != target) {
-//                    return;
-//                }
-//
-//                proj.removeFromWorld();
-//
-//                CharacterEntity character = (CharacterEntity) target;
-//
-//                player.getCharacterComponent().useTargetSkill(selectedSkillIndex, character);
-//
-//                // TODO: show damage
-//
-////                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
-////                showDamage(result.getDamage(), character.getPositionComponent().getValue());
-//
-//                if (character.getHp().isZero()) {
-//                    playerKilledChar(character);
-//                }
-//            }
-//        });
+        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
+            @Override
+            protected void onCollisionBegin(Entity proj, Entity target) {
+                if (proj.getObject("target") != target) {
+                    return;
+                }
+
+                proj.removeFromWorld();
+
+                CharacterEntity character = (CharacterEntity) target;
+
+                player.getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), character);
+
+                // TODO: show damage
+
+//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
+//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
+
+                if (character.getHp().isZero()) {
+                    playerKilledChar(character);
+                }
+            }
+        });
     }
 
     /**

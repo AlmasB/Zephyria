@@ -26,6 +26,7 @@ import java.lang.RuntimeException
 import java.util.function.Predicate
 
 /**
+ * TODO: where to store map data in .tmx or MapData, e.g. bgmName?
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

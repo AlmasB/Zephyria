@@ -77,11 +77,6 @@ class CharacterActionComponent : Component() {
                     val dmg = char.characterComponent.attack(attackTarget!!)
 
                     char.characterComponent.resetAtkTick()
-
-                    if (attackTarget!!.hp.isZero) {
-                        FXGL.getAppCast<ZephyriaApp>().playerKilledChar(attackTarget!!)
-                        state.changeStateToIdle()
-                    }
                 }
 
             } else {

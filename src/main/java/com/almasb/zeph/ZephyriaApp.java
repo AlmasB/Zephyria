@@ -186,39 +186,7 @@ public class ZephyriaApp extends GameApplication {
 
                 proj.removeFromWorld();
 
-                CharacterEntity character = (CharacterEntity) target;
-
-                player.getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), character);
-
-                if (character.getHp().isZero()) {
-                    playerKilledChar(character);
-                }
-            }
-        });
-    }
-
-    /**
-     * Called when player kills given character.
-     *
-     * @param character killed char
-     */
-    public void playerKilledChar(CharacterEntity character) {
-        character.getCharacterComponent().kill();
-
-        int levelDiff = character.getBaseLevel().get() - player.getBaseLevel().get();
-
-        int money = (levelDiff > 0 ? levelDiff * 5 : 0) + FXGLMath.random(0, character.getBaseLevel().get());
-
-        player.getPlayerComponent().rewardMoney(money);
-        player.getPlayerComponent().rewardXP(character.getData().getRewardXP());
-
-        List<Pair<Integer, Integer>> drops = character.getData().getDropItems();
-        drops.forEach(p -> {
-            int itemID = p.getFirst();
-            int chance = p.getSecond();
-
-            if (GameMath.INSTANCE.checkChance(chance)) {
-                Gameplay.INSTANCE.spawnItem(itemID, character.getCellX(), character.getCellY());
+                player.getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), (CharacterEntity) target);
             }
         });
     }

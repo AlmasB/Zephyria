@@ -15,6 +15,7 @@ import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.events.OnAttackEvent
+import com.almasb.zeph.events.OnBeingKilledEvent
 import com.almasb.zeph.events.OnMagicalDamageDealtEvent
 import com.almasb.zeph.events.OnPhysicalDamageDealtEvent
 import com.almasb.zeph.item.UsableItem
@@ -342,6 +343,15 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         fire(OnPhysicalDamageDealtEvent(char, target, totalDamage, crit))
 
+        if (target.hp.isZero) {
+            fire(OnBeingKilledEvent(char, target))
+
+            char.actionComponent.orderIdle()
+
+            if (!target.isPlayer)
+                target.characterComponent.kill()
+        }
+
         return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
     }
 
@@ -377,18 +387,27 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         fire(OnMagicalDamageDealtEvent(char, target, totalDamage, crit))
 
+        if (target.hp.isZero) {
+            fire(OnBeingKilledEvent(char, target))
+
+            char.actionComponent.orderIdle()
+
+            if (!target.isPlayer)
+                target.characterComponent.kill()
+        }
+
         return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
     }
 
-    /**
-     * Deals the exact amount of [value] damage to [target].
-     */
-    fun dealPureDamage(target: CharacterEntity, value: Double): DamageResult {
-        val amount = value.toInt()
-        (target).hp.damage(amount.toDouble())
-
-        return DamageResult(DamageType.PURE, Element.NEUTRAL, amount, false)
-    }
+//    /**
+//     * Deals the exact amount of [value] damage to [target].
+//     */
+//    fun dealPureDamage(target: CharacterEntity, value: Double): DamageResult {
+//        val amount = value.toInt()
+//        (target).hp.damage(amount.toDouble())
+//
+//        return DamageResult(DamageType.PURE, Element.NEUTRAL, amount, false)
+//    }
 
     fun useSelfSkill(index: Int): SkillUseResult {
         val skill = skills[index]
@@ -441,7 +460,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         return SkillUseResult.NONE
     }
 
-    fun kill() {
+    private fun kill() {
         char.components
                 .filter { it !is AnimationComponent && it !is ViewComponent }
                 .forEach {

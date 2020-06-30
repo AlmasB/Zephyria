@@ -1,5 +1,6 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.dsl.image
 import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.pathfinding.CellMoveComponent
@@ -47,32 +48,34 @@ class AnimationComponent(textureName: String) : Component() {
     private val channelDeath: AnimationChannel
 
     init {
-        channelIdleDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
-        channelIdleRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 11, 9 * 11)
-        channelIdleUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 8, 9 * 8)
-        channelIdleLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 9, 9 * 9)
+        val image = image(textureName)
 
-        channelWalkDown = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 10, 9 * 10 + 9 - 1)
-        channelWalkRight = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 + 9 - 1)
-        channelWalkUp = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 8, 9 * 8 + 9 - 1)
-        channelWalkLeft = AnimationChannel(texture(textureName).image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 + 9 - 1)
+        channelIdleDown = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
+        channelIdleRight = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 11, 9 * 11)
+        channelIdleUp = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 8, 9 * 8)
+        channelIdleLeft = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 9, 9 * 9)
 
-        channelCastDown = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 2, 7 * 2 + 7 - 1)
-        channelCastRight = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 3, 7 * 3 + 7 - 1)
-        channelCastUp = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 0, 7 * 0 + 7 - 1)
-        channelCastLeft = AnimationChannel(texture(textureName).image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 1, 7 * 1 + 7 - 1)
+        channelWalkDown = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 10, 9 * 10 + 9 - 1)
+        channelWalkRight = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 + 9 - 1)
+        channelWalkUp = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 8, 9 * 8 + 9 - 1)
+        channelWalkLeft = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 + 9 - 1)
 
-        channelSlashDown = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 14, 6 * 14 + 6 - 1)
-        channelSlashRight = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 15, 6 * 15 + 6 - 1)
-        channelSlashUp = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 12, 6 * 12 + 6 - 1)
-        channelSlashLeft = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 13, 6 * 13 + 6 - 1)
+        channelCastDown = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 2, 7 * 2 + 7 - 1)
+        channelCastRight = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 3, 7 * 3 + 7 - 1)
+        channelCastUp = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 0, 7 * 0 + 7 - 1)
+        channelCastLeft = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 1, 7 * 1 + 7 - 1)
 
-        channelShootDown = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 18, 13 * 18 + 13 - 1)
-        channelShootRight = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 19, 13 * 19 + 13 - 1)
-        channelShootUp = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 16, 13 * 16 + 13 - 1)
-        channelShootLeft = AnimationChannel(texture(textureName).image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 17, 13 * 17 + 13 - 1)
+        channelSlashDown = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 14, 6 * 14 + 6 - 1)
+        channelSlashRight = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 15, 6 * 15 + 6 - 1)
+        channelSlashUp = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 12, 6 * 12 + 6 - 1)
+        channelSlashLeft = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 13, 6 * 13 + 6 - 1)
 
-        channelDeath = AnimationChannel(texture(textureName).image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 20, 6 * 20 + 6 - 1)
+        channelShootDown = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 18, 13 * 18 + 13 - 1)
+        channelShootRight = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 19, 13 * 19 + 13 - 1)
+        channelShootUp = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 16, 13 * 16 + 13 - 1)
+        channelShootLeft = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 17, 13 * 17 + 13 - 1)
+
+        channelDeath = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 20, 6 * 20 + 6 - 1)
 
         animatedTexture = AnimatedTexture(channelIdleDown)
         animatedTexture.isPickOnBounds = true

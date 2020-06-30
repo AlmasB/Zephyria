@@ -15,6 +15,7 @@ import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.npc.NPCData
 import com.almasb.zeph.components.TiledMapLayerOptimizerComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.data.Data.getCharacterData
@@ -166,14 +167,19 @@ class GameMap(private val level: Level) : EntityWorldListener {
 
     private fun spawnNPCs() {
         npcs.forEach { id, (cellX, cellY) ->
-
-            val data = SpawnData(0.0, 0.0)
-            data.put("cellX", cellX)
-            data.put("cellY", cellY)
-            data.put("npcData", Data.getNPCData(id))
-
-            spawn("npc", data)
+            spawnNPC(cellX, cellY, Data.getNPCData(id))
         }
+    }
+
+    fun spawnNPC(cellX: Int, cellY: Int, npcData: NPCData) {
+        log.debug("spawnNPC ${npcData.description.name} (${npcData.description.id}) at $cellX,$cellY")
+
+        val data = SpawnData(0.0, 0.0)
+        data.put("cellX", cellX)
+        data.put("cellY", cellY)
+        data.put("npcData", npcData)
+
+        spawn("npc", data)
     }
 
     fun spawnItem(cellX: Int, cellY: Int, itemData: ItemData) {

@@ -129,8 +129,6 @@ class Gladiator {
                 status = STUNNED
                 duration = 5.0
             })
-
-//            useResult = new SkillUseResult(GameMath.normalizeDamage(d) + ",STUNNED");
         }
     }
 }
@@ -156,8 +154,6 @@ class Mage {
             val dmg = caster.getTotal(MATK) + skill.level * 20.0
 
             caster.characterComponent.dealMagicalDamage(target, dmg, FIRE)
-
-            // SkillUseResult(caster.charConrol.dealMagicalDamage(target, dmg, Element.FIRE))
         }
     }
 
@@ -178,8 +174,6 @@ class Mage {
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) + skill.level * 25.0
             val result = caster.characterComponent.dealMagicalDamage(target, dmg, EARTH)
-
-            // useResult = new SkillUseResult(d);
         }
     }
 }
@@ -202,7 +196,6 @@ class Wizard {
             id = 7121
             name = "Amplify Magic"
             description = "Increases MATK for the duration."
-            //textureName =
         }
 
         targetTypes = of(SELF)
@@ -217,15 +210,8 @@ class Wizard {
 
                 MATK +10*skill.level
             })
-
-            //                useResult = new SkillUseResult("MATK +" + 10*level);
         }
     }
-
-
-
-
-
 }
 
 class Enchanter {
@@ -251,20 +237,51 @@ class Scout {
             caster.playerComponent?.rewardMoney(dmg)
 
             caster.dealPhysicalDamage(target, dmg.toDouble())
+        }
+    }
 
+    val POISON_ATTACK = skill {
+        desc {
+            id = 7031
+            name = "Poison Attack"
+            description = "Attacks the target with high chance to poison it."
         }
 
-        //
-//
-//                                var money = false
-//                                if (caster is Entity) {
-//                                    caster.playerControl.rewardMoney(dmg.toInt())
-//                                    money = true
-//                                }
-//
-//                                // TODO: somehow notify user that he got money from attack
-//
-//                                SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
+        targetTypes = of(ENEMY)
+
+        manaCost = 25
+        cooldown = 6.0
+
+        onCastScript = { caster, target, skill ->
+            runIfChance(skill.level * 7) {
+                // TODO: apply poison to target
+            }
+
+            val dmg = caster.getTotal(ATK) + 2 * skill.level
+
+            caster.dealPhysicalDamage(target, dmg.toDouble())
+        }
+    }
+
+    val WEAPON_MASTERY = passiveSkill {
+        desc {
+            id = 7032
+            name = "Weapon Mastery"
+            description = "Passively increases ATK."
+        }
+
+        ATK +3
+    }
+
+    val EXPERIENCED_FIGHTER = passiveSkill {
+        desc {
+            id = 7033
+            name = "Experienced Fighter"
+            description = "Passively increases AGI and DEX."
+        }
+
+        AGILITY +2
+        DEXTERITY +2
     }
 }
 
@@ -274,4 +291,34 @@ class Rogue {
 
 class Ranger {
 
+    val EAGLE_EYE = passiveSkill {
+        desc {
+            id = 7234
+            name = "Eagle Eye"
+            description = "Passively increases ATK based on DEX."
+        }
+
+
+    }
+
+    //        addSkill(new Skill(ID.Skill.Ranger.EAGLE_EYE, "Eagle Eye", Desc.Skill.Ranger.EAGLE_EYE, false, 0.0f) {
+    //            /**
+    //             *
+    //             */
+    //            private static final long serialVersionUID = 7005439875094828368L;
+    //
+    //            private int value = 0;
+    //
+    //            @Override
+    //            public int getManaCost() {
+    //                return 0;
+    //            }
+    //
+    //            @Override
+    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
+    //                caster.addBonusStat(Stat.ATK, -value);
+    //                value = (int)(caster.getTotalAttribute(Attribute.DEXTERITY) * level * 0.1f);
+    //                caster.addBonusStat(Stat.ATK, value);
+    //            }
+    //        });
 }

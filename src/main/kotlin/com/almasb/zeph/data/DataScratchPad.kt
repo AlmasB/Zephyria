@@ -245,82 +245,6 @@ package com.almasb.zeph.data
 //            //            public static final String MANA_BURN = "Burns target's SP and deals damage based on the SP burnt";
 //        }
 //
-//        object Scout {
-//
-
-//
-//            fun POISON_ATTACK() = listOf<Component>(
-//                    Description(7031, "Poison Attack", "Attacks the target with high chance to poison it.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .onCast { caster, target, skill ->
-//
-//                                var poison = false
-//                                if (GameMath.checkChance(skill.level.value * 7)) {
-//                                    target.charConrol.addStatusEffect(StatusEffectEntity(listOf<Component>(
-//                                            // TODO: what do we assign statuses?
-//                                            Description(10000, "Poison", "...", "effects/attr_up.png"),
-//                                            StatusEffectDataComponent(Status.POISONED, 10.0)
-//                                    )))
-//                                    poison = true
-//                                }
-//
-//                                // TODO: somehow notify user that target is poisoned
-//
-//                                SkillUseResult(caster.charConrol.attack(target))
-//                            }
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun WEAPON_MASTERY() = listOf<Component>(
-//                    Description(7032, "Weapon Mastery", "Passively increases ATK.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-//                            .onLearn { caster, skill ->
-//                                skill.data.onCast(caster, caster, skill)
-//
-//                                skill.level.addListener({o, old, new ->
-//                                    skill.data.onCast(caster, caster, skill)
-//                                })
-//                            }
-//                            .onCast { caster, target, skill ->
-//                                val factor = 7
-//                                val value = skill.level.value * factor
-//
-//                                caster.stats.addBonusStat(Stat.ARM, -skill.testValue)
-//
-//                                skill.testValue = value
-//
-//                                caster.stats.addBonusStat(Stat.ARM, skill.testValue)
-//
-//                                SkillUseResult.NONE
-//                            }
-//            )
-//
-//            fun EXPERIENCED_FIGHTER() = listOf<Component>(
-//                    Description(7033, "Experienced Fighter", "Passively increases AGI and DEX.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.PASSIVE, SkillUseType.EFFECT, EnumSet.of(SkillTargetType.SELF))
-//                            .onLearn { caster, skill ->
-//                                skill.data.onCast(caster, caster, skill)
-//
-//                                skill.level.addListener({o, old, new ->
-//                                    skill.data.onCast(caster, caster, skill)
-//                                })
-//                            }
-//                            .onCast { caster, target, skill ->
-//                                val value = skill.level.value * 2
-//
-//                                caster.attributes.addBonusAttribute(Attribute.AGILITY, -skill.testValue)
-//                                caster.attributes.addBonusAttribute(Attribute.DEXTERITY, -skill.testValue)
-//
-//                                skill.testValue = value
-//
-//                                caster.attributes.addBonusAttribute(Attribute.AGILITY, skill.testValue)
-//                                caster.attributes.addBonusAttribute(Attribute.DEXTERITY, skill.testValue)
-//
-//                                SkillUseResult.NONE
-//                            }
-//            )
-//        }
 //
 //        object Rogue {
 //            //            public static final int SHAMELESS = 7130;
@@ -341,11 +265,10 @@ package com.almasb.zeph.data
 //            //            public static final int BULLSEYE = 7231;
 //            //            public static final int FAST_REFLEXES = 7232;
 //            //            public static final int ENCHANTED_ARROW = 7233;
-//            //            public static final int EAGLE_EYE = 7234;
 //
 //            //            public static final String FAST_REFLEXES = "Increases ASPD for the duration";
 //            //            public static final String ENCHANTED_ARROW = "Stuns target. Stun lasts longer for target's with high armor rating";
-//            //            public static final String EAGLE_EYE = "Passively increases ATK based on DEX";
+
 //            //            public static final String PINPOINT_WEAKNESS = "Decreases target's defense for the duration";
 //            //            public static final String BULLSEYE = "Deals armor ignoring damage to target."
 //            //                    + "Target's defense is not ignored. "
@@ -929,26 +852,7 @@ package com.almasb.zeph.data
 //    ////            }
 //    ////        });
 //    ////
-//    ////        addSkill(new Skill(ID.Skill.Ranger.EAGLE_EYE, "Eagle Eye", Desc.Skill.Ranger.EAGLE_EYE, false, 0.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 7005439875094828368L;
-//    ////
-//    ////            private int value = 0;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 0;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                caster.addBonusStat(Stat.ATK, -value);
-//    ////                value = (int)(caster.getTotalAttribute(Attribute.DEXTERITY) * level * 0.1f);
-//    ////                caster.addBonusStat(Stat.ATK, value);
-//    ////            }
-//    ////        });
+
 //    ////
 //    ////        addSkill(new Skill(ID.Skill.Ranger.ENCHANTED_ARROW, "Enchanted Arrows", Desc.Skill.Ranger.ENCHANTED_ARROW, true, 35.0f) {
 //    ////            /**
@@ -999,19 +903,6 @@ package com.almasb.zeph.data
 //    ////
 //    ////
 //    ////        // ENEMIES
-//    //
-//    //        EnemyBuilder enemyBuilder = new EnemyBuilder();
-//    //        enemyBuilder.id(ID.Enemy.MINOR_EARTH_SPIRIT)
-//    //                    .description(Desc.Enemy.MINOR_EARTH_SPIRIT)
-//    //                    .name("Minor Earth Spirit")
-//    //                    .textureName("enemy.png")
-//    //                    .xp(new Experience(100, 100, 100))
-//    //                    .element(Element.EARTH)
-//    //                    .drops(new DroppableItem(ID.Weapon.KNIFE, 50), new DroppableItem(ID.Armor.CHAINMAL, 35));
-//    //
-//    //        addEnemy(enemyBuilder);
-//    //
-//    ////
 //    ////        addEnemy(new Enemy(ID.Enemy.MINOR_FIRE_SPIRIT, "Minor Fire Spirit", Desc.Enemy.MINOR_FIRE_SPIRIT,
 //    ////                EnemyType.NORMAL, Element.FIRE, 1, new AttributeInfo(),
 //    ////                new Experience(100, 100, 100), 0, new DroppableItem(ID.Weapon.KNIFE, 50), new DroppableItem(ID.Armor.THANATOS_BODY_ARMOR, 10)));

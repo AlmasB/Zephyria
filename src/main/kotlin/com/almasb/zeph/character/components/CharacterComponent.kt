@@ -4,10 +4,10 @@ import com.almasb.fxgl.core.collection.PropertyMap
 import com.almasb.fxgl.dsl.components.HealthDoubleComponent
 import com.almasb.fxgl.dsl.components.ManaDoubleComponent
 import com.almasb.fxgl.dsl.fire
-import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.ViewComponent
 import com.almasb.zeph.Config
+import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
@@ -54,6 +54,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val attrXP = SimpleIntegerProperty()
     val jobXP = SimpleIntegerProperty()
 
+    /**
+     * In cells.
+     */
     val attackRange: Int = data.attackRange
 
     init {
@@ -271,7 +274,8 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     /**
      * @return true if [target] is in weapon range of this character
      */
-    fun isInWeaponRange(target: Entity) = entity.distance(target) <= attackRange * Config.SPRITE_SIZE
+    fun isInWeaponRange(target: CharacterEntity): Boolean =
+            char.distance(target.cellX, target.cellY) <= attackRange
 
     /**
      * Attack tick that decides if character can attack.

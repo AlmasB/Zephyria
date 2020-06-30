@@ -71,6 +71,10 @@ class CharacterEntity : Entity() {
     val cellY: Int
         get() = getComponent(CellMoveComponent::class.java).cellY
 
+    fun distance(cellX: Int, cellY: Int): Int {
+        return Math.abs(this.cellX - cellX) + Math.abs(this.cellY - cellY)
+    }
+
     fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 
     fun orderMove(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)

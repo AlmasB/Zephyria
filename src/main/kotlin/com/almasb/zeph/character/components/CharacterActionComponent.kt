@@ -7,8 +7,10 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.zeph.Config
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
@@ -56,8 +58,10 @@ class CharacterActionComponent : Component() {
                 }
             } else {
                 if (attackTarget != null) {
-                    if (moveTarget!!.x.toInt() != attackTarget!!.cellX
-                            || moveTarget!!.y.toInt() != attackTarget!!.cellY) {
+                    val moveCellX = moveTarget!!.x.toInt()
+                    val moveCellY = moveTarget!!.y.toInt()
+
+                    if (attackTarget!!.distance(moveCellX, moveCellY) > char.characterComponent.attackRange) {
                         orderAttack(attackTarget!!)
                     }
                 }
@@ -122,8 +126,19 @@ class CharacterActionComponent : Component() {
         if (char.characterComponent.isInWeaponRange(target)) {
             attack(attackTarget!!)
         } else {
-            move(attackTarget!!.cellX, attackTarget!!.cellY)
+
+            val cell = findNearestCell(attackTarget!!)
+
+            move(cell.x, cell.y)
         }
+    }
+
+    private fun findNearestCell(target: CharacterEntity): Cell {
+        return Gameplay.getCurrentMap()
+                .grid
+                .getNeighbors(target.cellX, target.cellY)
+                .sortedBy { char.distance(it.x, it.y) }
+                .first()
     }
 
     fun orderSkillCast(skillIndex: Int, target: CharacterEntity) {
@@ -201,6 +216,8 @@ class CharacterActionComponent : Component() {
 
     private fun attack(target: CharacterEntity) {
         state.changeState(ATTACK)
+
+        // TODO: check char data to see how to attack (thrust, slash, ranged, etc.)
 
         if (target.cellX > char.cellX) {
             animationComponent.loopAttackRight()

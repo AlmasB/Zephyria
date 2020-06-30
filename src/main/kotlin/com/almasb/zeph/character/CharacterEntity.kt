@@ -4,10 +4,7 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.components.*
-import com.almasb.zeph.combat.Attribute
-import com.almasb.zeph.combat.Effect
-import com.almasb.zeph.combat.Stat
-import com.almasb.zeph.combat.Status
+import com.almasb.zeph.combat.*
 import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
 
 /**
@@ -79,12 +76,18 @@ class CharacterEntity : Entity() {
 
     fun orderMove(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
 
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element = Element.NEUTRAL): DamageResult {
+        return characterComponent.dealPhysicalDamage(target, baseDamage, element)
+    }
+
+    fun dealMagicalDamage(target: CharacterEntity, baseDamage: Double, element: Element = Element.NEUTRAL): DamageResult {
+        return characterComponent.dealMagicalDamage(target, baseDamage, element)
+    }
+
     fun hasStatus(status: Status) = effectComponent.hasStatus(status)
 
     fun addEffect(effect: Effect) = effectComponent.addEffect(effect)
     fun removeEffect(effect: Effect) = effectComponent.removeEffect(effect)
-
-
 
     fun addBonus(attribute: Attribute, value: Int) {
         characterComponent.addBonus(attribute, value)

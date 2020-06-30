@@ -247,26 +247,7 @@ package com.almasb.zeph.data
 //
 //        object Scout {
 //
-//            fun TRICK_ATTACK() = listOf<Component>(
-//                    Description(7030, "Trick Attack", "Deals physical damage and steals gold equal to damage dealt.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .onCast { caster, target, skill ->
-//
-//                                val dmg = caster.stats.getTotalStat(Stat.ATK) + skill.level.value * 2 * GameMath.random(5)
-//
-//                                var money = false
-//                                if (caster is Entity) {
-//                                    caster.playerControl.rewardMoney(dmg.toInt())
-//                                    money = true
-//                                }
-//
-//                                // TODO: somehow notify user that he got money from attack
-//
-//                                SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
-//                            }
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 //
 //            fun POISON_ATTACK() = listOf<Component>(
 //                    Description(7031, "Poison Attack", "Attacks the target with high chance to poison it.", "skills/ic_skill_bash.png"),

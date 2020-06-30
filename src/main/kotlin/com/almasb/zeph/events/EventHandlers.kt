@@ -21,11 +21,6 @@ object EventHandlers {
 
     fun initialize() {
         onEvent(Events.ON_ATTACK) {
-            if (!it.target.isType(PLAYER)) {
-                it.target.actionComponent.orderAttack(it.attacker)
-                it.target.getComponent(RandomWanderComponent::class.java).pause()
-            }
-
             if (it.attacker.isType(PLAYER)) {
                 it.attacker.playerComponent!!.weapon.value.onAttack(it.attacker, it.target)
             }
@@ -36,6 +31,11 @@ object EventHandlers {
                     it.damage, it.isCritical, it.target.center,
                     if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
             )
+
+            if (!it.target.isType(PLAYER)) {
+                it.target.actionComponent.orderAttack(it.attacker)
+                it.target.getComponent(RandomWanderComponent::class.java).pause()
+            }
         }
 
         onEvent(Events.ON_MAGICAL_DAMAGE_DEALT) {
@@ -43,6 +43,11 @@ object EventHandlers {
                     it.damage, it.isCritical, it.target.center,
                     if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
             )
+
+            if (!it.target.isType(PLAYER)) {
+                it.target.actionComponent.orderAttack(it.attacker)
+                it.target.getComponent(RandomWanderComponent::class.java).pause()
+            }
         }
 
         onEvent(Events.ON_MONEY_RECEIVED) {

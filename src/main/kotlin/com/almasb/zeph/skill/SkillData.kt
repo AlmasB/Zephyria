@@ -22,7 +22,7 @@ class SkillDataBuilder(
         var manaCost: Int = 0,
         var cooldown: Double = 0.0,
         var hasProjectile: Boolean = false,
-        var projectileTextureName: String = "null_object.png",
+        var projectileTextureName: String = "",
         var soundEffectName: String = "null_object.wav",
         var passiveRunes: MutableList<Rune> = arrayListOf(),
         var passiveEssences: MutableList<Essence> = arrayListOf(),
@@ -46,6 +46,12 @@ class SkillDataBuilder(
     }
 
     fun build(): SkillData {
+        if (description.textureName.isEmpty()) {
+            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
+
+            description = description.copy(textureName = "skills/$fileName")
+        }
+
         return SkillData(
                 description,
                 type,

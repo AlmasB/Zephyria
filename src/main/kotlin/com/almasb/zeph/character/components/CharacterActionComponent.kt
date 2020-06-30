@@ -164,14 +164,21 @@ class CharacterActionComponent : Component() {
 
             val projTextureName = skill.data.projectileTextureName
 
-            val direction: Point2D = target.position.subtract(char.position)
+            // if has a projectile, spawn projectile
+            if (!projTextureName.isNotEmpty()) {
+                val direction: Point2D = target.position.subtract(char.position)
 
-            spawn("skillProjectile",
-                    SpawnData(char.position)
-                            .put("projectileTextureName", projTextureName)
-                            .put("target", target)
-                            .put("dir", direction)
-            )
+                spawn("skillProjectile",
+                        SpawnData(char.position)
+                                .put("projectileTextureName", projTextureName)
+                                .put("target", target)
+                                .put("dir", direction)
+                )
+            } else {
+
+                // cast skill immediately
+                char.characterComponent.useTargetSkill(skill, target)
+            }
         }
 
         if (target.cellX > char.cellX) {

@@ -1,13 +1,10 @@
 package com.almasb.zeph.data
 
+import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
-import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Element.*
-import com.almasb.zeph.combat.Stat
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.combat.Status
 import com.almasb.zeph.combat.Status.*
-import com.almasb.zeph.combat.effect
 import com.almasb.zeph.skill.SkillTargetType.*
 import com.almasb.zeph.skill.SkillType.ACTIVE
 import com.almasb.zeph.skill.SkillType.PASSIVE
@@ -57,7 +54,6 @@ class Warrior {
             id = 7010
             name = "Roar"
             description = "Increases STR and VIT for the duration."
-            textureName = "skills/ic_skill_roar.png"
         }
 
         type = ACTIVE
@@ -87,7 +83,6 @@ class Crusader {
             id = 7110
             name = "Holy Light"
             description = "Heals and increases VIT for the duration."
-            textureName = "skills/ic_skill_holy_light.png"
         }
 
         type = ACTIVE
@@ -117,7 +112,6 @@ class Gladiator {
             id = 7210
             name = "Bash"
             description = "A powerful physical attack that stuns the target"
-            textureName = "skills/ic_skill_bash.png"
         }
 
         type = ACTIVE
@@ -148,7 +142,6 @@ class Mage {
             id = 7020
             name = "Fireball"
             description = "Deals magic damage with FIRE element."
-            textureName = "skills/ic_skill_fireball.png"
         }
 
         useType = DAMAGE
@@ -173,7 +166,6 @@ class Mage {
             id = 7023
             name = "Earth Boulder"
             description = "Deals magic damage with EARTH element."
-            textureName = "skills/ic_skill_earth_boulder.png"
         }
 
         type = ACTIVE
@@ -241,7 +233,39 @@ class Enchanter {
 }
 
 class Scout {
+    val TRICK_ATTACK = skill {
+        desc {
+            id = 7030
+            name = "Trick Attack"
+            description = "Deals physical damage and steals gold equal to damage dealt."
+        }
 
+        targetTypes = of(ENEMY)
+
+        manaCost = 1
+        cooldown = 1.0
+
+        onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(ATK) + skill.level * 2 * GameMath.random(2)
+
+            caster.playerComponent?.rewardMoney(dmg)
+
+            caster.dealPhysicalDamage(target, dmg.toDouble())
+
+        }
+
+        //
+//
+//                                var money = false
+//                                if (caster is Entity) {
+//                                    caster.playerControl.rewardMoney(dmg.toInt())
+//                                    money = true
+//                                }
+//
+//                                // TODO: somehow notify user that he got money from attack
+//
+//                                SkillUseResult(caster.charConrol.dealPhysicalDamage(target, dmg))
+    }
 }
 
 class Rogue {

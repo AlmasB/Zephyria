@@ -65,8 +65,6 @@ class TiledMapLayerOptimizerComponent : Component() {
         frontBufferView.layoutY = viewportOrigin.y - TILE_SIZE * MARGIN_TILES
         backBufferView.layoutX = viewportOrigin.x - TILE_SIZE * MARGIN_TILES
         backBufferView.layoutY = viewportOrigin.y - TILE_SIZE * MARGIN_TILES
-
-        println(" $W x $H")
     }
 
     override fun onUpdate(tpf: Double) {
@@ -74,36 +72,17 @@ class TiledMapLayerOptimizerComponent : Component() {
 
         if (frontBufferView.layoutX + W - (viewportOrigin.x + getAppWidth() / getGameScene().viewport.getZoom()) < MIN_MARGIN_PIXELS) {
 
-            println("FLIP RIGHT X")
-
             flipBuffers()
         } else if (viewportOrigin.x - frontBufferView.layoutX < MIN_MARGIN_PIXELS) {
-
-            println("FLIP LEFT X")
 
             flipBuffers()
         } else if (viewportOrigin.y - frontBufferView.layoutY < MIN_MARGIN_PIXELS) {
 
-            println("FLIP TOP Y")
-
             flipBuffers()
         } else if (frontBufferView.layoutY + H - (viewportOrigin.y + getAppHeight() / getGameScene().viewport.getZoom()) < MIN_MARGIN_PIXELS) {
 
-            println("FLIP BOT Y")
-
             flipBuffers()
         }
-
-
-//        // +- TILE_SIZE to leave some offscreen offset for seamless rendering
-//        mapView.relocate(viewportOrigin.x - TILE_SIZE, viewportOrigin.y - TILE_SIZE)
-//
-//        mapView.viewport = Rectangle2D(
-//                viewportOrigin.x - TILE_SIZE,
-//                viewportOrigin.y - TILE_SIZE,
-//                getAppWidth() / getGameScene().viewport.getZoom() + TILE_SIZE * 2,
-//                getAppHeight() / getGameScene().viewport.getZoom() + TILE_SIZE * 2
-//        )
     }
 
     // TODO: potentially load dynamically, generate image on the fly from sprite sheet?
@@ -115,9 +94,6 @@ class TiledMapLayerOptimizerComponent : Component() {
 
         val dstX = if (srcX < 0) -srcX else 0
         val dstY = if (srcY < 0) -srcY else 0
-
-//        println("Source: $srcX, $srcY")
-//        println("Destin: $dstX, $dstY")
 
         (backBufferView.image as WritableImage).pixelWriter.setPixels(
                 dstX,

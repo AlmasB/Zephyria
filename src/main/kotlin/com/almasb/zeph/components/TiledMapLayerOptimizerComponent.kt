@@ -106,6 +106,7 @@ class TiledMapLayerOptimizerComponent : Component() {
 //        )
     }
 
+    // TODO: potentially load dynamically, generate image on the fly from sprite sheet?
     private fun flipBuffers() {
         val viewportOrigin = getGameScene().viewport.origin
 

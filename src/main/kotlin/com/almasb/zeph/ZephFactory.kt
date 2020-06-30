@@ -37,6 +37,7 @@ import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
 import com.almasb.zeph.character.npc.NPCData
+import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.components.PortalComponent
@@ -184,15 +185,9 @@ class ZephFactory : EntityFactory {
                 charClass = CharacterClass.NOVICE
 
                 attributes {
-                    str = 1
-                    vit = 1
-                    dex = 1
-                    agi = 1
-                    int = 1
-                    wis = 1
-                    wil = 1
-                    per = 1
-                    luc = 1
+                    Attribute.values().forEach {
+                        it +1
+                    }
                 }
             }
 

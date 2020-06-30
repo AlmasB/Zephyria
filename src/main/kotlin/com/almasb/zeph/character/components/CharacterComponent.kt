@@ -57,15 +57,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val attackRange: Int = data.attackRange
 
     init {
-        setBase(STRENGTH, data.attributes.str)
-        setBase(VITALITY, data.attributes.vit)
-        setBase(DEXTERITY, data.attributes.dex)
-        setBase(AGILITY, data.attributes.agi)
-        setBase(INTELLECT, data.attributes.int)
-        setBase(WISDOM, data.attributes.wis)
-        setBase(WILLPOWER, data.attributes.wil)
-        setBase(PERCEPTION, data.attributes.per)
-        setBase(LUCK, data.attributes.luc)
+        data.attributes.attrs.forEach { attr, value ->
+            setBase(attr, value)
+        }
 
         Stat.values().forEach { setBase(it, 0) }
         

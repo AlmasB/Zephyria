@@ -129,7 +129,7 @@ public class ZephyriaApp extends GameApplication {
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
 
-        Gameplay.INSTANCE.gotoMap("test_map3.tmx", 2, 6);
+        Gameplay.INSTANCE.gotoMap("test_map.tmx", 2, 6);
     }
 
     @Override

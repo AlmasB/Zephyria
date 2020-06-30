@@ -87,15 +87,18 @@ enum class Attribute(description: String, vararg cStats: Pair<Stat, AM>) {
      * values of all the attributes.
      */
     class AttributeInfo {
-        var str = 0
-        var vit = 0
-        var dex = 0
-        var agi = 0
-        var int = 0
-        var wis = 0
-        var wil = 0
-        var per = 0
-        var luc = 0
+        val attrs = hashMapOf<Attribute, Int>()
+
+        init {
+            // add 0 defaults
+            Attribute.values().forEach {
+                it +0
+            }
+        }
+
+        operator fun Attribute.plus(value: Int) {
+            attrs[this] = value
+        }
     }
 }
 

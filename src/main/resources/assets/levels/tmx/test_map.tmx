@@ -3,6 +3,16 @@
  <properties>
   <property name="2004" type="int" value="30"/>
   <property name="2005" type="int" value="25"/>
+  <property name="2006" type="int" value="30"/>
+  <property name="2007" type="int" value="25"/>
+  <property name="2008" type="int" value="20"/>
+  <property name="2009" type="int" value="10"/>
+  <property name="2010" type="int" value="15"/>
+  <property name="2011" type="int" value="15"/>
+  <property name="2012" type="int" value="10"/>
+  <property name="2013" type="int" value="8"/>
+  <property name="2014" type="int" value="5"/>
+  <property name="2015" type="int" value="1"/>
   <property name="2500" value="11,9"/>
   <property name="2501" value="10,9"/>
   <property name="2502" value="9,14"/>

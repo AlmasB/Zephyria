@@ -47,6 +47,12 @@ class CharacterDataBuilder(
     }
 
     fun build(): CharacterData {
+        if (description.textureName.isEmpty()) {
+            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
+
+            description = description.copy(textureName = "chars/enemies/$fileName")
+        }
+
         return CharacterData(description, type, charClass, baseLevel, attributes, attackRange, element, rewardXP, dropItems)
     }
 

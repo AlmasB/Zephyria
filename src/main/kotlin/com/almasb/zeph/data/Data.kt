@@ -54,7 +54,7 @@ object Data {
     val Armors = Armors()
 
     @JvmField
-    val Characters = Characters()
+    val Monsters = Monsters()
 
     @JvmField
     val NPCs = NPCs()
@@ -105,7 +105,7 @@ object Data {
             populate(dbSkills, Skills.Rogue)
             populate(dbSkills, Skills.Ranger)
 
-            populate(dbMonsters, Characters)
+            populate(dbMonsters, Monsters)
 
             populate(dbNPCs, NPCs)
 

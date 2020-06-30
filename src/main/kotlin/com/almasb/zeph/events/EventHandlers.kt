@@ -5,6 +5,7 @@ import com.almasb.zeph.EntityType
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.character.ai.RandomWanderComponent
+import javafx.scene.paint.Color
 
 /**
  *
@@ -25,7 +26,10 @@ object EventHandlers {
         }
 
         onEvent(Events.ON_PHYSICAL_DAMAGE_DEALT) {
-            Gameplay.showDamage(it.damage, it.isCritical, it.target.center)
+            Gameplay.showDamage(
+                    it.damage, it.isCritical, it.target.center,
+                    if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
+            )
         }
 
         onEvent(Events.ON_MONEY_RECEIVED) {

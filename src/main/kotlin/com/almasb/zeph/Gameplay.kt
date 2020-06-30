@@ -53,14 +53,15 @@ object Gameplay {
         player.setPositionToCell(toCellX, toCellY)
     }
 
-    fun showDamage(damage: Int, isCritical: Boolean, position: Point2D) {
+    fun showDamage(damage: Int, isCritical: Boolean, position: Point2D, color: Color = Color.WHITE) {
         val text = getUIFactoryService().newText(
                 damage.toString() + if (isCritical) "!" else "",
-                if (isCritical) Color.RED else Color.WHITE, FontType.GAME,
+                color,
+                FontType.GAME,
                 if (isCritical) 28.0 else 26.0
         )
 
-        text.stroke = if (isCritical) Color.RED else Color.WHITE
+        text.stroke = Color.WHITE
         val view = GameView(text, Z_INDEX_DAMAGE_TEXT)
 
         getGameScene().addGameView(view)
@@ -74,7 +75,7 @@ object Gameplay {
 
         animationBuilder()
                 .onFinished(Runnable { getGameScene().removeGameView(view) })
-                .duration(Duration.seconds(2.15))
+                .duration(Duration.seconds(3.0))
                 .fadeOut(text)
                 .buildAndPlay()
     }

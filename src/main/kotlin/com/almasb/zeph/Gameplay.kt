@@ -2,6 +2,7 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.app.scene.GameView
+import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
@@ -19,7 +20,7 @@ import javafx.util.Duration
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-object Gameplay {
+object Gameplay : FunctionCallHandler {
 
     fun getPlayer(): CharacterEntity {
         return getGameWorld().getSingleton(EntityType.PLAYER) as CharacterEntity
@@ -105,5 +106,40 @@ object Gameplay {
 
     fun spawnItem(id: Int, cellX: Int, cellY: Int) {
         getCurrentMap().spawnItem(cellX, cellY, Data.getItemData(id))
+    }
+
+    override fun handle(functionName: String, args: Array<String>): Any {
+        val cmd = functionName.toLowerCase()
+
+        when (cmd) {
+            "tp" -> {
+                val cellX = args[0].toInt()
+                val cellY = args[1].toInt()
+
+                goto(cellX, cellY)
+            }
+
+            "spawn_mob" -> {
+                val mobID = args[0].toInt()
+                val cellX = args[1].toInt()
+                val cellY = args[2].toInt()
+
+                spawnMob(mobID, cellX, cellY)
+            }
+
+            "spawn_item" -> {
+                val itemID = args[0].toInt()
+                val cellX = args[1].toInt()
+                val cellY = args[2].toInt()
+
+                spawnItem(itemID, cellX, cellY)
+            }
+
+            else -> {
+                println("Unrecognized command: $cmd")
+            }
+        }
+
+        return 0
     }
 }

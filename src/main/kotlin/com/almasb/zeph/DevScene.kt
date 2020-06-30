@@ -4,7 +4,6 @@ import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.getAppHeight
 import com.almasb.fxgl.dsl.getAppWidth
 import com.almasb.fxgl.logging.Logger
-import com.almasb.fxgl.scene.Scene
 import com.almasb.fxgl.scene.SubScene
 import javafx.scene.control.TextField
 import javafx.scene.paint.Color
@@ -53,33 +52,6 @@ class DevScene : SubScene() {
         val tokens = input.split(" +".toRegex())
         val cmd = tokens[0]
 
-        when (cmd) {
-            "TP" -> {
-                val cellX = tokens[1].toInt()
-                val cellY = tokens[2].toInt()
-
-                Gameplay.goto(cellX, cellY)
-            }
-
-            "SPAWN_MOB" -> {
-                val mobID = tokens[1].toInt()
-                val cellX = tokens[2].toInt()
-                val cellY = tokens[3].toInt()
-
-                Gameplay.spawnMob(mobID, cellX, cellY)
-            }
-
-            "SPAWN_ITEM" -> {
-                val itemID = tokens[1].toInt()
-                val cellX = tokens[2].toInt()
-                val cellY = tokens[3].toInt()
-
-                Gameplay.spawnItem(itemID, cellX, cellY)
-            }
-
-            else -> {
-                println("Unrecognized command: $cmd")
-            }
-        }
+        Gameplay.handle(cmd, tokens.drop(1).map { it.trim() }.toTypedArray())
     }
 }

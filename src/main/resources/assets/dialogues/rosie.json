@@ -1,88 +1,183 @@
 {
-  "uniqueID" : 8,
+  "uniqueID" : 17,
   "nodes" : {
     "0" : {
       "type" : "START",
-      "text" : "Hello! This is is an example dialogue. NPCs, like me, will sometimes give out quests with potentially interesting rewards, including rare items."
+      "text" : "Hello, $playerName, I am Rosie! I am, what people call, a Job Master. Job Masters give out quests that allow a character to change their Job. "
+    },
+    "16" : {
+      "type" : "END",
+      "text" : "You have started your Job quest. Goodbye!"
     },
     "1" : {
       "type" : "END",
-      "text" : "This is the end of the example dialogue. Bye!"
+      "text" : "No problem, come back when you want to know more about Jobs or would like to start a Job quest."
     },
-    "2" : {
+    "9" : {
       "type" : "TEXT",
-      "text" : "Most quests in this game are optional and you can complete them in your own time. Some quests also have entry requirements, for example you must be a certain level or have a certain item."
+      "text" : "Warriors are strong and can withstand a great deal of damage. They rely on their STR and VIT to defeat their foes. Warriors can train to become Crusaders or Gladiators."
     },
-    "6" : {
+    "12" : {
       "type" : "TEXT",
-      "text" : "Unfortunately, there is no opiton 3. Please choose one of the other two."
+      "text" : "Scouts are quick and agile, they make the most use out of DEX and AGI. Scouts can progress to Rogues or Rangers."
     },
-    "7" : {
+    "13" : {
       "type" : "TEXT",
-      "text" : "Wonderful! In the future, NPCs will also be able to buy items from you that you no longer need. NPCs usually do not wander, though this is not true for all NPCs."
+      "text" : "Mages may be physically weaker than other Jobs, but their magic skills are second to none. With high INT and WIL, they can obliterate an entire army within seconds. Trained Mages can become Wizards or Enchanters."
+    },
+    "15" : {
+      "type" : "FUNCTION",
+      "text" : "ADD_QUEST TODO"
     }
   },
   "choiceNodes" : {
     "3" : {
       "type" : "CHOICE",
-      "text" : "Would you like me to repeat info on quests or is it clear?",
+      "text" : "Would you like to know more about Jobs?",
       "options" : {
-        "0" : "Thanks, I got it.",
-        "1" : "Please repeat.",
-        "2" : "Option 3 please..."
+        "0" : "Yes, please!",
+        "1" : "I would like to start a Job quest.",
+        "2" : "No, thank you."
+      }
+    },
+    "8" : {
+      "type" : "CHOICE",
+      "text" : "Which Job would you like me to talk about?",
+      "options" : {
+        "0" : "Warrior",
+        "1" : "Scout",
+        "2" : "Mage",
+        "3" : "Thanks, I know enough about Jobs."
+      }
+    },
+    "11" : {
+      "type" : "CHOICE",
+      "text" : "Would you like to start a Job quest?",
+      "options" : {
+        "0" : "Yes.",
+        "1" : "No, I have to go now."
+      }
+    },
+    "14" : {
+      "type" : "CHOICE",
+      "text" : "Please choose your Job quest.",
+      "options" : {
+        "0" : "Warrior",
+        "1" : "Scout",
+        "2" : "Mage",
+        "3" : "Sorry, I've changed my mind, I do not want a Job quest."
       }
     }
   },
   "edges" : [ {
     "sourceID" : 0,
-    "targetID" : 2
-  }, {
-    "sourceID" : 2,
     "targetID" : 3
   }, {
-    "sourceID" : 6,
-    "targetID" : 3
+    "sourceID" : 9,
+    "targetID" : 8
   }, {
-    "sourceID" : 7,
-    "targetID" : 1
+    "sourceID" : 12,
+    "targetID" : 8
+  }, {
+    "sourceID" : 13,
+    "targetID" : 8
+  }, {
+    "sourceID" : 15,
+    "targetID" : 16
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
-    "optionID" : 1,
-    "targetID" : 2
+    "optionID" : 0,
+    "targetID" : 8
   }, {
     "sourceID" : 3,
     "optionID" : 2,
-    "targetID" : 6
+    "targetID" : 1
   }, {
-    "sourceID" : 3,
+    "sourceID" : 8,
     "optionID" : 0,
-    "targetID" : 7
+    "targetID" : 9
+  }, {
+    "sourceID" : 11,
+    "optionID" : 1,
+    "targetID" : 1
+  }, {
+    "sourceID" : 8,
+    "optionID" : 3,
+    "targetID" : 11
+  }, {
+    "sourceID" : 8,
+    "optionID" : 1,
+    "targetID" : 12
+  }, {
+    "sourceID" : 8,
+    "optionID" : 2,
+    "targetID" : 13
+  }, {
+    "sourceID" : 11,
+    "optionID" : 0,
+    "targetID" : 14
+  }, {
+    "sourceID" : 14,
+    "optionID" : 3,
+    "targetID" : 1
+  }, {
+    "sourceID" : 14,
+    "optionID" : 0,
+    "targetID" : 15
+  }, {
+    "sourceID" : 14,
+    "optionID" : 1,
+    "targetID" : 15
+  }, {
+    "sourceID" : 14,
+    "optionID" : 2,
+    "targetID" : 15
   } ],
   "uiMetadata" : {
     "0" : {
-      "x" : 50.0,
-      "y" : 450.0
+      "x" : -96.0,
+      "y" : 300.5
+    },
+    "16" : {
+      "x" : 2453.4172595057394,
+      "y" : 263.32336274510203
     },
     "1" : {
-      "x" : 1433.0,
-      "y" : 291.0
-    },
-    "2" : {
-      "x" : 284.0,
-      "y" : 64.0
+      "x" : 1199.4005856183833,
+      "y" : 788.2718329457867
     },
     "3" : {
-      "x" : 604.5,
-      "y" : 480.0
+      "x" : 305.22961225117956,
+      "y" : 265.08720422610554
     },
-    "6" : {
-      "x" : 663.0,
-      "y" : 768.0
+    "8" : {
+      "x" : 704.8222294957,
+      "y" : 110.32594506775227
     },
-    "7" : {
-      "x" : 1028.5,
-      "y" : 129.0
+    "9" : {
+      "x" : 973.9479671265534,
+      "y" : -209.43176754672044
+    },
+    "11" : {
+      "x" : 1059.2898084944452,
+      "y" : 395.72616439532646
+    },
+    "12" : {
+      "x" : 593.5129695865712,
+      "y" : -259.68714658167727
+    },
+    "13" : {
+      "x" : 1150.562591226881,
+      "y" : -25.857610182634687
+    },
+    "14" : {
+      "x" : 1523.4524766012094,
+      "y" : 234.46084556789705
+    },
+    "15" : {
+      "x" : 2021.110406391034,
+      "y" : 283.52463375600047
     }
   }
 }

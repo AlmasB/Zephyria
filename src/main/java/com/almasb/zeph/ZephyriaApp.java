@@ -190,11 +190,6 @@ public class ZephyriaApp extends GameApplication {
 
                 player.getCharacterComponent().useTargetSkill(geti(SELECTED_SKILL_INDEX), character);
 
-                // TODO: show damage
-
-//                SkillUseResult result = playerComponent.useTargetSkill(skill, character);
-//                showDamage(result.getDamage(), character.getPositionComponent().getValue());
-
                 if (character.getHp().isZero()) {
                     playerKilledChar(character);
                 }

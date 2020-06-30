@@ -98,8 +98,8 @@ class TiledMapLayerOptimizerComponent : Component() {
         (backBufferView.image as WritableImage).pixelWriter.setPixels(
                 dstX,
                 dstY,
-                W - dstX,
-                H - dstY,
+                minOf(W - dstX, mapView.image.width.toInt() - srcX),
+                minOf(H - dstY, mapView.image.height.toInt() - srcY),
                 mapView.image.pixelReader,
                 maxOf(srcX, 0),
                 maxOf(srcY, 0)

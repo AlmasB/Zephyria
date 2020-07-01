@@ -528,127 +528,101 @@ class Wizard {
 }
 
 class Enchanter {
-    //            public static final int MAGIC_SHIELD = 7220;
-    //            public static final int ASTRAL_PROTECTION = 7221;
-    //            public static final int MIND_BLAST = 7222;
-    //            public static final int CURSE_OF_WITCHCRAFT = 7223;
-    //            public static final int MANA_BURN = 7224;
 
-    //            public static final String MAGIC_SHIELD = "Increases Armor rating for the duration";
-    //            public static final String ASTRAL_PROTECTION = "Passively increases MDEF";
-    //            public static final String MIND_BLAST = "Drains % of target's SP. Increases mana cost of all target's skills";
-    //            public static final String CURSE_OF_WITCHCRAFT = "Target cannot use skills for the duration";
-    //            public static final String MANA_BURN = "Burns target's SP and deals damage based on the SP burnt";
+    val MAGIC_SHIELD = skill {
+        desc {
+            id = 7220
+            name = "Magic Shield"
+            description = "Increases ARM for the duration based on WIL."
+        }
 
+        manaCost = 55
+        cooldown = 45.0
 
+        targetTypes = of(SELF)
 
-    //        addSkill(new Skill(ID.Skill.Enchanter.ASTRAL_PROTECTION, "Astral Protection", Desc.Skill.Enchanter.ASTRAL_PROTECTION, false, 0.0f) {
-    //            /**
-    //             *
-    //             */
-    //            private static final long serialVersionUID = 8691650266711866295L;
-    //
-    //            private int value = 0;
-    //
-    //            @Override
-    //            public int getManaCost() {
-    //                return 0;
-    //            }
-    //
-    //            @Override
-    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    //                caster.addBonusStat(Stat.MDEF, -value);
-    //                value = level * 2;
-    //                caster.addBonusStat(Stat.MDEF, value);
-    //            }
-    //        });
+        onCastScript = { caster, target, skill ->
 
-    //        addSkill(new Skill(ID.Skill.Enchanter.MAGIC_SHIELD, "Magic Shield", Desc.Skill.Enchanter.MAGIC_SHIELD, true, 60.0f) {
-    //            /**
-    //             *
-    //             */
-    //            private static final long serialVersionUID = 7104420977798092420L;
-    //
-    //            @Override
-    //            public int getManaCost() {
-    //                return 5 + level * 5;
-    //            }
-    //
-    //            @Override
-    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    //                caster.addEffect(new Effect((25.0f), ID.Skill.Enchanter.MAGIC_SHIELD,
-    //                        new Rune[] {},
-    //                        new Essence[] {
-    //                        new Essence(Stat.ARM, 5*level)
-    //                }
-    //                        ));
-    //
-    //                useResult = new SkillUseResult("ARM +" + 5*level);
-    //            }
-    //
-    //            @Override
-    //            public boolean isSelfTarget() {
-    //                return true;
-    //            }
-    //        });
+            caster.addEffect(effect(description) {
+                duration = 30.0
 
-//    ////
-//    ////        addSkill(new Skill(ID.Skill.Enchanter.MANA_BURN, "Mana Burn", Desc.Skill.Enchanter.MANA_BURN, true, 20.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 1031700846462374399L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 3 + level*4;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                int oldSP = target.getSP();
-//    ////                target.setSP(Math.max(oldSP - 50 * level, 0));
-//    ////                int dmg = caster.dealMagicalDamage(target, oldSP-target.getSP(), Element.NEUTRAL);
-//    ////
-//    ////                useResult = new SkillUseResult(dmg);
-//    ////            }
-//    ////        });
-//    ////
-//    ////        addSkill(new Skill(ID.Skill.Enchanter.CURSE_OF_WITCHCRAFT, "Curse of Witchcraft", Desc.Skill.Enchanter.CURSE_OF_WITCHCRAFT, true, 20.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 8295208480454374043L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 3 + level*4;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                target.addStatusEffect(new StatusEffect(Status.SILENCED, level*3));
-//    ////
-//    ////                useResult = new SkillUseResult("SILENCED");
-//    ////            }
-//    ////        });
-//    ////
-//    ////        addSkill(new Skill(ID.Skill.Enchanter.MIND_BLAST, "Mind Blast", Desc.Skill.Enchanter.MIND_BLAST, true, 20.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = -3587620067204007562L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 3 + level*4;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                // TODO: impl
-//    ////            }
-//    ////        });
+                // TODO:
+            })
+        }
+    }
+
+    val ASTRAL_PROTECTION = passiveSkill {
+        desc {
+            id = 7221
+            name = "Astral Protection"
+            description = "Passively increases MDEF."
+        }
+
+        MDEF +2
+    }
+
+    val MIND_BLAST = skill {
+        desc {
+            id = 7222
+            name = "Mind Blast"
+            description = "Drains % of target's SP. Decreases target's MDEF for the duration."
+        }
+
+        manaCost = 55
+        cooldown = 45.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+            caster.addEffect(effect(description) {
+                duration = 30.0
+
+                // TODO:
+            })
+        }
+    }
+
+    val CURSE_OF_KNOWLEDGE = skill {
+        desc {
+            id = 7223
+            name = "Curse of Knowledge"
+            description = "Deals damage based on target's INT, WIS and WIL."
+        }
+
+        manaCost = 65
+        cooldown = 25.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+            // TODO:
+        }
+    }
+
+    val MANA_BURN = skill {
+        desc {
+            id = 7224
+            name = "Mana Burn"
+            description = "Burns target's SP and deals damage based on the SP burnt."
+        }
+
+        manaCost = 65
+        cooldown = 10.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+            // TODO:
+            //                int oldSP = target.getSP();
+            //                target.setSP(Math.max(oldSP - 50 * level, 0));
+            //                int dmg = caster.dealMagicalDamage(target, oldSP-target.getSP(), Element.NEUTRAL);
+            //
+            //                useResult = new SkillUseResult(dmg);
+        }
+    }
 }
 
 class Scout {
@@ -743,12 +717,6 @@ class Rogue {
             //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
         }
     }
-
-
-    //            public static final String DOUBLE_STRIKE = ;
-    //            public static final String TRIPLE_STRIKE = "";
-    //           ";
-
 
     val DOUBLE_STRIKE = skill {
         desc {
@@ -932,6 +900,5 @@ class Ranger {
         }
 
         // TODO: value = (int)(caster.getTotalAttribute(Attribute.DEXTERITY) * level * 0.1f);
-
     }
 }

@@ -71,7 +71,6 @@ class Warrior {
         useType = EFFECT
         targetTypes = of(SELF)
 
-
         manaCost = 10
         cooldown = 14.0
 
@@ -95,6 +94,8 @@ class Warrior {
 
         manaCost = 25
         cooldown = 15.0
+
+        targetTypes = of(ENEMY)
 
         onCastScript = { caster, target, skill ->
             val diff = caster.getTotal(STRENGTH) - target.getTotal(STRENGTH)
@@ -137,7 +138,7 @@ class Crusader {
 
         type = ACTIVE
         useType = RESTORE
-        targetTypes = of(ALLY)
+        targetTypes = of(SELF, ALLY)
 
         manaCost = 35
         cooldown = 15.0
@@ -190,9 +191,36 @@ class Crusader {
         onCastScript = { caster, target, skill ->
 
             // TODO: Deals armor ignoring damage based on STR.
+
+            //                float dmg = caster.getTotalStat(Stat.ATK) + (caster.getTotalAttribute(Attribute.STRENGTH) / 10) * level;
+            //                caster.dealPureDamage(target, dmg);
         }
     }
 
+    val LAST_STAND = skill {
+        desc {
+            id = 7114
+            name = "Last Stand"
+            description = "Significantly increases STR and MAX_HP for the duration. Consumes all available SP."
+        }
+
+        manaCost = 0
+        cooldown = 120.0
+
+        targetTypes = of(SELF)
+
+        onCastScript = { caster, target, skill ->
+
+            caster.sp.damageFully()
+
+            caster.addEffect(effect(description) {
+                duration = 30.0
+
+                STRENGTH +5*skill.level
+                MAX_HP +50*skill.level
+            })
+        }
+    }
 }
 
 class Gladiator {
@@ -221,6 +249,107 @@ class Gladiator {
             })
         }
     }
+
+    val ENDURANCE = skill {
+        desc {
+            id = 7211
+            name = "Endurance"
+            description = "Takes less damage and regenerates HP faster for the duration."
+        }
+
+        manaCost = 35
+        cooldown = 25.0
+
+        targetTypes = of(SELF)
+
+        onCastScript = { caster, target, skill ->
+
+            target.addEffect(effect(description) {
+                duration = 15.0
+
+                ARM +3*skill.level
+                DEF +1*skill.level
+                HP_REGEN +2*skill.level
+            })
+        }
+    }
+
+    val DOUBLE_EDGE = skill {
+        desc {
+            id = 7211
+            name = "Endurance"
+            description = "Takes less damage and regenerates HP faster for the duration."
+        }
+
+        manaCost = 35
+        cooldown = 25.0
+
+        targetTypes = of(SELF)
+
+        onCastScript = { caster, target, skill ->
+
+            target.addEffect(effect(description) {
+                duration = 15.0
+
+                ARM +3*skill.level
+                DEF +1*skill.level
+                HP_REGEN +2*skill.level
+            })
+        }
+    }
+
+//
+//            fun DOUBLE_EDGE() = listOf<Component>(
+//                    Description(7212, "Double Edge", "Sacrifice % of HP to deal double that damage to target. Damage is pure.", "skills/ic_skill_bash.png"),
+//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+//                            .withMana(35)
+//                            .withCooldown(15.0)
+//            )
+//
+//            fun BLOODLUST() = listOf<Component>(
+//                    Description(7213, "Bloodlust", "Increases ATK based on the missing % HP.", "skills/ic_skill_bash.png"),
+//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+//                            .withMana(35)
+//                            .withCooldown(15.0)
+//            )
+//
+//            fun SHATTER_ARMOR() = listOf<Component>(
+//                    Description(7214, "Shatter Armor", "Decreases target's armor for the duration.", "skills/ic_skill_bash.png"),
+//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
+//                            .withMana(35)
+//                            .withCooldown(15.0)
+//            )
+
+
+
+
+    //        addSkill(new Skill(ID.Skill.Gladiator.ENDURANCE, "Endurance", Desc.Skill.Gladiator.ENDURANCE, true, 40.0f) {
+    //            /**
+    //             *
+    //             */
+    //            private static final long serialVersionUID = -7936080589333242098L;
+    //
+    //            @Override
+    //            public int getManaCost() {
+    //                return 3 + level*4;
+    //            }
+    //
+    //            @Override
+    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
+    //                caster.addEffect(new Effect(15.0f, ID.Skill.Gladiator.ENDURANCE, new Rune[] {},
+    //                        new Essence[] {
+    //                        new Essence(Stat.DEF, 2*level),
+    //                        new Essence(Stat.HP_REGEN, 2*level)
+    //                }));
+    //
+    //                useResult = new SkillUseResult("DEF +" + level*2 + ", HP REGEN +" + 2*level);
+    //            }
+    //
+    //            @Override
+    //            public boolean isSelfTarget() {
+    //                return true;
+    //            }
+    //        });
 
     //        addSkill(new Skill(ID.Skill.Gladiator.SHATTER_ARMOR, "Shatter Armor", Desc.Skill.Gladiator.SHATTER_ARMOR, true, 30.0f) {
     //            /**
@@ -295,67 +424,8 @@ class Gladiator {
 //    ////
 //
 
-    //            fun ENDURANCE() = listOf<Component>(
-//                    Description(7211, "Endurance", "Takes less damage and regenerates HP faster for the duration.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun DOUBLE_EDGE() = listOf<Component>(
-//                    Description(7212, "Double Edge", "Sacrifice % of HP to deal double that damage to target. Damage is pure.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun BLOODLUST() = listOf<Component>(
-//                    Description(7213, "Bloodlust", "Increases ATK based on the missing % HP.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun SHATTER_ARMOR() = listOf<Component>(
-//                    Description(7214, "Shatter Armor", "Decreases target's armor for the duration.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+
 }
-
-
-
-//    ////
-//    ////        addSkill(new Skill(ID.Skill.Crusader.LAST_STAND, "Last Stand", Desc.Skill.Crusader.LAST_STAND, true, 60.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = -8176078084748576113L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 2 + level*5;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                caster.addEffect(new Effect((20.0f), ID.Skill.Crusader.LAST_STAND,
-//    ////                        new Rune[] {
-//    ////                }, new Essence[] {
-//    ////                        new Essence(Stat.ATK, Math.round(caster.getBaseStat(Stat.ATK)))
-//    ////                }
-//    ////                        ));
-//    ////
-//    ////                useResult = new SkillUseResult("ATK UP!");
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            public boolean isSelfTarget() {
-//    ////                return true;
-//    ////            }
-//    ////        });
-//    ////
 
 class Mage {
 
@@ -490,6 +560,9 @@ class Wizard {
         onCastScript = { caster, target, skill ->
 
             // TODO: deal pure damage based on MATK
+
+            //                float dmg = caster.getTotalStat(Stat.MATK) * (1 + level*0.1f);
+            //                caster.dealPureDamage(target, dmg);
         }
     }
 
@@ -541,6 +614,20 @@ class Wizard {
 }
 
 class Enchanter {
+    //            public static final int MAGIC_SHIELD = 7220;
+    //            public static final int ASTRAL_PROTECTION = 7221;
+    //            public static final int MIND_BLAST = 7222;
+    //            public static final int CURSE_OF_WITCHCRAFT = 7223;
+    //            public static final int MANA_BURN = 7224;
+
+    //            public static final String MAGIC_SHIELD = "Increases Armor rating for the duration";
+    //            public static final String ASTRAL_PROTECTION = "Passively increases MDEF";
+    //            public static final String MIND_BLAST = "Drains % of target's SP. Increases mana cost of all target's skills";
+    //            public static final String CURSE_OF_WITCHCRAFT = "Target cannot use skills for the duration";
+    //            public static final String MANA_BURN = "Burns target's SP and deals damage based on the SP burnt";
+
+
+
     //        addSkill(new Skill(ID.Skill.Enchanter.ASTRAL_PROTECTION, "Astral Protection", Desc.Skill.Enchanter.ASTRAL_PROTECTION, false, 0.0f) {
     //            /**
     //             *
@@ -561,6 +648,93 @@ class Enchanter {
     //                caster.addBonusStat(Stat.MDEF, value);
     //            }
     //        });
+
+    //        addSkill(new Skill(ID.Skill.Enchanter.MAGIC_SHIELD, "Magic Shield", Desc.Skill.Enchanter.MAGIC_SHIELD, true, 60.0f) {
+    //            /**
+    //             *
+    //             */
+    //            private static final long serialVersionUID = 7104420977798092420L;
+    //
+    //            @Override
+    //            public int getManaCost() {
+    //                return 5 + level * 5;
+    //            }
+    //
+    //            @Override
+    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
+    //                caster.addEffect(new Effect((25.0f), ID.Skill.Enchanter.MAGIC_SHIELD,
+    //                        new Rune[] {},
+    //                        new Essence[] {
+    //                        new Essence(Stat.ARM, 5*level)
+    //                }
+    //                        ));
+    //
+    //                useResult = new SkillUseResult("ARM +" + 5*level);
+    //            }
+    //
+    //            @Override
+    //            public boolean isSelfTarget() {
+    //                return true;
+    //            }
+    //        });
+
+//    ////
+//    ////        addSkill(new Skill(ID.Skill.Enchanter.MANA_BURN, "Mana Burn", Desc.Skill.Enchanter.MANA_BURN, true, 20.0f) {
+//    ////            /**
+//    ////             *
+//    ////             */
+//    ////            private static final long serialVersionUID = 1031700846462374399L;
+//    ////
+//    ////            @Override
+//    ////            public int getManaCost() {
+//    ////                return 3 + level*4;
+//    ////            }
+//    ////
+//    ////            @Override
+//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
+//    ////                int oldSP = target.getSP();
+//    ////                target.setSP(Math.max(oldSP - 50 * level, 0));
+//    ////                int dmg = caster.dealMagicalDamage(target, oldSP-target.getSP(), Element.NEUTRAL);
+//    ////
+//    ////                useResult = new SkillUseResult(dmg);
+//    ////            }
+//    ////        });
+//    ////
+//    ////        addSkill(new Skill(ID.Skill.Enchanter.CURSE_OF_WITCHCRAFT, "Curse of Witchcraft", Desc.Skill.Enchanter.CURSE_OF_WITCHCRAFT, true, 20.0f) {
+//    ////            /**
+//    ////             *
+//    ////             */
+//    ////            private static final long serialVersionUID = 8295208480454374043L;
+//    ////
+//    ////            @Override
+//    ////            public int getManaCost() {
+//    ////                return 3 + level*4;
+//    ////            }
+//    ////
+//    ////            @Override
+//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
+//    ////                target.addStatusEffect(new StatusEffect(Status.SILENCED, level*3));
+//    ////
+//    ////                useResult = new SkillUseResult("SILENCED");
+//    ////            }
+//    ////        });
+//    ////
+//    ////        addSkill(new Skill(ID.Skill.Enchanter.MIND_BLAST, "Mind Blast", Desc.Skill.Enchanter.MIND_BLAST, true, 20.0f) {
+//    ////            /**
+//    ////             *
+//    ////             */
+//    ////            private static final long serialVersionUID = -3587620067204007562L;
+//    ////
+//    ////            @Override
+//    ////            public int getManaCost() {
+//    ////                return 3 + level*4;
+//    ////            }
+//    ////
+//    ////            @Override
+//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
+//    ////                // TODO: impl
+//    ////            }
+//    ////        });
 }
 
 class Scout {
@@ -631,10 +805,210 @@ class Scout {
 }
 
 class Rogue {
+    val SHAMELESS = skill {
+        desc {
+            id = 7130
+            name = "Shameless"
+            description = "Deals more damage if target's % HP is lower than yours. No cooldown but consumes a large portion of mana."
+        }
 
+        manaCost = 50
+        cooldown = 0.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+            //                float dmg = caster.getTotalStat(Stat.ATK);
+            //                float casterHPFactor = caster.getHP() / caster.getTotalStat(Stat.MAX_HP);
+            //                float targetHPFactor = target.getHP() / target.getTotalStat(Stat.MAX_HP);
+            //                if (casterHPFactor > targetHPFactor) {
+            //                    dmg += level * 0.1f * (casterHPFactor - targetHPFactor) * dmg;
+            //                }
+            //
+            //                int d = caster.dealPhysicalDamage(target, dmg);
+            //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
+        }
+    }
+
+
+    //            public static final String DOUBLE_STRIKE = ;
+    //            public static final String TRIPLE_STRIKE = "";
+    //           ";
+
+
+    val DOUBLE_STRIKE = skill {
+        desc {
+            id = 7131
+            name = "Double Strike"
+            description = "Quickly performs two attacks with a chance to stun the target."
+        }
+
+        manaCost = 25
+        cooldown = 13.0
+
+        targetTypes = of(ENEMY)
+
+        //                int dmg1 = caster.attack(target);
+        //                int dmg2 = caster.attack(target);
+        //                boolean stun = false;
+        //                if (GameMath.checkChance(level*5)) {
+        //                    target.addStatusEffect(new StatusEffect(Status.STUNNED, 2.5f));
+        //                    stun = true;
+        //                }
+        //
+        //                useResult = new SkillUseResult(GameMath.normalizeDamage(dmg1) + "," + GameMath.normalizeDamage(dmg2)
+        //                        + (stun ? ",STUNNED" : ",X2"));
+    }
+
+    val TRIPLE_STRIKE = skill {
+        desc {
+            id = 7132
+            name = "Triple Strike"
+            description = "Quickly performs three attacks. Deals more damage if the target is stunned."
+        }
+
+        manaCost = 35
+        cooldown = 25.0
+
+        targetTypes = of(ENEMY)
+
+        //                float dmg = caster.getTotalStat(Stat.ATK);
+        //                if (target.hasStatusEffect(Status.STUNNED)) {
+        //                    dmg += level * 15;
+        //                }
+        //
+        //                int dmg1 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
+        //                int dmg2 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
+        //                int dmg3 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
+        //
+        //                useResult = new SkillUseResult(dmg1 + "," + dmg2 + "," + dmg3 + ",X3");
+    }
+
+    val CRITICAL_STRIKE = skill {
+        desc {
+            id = 7133
+            name = "Critical Strike"
+            description = "Strikes the target with high chance of crit. Crit damage is greater for this skill."
+        }
+
+        manaCost = 30
+        cooldown = 15.0
+
+        targetTypes = of(ENEMY)
+
+        //                float dmg = caster.getTotalStat(Stat.ATK) + 15 + 5 * level;
+        //                caster.addBonusStat(Stat.CRIT_CHANCE, 50 + level * 3);
+        //                int d = caster.dealPhysicalDamage(target, dmg);
+        //                caster.addBonusStat(Stat.CRIT_CHANCE, -(50 + level * 3));
+        //
+        //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
+    }
+
+    val PIERCING_STRIKE = skill {
+        desc {
+            id = 7134
+            name = "Piercing Strike"
+            description = "Deals devastating damage to targets with low ARM."
+        }
+
+        manaCost = 35
+        cooldown = 7.0
+
+        targetTypes = of(ENEMY)
+
+        //                float dmg = 20 + level*30 - target.getTotalStat(Stat.ARM);
+        //                int d = caster.dealPhysicalDamage(target, dmg);
+        //
+        //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
+    }
 }
 
 class Ranger {
+
+    val PINPOINT_WEAKNESS = skill {
+        desc {
+            id = 7230
+            name = "Pinpoint Weakness"
+            description = "Decreases target's DEF for the duration."
+        }
+
+        manaCost = 25
+        cooldown = 15.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+            target.addEffect(effect(description) {
+                duration = 10.0
+
+                DEF +(-3*skill.level)
+            })
+        }
+    }
+
+    val BULLSEYE = skill {
+        desc {
+            id = 7231
+            name = "Bullseye"
+            description = "Deals armor ignoring damage to target. Target's defense is not ignored. Damage is based on caster's DEX."
+        }
+
+        manaCost = 25
+        cooldown = 15.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+            // TODO:
+            //                float dmg = 100 + 0.2f*level * caster.getTotalAttribute(Attribute.DEXTERITY) - target.getTotalStat(GameCharacter.DEF);
+            //                caster.dealPureDamage(target, dmg);
+            //
+            //                useResult = new SkillUseResult(dmg + ",PURE");
+        }
+    }
+
+    val FAST_REFLEXES = skill {
+        desc {
+            id = 7232
+            name = "Fast Reflexes"
+            description = "Increases AGI and DEX for the duration."
+        }
+
+        manaCost = 45
+        cooldown = 20.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+            target.addEffect(effect(description) {
+                duration = 20.0
+
+                AGILITY +2*skill.level
+                DEXTERITY +2*skill.level
+            })
+        }
+    }
+
+    val ENCHANTED_ARROW = skill {
+        desc {
+            id = 7233
+            name = "Enchanted Arrow"
+            description = "Stuns target. Stun lasts longer for target's with high armor rating."
+        }
+
+        manaCost = 35
+        cooldown = 11.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+            // TODO:
+            //                float duration = target.getTotalStat(Stat.ARM) * 0.1f;
+            //                target.addStatusEffect(new StatusEffect(Status.STUNNED, duration));
+            //
+            //                useResult = new SkillUseResult("STUNNED");
+        }
+    }
 
     val EAGLE_EYE = passiveSkill {
         desc {
@@ -646,5 +1020,4 @@ class Ranger {
         // TODO: value = (int)(caster.getTotalAttribute(Attribute.DEXTERITY) * level * 0.1f);
 
     }
-
 }

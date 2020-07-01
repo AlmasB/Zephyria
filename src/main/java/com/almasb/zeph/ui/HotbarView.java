@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -124,6 +125,23 @@ public class HotbarView extends Parent {
             this.skill = skill;
 
             stack.getChildren().set(1, texture(skill.getData().getDescription().getTextureName(), 64, 64));
+
+            setCursor(Cursor.HAND);
+
+            // TODO: indicate skill is on cooldown or no mana
+//        view.visibleProperty().bind(player.getSp().valueProperty().greaterThan(skill.getManaCost())
+//                .and(skill.getCurrentCooldown().lessThanOrEqualTo(0)));
+//
+            Tooltip tooltip = new Tooltip();
+
+            Text text = new Text();
+            text.setFont(Font.font(20));
+            text.setFill(Color.WHITE);
+            text.setWrappingWidth(200);
+            text.textProperty().bind(skill.getDynamicDescription());
+
+            tooltip.setGraphic(text);
+            Tooltip.install(this, tooltip);
         }
     }
 
@@ -183,22 +201,6 @@ public class HotbarView extends Parent {
 //            StrokeTransition st = new StrokeTransition(Duration.seconds(1), frame, Color.YELLOW, Color.AQUAMARINE.darker());
 //            st.play();
         });
-
-//        Texture view = getAssetLoader().loadTexture(desc.getTextureName(), 62, 62);
-//        view.setCursor(Cursor.HAND);
-//        view.visibleProperty().bind(player.getSp().valueProperty().greaterThan(skill.getManaCost())
-//                .and(skill.getCurrentCooldown().lessThanOrEqualTo(0)));
-//
-//        Tooltip tooltip = new Tooltip();
-//
-//        Text text = new Text();
-//        text.setFont(Font.font(20));
-//        text.setFill(Color.WHITE);
-//        text.setWrappingWidth(200);
-//        text.textProperty().bind(skill.getDynamicDescription());
-//
-//        tooltip.setGraphic(text);
-//        Tooltip.install(view, tooltip);
 
         index++;
     }

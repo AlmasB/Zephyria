@@ -3,6 +3,8 @@ package com.almasb.zeph;
 import com.almasb.fxgl.app.ApplicationMode;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.LoadingScene;
+import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.physics.PhysicsWorld;
@@ -15,6 +17,7 @@ import com.almasb.zeph.skill.SkillUseResult;
 import com.almasb.zeph.ui.BasicInfoView;
 import com.almasb.zeph.ui.HotbarView;
 import com.almasb.zeph.ui.InventoryView;
+import com.almasb.zeph.ui.ZephLoadingScene;
 import javafx.geometry.Point2D;
 import javafx.scene.input.KeyCode;
 
@@ -39,6 +42,12 @@ public class ZephyriaApp extends GameApplication {
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
         settings.setProfilingEnabled(true);
+        settings.setSceneFactory(new SceneFactory() {
+            @Override
+            public LoadingScene newLoadingScene() {
+                return new ZephLoadingScene();
+            }
+        });
         settings.setApplicationMode(ApplicationMode.RELEASE);
     }
 

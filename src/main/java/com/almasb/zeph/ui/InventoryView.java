@@ -6,9 +6,14 @@ import com.almasb.zeph.item.Armor;
 import com.almasb.zeph.item.Item;
 import com.almasb.zeph.item.UsableItem;
 import com.almasb.zeph.item.Weapon;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Tooltip;
@@ -38,7 +43,13 @@ public class InventoryView extends Parent {
 
     private boolean isMinimized = false;
 
+    // K - index, V - if free? TODO: double check
     private Map<Integer, Boolean> slots = new HashMap<>();
+
+    private Group itemGroup = new Group();
+
+    private TooltipView tooltip = new TooltipView();
+    private BooleanBinding isTooltipVisible;
 
     private ListChangeListener<Item> listener;
 
@@ -76,7 +87,7 @@ public class InventoryView extends Parent {
         EquipmentView equipView = new EquipmentView(player);
         equipView.setTranslateX(-BG_WIDTH);
 
-        getChildren().addAll(borderShape, background, equipView, btn);
+        getChildren().addAll(borderShape, background, equipView, itemGroup, btn);
 
         this.player = player;
 
@@ -96,7 +107,7 @@ public class InventoryView extends Parent {
                     else if (change.wasRemoved()) {
                         for (Item item : change.getRemoved()) {
 
-                            for (Iterator<Node> it = getChildren().iterator(); it.hasNext(); ) {
+                            for (Iterator<Node> it = itemGroup.getChildren().iterator(); it.hasNext(); ) {
                                 Node node = it.next();
 
                                 if (node.getUserData() != null) {
@@ -118,6 +129,19 @@ public class InventoryView extends Parent {
         player.getInventory().getItems().forEach(this::addItem);
 
         player.getInventory().getItems().addListener(listener);
+
+        // TODO: should have 1 tooltip object for everything in the game
+        // TODO: description should have TextFlow, so we can color some text, e.g. 10% damage, runes, etc.
+
+        isTooltipVisible = Bindings.createBooleanBinding(() -> false, player.getInventory().getItems());
+
+        itemGroup.getChildren().forEach(node -> {
+            isTooltipVisible = isTooltipVisible.or(node.hoverProperty());
+        });
+
+        tooltip.visibleProperty().bind(isTooltipVisible);
+
+        addUINode(tooltip, getAppWidth() - 300, 0);
     }
 
     private int getNextFreeSlot() {
@@ -139,6 +163,13 @@ public class InventoryView extends Parent {
         view.setTranslateX((index % 5) * 40 + 3);
         view.setTranslateY((index / 5) * 40 + 3);
         view.setPickOnBounds(true);
+
+        view.hoverProperty().addListener((o, old, isHover) -> {
+            if (isHover) {
+                tooltip.setItem(item);
+            }
+        });
+
         view.setOnMouseClicked(event -> {
 
             if (event.getButton() == MouseButton.PRIMARY) {
@@ -155,17 +186,6 @@ public class InventoryView extends Parent {
         });
         view.setCursor(Cursor.HAND);
 
-        Tooltip tooltip = new Tooltip();
-
-        Text text = new Text();
-        text.setFont(Font.font(20));
-        text.setFill(Color.WHITE);
-        text.setWrappingWidth(200);
-        text.textProperty().bind(item.getDynamicDescription());
-
-        tooltip.setGraphic(text);
-        Tooltip.install(view, tooltip);
-
-        getChildren().add(view);
+        itemGroup.getChildren().add(view);
     }
 }

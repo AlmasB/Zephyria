@@ -297,5 +297,15 @@ class Katars {
 
 // BOWS 4800
 class Bows {
-
+//        fun DRAGON_CLAW() = listOf<Component>(
+//                Description(4800, "Dragon's Claw", "A mythical bow made of claws of the legendary dragon. Contains dragon's wisdom and loyal to only one master throughout his whole life. Grants dragon's and earlier owner's wisdom and knowledge to the new master.", "items/weapons/dragon_claw.png"),
+//                WeaponDataComponent(ItemLevel.EPIC, WeaponType.BOW, 130)
+//                        .withRune(Rune(Attribute.WISDOM, 3))
+//                        .withRune(Rune(Attribute.DEXTERITY, 4))
+//                        .withRune(Rune(Attribute.LUCK, 1))
+//                        .withElement(Element.FIRE)
+//        )
+//
+//
+//    }
 }

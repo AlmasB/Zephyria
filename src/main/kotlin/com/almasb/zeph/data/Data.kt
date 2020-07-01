@@ -95,6 +95,7 @@ object Data {
             populate(dbUsableItems, UsableItems)
             populate(dbMiscItems, MiscItems)
 
+            populate(dbSkills, Skills.Novice)
             populate(dbSkills, Skills.Warrior)
             populate(dbSkills, Skills.Crusader)
             populate(dbSkills, Skills.Gladiator)

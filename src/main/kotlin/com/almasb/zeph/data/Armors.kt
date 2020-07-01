@@ -23,6 +23,7 @@ class Armors {
     val Shoes = Shoes()
 }
 
+// 5004-5099
 class Helm {
     val HAT = armor {
         desc {
@@ -36,6 +37,7 @@ class Helm {
     }
 }
 
+// 5100-5199
 class Body {
     val CLOTHES = armor {
         desc {
@@ -53,8 +55,29 @@ class Body {
             }
         }
     }
+
+    //        fun CHAINMAIL() = listOf<Component>(
+//                Description(5100, "Chainmail", "Armour consisting of small metal rings linked together in a pattern to form a mesh.", "items/armor/chainmail.png"),
+//                ArmorDataComponent(ItemLevel.NORMAL, ArmorType.BODY, 10, 5)
+//                        .withRune(Rune(Attribute.STRENGTH, 2))
+//        )
+//
+//        fun SOUL_BARRIER() = listOf<Component>(
+//                Description(5101, "Soul Barrier", "Protects its wearer from magic attacks.", "items/armor/soul_barrier.png"),
+//                ArmorDataComponent(ItemLevel.UNIQUE, ArmorType.BODY, 10, 50)
+//                        .withRune(Rune(Attribute.WILLPOWER, 2))
+//        )
+//
+//
+//        fun THANATOS_BODY_ARMOR() = listOf<Component>(
+//                Description(5102, "Thanatos Body Armor", "A shattered piece of Thanatos' legendary armor. Grants its user great constitution.", "items/armor/thanatos_body_armor.png"),
+//                ArmorDataComponent(ItemLevel.EPIC, ArmorType.BODY, 50, 25)
+//                        .withRune(Rune(Attribute.VITALITY, 5))
+//                        .withRune(Rune(Attribute.PERCEPTION, 3))
+//        )
 }
 
+// 5200-5299
 class Shoes {
     val SIMPLE_SHOES = armor {
         desc {
@@ -69,7 +92,7 @@ class Shoes {
 
     val LUCKY_SHOES = armor {
         desc {
-            id = 5003
+            id = 5200
             name = "Lucky Shoes"
             description = "It is said that the wearer gains immense luck."
             textureName = "items/armor/lucky_shoes.png"

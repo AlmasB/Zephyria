@@ -39,7 +39,7 @@ public class ZephyriaApp extends GameApplication {
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
         settings.setProfilingEnabled(true);
-        settings.setApplicationMode(ApplicationMode.DEBUG);
+        settings.setApplicationMode(ApplicationMode.RELEASE);
     }
 
     @Override
@@ -79,6 +79,20 @@ public class ZephyriaApp extends GameApplication {
 
         if (index < pc.getSkills().size()) {
             Skill skill = pc.getSkills().get(index);
+
+            if (skill.getLevel() == 0) {
+                // skill not learned yet
+                return;
+            }
+
+            if (skill.isOnCooldown()) {
+                return;
+            }
+
+            if (skill.getManaCost().getValue() > pc.getSp().getValue()) {
+                // no mana
+                return;
+            }
 
             if (skill.getData().getType() == SkillType.PASSIVE) {
                 // skill is passive and is always on

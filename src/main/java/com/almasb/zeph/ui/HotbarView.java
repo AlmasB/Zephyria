@@ -1,7 +1,9 @@
 package com.almasb.zeph.ui;
 
+import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.skill.Skill;
+import javafx.animation.Interpolator;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
@@ -188,7 +190,6 @@ public class HotbarView extends Parent {
         btn.setStrokeWidth(3);
         btn.setFont(Font.font(16));
 
-
         var stack = new StackPane(bg, btn);
         stack.visibleProperty().bind(player.getPlayerComponent().getSkillPoints().greaterThan(0).and(skill.getLevelProperty().lessThan(10)));
 
@@ -198,8 +199,13 @@ public class HotbarView extends Parent {
         btn.setOnMouseClicked(event -> {
             player.getPlayerComponent().increaseSkillLevel(skillIndex);
 
-//            StrokeTransition st = new StrokeTransition(Duration.seconds(1), frame, Color.YELLOW, Color.AQUAMARINE.darker());
-//            st.play();
+            animationBuilder()
+                    .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
+                    .duration(Duration.seconds(1.0))
+                    .scale(frame)
+                    .from(new Point2D(1.3, 1.3))
+                    .to(new Point2D(1.0, 1.0))
+                    .buildAndPlay();
         });
 
         index++;

@@ -434,17 +434,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     fun useTargetSkill(skill: Skill, target: CharacterEntity): SkillUseResult {
-        if (skill.level == 0)
-            return SkillUseResult.NONE
-
-        if (skill.currentCooldown.value > 0)
-            return SkillUseResult.ON_COOLDOWN
-
-        if (skill.manaCost.value > sp.value)
-            return SkillUseResult.NO_MANA
-
-        // TODO: do these checks before using skills
-
         sp.value -= skill.manaCost.intValue()
         skill.putOnCooldown()
 

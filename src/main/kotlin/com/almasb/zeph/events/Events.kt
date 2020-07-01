@@ -83,3 +83,5 @@ class OnXPReceivedEvent(
         val receiver: CharacterEntity,
         val xp: Experience
 ) : GameEvent(ON_XP_RECEIVED)
+
+// TODO: OnBeforeSkillCastEvent

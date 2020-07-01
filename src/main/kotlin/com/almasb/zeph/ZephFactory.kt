@@ -207,9 +207,9 @@ class ZephFactory : EntityFactory {
             // TODO: TEST DATA BEGIN
 
             player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-            player.characterComponent.skills += Skill(Data.Skills.Wizard.AMPLIFY_MAGIC)
-            player.characterComponent.skills += Skill(Data.Skills.Mage.FIREBALL)
-            player.characterComponent.skills += Skill(Data.Skills.Scout.WEAPON_MASTERY)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
 
             player.inventory.items.add(newDagger(Element.NEUTRAL))
             player.inventory.items.add(newDagger(Element.FIRE))

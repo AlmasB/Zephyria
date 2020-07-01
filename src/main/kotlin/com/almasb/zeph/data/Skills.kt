@@ -276,155 +276,69 @@ class Gladiator {
 
     val DOUBLE_EDGE = skill {
         desc {
-            id = 7211
-            name = "Endurance"
-            description = "Takes less damage and regenerates HP faster for the duration."
+            id = 7212
+            name = "Double Edge"
+            description = "Sacrifice % of HP to deal double that damage to target. Damage is pure."
+        }
+
+        manaCost = 45
+        cooldown = 35.0
+
+        targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+            // float dmg = (0.1f + 0.02f * level) * caster.getHP();
+//                    caster.setHP(Math.round(caster.getHP() - dmg));
+//                    caster.dealPureDamage(target, 2*dmg);
+//
+//                    useResult = new SkillUseResult(2*dmg + ",PURE");
+        }
+    }
+
+    val BLOODLUST = skill {
+        desc {
+            id = 7213
+            name = "Bloodlust"
+            description = "Increases ATK based on the missing % HP for the duration."
         }
 
         manaCost = 35
         cooldown = 25.0
 
-        targetTypes = of(SELF)
+        targetTypes = of(ENEMY)
 
         onCastScript = { caster, target, skill ->
 
-            target.addEffect(effect(description) {
-                duration = 15.0
+            caster.addEffect(effect(description) {
+                val value = (10*skill.level * caster.getTotal(MAX_HP) / (caster.hp.value + 1)).toInt()
 
-                ARM +3*skill.level
-                DEF +1*skill.level
-                HP_REGEN +2*skill.level
+                duration = 10.0
+
+                ATK +value
             })
         }
     }
 
-//
-//            fun DOUBLE_EDGE() = listOf<Component>(
-//                    Description(7212, "Double Edge", "Sacrifice % of HP to deal double that damage to target. Damage is pure.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun BLOODLUST() = listOf<Component>(
-//                    Description(7213, "Bloodlust", "Increases ATK based on the missing % HP.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
-//
-//            fun SHATTER_ARMOR() = listOf<Component>(
-//                    Description(7214, "Shatter Armor", "Decreases target's armor for the duration.", "skills/ic_skill_bash.png"),
-//                    SkillDataComponent(SkillType.ACTIVE, SkillUseType.DAMAGE, EnumSet.of(SkillTargetType.ENEMY))
-//                            .withMana(35)
-//                            .withCooldown(15.0)
-//            )
+    val SHATTER_ARMOR = skill {
+        desc {
+            id = 7214
+            name = "Shatter Armor"
+            description = "Decreases target's ARM for the duration."
+        }
 
+        manaCost = 45
+        cooldown = 15.0
 
+        targetTypes = of(ENEMY)
 
+        onCastScript = { caster, target, skill ->
 
-    //        addSkill(new Skill(ID.Skill.Gladiator.ENDURANCE, "Endurance", Desc.Skill.Gladiator.ENDURANCE, true, 40.0f) {
-    //            /**
-    //             *
-    //             */
-    //            private static final long serialVersionUID = -7936080589333242098L;
-    //
-    //            @Override
-    //            public int getManaCost() {
-    //                return 3 + level*4;
-    //            }
-    //
-    //            @Override
-    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    //                caster.addEffect(new Effect(15.0f, ID.Skill.Gladiator.ENDURANCE, new Rune[] {},
-    //                        new Essence[] {
-    //                        new Essence(Stat.DEF, 2*level),
-    //                        new Essence(Stat.HP_REGEN, 2*level)
-    //                }));
-    //
-    //                useResult = new SkillUseResult("DEF +" + level*2 + ", HP REGEN +" + 2*level);
-    //            }
-    //
-    //            @Override
-    //            public boolean isSelfTarget() {
-    //                return true;
-    //            }
-    //        });
-
-    //        addSkill(new Skill(ID.Skill.Gladiator.SHATTER_ARMOR, "Shatter Armor", Desc.Skill.Gladiator.SHATTER_ARMOR, true, 30.0f) {
-    //            /**
-    //             *
-    //             */
-    //            private static final long serialVersionUID = -4834599835655165707L;
-    //
-    //            @Override
-    //            public int getManaCost() {
-    //                return 2 + level*5;
-    //            }
-    //
-    //            @Override
-    //            protected void useImpl(GameCharacter caster, GameCharacter target) {
-    //                target.addEffect(new Effect((20.0f), ID.Skill.Gladiator.SHATTER_ARMOR,
-    //                        new Rune[] {
-    //                }, new Essence[] {
-    //                        new Essence(Stat.ARM, -2*level)
-    //                }
-    //                        ));
-    //
-    //                useResult = new SkillUseResult("ARM -" + 2*level);
-    //            }
-    //        });
-
-//    ////        addSkill(new Skill(ID.Skill.Gladiator.BLOODLUST, "Bloodlust", Desc.Skill.Gladiator.BLOODLUST, false, 0.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = 5844145407908548491L;
-//    ////
-//    ////            private int value = 0;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 0;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                caster.addBonusStat(Stat.ATK, -value);
-//    ////                // div 0 shouldn't occur
-//    ////                value = (int) (10*level * caster.getTotalStat(Stat.MAX_HP) / (caster.getHP() + 1));
-//    ////                caster.addBonusStat(Stat.ATK, value);
-//    ////            }
-//    ////        });
-//    ////
-
-//    ////
-//
-//    ////
-//    ////        addSkill(new Skill(ID.Skill.Gladiator.DOUBLE_EDGE, "Double Edge", Desc.Skill.Gladiator.DOUBLE_EDGE, true, 0.0f) {
-//    ////            /**
-//    ////             *
-//    ////             */
-//    ////            private static final long serialVersionUID = -5670132035647752285L;
-//    ////
-//    ////            @Override
-//    ////            public int getManaCost() {
-//    ////                return 0;
-//    ////            }
-//    ////
-//    ////            @Override
-//    ////            protected void useImpl(GameCharacter caster, GameCharacter target) {
-//    ////                float dmg = (0.1f + 0.02f * level) * caster.getHP();
-//    ////                caster.setHP(Math.round(caster.getHP() - dmg));
-//    ////                caster.dealPureDamage(target, 2*dmg);
-//    ////
-//    ////                useResult = new SkillUseResult(2*dmg + ",PURE");
-//    ////            }
-//    ////        });
-//    ////
-//
-
-
+            target.addEffect(effect(description) {
+                ARM +-(3*skill.level)
+            })
+        }
+    }
 }
 
 class Mage {

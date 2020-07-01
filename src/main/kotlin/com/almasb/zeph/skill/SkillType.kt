@@ -39,29 +39,6 @@ enum class SkillTargetType {
     AREA
 }
 
-enum class SkillUseType {
-
-    /**
-     * Offensive skills.
-     */
-    DAMAGE,
-
-    /**
-     * Skills that heal, restore mana.
-     */
-    RESTORE,
-
-    /**
-     * Skills that apply an effect on the target.
-     */
-    EFFECT,
-
-    /**
-     * Skills that apply a status effect on the target.
-     */
-    STATUS_EFFECT
-}
-
 /**
  * Data structure for holding information about the result of using a skill.
  */

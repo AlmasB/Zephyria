@@ -6,11 +6,8 @@ import com.almasb.zeph.combat.Element.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.combat.Status.*
 import com.almasb.zeph.skill.SkillTargetType.*
-import com.almasb.zeph.skill.SkillType.ACTIVE
-import com.almasb.zeph.skill.SkillType.PASSIVE
-import com.almasb.zeph.skill.SkillUseType.*
 import com.almasb.zeph.skill.passiveSkill
-import com.almasb.zeph.skill.skill
+import com.almasb.zeph.skill.activeSkill
 import java.lang.Math.*
 import java.util.EnumSet.of
 
@@ -59,16 +56,13 @@ class Novice {
 }
 
 class Warrior {
-    // TODO: rename activeSkill
-    val ROAR = skill {
+    val ROAR = activeSkill {
         desc {
             id = 7010
             name = "Roar"
             description = "Increases STR and VIT for the duration."
         }
 
-        type = ACTIVE
-        useType = EFFECT
         targetTypes = of(SELF)
 
         manaCost = 10
@@ -85,7 +79,7 @@ class Warrior {
         }
     }
 
-    val MIGHTY_SWING = skill {
+    val MIGHTY_SWING = activeSkill {
         desc {
             id = 7011
             name = "Mighty Swing"
@@ -129,15 +123,13 @@ class Warrior {
 
 class Crusader {
 
-    val HOLY_LIGHT = skill {
+    val HOLY_LIGHT = activeSkill {
         desc {
             id = 7110
             name = "Holy Light"
             description = "Heals and increases VIT for the duration."
         }
 
-        type = ACTIVE
-        useType = RESTORE
         targetTypes = of(SELF, ALLY)
 
         manaCost = 35
@@ -176,7 +168,7 @@ class Crusader {
         ARM +1
     }
 
-    val PRECISION_STRIKE = skill {
+    val PRECISION_STRIKE = activeSkill {
         desc {
             id = 7113
             name = "Precision Strike"
@@ -197,7 +189,7 @@ class Crusader {
         }
     }
 
-    val LAST_STAND = skill {
+    val LAST_STAND = activeSkill {
         desc {
             id = 7114
             name = "Last Stand"
@@ -225,15 +217,13 @@ class Crusader {
 
 class Gladiator {
 
-    val BASH = skill {
+    val BASH = activeSkill {
         desc {
             id = 7210
             name = "Bash"
             description = "A powerful physical attack that stuns the target"
         }
 
-        type = ACTIVE
-        useType = DAMAGE
         targetTypes = of(ENEMY)
 
         manaCost = 40
@@ -250,7 +240,7 @@ class Gladiator {
         }
     }
 
-    val ENDURANCE = skill {
+    val ENDURANCE = activeSkill {
         desc {
             id = 7211
             name = "Endurance"
@@ -274,7 +264,7 @@ class Gladiator {
         }
     }
 
-    val DOUBLE_EDGE = skill {
+    val DOUBLE_EDGE = activeSkill {
         desc {
             id = 7212
             name = "Double Edge"
@@ -296,7 +286,7 @@ class Gladiator {
         }
     }
 
-    val BLOODLUST = skill {
+    val BLOODLUST = activeSkill {
         desc {
             id = 7213
             name = "Bloodlust"
@@ -320,7 +310,7 @@ class Gladiator {
         }
     }
 
-    val SHATTER_ARMOR = skill {
+    val SHATTER_ARMOR = activeSkill {
         desc {
             id = 7214
             name = "Shatter Armor"
@@ -343,14 +333,13 @@ class Gladiator {
 
 class Mage {
 
-    val FIREBALL = skill {
+    val FIREBALL = activeSkill {
         desc {
             id = 7020
             name = "Fireball"
             description = "Deals magic damage with FIRE element."
         }
 
-        useType = DAMAGE
         targetTypes = of(ENEMY)
 
         manaCost = 1
@@ -365,7 +354,7 @@ class Mage {
         }
     }
 
-    val ICE_SHARD = skill {
+    val ICE_SHARD = activeSkill {
         desc {
             id = 7021
             name = "Ice Shard"
@@ -383,15 +372,13 @@ class Mage {
         }
     }
 
-    val AIR_SPEAR = skill {
+    val AIR_SPEAR = activeSkill {
         desc {
             id = 7022
             name = "Air Spear"
             description = "Deals magic damage with AIR element."
         }
 
-        type = ACTIVE
-        useType = DAMAGE
         targetTypes = of(ENEMY)
 
         manaCost = 25
@@ -403,15 +390,13 @@ class Mage {
         }
     }
 
-    val EARTH_BOULDER = skill {
+    val EARTH_BOULDER = activeSkill {
         desc {
             id = 7023
             name = "Earth Boulder"
             description = "Deals magic damage with EARTH element."
         }
 
-        type = ACTIVE
-        useType = DAMAGE
         targetTypes = of(ENEMY)
 
         manaCost = 25
@@ -437,7 +422,7 @@ class Wizard {
         WILLPOWER +2
     }
 
-    val AMPLIFY_MAGIC = skill {
+    val AMPLIFY_MAGIC = activeSkill {
         desc {
             id = 7121
             name = "Amplify Magic"
@@ -459,7 +444,7 @@ class Wizard {
         }
     }
 
-    val MENTAL_STRIKE = skill {
+    val MENTAL_STRIKE = activeSkill {
         desc {
             id = 7122
             name = "Mental Strike"
@@ -480,7 +465,7 @@ class Wizard {
         }
     }
 
-    val THUNDERBOLT_FIRESTORM = skill {
+    val THUNDERBOLT_FIRESTORM = activeSkill {
         desc {
             id = 7123
             name = "Thunderbolt Firestorm"
@@ -503,7 +488,7 @@ class Wizard {
         }
     }
 
-    val ICICLE_AVALANCHE = skill {
+    val ICICLE_AVALANCHE = activeSkill {
         desc {
             id = 7124
             name = "Icicle Avalanche"
@@ -529,7 +514,7 @@ class Wizard {
 
 class Enchanter {
 
-    val MAGIC_SHIELD = skill {
+    val MAGIC_SHIELD = activeSkill {
         desc {
             id = 7220
             name = "Magic Shield"
@@ -561,7 +546,7 @@ class Enchanter {
         MDEF +2
     }
 
-    val MIND_BLAST = skill {
+    val MIND_BLAST = activeSkill {
         desc {
             id = 7222
             name = "Mind Blast"
@@ -583,7 +568,7 @@ class Enchanter {
         }
     }
 
-    val CURSE_OF_KNOWLEDGE = skill {
+    val CURSE_OF_KNOWLEDGE = activeSkill {
         desc {
             id = 7223
             name = "Curse of Knowledge"
@@ -601,7 +586,7 @@ class Enchanter {
         }
     }
 
-    val MANA_BURN = skill {
+    val MANA_BURN = activeSkill {
         desc {
             id = 7224
             name = "Mana Burn"
@@ -626,7 +611,7 @@ class Enchanter {
 }
 
 class Scout {
-    val TRICK_ATTACK = skill {
+    val TRICK_ATTACK = activeSkill {
         desc {
             id = 7030
             name = "Trick Attack"
@@ -647,7 +632,7 @@ class Scout {
         }
     }
 
-    val POISON_ATTACK = skill {
+    val POISON_ATTACK = activeSkill {
         desc {
             id = 7031
             name = "Poison Attack"
@@ -693,7 +678,7 @@ class Scout {
 }
 
 class Rogue {
-    val SHAMELESS = skill {
+    val SHAMELESS = activeSkill {
         desc {
             id = 7130
             name = "Shameless"
@@ -718,7 +703,7 @@ class Rogue {
         }
     }
 
-    val DOUBLE_STRIKE = skill {
+    val DOUBLE_STRIKE = activeSkill {
         desc {
             id = 7131
             name = "Double Strike"
@@ -742,7 +727,7 @@ class Rogue {
         //                        + (stun ? ",STUNNED" : ",X2"));
     }
 
-    val TRIPLE_STRIKE = skill {
+    val TRIPLE_STRIKE = activeSkill {
         desc {
             id = 7132
             name = "Triple Strike"
@@ -766,7 +751,7 @@ class Rogue {
         //                useResult = new SkillUseResult(dmg1 + "," + dmg2 + "," + dmg3 + ",X3");
     }
 
-    val CRITICAL_STRIKE = skill {
+    val CRITICAL_STRIKE = activeSkill {
         desc {
             id = 7133
             name = "Critical Strike"
@@ -786,7 +771,7 @@ class Rogue {
         //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
     }
 
-    val PIERCING_STRIKE = skill {
+    val PIERCING_STRIKE = activeSkill {
         desc {
             id = 7134
             name = "Piercing Strike"
@@ -807,7 +792,7 @@ class Rogue {
 
 class Ranger {
 
-    val PINPOINT_WEAKNESS = skill {
+    val PINPOINT_WEAKNESS = activeSkill {
         desc {
             id = 7230
             name = "Pinpoint Weakness"
@@ -828,7 +813,7 @@ class Ranger {
         }
     }
 
-    val BULLSEYE = skill {
+    val BULLSEYE = activeSkill {
         desc {
             id = 7231
             name = "Bullseye"
@@ -849,7 +834,7 @@ class Ranger {
         }
     }
 
-    val FAST_REFLEXES = skill {
+    val FAST_REFLEXES = activeSkill {
         desc {
             id = 7232
             name = "Fast Reflexes"
@@ -871,7 +856,7 @@ class Ranger {
         }
     }
 
-    val ENCHANTED_ARROW = skill {
+    val ENCHANTED_ARROW = activeSkill {
         desc {
             id = 7233
             name = "Enchanted Arrow"

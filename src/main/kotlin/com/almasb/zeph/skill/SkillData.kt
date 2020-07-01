@@ -17,7 +17,6 @@ import java.util.*
 class SkillDataBuilder(
         var description: Description = emptyDescription,
         var type: SkillType = SkillType.ACTIVE,
-        var useType: SkillUseType = SkillUseType.DAMAGE,
         var targetTypes: EnumSet<SkillTargetType> = EnumSet.of(SkillTargetType.ENEMY),
         var manaCost: Int = 0,
         var cooldown: Double = 0.0,
@@ -55,7 +54,6 @@ class SkillDataBuilder(
         return SkillData(
                 description,
                 type,
-                useType,
                 targetTypes,
                 manaCost,
                 cooldown,
@@ -71,7 +69,7 @@ class SkillDataBuilder(
 }
 
 @DataDSL
-fun skill(setup: SkillDataBuilder.() -> Unit): SkillData {
+fun activeSkill(setup: SkillDataBuilder.() -> Unit): SkillData {
     val builder = SkillDataBuilder()
     builder.setup()
     return builder.build()
@@ -88,7 +86,6 @@ fun passiveSkill(setup: SkillDataBuilder.() -> Unit): SkillData {
 data class SkillData(
         val description: Description,
         val type: SkillType,
-        val useType: SkillUseType,
         val targetTypes: EnumSet<SkillTargetType>,
         val manaCost: Int,
         val cooldown: Double,

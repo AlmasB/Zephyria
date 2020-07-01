@@ -26,6 +26,8 @@ class Monsters {
         element = EARTH
         rewardXP = Experience(3, 3, 3)
 
+        deathSoundName = "death/skeleton.wav"
+
         attributes {
             DEXTERITY +1
         }
@@ -44,6 +46,8 @@ class Monsters {
         baseLevel = 1
         element = EARTH
         rewardXP = Experience(3, 5, 3)
+
+        deathSoundName = "death/skeleton.wav"
 
         attributes {
             STRENGTH +1
@@ -65,6 +69,8 @@ class Monsters {
         element = FIRE
         rewardXP = Experience(5, 3, 7)
 
+        deathSoundName = "death/skeleton.wav"
+
         attributes {
             INTELLECT +3
             WILLPOWER +1
@@ -81,6 +87,8 @@ class Monsters {
         element = EARTH
         rewardXP = Experience(7, 6, 4)
 
+        deathSoundName = "death/skeleton.wav"
+
         attributes {
             DEXTERITY +4
             AGILITY +2
@@ -96,6 +104,8 @@ class Monsters {
         baseLevel = 4
         element = EARTH
         rewardXP = Experience(8, 5, 6)
+
+        deathSoundName = "death/skeleton.wav"
 
         attributes {
             STRENGTH +4

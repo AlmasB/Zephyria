@@ -1,7 +1,9 @@
 package com.almasb.zeph.events
 
 import com.almasb.fxgl.core.math.FXGLMath
+import com.almasb.fxgl.dsl.isReleaseMode
 import com.almasb.fxgl.dsl.onEvent
+import com.almasb.fxgl.dsl.play
 import com.almasb.fxgl.dsl.random
 import com.almasb.zeph.EntityType.PLAYER
 import com.almasb.zeph.Gameplay
@@ -10,6 +12,8 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.combat.GameMath.checkChance
 import com.almasb.zeph.combat.runIfChance
+import com.almasb.zeph.item.ArmorType
+import com.almasb.zeph.item.ArmorType.*
 import javafx.scene.paint.Color
 import java.util.function.Consumer
 
@@ -23,6 +27,12 @@ object EventHandlers {
         onEvent(Events.ON_ATTACK) {
             if (it.attacker.isType(PLAYER)) {
                 it.attacker.playerComponent!!.weapon.value.onAttack(it.attacker, it.target)
+            }
+
+            if (isReleaseMode()) {
+                val value = random(0, 4)
+
+                play("slash$value.wav")
             }
         }
 
@@ -71,6 +81,33 @@ object EventHandlers {
                         spawnItem(itemID, mob.cellX, mob.cellY)
                     }
                 })
+            }
+
+            if (!it.killedEntity.isPlayer) {
+                val deathSoundName = it.killedEntity.characterComponent.data.deathSoundName
+
+                if (deathSoundName.isNotEmpty()) {
+                    if (isReleaseMode()) {
+                        play(deathSoundName)
+                    }
+                }
+            }
+        }
+
+        onEvent(Events.ON_SKILL_LEARNED) {
+            if (isReleaseMode()) {
+                play("skill_level_up.wav")
+            }
+        }
+
+        onEvent(Events.ON_ARMOR_EQUIPPED) {
+            if (isReleaseMode()) {
+
+                when (it.armor.type) {
+                    HELM -> play("equip_armor_helm.wav")
+                    BODY -> play("equip_armor_body.wav")
+                    SHOES -> play("equip_armor_shoes.wav")
+                }
             }
         }
     }

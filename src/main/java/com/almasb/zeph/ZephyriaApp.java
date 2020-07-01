@@ -35,7 +35,7 @@ public class ZephyriaApp extends GameApplication {
         settings.setWidth(1700);
         settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
-        settings.setVersion("0.1");
+        settings.setVersion("0.1 Pre-alpha");
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
         settings.setProfilingEnabled(true);

@@ -21,6 +21,7 @@ class CharacterDataBuilder(
         val attackRange: Int = 1,
         var element: Element = Element.NEUTRAL,
         var rewardXP: Experience = Experience(0, 0, 0),
+        var deathSoundName: String = "",
 
         /**
          * Item ID -> chance to drop
@@ -53,7 +54,18 @@ class CharacterDataBuilder(
             description = description.copy(textureName = "chars/enemies/$fileName")
         }
 
-        return CharacterData(description, type, charClass, baseLevel, attributes, attackRange, element, rewardXP, dropItems)
+        return CharacterData(
+                description,
+                type,
+                charClass,
+                baseLevel,
+                attributes,
+                attackRange,
+                element,
+                rewardXP,
+                deathSoundName,
+                dropItems
+        )
     }
 
     class DropInfo {
@@ -85,6 +97,7 @@ data class CharacterData(
         val attackRange: Int,
         val element: Element,
         val rewardXP: Experience,
+        val deathSoundName: String,
 
         /**
          * Item ID -> chance to drop

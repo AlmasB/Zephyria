@@ -12,7 +12,9 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.events.OnArmorEquippedEvent
 import com.almasb.zeph.events.OnMoneyReceivedEvent
+import com.almasb.zeph.events.OnSkillLearnedEvent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
@@ -124,6 +126,8 @@ class PlayerComponent : Component() {
             skillPoints.value--
 
             skill.onLearn(player)
+
+            fire(OnSkillLearnedEvent(player, skill))
         }
     }
 
@@ -246,6 +250,9 @@ class PlayerComponent : Component() {
         unEquipItem(place)
         setEquip(place, armor)
         armor.onEquip(player)
+
+        fire(OnArmorEquippedEvent(player, armor))
+
         player.armorElement.value = armor.element.value
     }
 

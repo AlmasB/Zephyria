@@ -39,16 +39,17 @@ public class ZephyriaApp extends GameApplication {
         settings.setHeightFromRatio(16/9.0);
         settings.setTitle("Zephyria RPG");
         settings.setVersion("0.1 Pre-alpha");
+        //settings.setIntroEnabled(true);
         //settings.setManualResizeEnabled(true);
         //settings.setPreserveResizeRatio(true);
-        settings.setProfilingEnabled(true);
+        //settings.setProfilingEnabled(true);
         settings.setSceneFactory(new SceneFactory() {
             @Override
             public LoadingScene newLoadingScene() {
                 return new ZephLoadingScene();
             }
         });
-        settings.setApplicationMode(ApplicationMode.RELEASE);
+        settings.setApplicationMode(ApplicationMode.DEVELOPER);
     }
 
     @Override

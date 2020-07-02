@@ -135,6 +135,7 @@ public class InventoryView extends Parent {
 
         isTooltipVisible = Bindings.createBooleanBinding(() -> false, player.getInventory().getItems());
 
+        // TODO: and NEWly added items
         itemGroup.getChildren().forEach(node -> {
             isTooltipVisible = isTooltipVisible.or(node.hoverProperty());
         });

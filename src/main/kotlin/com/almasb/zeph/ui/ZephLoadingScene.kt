@@ -19,7 +19,7 @@ import java.util.function.Consumer
 class ZephLoadingScene : LoadingScene() {
 
     init {
-        val text = getUIFactoryService().newText("Loading Zephyria...", Color.WHITE, 72.0)
+        val text = getUIFactoryService().newText("Loading Zephyria...", Color.WHITE, 58.0)
         FXGL.centerText(text)
 
         animationBuilder(this)

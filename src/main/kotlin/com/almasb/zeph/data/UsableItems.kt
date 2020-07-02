@@ -93,7 +93,7 @@ class UsableItems {
         desc {
             id = 6007
             name = "Teleportation Stone"
-            description = "Teleports the stone user to a random location on the map"
+            description = "Teleports the stone user to a random location on the map."
             textureName = "items/usable/teleportation_stone.png"
         }
 

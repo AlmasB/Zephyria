@@ -15,4 +15,12 @@ class MiscItems {
             description = "An old bone."
         }
     }
+
+    val ORC_TOOTH = miscItem {
+        desc {
+            id = 6501
+            name = "Orc Tooth"
+            description = "A chipped tooth of an orc."
+        }
+    }
 }

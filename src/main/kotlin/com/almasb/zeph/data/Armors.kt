@@ -2,6 +2,8 @@ package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Attribute.*
+import com.almasb.zeph.combat.Stat
+import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.combat.runIfChance
 import com.almasb.zeph.item.*
 import com.almasb.zeph.item.ArmorType.*
@@ -30,10 +32,20 @@ class Helm {
             id = 5000
             name = "Hat"
             description = "Ordinary hat, already out of fashion."
-            textureName = "items/armor/hat.png"
+        }
+    }
+
+    val MAGE_HAT = armorHelm {
+        desc {
+            id = 5004
+            name = "Mage Hat"
+            description = "A hat owned by every mage."
         }
 
-        armorType = HELM
+        INTELLECT +1
+        WILLPOWER +1
+
+        MAX_SP +10
     }
 }
 
@@ -46,8 +58,6 @@ class Body {
             description = "Just normal clothes, don't count on any defense. Chance to restore 1 HP on hit."
             textureName = "items/armor/clothes.png"
         }
-
-        armorType = BODY
 
         onBeingHitScript = { attacker, target ->
             runIfChance(50) {

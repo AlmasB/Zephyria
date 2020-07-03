@@ -2,10 +2,11 @@ package com.almasb.zeph.character
 
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.pathfinding.CellMoveComponent
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.components.*
 import com.almasb.zeph.combat.*
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
@@ -72,7 +73,7 @@ class CharacterEntity : Entity() {
         return Math.abs(this.cellX - cellX) + Math.abs(this.cellY - cellY)
     }
 
-    fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
+    fun setPositionToCell(cellX: Int, cellY: Int) = getComponent(AStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 
     fun orderMove(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
 

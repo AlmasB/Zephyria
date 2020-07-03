@@ -17,6 +17,7 @@ import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
 import com.almasb.fxgl.procedural.HeightMapGenerator
@@ -42,7 +43,7 @@ import com.almasb.zeph.combat.Element
 import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -73,14 +74,14 @@ class ZephFactory : EntityFactory {
         val entity = entityBuilder()
                 .type(NPC)
                 .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                .with(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
+                .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
                 .with(AnimationComponent(npcData.description.textureName))
                 .build()
 
         entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
         entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
 
-        entity.getComponent(NewAStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
+        entity.getComponent(AStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
 
         entity.viewComponent.parent.cursor = ImageCursor(image("ui/chat.png"), 16.0, 16.0)
 
@@ -128,7 +129,7 @@ class ZephFactory : EntityFactory {
                 addComponent(StateComponent())
                 addComponent(CharacterEffectComponent())
                 addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                addComponent(NewAStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
+                addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
                 addComponent(CharacterComponent(charData))

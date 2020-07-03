@@ -9,11 +9,12 @@ import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
@@ -36,8 +37,8 @@ class CharacterActionComponent : Component() {
     private lateinit var animationComponent: AnimationComponent
     private lateinit var moveComponent: CellMoveComponent
 
-    private val astar: NewAStarMoveComponent
-        get() = entity.getComponent(NewAStarMoveComponent::class.java)
+    private val astar: AStarMoveComponent
+        get() = entity.getComponent(AStarMoveComponent::class.java)
 
     private val CASTING: EntityState = object : EntityState() {
 
@@ -213,7 +214,7 @@ class CharacterActionComponent : Component() {
     private fun move(cellX: Int, cellY: Int) {
         moveTarget = Point2D(cellX.toDouble(), cellY.toDouble())
         state.changeState(MOVE)
-        entity.getComponent(NewAStarMoveComponent::class.java).moveToCell(cellX, cellY)
+        entity.getComponent(AStarMoveComponent::class.java).moveToCell(cellX, cellY)
     }
 
     private fun attack(target: CharacterEntity) {

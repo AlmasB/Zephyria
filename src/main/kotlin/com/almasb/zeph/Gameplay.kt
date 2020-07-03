@@ -7,12 +7,13 @@ import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
 import com.almasb.fxgl.logging.Logger
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
-import com.almasb.zeph.entity.character.component.NewAStarMoveComponent
+
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
@@ -54,8 +55,8 @@ object Gameplay : FunctionCallHandler {
 
         val player = getPlayer()
 
-        player.removeComponent(NewAStarMoveComponent::class.java)
-        player.addComponent(NewAStarMoveComponent(newMap.grid))
+        player.removeComponent(AStarMoveComponent::class.java)
+        player.addComponent(AStarMoveComponent(newMap.grid))
 
         player.actionComponent.orderIdle()
         player.setPositionToCell(toCellX, toCellY)

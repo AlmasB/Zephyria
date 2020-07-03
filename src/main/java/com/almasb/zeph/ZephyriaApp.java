@@ -134,14 +134,11 @@ public class ZephyriaApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new ZephFactory());
 
-        // TODO: check collision with teleport ...
         var player = (CharacterEntity) spawn("player");
 
         spawn("cellSelection");
 
-        // TODO: bounds should consider zoom
-        // maxX and width should be recomputed because of zoom
-        getGameScene().getViewport().setBounds(0, 0, (int)(MAP_WIDTH * TILE_SIZE * 1.13 - 64), (int)(MAP_HEIGHT * TILE_SIZE * 1.07 - 32));
+        getGameScene().getViewport().setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE);
         getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
         getGameScene().getViewport().setZoom(1.5);
 

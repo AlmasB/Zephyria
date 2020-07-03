@@ -95,9 +95,26 @@ class WeaponDataBuilder(
 }
 
 @DataDSL
-fun armor(setup: ArmorDataBuilder.() -> Unit): ArmorData {
+fun armorHelm(setup: ArmorDataBuilder.() -> Unit): ArmorData {
     val builder = ArmorDataBuilder()
     builder.setup()
+    builder.armorType = ArmorType.HELM
+    return builder.build()
+}
+
+@DataDSL
+fun armorShoes(setup: ArmorDataBuilder.() -> Unit): ArmorData {
+    val builder = ArmorDataBuilder()
+    builder.setup()
+    builder.armorType = ArmorType.SHOES
+    return builder.build()
+}
+
+@DataDSL
+fun armorBody(setup: ArmorDataBuilder.() -> Unit): ArmorData {
+    val builder = ArmorDataBuilder()
+    builder.setup()
+    builder.armorType = ArmorType.BODY
     return builder.build()
 }
 

@@ -96,16 +96,9 @@ class ZephFactory : EntityFactory {
                 removeUINode(fullTexture)
             }, Duration.seconds(0.05))
 
+            val graph = getAssetLoader().loadDialogueGraph(npcData.dialogueName.removePrefix("dialogues/"))
 
-            // TODO: store this in FXGL assets dialogue ...
-            getAssetLoader().getStream("/assets/${npcData.dialogueName}").use {
-                val serializedGraph = jacksonObjectMapper().readValue(it, SerializableGraph::class.java)
-
-                val graph = DialogueGraphSerializer.fromSerializable(serializedGraph)
-
-                // TODO: add callback on finished?
-                getCutsceneService().startDialogueScene(graph)
-            }
+            getCutsceneService().startDialogueScene(graph, Gameplay, Runnable { removeUINode(fullTexture) })
         })
 
         return entity
@@ -223,7 +216,7 @@ class ZephFactory : EntityFactory {
             player.inventory.items.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
             player.inventory.items.add(UsableItem(Data.UsableItems.TREASURE_BOX))
 
-            player.inventory.items.add(Armor(Data.Armors.Shoes.LUCKY_SHOES))
+            player.inventory.items.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
 
             player.inventory.items.add(MiscItem(Data.MiscItems.SKELETON_BONE))
 

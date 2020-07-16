@@ -129,61 +129,36 @@ class AnimationComponent(textureName: String) : Component() {
         animatedTexture.onCycleFinished = onFinished
     }
 
-    // TODO: move to loopNoOverride()
     fun loopIdleUp() {
-        if (animatedTexture.animationChannel === channelIdleUp)
-            return
-
-        animatedTexture.loopAnimationChannel(channelIdleUp)
+        animatedTexture.loopNoOverride(channelIdleUp)
     }
 
     fun loopIdleDown() {
-        if (animatedTexture.animationChannel === channelIdleDown)
-            return
-
-        animatedTexture.loopAnimationChannel(channelIdleDown)
+        animatedTexture.loopNoOverride(channelIdleDown)
     }
 
     fun loopIdleRight() {
-        if (animatedTexture.animationChannel === channelIdleRight)
-            return
-
-        animatedTexture.loopAnimationChannel(channelIdleRight)
+        animatedTexture.loopNoOverride(channelIdleRight)
     }
 
     fun loopIdleLeft() {
-        if (animatedTexture.animationChannel === channelIdleLeft)
-            return
-
-        animatedTexture.loopAnimationChannel(channelIdleLeft)
+        animatedTexture.loopNoOverride(channelIdleLeft)
     }
 
     fun loopWalkUp() {
-        if (animatedTexture.animationChannel === channelWalkUp)
-            return
-
-        animatedTexture.loopAnimationChannel(channelWalkUp)
+        animatedTexture.loopNoOverride(channelWalkUp)
     }
 
     fun loopWalkDown() {
-        if (animatedTexture.animationChannel === channelWalkDown)
-            return
-
-        animatedTexture.loopAnimationChannel(channelWalkDown)
+        animatedTexture.loopNoOverride(channelWalkDown)
     }
 
     fun loopWalkRight() {
-        if (animatedTexture.animationChannel === channelWalkRight)
-            return
-
-        animatedTexture.loopAnimationChannel(channelWalkRight)
+        animatedTexture.loopNoOverride(channelWalkRight)
     }
 
     fun loopWalkLeft() {
-        if (animatedTexture.animationChannel === channelWalkLeft)
-            return
-
-        animatedTexture.loopAnimationChannel(channelWalkLeft)
+        animatedTexture.loopNoOverride(channelWalkLeft)
     }
 
     fun loopAttackUp() {

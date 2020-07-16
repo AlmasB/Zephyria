@@ -70,7 +70,7 @@ class UsableItems {
                     else
                         Armor(Data.allArmorData.random())
 
-            it.inventory.addItem(item)
+            it.inventory.add(item)
         }
     }
 

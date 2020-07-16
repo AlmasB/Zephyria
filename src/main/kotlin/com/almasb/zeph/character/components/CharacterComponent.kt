@@ -7,8 +7,6 @@ import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.ViewComponent
 import com.almasb.zeph.Config
-import com.almasb.zeph.Config.TILE_SIZE
-import com.almasb.zeph.Inventory
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
@@ -18,6 +16,8 @@ import com.almasb.zeph.events.OnAttackEvent
 import com.almasb.zeph.events.OnBeingKilledEvent
 import com.almasb.zeph.events.OnMagicalDamageDealtEvent
 import com.almasb.zeph.events.OnPhysicalDamageDealtEvent
+import com.almasb.zeph.fxglinventory.Inventory
+import com.almasb.zeph.item.Item
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillUseResult
@@ -48,7 +48,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val weaponElement = SimpleObjectProperty(data.element)
     val armorElement = SimpleObjectProperty(data.element)
 
-    val inventory = Inventory()
+    val inventory = Inventory<Item>(Config.MAX_INVENTORY_SIZE).also { it.isRemoveItemsIfQty0 = true }
     val skills = FXCollections.observableArrayList<Skill>()
 
     // what XP does this char give on death
@@ -460,8 +460,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     fun useItem(item: UsableItem) {
-        // TODO: allow stacks of items
         item.onUse(char)
-        inventory.removeItem(item)
+        inventory.incrementQuantity(item, -1)
     }
 }

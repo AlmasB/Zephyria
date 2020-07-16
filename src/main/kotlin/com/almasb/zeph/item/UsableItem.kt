@@ -15,10 +15,31 @@ class UsableItem(val data: UsableItemData) : Item(data.description) {
     fun onUse(char: CharacterEntity) {
         data.onUseScript.invoke(char)
     }
+
+    override fun hashCode(): Int {
+        return description.id
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is UsableItem)
+            return false
+
+        return this.description.id == other.description.id
+    }
 }
 
 class MiscItem(val data: MiscItemData) : Item(data.description) {
 
+    override fun hashCode(): Int {
+        return description.id
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is MiscItem)
+            return false
+
+        return this.description.id == other.description.id
+    }
 }
 
 @DataDSL

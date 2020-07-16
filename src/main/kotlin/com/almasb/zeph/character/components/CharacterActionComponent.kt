@@ -16,6 +16,7 @@ import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
 
 import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.MiscItem
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.skill.Skill
@@ -235,15 +236,19 @@ class CharacterActionComponent : Component() {
 
     private fun pickUp(item: Entity) {
         item.getPropertyOptional<Weapon>("weapon").ifPresent {
-            char.inventory.addItem(it)
+            char.inventory.add(it)
         }
 
         item.getPropertyOptional<Armor>("armor").ifPresent {
-            char.inventory.addItem(it)
+            char.inventory.add(it)
         }
 
         item.getPropertyOptional<UsableItem>("usable").ifPresent {
-            char.inventory.addItem(it)
+            char.inventory.add(it)
+        }
+
+        item.getPropertyOptional<MiscItem>("misc").ifPresent {
+            char.inventory.add(it)
         }
 
         item.removeFromWorld()

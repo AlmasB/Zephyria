@@ -12,6 +12,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -21,6 +22,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -126,14 +128,14 @@ public class InventoryView extends Parent {
             }
         };
 
-        player.getInventory().getItems().forEach(this::addItem);
+        player.getInventory().itemsProperty().forEach(this::addItem);
 
-        player.getInventory().getItems().addListener(listener);
+        player.getInventory().itemsProperty().addListener(listener);
 
         // TODO: should have 1 tooltip object for everything in the game
         // TODO: description should have TextFlow, so we can color some text, e.g. 10% damage, runes, etc.
 
-        isTooltipVisible = Bindings.createBooleanBinding(() -> false, player.getInventory().getItems());
+        isTooltipVisible = Bindings.createBooleanBinding(() -> false, player.getInventory().itemsProperty());
 
         // TODO: and NEWly added items
         itemGroup.getChildren().forEach(node -> {
@@ -158,8 +160,8 @@ public class InventoryView extends Parent {
         int index = getNextFreeSlot();
         slots.put(index, false);
 
-        Texture view = texture(item.getDescription().getTextureName());
-
+        StackPane view = new StackPane(texture(item.getDescription().getTextureName()));
+        view.setAlignment(Pos.BOTTOM_RIGHT);
         view.setUserData(new Pair<>(item, index));
         view.setTranslateX((index % 5) * 40 + 3);
         view.setTranslateY((index / 5) * 40 + 3);
@@ -186,6 +188,12 @@ public class InventoryView extends Parent {
             }
         });
         view.setCursor(Cursor.HAND);
+
+        var text = getUIFactoryService().newText("", Color.WHITE, 12.0);
+        text.textProperty().bind(player.getInventory().getData(item).get().quantityProperty().asString());
+        text.setStrokeWidth(1.5);
+
+        view.getChildren().addAll(text);
 
         itemGroup.getChildren().add(view);
     }

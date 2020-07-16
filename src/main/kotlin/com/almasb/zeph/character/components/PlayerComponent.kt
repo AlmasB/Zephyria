@@ -208,16 +208,16 @@ class PlayerComponent : Component() {
     fun getLeftWeapon() = getEquip(EquipPlace.LEFT_HAND) as Weapon
 
     fun equipWeapon(weapon: Weapon) {
-        player.inventory.removeItem(weapon)
+        player.inventory.remove(weapon)
 
         if (weapon.type.isTwoHanded()) {
 
-            if (Config.MAX_INVENTORY_SIZE - player.inventory.items.size == 1
+            if (Config.MAX_INVENTORY_SIZE - player.inventory.size == 1
                 && !isFree(EquipPlace.RIGHT_HAND)
                 && !isFree(EquipPlace.LEFT_HAND)) {
                 // ex case, when inventory is full and player tries to equip 2H weapon
                 // but holds two 1H weapons
-                player.inventory.addItem(weapon)
+                player.inventory.add(weapon)
                 return
             }
 
@@ -239,7 +239,7 @@ class PlayerComponent : Component() {
     }
 
     fun equipArmor(armor: Armor) {
-        player.inventory.removeItem(armor)
+        player.inventory.remove(armor)
 
         val place = when (armor.type) {
             ArmorType.BODY -> EquipPlace.BODY
@@ -257,7 +257,7 @@ class PlayerComponent : Component() {
     }
 
     fun unEquipItem(place: EquipPlace) {
-        if (isFree(place) || player.inventory.isFull())
+        if (isFree(place) || player.inventory.isFull)
             return
 
         val item = getEquip(place)
@@ -289,7 +289,7 @@ class PlayerComponent : Component() {
             item.onUnEquip(player)
         }
 
-        player.inventory.addItem(item)
+        player.inventory.add(item)
 
         // replace with default
         if (place.isWeapon) {

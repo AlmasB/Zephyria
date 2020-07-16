@@ -205,20 +205,20 @@ class ZephFactory : EntityFactory {
             player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
             player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
 
-            player.inventory.items.add(newDagger(Element.NEUTRAL))
-            player.inventory.items.add(newDagger(Element.FIRE))
-            player.inventory.items.add(newDagger(Element.EARTH))
-            player.inventory.items.add(newDagger(Element.AIR))
-            player.inventory.items.add(newDagger(Element.WATER))
+            player.inventory.add(newDagger(Element.NEUTRAL))
+            player.inventory.add(newDagger(Element.FIRE))
+            player.inventory.add(newDagger(Element.EARTH))
+            player.inventory.add(newDagger(Element.AIR))
+            player.inventory.add(newDagger(Element.WATER))
 
-            player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.items.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.items.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
-            player.inventory.items.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
+            player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
 
-            player.inventory.items.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
+            player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
 
-            player.inventory.items.add(MiscItem(Data.MiscItems.SKELETON_BONE))
+            player.inventory.add(MiscItem(Data.MiscItems.SKELETON_BONE))
 
             // TEST DATA END
 
@@ -241,6 +241,8 @@ class ZephFactory : EntityFactory {
             data.put("weapon", Weapon(itemData))
         } else if (itemData is ArmorData) {
             data.put("armor", Armor(itemData))
+        } else if (itemData is MiscItemData) {
+            data.put("misc", MiscItem(itemData))
         }
 
         val e = entityBuilder(data)

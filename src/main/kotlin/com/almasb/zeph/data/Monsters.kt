@@ -33,7 +33,8 @@ class Monsters {
         }
 
         drops {
-            Data.Weapons.Daggers.KNIFE has 50
+            Data.Weapons.Daggers.KNIFE has 10
+            Data.MiscItems.SKELETON_BONE has 50
         }
     }
 
@@ -56,6 +57,7 @@ class Monsters {
 
         drops {
             Data.Weapons.Daggers.KNIFE has 50
+            Data.MiscItems.SKELETON_BONE has 50
         }
     }
 
@@ -74,6 +76,10 @@ class Monsters {
         attributes {
             INTELLECT +3
             WILLPOWER +1
+        }
+
+        drops {
+            Data.MiscItems.SKELETON_BONE has 50
         }
     }
 

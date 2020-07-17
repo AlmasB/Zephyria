@@ -1,5 +1,6 @@
 package com.almasb.zeph.item
 
+import com.almasb.zeph.Config.MAX_ESSENCES
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Essence
@@ -84,7 +85,37 @@ abstract class EquipItem(
         }
     }
 
-    // TODO: addEssence
+    /**
+     * @return whether essence addition succeeded
+     */
+    fun addEssence(essence: Essence): Boolean {
+        if (essences.size >= MAX_ESSENCES)
+            return false
+
+        equippedCharacter?.let {
+            onUnEquip(it)
+        }
+
+        essences += essence
+
+        equippedCharacter?.let {
+            onEquip(it)
+        }
+
+        return true
+    }
+
+    fun removeEssence(essence: Essence) {
+        equippedCharacter?.let {
+            onUnEquip(it)
+        }
+
+        essences -= essence
+
+        equippedCharacter?.let {
+            onEquip(it)
+        }
+    }
 
     open fun onEquip(char: CharacterEntity) {
         equippedCharacter = char

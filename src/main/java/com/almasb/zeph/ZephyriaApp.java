@@ -78,8 +78,6 @@ public class ZephyriaApp extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        // TODO: DSL String operator = ...
-
         vars.put(IS_SELECTING_SKILL_TARGET_CHAR, false);
         vars.put(SELECTED_SKILL_INDEX, -1);
     }

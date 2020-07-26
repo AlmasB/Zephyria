@@ -78,6 +78,7 @@ object Config {
 
     const val STARTING_MONEY = 100
 
+    const val MAX_STORAGE_SIZE = 100
     const val MAX_INVENTORY_SIZE = 30
     const val MAX_ESSENCES = 3
 

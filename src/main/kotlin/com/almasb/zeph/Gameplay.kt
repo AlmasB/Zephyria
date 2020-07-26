@@ -13,6 +13,7 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.ui.StorageView
 
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
@@ -32,6 +33,53 @@ object Gameplay : FunctionCallHandler {
 
     fun getCurrentMap(): GameMap {
         return geto(GAME_MAP)
+    }
+
+    override fun handle(functionName: String, args: Array<String>): Any {
+        log.debug("Function call: $functionName ${args.toList()}")
+
+        val cmd = functionName.toLowerCase()
+
+        when (cmd) {
+            "tp" -> {
+                val cellX = args[0].toInt()
+                val cellY = args[1].toInt()
+
+                goto(cellX, cellY)
+            }
+
+            "spawn_mob" -> {
+                val mobID = args[0].toInt()
+                val cellX = args[1].toInt()
+                val cellY = args[2].toInt()
+
+                spawnMob(mobID, cellX, cellY)
+            }
+
+            "spawn_item" -> {
+                val itemID = args[0].toInt()
+                val cellX = args[1].toInt()
+                val cellY = args[2].toInt()
+
+                spawnItem(itemID, cellX, cellY)
+            }
+
+            "open_storage" -> {
+                openStorage()
+            }
+
+            else -> {
+                log.warning("Unrecognized command: $cmd")
+            }
+        }
+
+        return 0
+    }
+
+    fun openStorage() {
+        val storageView = StorageView()
+
+        addUINode(storageView, 200.0, 200.0)
     }
 
     fun goto(toCellX: Int, toCellY: Int) {
@@ -114,42 +162,5 @@ object Gameplay : FunctionCallHandler {
 
     fun spawnItem(id: Int, cellX: Int, cellY: Int) {
         getCurrentMap().spawnItem(cellX, cellY, Data.getItemData(id))
-    }
-
-    override fun handle(functionName: String, args: Array<String>): Any {
-        log.debug("Function call: $functionName ${args.toList()}")
-
-        val cmd = functionName.toLowerCase()
-
-        when (cmd) {
-            "tp" -> {
-                val cellX = args[0].toInt()
-                val cellY = args[1].toInt()
-
-                goto(cellX, cellY)
-            }
-
-            "spawn_mob" -> {
-                val mobID = args[0].toInt()
-                val cellX = args[1].toInt()
-                val cellY = args[2].toInt()
-
-                spawnMob(mobID, cellX, cellY)
-            }
-
-            "spawn_item" -> {
-                val itemID = args[0].toInt()
-                val cellX = args[1].toInt()
-                val cellY = args[2].toInt()
-
-                spawnItem(itemID, cellX, cellY)
-            }
-
-            else -> {
-                log.warning("Unrecognized command: $cmd")
-            }
-        }
-
-        return 0
     }
 }

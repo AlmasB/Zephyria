@@ -9,5 +9,5 @@ enum class EntityType {
     PLAYER, MONSTER, NPC,
     ITEM,
     PROJECTILE, SKILL_PROJECTILE,
-    NAV, PORTAL
+    NAV, PORTAL, CELL_SELECTION
 }

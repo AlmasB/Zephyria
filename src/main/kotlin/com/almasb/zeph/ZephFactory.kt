@@ -290,6 +290,10 @@ class ZephFactory : EntityFactory {
                     val targetX = (FXGL.getInput().mouseXWorld / TILE_SIZE).toInt()
                     val targetY = (FXGL.getInput().mouseYWorld / TILE_SIZE).toInt()
 
+                    getGameWorld().getSingleton(CELL_SELECTION)
+                            .getComponent(CellSelectionComponent::class.java)
+                            .onClick()
+
                     getGameWorld().getSingleton(PLAYER)
                             .getComponent(CharacterActionComponent::class.java)
                             .orderMove(targetX, targetY)
@@ -378,6 +382,7 @@ class ZephFactory : EntityFactory {
                 .buildAndPlay()
 
         val e = entityBuilder(data)
+                .type(CELL_SELECTION)
                 .view(view)
                 .zIndex(Z_INDEX_CELL_SELECTION)
                 .with(CellSelectionComponent())

@@ -1,11 +1,16 @@
 package com.almasb.zeph.components
 
+import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.animationBuilder
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.zeph.Config
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import javafx.geometry.Point2D
+import javafx.scene.paint.Color
+import javafx.scene.shape.Rectangle
+import javafx.util.Duration
 
 /**
  *
@@ -28,5 +33,21 @@ class CellSelectionComponent : Component() {
         if (cell.isWalkable) {
             entity.position = Point2D(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
         }
+    }
+
+    fun onClick() {
+        val view = Rectangle(Config.TILE_SIZE * 1.0, Config.TILE_SIZE * 1.0, null)
+        view.stroke = Color.GOLD
+
+        entity.viewComponent.addChild(view)
+
+        animationBuilder()
+                .onFinished(Runnable { entity.viewComponent.removeChild(view) })
+                .duration(Duration.seconds(0.66))
+                .interpolator(Interpolators.SMOOTH.EASE_OUT())
+                .scale(view)
+                .from(Point2D(1.0, 1.0))
+                .to(Point2D.ZERO)
+                .buildAndPlay()
     }
 }

@@ -17,9 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class CharInfoView extends Region {
+public class CharInfoView2 extends Region {
 
-    public CharInfoView(CharacterEntity player) {
+    public CharInfoView2(CharacterEntity player) {
         setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
 
         Font font = Font.font("Lucida Console", 14);

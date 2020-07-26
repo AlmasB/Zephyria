@@ -1,7 +1,12 @@
 package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.getUIFactoryService
+import com.almasb.zeph.Description
+import com.almasb.zeph.getUITooltip
 import com.almasb.zeph.item.Item
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
@@ -38,5 +43,43 @@ class TooltipView : Parent() {
 
     fun setItem(item: Item) {
         text.text = item.dynamicDescription.value
+    }
+
+    fun setText(text: String) {
+        this.text.text = text
+    }
+
+    fun show() {
+        isVisible = true
+    }
+
+    fun hide() {
+        isVisible = false
+    }
+}
+
+fun Node.setOnTooltipHover(tooltipAction: (TooltipView) -> Unit) {
+    val tooltip = getUITooltip()
+
+    this.hoverProperty().addListener { _, _, isHovering ->
+        if (isHovering) {
+            tooltipAction(tooltip)
+            tooltip.show()
+        } else {
+            tooltip.hide()
+        }
+    }
+}
+
+
+
+
+class DescriptionTooltipListener(val description: Description) : ChangeListener<Boolean> {
+
+    override fun changed(observable: ObservableValue<out Boolean>, oldValue: Boolean, newValue: Boolean) {
+        // if isHovering
+        if (newValue) {
+            getUITooltip().setText(description.name + "\n" + description.description)
+        }
     }
 }

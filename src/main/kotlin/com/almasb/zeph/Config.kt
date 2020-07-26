@@ -1,5 +1,9 @@
 package com.almasb.zeph
 
+import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.addUINode
+import com.almasb.zeph.ui.TooltipView
+
 /**
  * Holds various constants.
  *
@@ -87,3 +91,12 @@ object Vars {
 
     const val GAME_MAP = "GAME_MAP"
 }
+
+private val tooltipView by lazy {
+    TooltipView().also {
+        it.hide()
+        addUINode(it, FXGL.getAppWidth() - 300.0, 0.0)
+    }
+}
+
+fun getUITooltip() = tooltipView

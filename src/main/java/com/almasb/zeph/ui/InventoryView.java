@@ -1,6 +1,8 @@
 package com.almasb.zeph.ui;
 
 import com.almasb.fxgl.texture.Texture;
+import com.almasb.zeph.Config;
+import com.almasb.zeph.ConfigKt;
 import com.almasb.zeph.character.CharacterEntity;
 import com.almasb.zeph.item.Armor;
 import com.almasb.zeph.item.Item;
@@ -50,7 +52,7 @@ public class InventoryView extends Parent {
 
     private Group itemGroup = new Group();
 
-    private TooltipView tooltip = new TooltipView();
+    private TooltipView tooltip = ConfigKt.getUITooltip();
     private BooleanBinding isTooltipVisible;
 
     private ListChangeListener<Item> listener;
@@ -142,9 +144,9 @@ public class InventoryView extends Parent {
             isTooltipVisible = isTooltipVisible.or(node.hoverProperty());
         });
 
-        tooltip.visibleProperty().bind(isTooltipVisible);
 
-        addUINode(tooltip, getAppWidth() - 300, 0);
+        //tooltip.visibleProperty().bind(isTooltipVisible);
+
     }
 
     private int getNextFreeSlot() {

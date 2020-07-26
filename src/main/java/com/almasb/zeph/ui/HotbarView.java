@@ -58,6 +58,10 @@ public class HotbarView extends Parent {
         btn.setLayoutX(368);
         btn.setLayoutY(-22);
         btn.setOnMouseClicked(e -> {
+            if (isReleaseMode()) {
+                play("ui_slide.wav");
+            }
+
             animationBuilder()
                     .duration(Duration.seconds(0.33))
                     .translate(this)

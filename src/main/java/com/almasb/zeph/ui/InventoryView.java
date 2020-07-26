@@ -66,6 +66,11 @@ public class InventoryView extends Parent {
         btn.setStroke(Color.WHITE);
         btn.relocate(BG_WIDTH - 46, -22);
         btn.setOnMouseClicked(e -> {
+
+            if (isReleaseMode()) {
+                play("ui_slide.wav");
+            }
+
             animationBuilder()
                     .duration(Duration.seconds(0.33))
                     .translate(this)

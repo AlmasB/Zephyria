@@ -15,6 +15,7 @@ import com.almasb.zeph.data.Data
 import com.almasb.zeph.events.OnArmorEquippedEvent
 import com.almasb.zeph.events.OnMoneyReceivedEvent
 import com.almasb.zeph.events.OnSkillLearnedEvent
+import com.almasb.zeph.events.OnWeaponEquippedEvent
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
@@ -235,6 +236,9 @@ class PlayerComponent : Component() {
         }
 
         weapon.onEquip(player)
+
+        fire(OnWeaponEquippedEvent(player, weapon))
+
         player.weaponElement.value = weapon.element.value
     }
 

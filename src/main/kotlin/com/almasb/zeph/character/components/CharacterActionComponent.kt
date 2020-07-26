@@ -1,6 +1,7 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.SpawnData
@@ -14,6 +15,8 @@ import com.almasb.zeph.Config
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.events.OnItemPickedUpEvent
+import com.almasb.zeph.events.OnOrderedMoveEvent
 
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.MiscItem
@@ -111,6 +114,8 @@ class CharacterActionComponent : Component() {
     }
 
     fun orderMove(x: Int, y: Int) {
+        fire(OnOrderedMoveEvent(char))
+
         reset()
         state.changeState(MOVE)
         move(x, y)
@@ -250,6 +255,8 @@ class CharacterActionComponent : Component() {
         item.getPropertyOptional<MiscItem>("misc").ifPresent {
             char.inventory.add(it)
         }
+
+        fire(OnItemPickedUpEvent(char, item))
 
         item.removeFromWorld()
 

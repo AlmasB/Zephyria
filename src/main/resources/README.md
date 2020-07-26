@@ -6,6 +6,8 @@
 - Trees - https://opengameart.org/content/trees-bushes
 - Textures - https://opengameart.org/content/2d-lost-garden-zelda-style-tiles-resized-to-32x32-with-additions
 - Portals - https://opengameart.org/content/teleporter-circle
+- Voice sounds - https://bckr.itch.io/sdap Dillon Becker
+- Sound effects - https://olexmazur.itch.io/fantasy-card-game Olex Mazur
 
 ## NPCs
 

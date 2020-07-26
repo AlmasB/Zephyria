@@ -1,6 +1,5 @@
 package com.almasb.zeph.events
 
-import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.dsl.isReleaseMode
 import com.almasb.fxgl.dsl.onEvent
 import com.almasb.fxgl.dsl.play
@@ -8,11 +7,8 @@ import com.almasb.fxgl.dsl.random
 import com.almasb.zeph.EntityType.PLAYER
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.Gameplay.spawnItem
-import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.ai.RandomWanderComponent
-import com.almasb.zeph.combat.GameMath.checkChance
 import com.almasb.zeph.combat.runIfChance
-import com.almasb.zeph.item.ArmorType
 import com.almasb.zeph.item.ArmorType.*
 import javafx.scene.paint.Color
 import java.util.function.Consumer
@@ -94,19 +90,33 @@ object EventHandlers {
             }
         }
 
-        onEvent(Events.ON_SKILL_LEARNED) {
-            if (isReleaseMode()) {
+        // SOUNDS
+
+        if (isReleaseMode()) {
+            onEvent(Events.ON_ITEM_PICKED_UP) {
+                play("pick_up_item.wav");
+            }
+
+            onEvent(Events.ON_SKILL_LEARNED) {
                 play("skill_level_up.wav")
             }
-        }
 
-        onEvent(Events.ON_ARMOR_EQUIPPED) {
-            if (isReleaseMode()) {
-
+            onEvent(Events.ON_ARMOR_EQUIPPED) {
                 when (it.armor.type) {
                     HELM -> play("equip_armor_helm.wav")
                     BODY -> play("equip_armor_body.wav")
                     SHOES -> play("equip_armor_shoes.wav")
+                }
+            }
+
+            onEvent(Events.ON_WEAPON_EQUIPPED) {
+                play("equip_weapon.wav")
+            }
+
+            onEvent(Events.ON_ORDERED_MOVE) {
+                if (it.char.isPlayer) {
+                    val num = random(0, 1)
+                    play("voice/male/move${num}_alex.wav")
                 }
             }
         }

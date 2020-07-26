@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.scene.paint.Color
+import java.util.concurrent.Callable
 
 enum class WeaponType(val range: Int, val aspdFactor: Float) {
 
@@ -55,8 +56,11 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
                 getUIFactoryService().newText(description.name + "\n", Color.WHITE, 16.0),
                 getUIFactoryService().newText(description.description + "\n", Color.DARKGRAY, 14.0),
                 getUIFactoryService().newText("Element: ", Color.WHITE, 14.0),
-                getUIFactoryService().newText("${element.value}\n", element.value.color, 16.0),
-                getUIFactoryService().newText("Damage: ", Color.RED, 14.0),
+                getUIFactoryService().newText("", 16.0).also {
+                    it.fillProperty().bind(Bindings.createObjectBinding(Callable { element.value.color }, element))
+                    it.textProperty().bind(element.asString("%s\n"))
+                },
+                getUIFactoryService().newText("Damage: ", Color.WHITE, 14.0),
                 getUIFactoryService().newText("${pureDamage.value}\n", Color.WHITE, 16.0)
         )
     }

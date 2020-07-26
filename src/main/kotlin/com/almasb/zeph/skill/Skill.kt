@@ -1,9 +1,12 @@
 package com.almasb.zeph.skill
 
+import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.character.CharacterEntity
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.paint.Color
+import javafx.scene.text.TextFlow
 
 /**
  *
@@ -13,6 +16,8 @@ import javafx.beans.property.SimpleStringProperty
 class Skill(val data: SkillData) {
 
     val dynamicDescription = SimpleStringProperty(data.description.description)
+
+    val dynamicTextFlow = TextFlow()
 
     val levelProperty = SimpleIntegerProperty()
     val manaCost = levelProperty.multiply(data.manaCost)
@@ -33,6 +38,17 @@ class Skill(val data: SkillData) {
                 .concat(data.description.description + "\n")
                 .concat(levelProperty.asString("Level: %d\n"))
                 .concat(manaCost.asString("Mana Cost: %d\n")))
+
+        // TODO: this is still static for now, we need to listen for any changes in dynamicDescription and update
+
+        dynamicTextFlow.children.setAll(
+                getUIFactoryService().newText(data.description.name + "\n", Color.WHITE, 16.0),
+                getUIFactoryService().newText(data.description.description + "\n", Color.DARKGRAY, 14.0),
+                getUIFactoryService().newText("Level: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.GREEN, 16.0).also { it.textProperty().bind(levelProperty.asString("%d\n")) },
+                getUIFactoryService().newText("Cost: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.BLUE, 16.0).also { it.textProperty().bind(manaCost.asString("%d\n")) }
+        )
     }
 
     fun putOnCooldown() {

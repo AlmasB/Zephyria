@@ -33,6 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.Pair;
+import kotlin.Unit;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,9 +52,6 @@ public class InventoryView extends Parent {
     private Map<Integer, Boolean> slots = new HashMap<>();
 
     private Group itemGroup = new Group();
-
-    private TooltipView tooltip = ConfigKt.getUITooltip();
-    private BooleanBinding isTooltipVisible;
 
     private ListChangeListener<Item> listener;
 
@@ -112,8 +110,7 @@ public class InventoryView extends Parent {
                         for (Item item : change.getAddedSubList()) {
                             addItem(item);
                         }
-                    }
-                    else if (change.wasRemoved()) {
+                    } else if (change.wasRemoved()) {
                         for (Item item : change.getRemoved()) {
 
                             for (Iterator<Node> it = itemGroup.getChildren().iterator(); it.hasNext(); ) {
@@ -138,20 +135,6 @@ public class InventoryView extends Parent {
         player.getInventory().itemsProperty().forEach(this::addItem);
 
         player.getInventory().itemsProperty().addListener(listener);
-
-        // TODO: should have 1 tooltip object for everything in the game
-        // TODO: description should have TextFlow, so we can color some text, e.g. 10% damage, runes, etc.
-
-        isTooltipVisible = Bindings.createBooleanBinding(() -> false, player.getInventory().itemsProperty());
-
-        // TODO: and NEWly added items
-        itemGroup.getChildren().forEach(node -> {
-            isTooltipVisible = isTooltipVisible.or(node.hoverProperty());
-        });
-
-
-        //tooltip.visibleProperty().bind(isTooltipVisible);
-
     }
 
     private int getNextFreeSlot() {
@@ -174,10 +157,11 @@ public class InventoryView extends Parent {
         view.setTranslateY((index / 5) * 40 + 3);
         view.setPickOnBounds(true);
 
-        view.hoverProperty().addListener((o, old, isHover) -> {
-            if (isHover) {
-                tooltip.setItem(item);
-            }
+        TooltipViewKt.setOnTooltipHover(view, t -> {
+
+            t.setItem(item);
+
+            return Unit.INSTANCE;
         });
 
         view.setOnMouseClicked(event -> {

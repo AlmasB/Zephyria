@@ -1,5 +1,6 @@
 package com.almasb.zeph.item
 
+import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.Config.MAX_ESSENCES
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
@@ -9,6 +10,8 @@ import com.almasb.zeph.combat.Rune
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
+import javafx.scene.text.Text
+import javafx.scene.text.TextFlow
 
 enum class ItemLevel constructor(
         val bonus: Int,
@@ -38,6 +41,8 @@ abstract class Item(val description: Description) {
      * actual weapon damage, actual armor rating, etc.
      */
     val dynamicDescription = SimpleStringProperty(description.description)
+
+    val dynamicTextFlow: TextFlow = TextFlow(getUIFactoryService().newText(dynamicDescription))
 }
 
 abstract class EquipItem(

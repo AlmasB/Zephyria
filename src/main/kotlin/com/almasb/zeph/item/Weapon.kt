@@ -1,11 +1,13 @@
 package com.almasb.zeph.item
 
+import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Stat
 import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.scene.paint.Color
 
 enum class WeaponType(val range: Int, val aspdFactor: Float) {
 
@@ -45,6 +47,17 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
                 .concat(pureDamage.asString("Damage: %d").concat("\n"))
                 .concat(runes)
                 .concat(essences)
+        )
+
+        // TODO: this is still static for now, we need to listen for any changes in dynamicDescription and update
+
+        dynamicTextFlow.children.setAll(
+                getUIFactoryService().newText(description.name + "\n", Color.WHITE, 16.0),
+                getUIFactoryService().newText(description.description + "\n", Color.DARKGRAY, 14.0),
+                getUIFactoryService().newText("Element: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("${element.value}\n", element.value.color, 16.0),
+                getUIFactoryService().newText("Damage: ", Color.RED, 14.0),
+                getUIFactoryService().newText("${pureDamage.value}\n", Color.WHITE, 16.0)
         )
     }
 

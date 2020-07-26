@@ -1,5 +1,7 @@
 package com.almasb.zeph.combat
 
+import javafx.scene.paint.Color
+
 /**
  * There are 5 element types.
  *
@@ -13,6 +15,15 @@ enum class Element(vararg modifiers: Double) {
     EARTH  (1.25, 0.25, 0.50, 2.00, 0.00);
 
     private val modifiers: DoubleArray = modifiers
+
+    val color: Color
+        get() = when (this) {
+            NEUTRAL -> Color.DARKGRAY
+            FIRE -> Color.RED
+            WATER -> Color.BLUE
+            AIR -> Color.AZURE
+            EARTH -> Color.BROWN
+        }
 
     fun getDamageModifierAgainst(element: Element): Double {
         return this.modifiers[element.ordinal]

@@ -3,48 +3,77 @@ package com.almasb.zeph.ui
 import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.getUITooltip
 import com.almasb.zeph.item.Item
+import javafx.beans.value.ChangeListener
+import javafx.beans.value.ObservableValue
+import javafx.geometry.Bounds
 import javafx.scene.Node
 import javafx.scene.Parent
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
+import javafx.scene.text.TextFlow
 
 /**
- * // TODO: redesign to use TextFlow to allow rich text
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class TooltipView : Parent() {
+class TooltipView : Parent(), ChangeListener<Bounds> {
 
-    private val MAX_WIDTH = 300.0
-    private val MAX_HEIGHT = 300.0
+    private val WIDTH = 300.0
 
-    private val bg = Rectangle(MAX_WIDTH, MAX_HEIGHT)
-    private val text = getUIFactoryService().newText("", Color.WHITE, 18.0)
+    private val bg = Rectangle(WIDTH, 0.0)
+    private val text = getUIFactoryService().newText("", Color.WHITE, 16.0)
 
     init {
         isMouseTransparent = true
 
         text.relocate(10.0, 10.0)
-        text.wrappingWidth = MAX_WIDTH - 15*2
+        text.wrappingWidth = WIDTH - 15*2
 
         bg.arcWidth = 15.0
         bg.arcHeight = 15.0
+        bg.fill = Color.color(0.0, 0.0, 0.0, 0.9)
         bg.stroke = Color.AQUA
 
-        text.layoutBoundsProperty().addListener { _, _, newBounds ->
-            bg.height = newBounds.height + 15*2
+        text.layoutBoundsProperty().addListener { _, _, newValue ->
+            bg.height = newValue.height + 15*2
         }
 
         children += bg
         children += text
     }
 
+    override fun changed(observable: ObservableValue<out Bounds>, oldValue: Bounds, newValue: Bounds) {
+        if (newValue.height != 0.0) {
+            bg.height = newValue.height + 15 * 2
+
+            observable.removeListener(this)
+        }
+    }
+
+    fun setNode(node: Node) {
+        node.relocate(10.0, 10.0)
+
+        if (node is TextFlow) {
+            node.prefWidth = WIDTH - 15*2
+        }
+
+        children.set(1, node)
+
+        if (node.layoutBounds.height == 0.0) {
+            // layout hasn't been computed yet, so delay adjusting height
+            node.layoutBoundsProperty().addListener(this)
+        } else {
+            bg.height = node.layoutBounds.height + 15*2
+        }
+    }
+
     fun setItem(item: Item) {
-        text.text = item.dynamicDescription.value
+        setNode(item.dynamicTextFlow)
     }
 
     fun setText(text: String) {
         this.text.text = text
+        children.set(1, this.text)
     }
 
     fun show() {

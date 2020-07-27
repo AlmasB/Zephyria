@@ -63,6 +63,36 @@ package com.almasb.zeph.data
 //                animation.setAnimationChannel(CharacterAnimation.SHOOT_UP)
 //            }
 //        }
+
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.CHARACTER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+//                    return;
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                DamageResult damage = player.getPlayerControl().attack(character);
+//            }
+//        });
+//
+//        physicsWorld.addCollisionHandler(new CollisionHandler(EntityType.PROJECTILE, EntityType.PLAYER) {
+//            @Override
+//            protected void onCollisionBegin(Entity proj, Entity target) {
+//                if (proj.getComponentUnsafe(OwnerComponent.class).getValue() == target)
+//                    return;
+//
+//                proj.removeFromWorld();
+//
+//                CharacterEntity attacker = (CharacterEntity) proj.getComponentUnsafe(OwnerComponent.class).getValue();
+//                CharacterEntity character = (CharacterEntity) target;
+//
+//                DamageResult damage = attacker.getCharConrol().attack(character);
+//            }
+//        });
+
 //
 //        // TODO: generalize
 //

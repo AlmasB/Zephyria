@@ -71,6 +71,15 @@ public class ZephyriaApp extends GameApplication {
             onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
         }
 
+        onKeyDown(KeyCode.C, () -> {
+            getGameScene().getUiNodes()
+                    .stream()
+                    .filter(n -> n instanceof BasicInfoView)
+                    .map(n -> (BasicInfoView) n)
+                    .findAny()
+                    .ifPresent(BasicInfoView::toggleVisibility);
+        });
+
         if (!isReleaseMode()) {
             onKeyDown(KeyCode.ENTER, () -> getSceneService().pushSubScene(devScene));
         }
@@ -129,6 +138,8 @@ public class ZephyriaApp extends GameApplication {
     @Override
     protected void initGame() {
         devScene = new DevScene();
+
+        // TODO: allow test map loading for quick prototype testing
 
         getGameWorld().addEntityFactory(new ZephFactory());
 

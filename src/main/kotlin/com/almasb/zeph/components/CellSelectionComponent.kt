@@ -22,7 +22,7 @@ class CellSelectionComponent : Component() {
         val cellX = (FXGL.getInput().mouseXWorld / Config.TILE_SIZE).toInt()
         val cellY = (FXGL.getInput().mouseYWorld / Config.TILE_SIZE).toInt()
 
-        val grid = Gameplay.getCurrentMap().grid
+        val grid = Gameplay.currentMap.grid
 
         if (!grid.isWithin(cellX, cellY)) {
             return

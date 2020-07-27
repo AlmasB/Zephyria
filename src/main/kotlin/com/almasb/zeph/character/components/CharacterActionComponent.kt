@@ -136,7 +136,7 @@ class CharacterActionComponent : Component() {
     }
 
     private fun findNearestCell(target: CharacterEntity): Cell {
-        return Gameplay.getCurrentMap()
+        return Gameplay.currentMap
                 .grid
                 .getNeighbors(target.cellX, target.cellY)
                 .sortedBy { char.distance(it.x, it.y) }

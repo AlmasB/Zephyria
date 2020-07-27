@@ -6,15 +6,15 @@ import com.almasb.fxgl.app.GameSettings
 import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
-import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
-import com.almasb.fxgl.physics.CollisionHandler
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.TILE_SIZE
-import com.almasb.zeph.Gameplay.getCurrentMap
-import com.almasb.zeph.Gameplay.getPlayer
+import com.almasb.zeph.EntityType.MONSTER
+import com.almasb.zeph.EntityType.SKILL_PROJECTILE
+import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
+import com.almasb.zeph.Gameplay.player
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
@@ -27,9 +27,8 @@ import com.almasb.zeph.ui.HotbarView
 import com.almasb.zeph.ui.InventoryView
 import com.almasb.zeph.ui.ZephLoadingScene
 import javafx.geometry.Point2D
-import javafx.scene.Node
 import javafx.scene.input.KeyCode
-import kotlin.text.set
+import kotlin.collections.set
 
 /**
  *
@@ -68,37 +67,34 @@ class ZephyriaApp : GameApplication() {
         for (i in 1..9) {
             val key = KeyCode.getKeyCode(i.toString() + "")
             val index = i - 1
-            onKeyDown(key, "Hotbar Skill $i", { onHotbarSkill(index) })
+
+            onKeyDown(key, "Hotbar Skill $i") {
+                onHotbarSkill(index)
+            }
         }
 
-        // TODO: cleanup
-        onKeyDown(KeyCode.C, {
+        onKeyDown(KeyCode.C) {
             getGameScene().uiNodes
-                    .stream()
-                    .filter { n: Node? -> n is BasicInfoView }
-                    .map { n: Node? -> n as BasicInfoView? }
-                    .findAny()
-                    .ifPresent { view: BasicInfoView -> view.minBtn.onClick() }
-        })
-        onKeyDown(KeyCode.I, {
+                    .filterIsInstance(BasicInfoView::class.java)
+                    .forEach { it.minBtn.onClick() }
+        }
+
+        onKeyDown(KeyCode.I) {
             getGameScene().uiNodes
-                    .stream()
-                    .filter { n: Node? -> n is InventoryView }
-                    .map { n: Node? -> n as InventoryView? }
-                    .findAny()
-                    .ifPresent { view: InventoryView -> view.minBtn.onClick() }
-        })
-        onKeyDown(KeyCode.S, {
+                    .filterIsInstance(InventoryView::class.java)
+                    .forEach { it.minBtn.onClick() }
+        }
+
+        onKeyDown(KeyCode.S) {
             getGameScene().uiNodes
-                    .stream()
-                    .filter { n: Node? -> n is HotbarView }
-                    .map { n: Node? -> n as HotbarView? }
-                    .findAny()
-                    .ifPresent { view: HotbarView -> view.minBtn.onClick() }
-        })
+                    .filterIsInstance(HotbarView::class.java)
+                    .forEach { it.minBtn.onClick() }
+        }
         
         if (!isReleaseMode()) {
-            onKeyDown(KeyCode.ENTER, { getSceneService().pushSubScene(devScene!!) })
+            onKeyDown(KeyCode.ENTER) {
+                getSceneService().pushSubScene(devScene!!)
+            }
         }
     }
 
@@ -109,24 +105,28 @@ class ZephyriaApp : GameApplication() {
     }
 
     private fun onHotbarSkill(index: Int) {
-        val pc = getPlayer().characterComponent
+        val pc = player.characterComponent
         if (index < pc.skills.size) {
             val skill = pc.skills[index]
             if (skill.level == 0) {
                 // skill not learned yet
                 return
             }
+
             if (skill.isOnCooldown) {
                 return
             }
+
             if (skill.manaCost.value > pc.sp.value) {
                 // no mana
                 return
             }
+
             if (skill.data.type === SkillType.PASSIVE) {
                 // skill is passive and is always on
                 return
             }
+
             if (skill.data.targetTypes.contains(SkillTargetType.SELF)) {
 
                 // use skill immediately since player is the target
@@ -150,30 +150,34 @@ class ZephyriaApp : GameApplication() {
 
         // TODO: allow test map loading for quick prototype testing
         getGameWorld().addEntityFactory(ZephFactory())
+
         val player = spawn("player") as CharacterEntity
+
         spawn("cellSelection")
+
         getGameScene().viewport.setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE)
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
+
         gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {
-        getPhysicsWorld().addCollisionHandler(object : CollisionHandler(EntityType.SKILL_PROJECTILE, EntityType.MONSTER) {
-            override fun onCollisionBegin(proj: Entity, target: Entity) {
-                if (proj.getObject<Any>("target") !== target) {
-                    return
-                }
-                proj.removeFromWorld()
-                getPlayer().characterComponent.useTargetSkill(geti(SELECTED_SKILL_INDEX), (target as CharacterEntity))
+        onCollisionBegin(SKILL_PROJECTILE, MONSTER) { proj, target ->
+
+            if (proj.getObject<Any>("target") !== target) {
+                return@onCollisionBegin
             }
-        })
+
+            proj.removeFromWorld()
+            player.characterComponent.useTargetSkill(geti(SELECTED_SKILL_INDEX), (target as CharacterEntity))
+        }
     }
 
     override fun initUI() {
         getGameScene().setUIMouseTransparent(false)
         getGameScene().setCursor(image("ui/cursors/main.png"), Point2D(52.0, 10.0))
-        val player = getPlayer()
+
         getGameScene().addUINodes(
                 BasicInfoView(player),
                 InventoryView(player),
@@ -182,7 +186,7 @@ class ZephyriaApp : GameApplication() {
     }
 
     override fun onUpdate(tpf: Double) {
-        getCurrentMap().onUpdate(tpf)
+        currentMap.onUpdate(tpf)
     }
 }
 

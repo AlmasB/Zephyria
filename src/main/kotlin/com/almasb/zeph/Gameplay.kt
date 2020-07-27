@@ -27,13 +27,10 @@ object Gameplay : FunctionCallHandler {
 
     private val log = Logger.get(javaClass)
 
-    fun getPlayer(): CharacterEntity {
-        return getGameWorld().getSingleton(EntityType.PLAYER) as CharacterEntity
-    }
+    val player: CharacterEntity by lazy { getGameWorld().getSingleton(EntityType.PLAYER) as CharacterEntity }
 
-    fun getCurrentMap(): GameMap {
-        return geto(GAME_MAP)
-    }
+    val currentMap: GameMap
+        get() = geto(GAME_MAP)
 
     override fun handle(functionName: String, args: Array<String>): Any {
         log.debug("Function call: $functionName ${args.toList()}")
@@ -83,8 +80,6 @@ object Gameplay : FunctionCallHandler {
     }
 
     fun goto(toCellX: Int, toCellY: Int) {
-        val player = getPlayer()
-
         player.actionComponent.orderIdle()
         player.setPositionToCell(toCellX, toCellY)
     }
@@ -93,15 +88,13 @@ object Gameplay : FunctionCallHandler {
         val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
 
         if (FXGL.getWorldProperties().exists(GAME_MAP)) {
-            getCurrentMap().exit()
+            currentMap.exit()
         }
 
         val newMap = GameMap(level)
         newMap.enter()
 
         set(GAME_MAP, newMap)
-
-        val player = getPlayer()
 
         player.removeComponent(AStarMoveComponent::class.java)
         player.addComponent(AStarMoveComponent(newMap.grid))
@@ -157,10 +150,10 @@ object Gameplay : FunctionCallHandler {
     }
 
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {
-        getCurrentMap().spawnMonster(cellX, cellY, Data.getCharacterData(id))
+        currentMap.spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }
 
     fun spawnItem(id: Int, cellX: Int, cellY: Int) {
-        getCurrentMap().spawnItem(cellX, cellY, Data.getItemData(id))
+        currentMap.spawnItem(cellX, cellY, Data.getItemData(id))
     }
 }

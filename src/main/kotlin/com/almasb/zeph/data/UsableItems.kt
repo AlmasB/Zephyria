@@ -98,7 +98,7 @@ class UsableItems {
         }
 
         onUseScript = {
-            val grid = Gameplay.getCurrentMap().grid
+            val grid = Gameplay.currentMap.grid
 
             val cell = grid.getRandomCell { it.isWalkable }.get()
 

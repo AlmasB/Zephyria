@@ -74,7 +74,7 @@ class ZephFactory : EntityFactory {
         val entity = entityBuilder()
                 .type(NPC)
                 .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
+                .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
                 .with(AnimationComponent(npcData.description.textureName))
                 .build()
 
@@ -122,7 +122,7 @@ class ZephFactory : EntityFactory {
                 addComponent(StateComponent())
                 addComponent(CharacterEffectComponent())
                 addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.getCurrentMap().grid })))
+                addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
 
                 addComponent(AnimationComponent(charData.description.textureName))
                 addComponent(CharacterComponent(charData))

@@ -1,6 +1,7 @@
 package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.FXGL
+import com.almasb.fxgl.dsl.texture
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Item
@@ -50,7 +51,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         borderShape.stroke = Color.WHITE
         borderShape.translateX = -BG_WIDTH - 3
 
-        val background = FXGL.getAssetLoader().loadTexture("ui/inventory_right.png")
+        val background = texture("ui/inventory_right.png")
 
         val equipView = EquipmentView(player)
         equipView.translateX = -BG_WIDTH

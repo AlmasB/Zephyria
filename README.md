@@ -1,5 +1,6 @@
-## Zephyria
-JavaFX / Kotlin RPG
+## Zephyria (Kotlin RPG)
+
+![Screenshot](https://raw.githubusercontent.com/AlmasB/git-server/master/storage/images/zephyria.png)
 
 ## Build
 ```bash

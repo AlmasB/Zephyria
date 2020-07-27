@@ -46,7 +46,7 @@ public class InventoryView extends Parent {
     private static final int BG_WIDTH = 200;
     private static final int BG_HEIGHT = 240;
 
-    private boolean isMinimized = false;
+    private MinimizeButton minBtn = new MinimizeButton("I", BG_WIDTH - 46, -22, 0.0, BG_HEIGHT, this);
 
     // K - index, V - if free? TODO: double check
     private Map<Integer, Boolean> slots = new HashMap<>();
@@ -59,25 +59,6 @@ public class InventoryView extends Parent {
 
     public InventoryView(CharacterEntity player) {
         relocate(getAppWidth() - 200, getAppHeight() - 240);
-
-        var btn = new Rectangle(30, 20);
-        btn.setStroke(Color.WHITE);
-        btn.relocate(BG_WIDTH - 46, -22);
-        btn.setOnMouseClicked(e -> {
-
-            if (isReleaseMode()) {
-                play("ui_slide.wav");
-            }
-
-            animationBuilder()
-                    .duration(Duration.seconds(0.33))
-                    .translate(this)
-                    .from(isMinimized ? new Point2D(0.0, BG_HEIGHT) : new Point2D(0.0, 0.0))
-                    .to(isMinimized ? new Point2D(0.0, 0.0) : new Point2D(0.0, BG_HEIGHT))
-                    .buildAndPlay();
-
-            isMinimized = !isMinimized;
-        });
 
         Rectangle border = new Rectangle(BG_WIDTH * 2 + 3, BG_HEIGHT + 5);
         border.setStrokeWidth(2);
@@ -94,7 +75,7 @@ public class InventoryView extends Parent {
         EquipmentView equipView = new EquipmentView(player);
         equipView.setTranslateX(-BG_WIDTH);
 
-        getChildren().addAll(borderShape, background, equipView, itemGroup, btn);
+        getChildren().addAll(borderShape, background, equipView, itemGroup, minBtn);
 
         this.player = player;
 
@@ -135,6 +116,10 @@ public class InventoryView extends Parent {
         player.getInventory().itemsProperty().forEach(this::addItem);
 
         player.getInventory().itemsProperty().addListener(listener);
+    }
+
+    public MinimizeButton getMinBtn() {
+        return minBtn;
     }
 
     private int getNextFreeSlot() {

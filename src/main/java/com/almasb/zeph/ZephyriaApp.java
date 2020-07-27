@@ -71,13 +71,32 @@ public class ZephyriaApp extends GameApplication {
             onKeyDown(key, "Hotbar Skill " + i, () -> onHotbarSkill(index));
         }
 
+        // TODO: cleanup
         onKeyDown(KeyCode.C, () -> {
             getGameScene().getUiNodes()
                     .stream()
                     .filter(n -> n instanceof BasicInfoView)
                     .map(n -> (BasicInfoView) n)
                     .findAny()
-                    .ifPresent(BasicInfoView::toggleVisibility);
+                    .ifPresent(view -> view.getMinBtn().onClick());
+        });
+
+        onKeyDown(KeyCode.I, () -> {
+            getGameScene().getUiNodes()
+                    .stream()
+                    .filter(n -> n instanceof InventoryView)
+                    .map(n -> (InventoryView) n)
+                    .findAny()
+                    .ifPresent(view -> view.getMinBtn().onClick());
+        });
+
+        onKeyDown(KeyCode.S, () -> {
+            getGameScene().getUiNodes()
+                    .stream()
+                    .filter(n -> n instanceof HotbarView)
+                    .map(n -> (HotbarView) n)
+                    .findAny()
+                    .ifPresent(view -> view.getMinBtn().onClick());
         });
 
         if (!isReleaseMode()) {

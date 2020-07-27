@@ -129,7 +129,7 @@ class Daggers {
         desc {
             id = 4001
             name = "Knife"
-            description = "A simple knife with poor blade."
+            description = "A simple knife with a poor blade."
         }
 
         type = DAGGER

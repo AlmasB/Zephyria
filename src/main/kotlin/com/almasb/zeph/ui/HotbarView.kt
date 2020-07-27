@@ -34,13 +34,12 @@ import java.util.stream.Collectors
  */
 class HotbarView(private val player: CharacterEntity) : Parent() {
 
-    companion object {
-        private const val BG_WIDTH = 767
-        private const val BG_HEIGHT = 110
-    }
+    private val BG_WIDTH = 767.0
+    private val BG_HEIGHT = 110.0
+
+    val minBtn = MinimizeButton("S", 368.0, -22.0, 0.0, BG_HEIGHT - 5, this)
 
     private val framesRoot = HBox()
-    private var isMinimized = false
 
     init {
         initView()
@@ -52,24 +51,7 @@ class HotbarView(private val player: CharacterEntity) : Parent() {
         layoutX = FXGL.getAppWidth() / 2.0 - BG_WIDTH / 2.0
         layoutY = FXGL.getAppHeight() - BG_HEIGHT + 5.toDouble()
 
-        val btn = Rectangle(30.0, 20.0)
-        btn.stroke = Color.WHITE
-        btn.layoutX = 368.0
-        btn.layoutY = -22.0
-        btn.setOnMouseClicked {
-            if (isReleaseMode()) {
-                play("ui_slide.wav")
-            }
-            FXGL.animationBuilder()
-                    .duration(Duration.seconds(0.33))
-                    .translate(this)
-                    .from(if (isMinimized) Point2D(0.0, BG_HEIGHT.toDouble()) else Point2D(0.0, 0.0))
-                    .to(if (isMinimized) Point2D(0.0, 0.0) else Point2D(0.0, BG_HEIGHT.toDouble()))
-                    .buildAndPlay()
-            isMinimized = !isMinimized
-        }
-
-        val border = Rectangle(BG_WIDTH.toDouble(), BG_HEIGHT.toDouble())
+        val border = Rectangle(BG_WIDTH, BG_HEIGHT)
         border.strokeWidth = 2.0
         border.arcWidth = 10.0
         border.arcHeight = 10.0
@@ -79,7 +61,7 @@ class HotbarView(private val player: CharacterEntity) : Parent() {
         borderShape.stroke = Color.WHITE
         framesRoot.layoutX = 1.0
 
-        children.addAll(borderShape, framesRoot, btn)
+        children.addAll(borderShape, framesRoot, minBtn)
     }
 
     private fun initSkillFrames() {

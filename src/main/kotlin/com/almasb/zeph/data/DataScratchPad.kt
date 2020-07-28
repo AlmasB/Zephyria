@@ -2,22 +2,10 @@ package com.almasb.zeph.data
 
 //class AttackControl : AbstractControl() {
 //
-//    var enabled = true
-//
 //    private lateinit var char: CharacterEntity
 //    private lateinit var animation: AnimatedTexture
 //
 //    val selected = SimpleObjectProperty<Entity>()
-//
-//    override fun onAdded(entity: Entity) {
-//        char = entity as CharacterEntity
-//        animation = char.data.animation
-//    }
-//
-//    override fun onUpdate(entity: Entity, tpf: Double) {
-//        if (selected.value is CharacterEntity)
-//            startAttack(char, selected.value as GameEntity)
-//    }
 //
 //    private fun startAttack(attacker: CharacterEntity, target: GameEntity) {
 //        if (!enabled)

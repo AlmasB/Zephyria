@@ -14,16 +14,9 @@ java -jar
 produced jar or simply double click it.
 
 ## Current State
-Early development
+
+- [WIP demo](https://www.youtube.com/watch?v=LIV8UJAokA0)
 
 ## Contributing
 
 - [Video guide on adding new misc items](https://www.youtube.com/watch?v=fcffiGzjLZ0)
-
-## Basic Specification
-
-* A game character has 9 attributes and 16 stats.
-* 3 damage types
-* 5 elements
-* 3 experience types
-* 3 status types

@@ -1,4 +1,4 @@
-## Zephyria (Kotlin RPG)
+## Zephyria (Kotlin RPG) using FXGL
 
 ![Screenshot](https://raw.githubusercontent.com/AlmasB/git-server/master/storage/images/zephyria.png)
 
@@ -15,6 +15,10 @@ produced jar or simply double click it.
 
 ## Current State
 Early development
+
+## Contributing
+
+- [Video guide on adding new misc items](https://www.youtube.com/watch?v=fcffiGzjLZ0)
 
 ## Basic Specification
 

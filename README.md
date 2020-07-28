@@ -22,3 +22,8 @@ java -jar Zephyria-0.1-SNAPSHOT.jar
 ## Contributing
 
 - [Video guide on adding new misc items](https://www.youtube.com/watch?v=fcffiGzjLZ0)
+
+## Resources
+
+- [Link to FXGL source code](https://github.com/AlmasB/FXGL)
+- [Link to assets and their references](src/main/resources/README.md)

@@ -218,7 +218,7 @@ class ZephFactory : EntityFactory {
 
             player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
 
-            player.inventory.add(MiscItem(Data.MiscItems.SKELETON_BONE))
+            player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
 
             // TEST DATA END
 

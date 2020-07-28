@@ -23,4 +23,22 @@ class MiscItems {
             description = "A chipped tooth of an orc."
         }
     }
+
+    val GOLD_INGOT = miscItem {
+        desc {
+            id = 6502
+            name = "Gold Ingot"
+            textureName = "items/misc/gold_ingot.png"
+            description = "A block of pure gold that can be used in a refining process."
+        }
+    }
+
+    val SILVER_INGOT = miscItem {
+        desc {
+            id = 6503
+            name = "Silver Ingot"
+            textureName = "items/misc/silver_ingot.png"
+            description = "A block of pure silver that can be used in a refining process."
+        }
+    }
 }

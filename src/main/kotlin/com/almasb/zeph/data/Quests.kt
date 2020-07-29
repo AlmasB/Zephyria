@@ -5,36 +5,27 @@ import com.almasb.zeph.data.Data.UsableItems
 import com.almasb.zeph.quest.quest
 
 /**
+ * Quests [7500-7999].
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class Quests {
 
-    val APPLES = quest {
+    val SARAH_HEALING_HERBS = quest {
+
+        // TODO: auto-generate description from collect{}?
+
         desc {
             id = 7500
-            name = "Apples"
-            description = "Fetch me an apple."
+            name = "A cure..."
+            description = "Collect 5 healing herbs for Sarah."
         }
 
-        rewardMoney = 3
-        rewardXP = Experience(0, 0, 5)
+        rewardMoney = 15
+        rewardXP = Experience(1, 1, 5)
 
         collect {
-            UsableItems.CARROT x 2
-            UsableItems.HEALING_POTION x 3
+            UsableItems.HEALING_HERBS x 5
         }
-
-//        go {
-//
-//        }
-//
-//        talk {
-//
-//        }
-//
-//        kill {
-//
-//        }
     }
 }

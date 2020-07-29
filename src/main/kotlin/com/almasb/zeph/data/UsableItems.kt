@@ -247,6 +247,19 @@ class UsableItems {
             })
         }
     }
+
+    val HEALING_HERBS = usableItem {
+        desc {
+            id = 6016
+            name = "Healing Herbs"
+            description = "Restores 10 HP"
+            textureName = "items/usable/healing_herbs.png"
+        }
+
+        onUseScript = {
+            it.hp.restore(10.0)
+        }
+    }
 }
 
 private class WeaponElementChangeEffect(val char: CharacterEntity, val element: Element, duration: Duration) : Effect(duration) {

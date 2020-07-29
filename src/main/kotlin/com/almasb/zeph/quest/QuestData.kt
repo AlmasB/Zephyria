@@ -40,7 +40,10 @@ class QuestDataBuilder(
     }
 
     fun kill(setup: KillQuestDataBuilder.() -> Unit) {
-        TODO()
+        val builder = KillQuestDataBuilder()
+        builder.setup()
+
+        requiredMonsters.putAll(builder.requiredMonsters)
     }
 
     fun go(setup: GoQuestDataBuilder.() -> Unit) {
@@ -78,6 +81,11 @@ class CollectQuestDataBuilder {
 @DataDSL
 class KillQuestDataBuilder {
 
+    val requiredMonsters: MutableMap<CharacterData, Int> = linkedMapOf()
+
+    infix fun CharacterData.x(amount: Int) {
+        requiredMonsters[this] = amount
+    }
 }
 
 @DataDSL
@@ -96,7 +104,6 @@ fun quest(setup: QuestDataBuilder.() -> Unit): QuestData {
     builder.setup()
     return builder.build()
 }
-
 
 data class QuestData(
         val description: Description,

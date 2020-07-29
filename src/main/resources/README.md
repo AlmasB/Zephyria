@@ -8,6 +8,7 @@
 - Portals - https://opengameart.org/content/teleporter-circle
 - Voice sounds - https://bckr.itch.io/sdap Dillon Becker
 - Sound effects - https://olexmazur.itch.io/fantasy-card-game Olex Mazur
+- Textures - https://opengameart.org/content/skill-item-and-spell-icons
 
 ## NPCs
 

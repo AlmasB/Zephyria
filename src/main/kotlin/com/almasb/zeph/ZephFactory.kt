@@ -134,6 +134,7 @@ class ZephFactory : EntityFactory {
 
             entity.setPositionToCell(cellX, cellY)
 
+            // TODO: do not allow click if dying ...
             // TODO: convenience methods on mouse click
             entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
 

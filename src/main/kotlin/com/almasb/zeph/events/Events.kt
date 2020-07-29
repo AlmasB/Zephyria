@@ -5,6 +5,7 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.events.Events.ON_ARMOR_EQUIPPED
 import com.almasb.zeph.events.Events.ON_ATTACK
+import com.almasb.zeph.events.Events.ON_BEFORE_SKILL_CAST
 import com.almasb.zeph.events.Events.ON_BEING_KILLED
 import com.almasb.zeph.events.Events.ON_ITEM_PICKED_UP
 import com.almasb.zeph.events.Events.ON_ITEM_USED
@@ -56,6 +57,8 @@ object Events {
 
     val ON_PHYSICAL_DAMAGE_DEALT = EventType<OnPhysicalDamageDealtEvent>(ANY, "ON_PHYSICAL_DAMAGE_DEALT")
     val ON_MAGICAL_DAMAGE_DEALT = EventType<OnMagicalDamageDealtEvent>(ANY, "ON_MAGICAL_DAMAGE_DEALT")
+
+    val ON_BEFORE_SKILL_CAST = EventType<OnBeforeSkillCastEvent>(ANY, "ON_BEFORE_SKILL_CAST")
 
     /**
      * Fired just before a character is killed.
@@ -126,7 +129,10 @@ class OnSkillLearnedEvent(
         val skill: Skill
 ) : GameEvent(ON_SKILL_LEARNED)
 
-// TODO: OnBeforeSkillCastEvent
+class OnBeforeSkillCastEvent(
+        val caster: CharacterEntity,
+        val skill: Skill
+) : GameEvent(ON_BEFORE_SKILL_CAST)
 
 class OnOrderedMoveEvent(
         val char: CharacterEntity

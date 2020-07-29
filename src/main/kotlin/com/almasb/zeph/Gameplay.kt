@@ -13,6 +13,7 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.ui.StorageView
 
 import javafx.geometry.Point2D
@@ -146,6 +147,23 @@ object Gameplay : FunctionCallHandler {
                 .translate(e)
                 .from(position)
                 .to(position.add(0.0, -30.0))
+                .buildAndPlay()
+    }
+
+    fun showSkillCast(skill: Skill, position: Point2D) {
+        val text = getUIFactoryService().newText(skill.data.description.name, Color.WHITE, FontType.GAME, 16.0)
+
+        val e = entityBuilder()
+                .at(position.x - text.layoutBounds.width / 2.0, position.y)
+                .viewWithBBox(text)
+                .with(ExpireCleanComponent(Duration.seconds(1.2)))
+                .buildAndAttach()
+
+        animationBuilder()
+                .duration(Duration.seconds(0.33))
+                .scale(e)
+                .from(Point2D(0.5, 1.2))
+                .to(Point2D(1.0, 1.0))
                 .buildAndPlay()
     }
 

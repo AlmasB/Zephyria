@@ -12,10 +12,7 @@ import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
-import com.almasb.zeph.events.OnAttackEvent
-import com.almasb.zeph.events.OnBeingKilledEvent
-import com.almasb.zeph.events.OnMagicalDamageDealtEvent
-import com.almasb.zeph.events.OnPhysicalDamageDealtEvent
+import com.almasb.zeph.events.*
 import com.almasb.zeph.fxglinventory.Inventory
 import com.almasb.zeph.item.Item
 import com.almasb.zeph.item.UsableItem
@@ -421,10 +418,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         if (skill.manaCost.value > sp.value)
             return SkillUseResult.NO_MANA
 
-        sp.value -= skill.manaCost.value
-        skill.putOnCooldown()
-
-        skill.onCast(char, char)
+        useTargetSkill(skill, char)
 
         return SkillUseResult.NONE
     }
@@ -434,6 +428,8 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     fun useTargetSkill(skill: Skill, target: CharacterEntity): SkillUseResult {
+        fire(OnBeforeSkillCastEvent(char, skill))
+
         sp.value -= skill.manaCost.intValue()
         skill.putOnCooldown()
 

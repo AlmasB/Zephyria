@@ -56,6 +56,10 @@ object EventHandlers {
             }
         }
 
+        onEvent(Events.ON_BEFORE_SKILL_CAST) {
+            Gameplay.showSkillCast(it.skill, it.caster.center.subtract(0.0, 35.0))
+        }
+
         onEvent(Events.ON_MONEY_RECEIVED) {
             Gameplay.showMoneyEarned(it.amount, it.receiver.position)
         }

@@ -108,133 +108,121 @@ class ZephFactory : EntityFactory {
     fun newMonster(data: SpawnData): Entity {
         val charData = data.get<CharacterData>("charData")
 
-        try {
-            val cellX = data.get<Int>("cellX")
-            val cellY = data.get<Int>("cellY")
+        val cellX = data.get<Int>("cellX")
+        val cellY = data.get<Int>("cellY")
 
-            val entity = CharacterEntity()
-            entity.type = MONSTER
-            entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
-            entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
+        val entity = CharacterEntity()
+        entity.type = MONSTER
+        entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
+        entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
 
-            with(entity) {
-                addComponent(CollidableComponent(true))
-                addComponent(StateComponent())
-                addComponent(CharacterEffectComponent())
-                addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
+        with(entity) {
+            addComponent(CollidableComponent(true))
+            addComponent(StateComponent())
+            addComponent(CharacterEffectComponent())
+            addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
+            addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
 
-                addComponent(AnimationComponent(charData.description.textureName))
-                addComponent(CharacterComponent(charData))
-                addComponent(CharacterActionComponent())
+            addComponent(AnimationComponent(charData.description.textureName))
+            addComponent(CharacterComponent(charData))
+            addComponent(CharacterActionComponent())
 
-                addComponent(CharacterChildViewComponent())
-                addComponent(RandomWanderComponent())
-            }
-
-            entity.setPositionToCell(cellX, cellY)
-
-            // TODO: do not allow click if dying ...
-            // TODO: convenience methods on mouse click
-            entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
-
-                val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
-
-                // TODO: handle differently?
-                if (player === entity)
-                    return@EventHandler
-
-                // TODO: check for skill range
-                if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
-                    set(IS_SELECTING_SKILL_TARGET_CHAR, false)
-
-                    player.actionComponent.orderSkillCast(geti(SELECTED_SKILL_INDEX), entity)
-                } else {
-                    player.actionComponent.orderAttack(entity)
-                }
-            })
-
-            animationBuilder()
-                    .fadeIn(entity)
-                    .buildAndPlay()
-
-            return entity
-        } catch (e: Exception) {
-            e.printStackTrace()
+            addComponent(CharacterChildViewComponent())
+            addComponent(RandomWanderComponent())
         }
 
-        throw RuntimeException("Failed to create char: $data")
+        entity.setPositionToCell(cellX, cellY)
+
+        // TODO: do not allow click if dying ...
+        // TODO: convenience methods on mouse click
+        entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+
+            val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
+
+            // TODO: handle differently?
+            if (player === entity)
+                return@EventHandler
+
+            // TODO: check for skill range
+            if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
+                set(IS_SELECTING_SKILL_TARGET_CHAR, false)
+
+                player.actionComponent.orderSkillCast(geti(SELECTED_SKILL_INDEX), entity)
+            } else {
+                player.actionComponent.orderAttack(entity)
+            }
+        })
+
+        animationBuilder()
+                .fadeIn(entity)
+                .buildAndPlay()
+
+        return entity
     }
 
     @Spawns("player")
     fun newPlayer(data: SpawnData): Entity {
-        try {
-            val charData = char {
-                desc {
-                    id = 1
-                    name = "Developer"
-                    description = "It's you! $name"
-                    textureName = "chars/players/dev_player.png"
-                }
-
-                charClass = CharacterClass.NOVICE
-
-                attributes {
-                    Attribute.values().forEach {
-                        it +1
-                    }
-                }
+        val charData = char {
+            desc {
+                id = 1
+                name = "Developer"
+                description = "It's you! $name"
+                textureName = "chars/players/dev_player.png"
             }
 
-            data.put("cellX", 0)
-            data.put("cellY", 0)
-            data.put("charData", charData)
+            charClass = CharacterClass.NOVICE
 
-            // TODO: separate newMonster to newCharacter?
-            val player = newMonster(data) as CharacterEntity
-            player.type = PLAYER
-            player.removeComponent(RandomWanderComponent::class.java)
-            player.addComponent(PlayerComponent())
-            player.addComponent(IrremovableComponent())
-
-            player.viewComponent.parent.isMouseTransparent = true
-
-            // TODO: TEST DATA BEGIN
-
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
-
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
-
-            player.inventory.add(newDagger(Element.NEUTRAL))
-            player.inventory.add(newDagger(Element.FIRE))
-            player.inventory.add(newDagger(Element.EARTH))
-            player.inventory.add(newDagger(Element.AIR))
-            player.inventory.add(newDagger(Element.WATER))
-
-            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
-            player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
-
-            player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
-
-            player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
-
-            // TEST DATA END
-
-            return player
-        } catch (e: Exception) {
-            e.printStackTrace()
+            attributes {
+                Attribute.values().forEach {
+                    it +1
+                }
+            }
         }
 
-        throw RuntimeException("Failed to create player: $data")
+        data.put("cellX", 0)
+        data.put("cellY", 0)
+        data.put("charData", charData)
+
+        // TODO: separate newMonster to newCharacter?
+        val player = newMonster(data) as CharacterEntity
+        player.type = PLAYER
+        player.removeComponent(RandomWanderComponent::class.java)
+        player.addComponent(PlayerComponent())
+        player.addComponent(IrremovableComponent())
+
+        player.viewComponent.parent.isMouseTransparent = true
+
+        // TODO: TEST DATA BEGIN
+
+        player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+        player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
+        player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
+        player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
+
+        player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
+        player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
+        player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
+        player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
+        player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
+
+        player.inventory.add(newDagger(Element.NEUTRAL))
+        player.inventory.add(newDagger(Element.FIRE))
+        player.inventory.add(newDagger(Element.EARTH))
+        player.inventory.add(newDagger(Element.AIR))
+        player.inventory.add(newDagger(Element.WATER))
+
+        player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+        player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+        player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
+        player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+
+        player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
+
+        player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
+
+        // TEST DATA END
+
+        return player
     }
 
     @Spawns("item")

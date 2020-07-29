@@ -205,6 +205,12 @@ class ZephFactory : EntityFactory {
             player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
             player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
 
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
+
             player.inventory.add(newDagger(Element.NEUTRAL))
             player.inventory.add(newDagger(Element.FIRE))
             player.inventory.add(newDagger(Element.EARTH))

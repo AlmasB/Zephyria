@@ -860,7 +860,7 @@ class Ranger {
         desc {
             id = 7233
             name = "Enchanted Arrow"
-            description = "Stuns target. Stun lasts longer for target's with high armor rating."
+            description = "Stuns target. Stun lasts longer for targets with high armor rating."
         }
 
         manaCost = 35

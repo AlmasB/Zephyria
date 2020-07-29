@@ -216,6 +216,8 @@ class ZephFactory : EntityFactory {
         player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
         player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
         player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+        player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+        player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
 
         player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
 

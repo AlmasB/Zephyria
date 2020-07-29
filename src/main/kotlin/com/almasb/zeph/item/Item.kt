@@ -40,7 +40,7 @@ abstract class Item(val description: Description) {
      * Typically a combination of static + runtime info, such as
      * actual weapon damage, actual armor rating, etc.
      */
-    val dynamicDescription = SimpleStringProperty(description.description)
+    val dynamicDescription = SimpleStringProperty(description.name + "\n" + description.description)
 
     val dynamicTextFlow: TextFlow = TextFlow(getUIFactoryService().newText(dynamicDescription))
 }

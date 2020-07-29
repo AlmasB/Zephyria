@@ -66,6 +66,31 @@ object Gameplay : FunctionCallHandler {
                 openStorage()
             }
 
+            "has_item" -> {
+                val itemID = args[0].toInt()
+
+                val num = if (args.size == 2) {
+                    args[1].toInt()
+                } else {
+                    1
+                }
+
+                val itemData = player.inventory
+                        .allData
+                        .entries
+                        .find { it.key.description.id == itemID }
+                        ?.value
+                        ?: return false
+
+                return itemData.quantity >= num
+            }
+
+            "add_money" -> {
+                val amount = args[0].toInt()
+
+                player.playerComponent!!.rewardMoney(amount)
+            }
+
             else -> {
                 log.warning("Unrecognized command: $cmd")
             }

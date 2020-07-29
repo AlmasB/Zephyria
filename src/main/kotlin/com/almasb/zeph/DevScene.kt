@@ -52,6 +52,8 @@ class DevScene : SubScene() {
         val tokens = input.split(" +".toRegex())
         val cmd = tokens[0]
 
-        Gameplay.handle(cmd, tokens.drop(1).map { it.trim() }.toTypedArray())
+        val result = Gameplay.handle(cmd, tokens.drop(1).map { it.trim() }.toTypedArray())
+
+        log.debug("Handled command: $input. Result: $result")
     }
 }

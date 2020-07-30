@@ -85,6 +85,37 @@ object Gameplay : FunctionCallHandler {
                 return itemData.quantity >= num
             }
 
+            "add_item" -> {
+                val itemID = args[0].toInt()
+
+                val num = if (args.size == 2) {
+                    args[1].toInt()
+                } else {
+                    1
+                }
+
+                val item = Data.newItem(itemID)
+
+                return player.inventory.add(item, quantity = num)
+            }
+
+            "remove_item" -> {
+                val itemID = args[0].toInt()
+
+                val num = if (args.size == 2) {
+                    args[1].toInt()
+                } else {
+                    1
+                }
+
+                player.inventory
+                        .itemsProperty()
+                        .find { it.description.id == itemID }
+                        ?.let {
+                            player.inventory.incrementQuantity(it, -num)
+                        }
+            }
+
             "add_money" -> {
                 val amount = args[0].toInt()
 

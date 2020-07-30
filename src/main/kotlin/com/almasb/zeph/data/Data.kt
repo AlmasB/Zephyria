@@ -160,6 +160,18 @@ object Data {
             ?: dbMiscItems[id]
             ?: throw IllegalArgumentException("No weapon/armor/usable/misc item found: $id")
 
+    fun newItem(id: Int): Item {
+        val data = getItemData(id)
+
+        return when (data) {
+            is WeaponData -> Weapon(data)
+            is ArmorData -> Armor(data)
+            is UsableItemData -> UsableItem(data)
+            is MiscItemData -> MiscItem(data)
+            else -> throw RuntimeException("Unknown item data type: ${data.javaClass.simpleName}")
+        }
+    }
+
     fun getDefaultWeapon(id: Int): Weapon {
         return hands
     }

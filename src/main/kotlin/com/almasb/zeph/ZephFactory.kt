@@ -98,7 +98,7 @@ class ZephFactory : EntityFactory {
 
             val graph = getAssetLoader().loadDialogueGraph(npcData.dialogueName.removePrefix("dialogues/"))
 
-            getCutsceneService().startDialogueScene(graph, Gameplay, Runnable { removeUINode(fullTexture) })
+            getCutsceneService().startDialogueScene(graph, CommandHandler, Runnable { removeUINode(fullTexture) })
         })
 
         return entity

@@ -21,7 +21,7 @@ class Quests {
             description = "Collect 5 healing herbs for Sarah."
         }
 
-        rewardMoney = 15
+        rewardMoney = 50
         rewardXP = Experience(1, 1, 5)
 
         collect {

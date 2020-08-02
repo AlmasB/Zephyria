@@ -13,6 +13,7 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.ui.StorageView
 
@@ -20,11 +21,15 @@ import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
 
+// TODO: dialogue bug when using keys to advance choice node while the text is being animated
+
 /**
+ * Functions of this object are automatically parsed to be available from the command line
+ * and in-game dialogues.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-object Gameplay : FunctionCallHandler {
+object Gameplay {
 
     private val log = Logger.get(javaClass)
 
@@ -32,103 +37,6 @@ object Gameplay : FunctionCallHandler {
 
     val currentMap: GameMap
         get() = geto(GAME_MAP)
-
-    override fun handle(functionName: String, args: Array<String>): Any {
-        log.debug("Function call: $functionName ${args.toList()}")
-
-        val cmd = functionName.toLowerCase()
-
-        when (cmd) {
-            "tp" -> {
-                val cellX = args[0].toInt()
-                val cellY = args[1].toInt()
-
-                goto(cellX, cellY)
-            }
-
-            "spawn_mob" -> {
-                val mobID = args[0].toInt()
-                val cellX = args[1].toInt()
-                val cellY = args[2].toInt()
-
-                spawnMob(mobID, cellX, cellY)
-            }
-
-            "spawn_item" -> {
-                val itemID = args[0].toInt()
-                val cellX = args[1].toInt()
-                val cellY = args[2].toInt()
-
-                spawnItem(itemID, cellX, cellY)
-            }
-
-            "open_storage" -> {
-                openStorage()
-            }
-
-            "has_item" -> {
-                val itemID = args[0].toInt()
-
-                val num = if (args.size == 2) {
-                    args[1].toInt()
-                } else {
-                    1
-                }
-
-                val itemData = player.inventory
-                        .allData
-                        .entries
-                        .find { it.key.description.id == itemID }
-                        ?.value
-                        ?: return false
-
-                return itemData.quantity >= num
-            }
-
-            "add_item" -> {
-                val itemID = args[0].toInt()
-
-                val num = if (args.size == 2) {
-                    args[1].toInt()
-                } else {
-                    1
-                }
-
-                val item = Data.newItem(itemID)
-
-                return player.inventory.add(item, quantity = num)
-            }
-
-            "remove_item" -> {
-                val itemID = args[0].toInt()
-
-                val num = if (args.size == 2) {
-                    args[1].toInt()
-                } else {
-                    1
-                }
-
-                player.inventory
-                        .itemsProperty()
-                        .find { it.description.id == itemID }
-                        ?.let {
-                            player.inventory.incrementQuantity(it, -num)
-                        }
-            }
-
-            "add_money" -> {
-                val amount = args[0].toInt()
-
-                player.playerComponent!!.rewardMoney(amount)
-            }
-
-            else -> {
-                log.warning("Unrecognized command: $cmd")
-            }
-        }
-
-        return 0
-    }
 
     fun openStorage() {
         val storageView = StorageView()
@@ -230,4 +138,65 @@ object Gameplay : FunctionCallHandler {
     fun spawnItem(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnItem(cellX, cellY, Data.getItemData(id))
     }
+
+    fun addMoney(amount: Int) {
+        player.playerComponent!!.rewardMoney(amount)
+    }
+
+    @JvmOverloads fun hasItem(itemID: Int, amount: Int = 1): Boolean {
+        val itemData = player.inventory
+                .allData
+                .entries
+                .find { it.key.description.id == itemID }
+                ?.value
+                ?: return false
+
+        return itemData.quantity >= amount
+    }
+
+    @JvmOverloads fun addItem(itemID: Int, amount: Int = 1): Boolean {
+        log.info("addItem $itemID $amount")
+
+        val item = Data.newItem(itemID)
+
+        return player.inventory.add(item, quantity = amount)
+    }
+
+    @JvmOverloads fun removeItem(itemID: Int, amount: Int = 1) {
+        log.info("removeItem $itemID $amount")
+
+        player.inventory
+                .itemsProperty()
+                .find { it.description.id == itemID }
+                ?.let {
+                    player.inventory.incrementQuantity(it, -amount)
+                }
+    }
+
+
+//            }
+
+    // TODO: implement
+    private val quests = arrayListOf<Int>()
+
+    fun hasQuest(questID: Int) = questID in quests
+
+    fun startQuest(questID: Int) {
+        log.info("Started quest $questID")
+
+        quests += questID
+    }
+
+    fun completeQuest(questID: Int) {
+        log.info("Quest $questID is completed")
+
+//        val quest = TODO()
+//        val questData: QuestData = TODO()
+//
+//        addMoney(questData.rewardMoney)
+    }
+//
+//    fun fail_quest() {
+//
+//    }
 }

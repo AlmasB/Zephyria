@@ -13,52 +13,71 @@ object CommandHandler : FunctionCallHandler {
 
     private val log = Logger.get(javaClass)
 
-    private val methods = hashMapOf<String, Method>()
+    private val methods = hashMapOf<MethodSignature, Method>()
 
     private val stringToObject = hashMapOf<Class<*>, (String) -> Any>()
 
     init {
-        javaClass.declaredMethods.forEach {
-            methods[it.name] = it
+        Gameplay.javaClass.declaredMethods.forEach {
+            val signature = MethodSignature(it.name, it.parameterCount)
+            methods[signature] = it
+
+            log.info("Added cmd: $it ($signature)")
         }
 
         // TODO: move this to FXGL, 1) attempt to call a member function, 2) call handle()
-        // TODO: other types
+        // TODO: other types, no-fail alternatives?
+
         stringToObject[String::class.java] = { it }
         stringToObject[Int::class.java] = { it.toInt() }
+        stringToObject[Double::class.java] = { it.toDouble() }
+        stringToObject[Boolean::class.java] = {
+            when (it) {
+                "true" -> true
+                "false" -> false
+                else -> throw RuntimeException("Cannot convert $it to Boolean")
+            }
+        }
     }
 
     override fun handle(functionName: String, args: Array<String>): Any {
-        val cmd = functionName.toLowerCase()
-        val method = methods[cmd]
+        val cmd = functionName
+        val method = methods[MethodSignature(cmd, args.size)]
 
         if (method != null) {
-
-            if (method.parameterCount != args.size) {
-                // TODO: no match
-
-                log.warning("No match for $cmd")
-            } else {
-
-                val argsAsObjects = method.parameterTypes.mapIndexed { index, type ->
-                    val converter = stringToObject[type] ?: throw RuntimeException("No converter found from String to $type")
-                    converter.invoke(args[index])
-                }
-
-                method.invoke(this, *argsAsObjects.toTypedArray())
+            val argsAsObjects = method.parameterTypes.mapIndexed { index, type ->
+                val converter = stringToObject[type] ?: throw RuntimeException("No converter found from String to $type")
+                converter.invoke(args[index])
             }
 
-        } else {
-            log.warning("Unrecognized command: $cmd")
+            return method.invoke(Gameplay, *argsAsObjects.toTypedArray()) ?: 0
         }
+
+        log.warning("Unrecognized command: $cmd with ${args.size} arguments")
 
         return 0
     }
 
-    fun has_item(s: String, i: Int): Boolean {
-
-        log.infof("Called has_item with %s and %d", s, i)
-
-        return false
-    }
+    private data class MethodSignature(val name: String, val paramCount: Int)
 }
+
+// override fun handle(functionName: String, args: Array<String>): Any {
+//        log.debug("Function call: $functionName ${args.toList()}")
+//
+//        val cmd = functionName.toLowerCase()
+//
+//        when (cmd) {
+//
+
+//
+
+//
+
+//
+//            else -> {
+//                log.warning("Unrecognized command: $cmd")
+//            }
+//        }
+//
+//        return 0
+//    }

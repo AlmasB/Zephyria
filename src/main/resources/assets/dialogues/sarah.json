@@ -1,0 +1,509 @@
+{
+  "uniqueID" : 48,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Sarah:\n\"Oh, hello there.\""
+    },
+    "1" : {
+      "type" : "END",
+      "text" : "Sarah:\n\"We'll be waiting for your return, please stay safe.\""
+    },
+    "2" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I'm very sorry, but if it's not too serious would you please wait a while?\""
+    },
+    "3" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I currently have a patient in very critical condition. I can't take on anyone else at the moment...\""
+    },
+    "4" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"She's very sick, it's not looking good right now... but I can't give up on her!\""
+    },
+    "5" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I must do everything within my ability to try and save her.\""
+    },
+    "8" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"If only I had some medicinal herbs in stock, they would help stabilise her condition...\""
+    },
+    "10" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Are you here to see a healer?\""
+    },
+    "11" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Really? You would do that?\""
+    },
+    "12" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Thank you so much! That would be such a relief if you could.\""
+    },
+    "15" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"You can usually find some of the plants growing near the forest to the East.\""
+    },
+    "16" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Then I can use the leaves to make a medicine for her.\""
+    },
+    "17" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I think 5 medicinal herbs should be enough.\""
+    },
+    "18" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Thank you... Um, I don't suppose you'd be able to help at all?\""
+    },
+    "20" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Oh I see... this poor girl. I wonder what will happen to her if I can't make that medicine.\""
+    },
+    "21" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Please excuse me, I must get back to caring for this girl now.\""
+    },
+    "22" : {
+      "type" : "END",
+      "text" : "Sarah:\n\"Keep safe on your travels.\""
+    },
+    "23" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I apologise for asking too much of you.\""
+    },
+    "26" : {
+      "type" : "BRANCH",
+      "text" : "hasQuest 7500"
+    },
+    "27" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Thank goodness you're back!\""
+    },
+    "29" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Oh okay... if you can, please find them soon.\""
+    },
+    "30" : {
+      "type" : "END",
+      "text" : "Sarah:\n\"I'm not sure how much longer she can hold on...\""
+    },
+    "31" : {
+      "type" : "BRANCH",
+      "text" : "hasItem 6016 5"
+    },
+    "32" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Oh, um... you don't seem to have enough.\""
+    },
+    "33" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\nI'm very sorry, but I need 5 medicinal herbs to make enough medicine for her.\""
+    },
+    "34" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I'm not sure how much longer she can hold on...\""
+    },
+    "36" : {
+      "type" : "END",
+      "text" : "Sarah:\n\"Please try to find the herbs soon. We'll be waiting.\""
+    },
+    "37" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"Thank you so much! You're a life saver!\""
+    },
+    "38" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I'll make up the medicine right away. Hopefully she'll make a full recovery.\""
+    },
+    "39" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"You have done a great kindness, going out of your way to help save her.\""
+    },
+    "40" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I know it's not much, but please take this as a reward for your gratitude.\""
+    },
+    "41" : {
+      "type" : "FUNCTION",
+      "text" : "completeQuest 7500\nremoveItem 6016 5"
+    },
+    "42" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"And if you ever need healing in future, please come and see me.\""
+    },
+    "43" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"I would happy to help you. It's the least I can do after all you've done.\""
+    },
+    "44" : {
+      "type" : "END",
+      "text" : "Sarah:\n\"Please take care and keep safe on your travels.\""
+    },
+    "45" : {
+      "type" : "FUNCTION",
+      "text" : "startQuest 7500"
+    },
+    "47" : {
+      "type" : "TEXT",
+      "text" : "Sarah:\n\"You can usually find some of the plants growing near the forest to the East.\""
+    }
+  },
+  "choiceNodes" : {
+    "7" : {
+      "type" : "CHOICE",
+      "text" : "Sarah:\n\"But I've completely run out... and I can't risk leaving her alone to go and find more. Whatever will I do...\"",
+      "options" : {
+        "0" : "I could go and find some for you.",
+        "1" : "That's really unfortunate... good luck."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "14" : {
+      "type" : "CHOICE",
+      "text" : "Sarah:\n\"Please... help me save this girl.\"",
+      "options" : {
+        "0" : "I'll be back with the medicinal herbs.",
+        "1" : "Where can I find these herbs?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "19" : {
+      "type" : "CHOICE",
+      "text" : "Sarah:\n\"Would there be any chance you could look for the herbs for me?\"",
+      "options" : {
+        "0" : "Okay, I'll help find the herbs for you.",
+        "1" : "Sorry, I'm not able to help right now..."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "28" : {
+      "type" : "CHOICE",
+      "text" : "Sarah:\n\"Did you manage to find the herbs?\"",
+      "options" : {
+        "0" : "I have the herbs.",
+        "1" : "I'm still looking..."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 2,
+    "targetID" : 3
+  }, {
+    "sourceID" : 3,
+    "targetID" : 4
+  }, {
+    "sourceID" : 4,
+    "targetID" : 5
+  }, {
+    "sourceID" : 5,
+    "targetID" : 8
+  }, {
+    "sourceID" : 8,
+    "targetID" : 7
+  }, {
+    "sourceID" : 10,
+    "targetID" : 2
+  }, {
+    "sourceID" : 15,
+    "targetID" : 16
+  }, {
+    "sourceID" : 11,
+    "targetID" : 12
+  }, {
+    "sourceID" : 12,
+    "targetID" : 14
+  }, {
+    "sourceID" : 16,
+    "targetID" : 14
+  }, {
+    "sourceID" : 17,
+    "targetID" : 1
+  }, {
+    "sourceID" : 18,
+    "targetID" : 19
+  }, {
+    "sourceID" : 21,
+    "targetID" : 22
+  }, {
+    "sourceID" : 20,
+    "targetID" : 23
+  }, {
+    "sourceID" : 23,
+    "targetID" : 21
+  }, {
+    "sourceID" : 0,
+    "targetID" : 26
+  }, {
+    "sourceID" : 27,
+    "targetID" : 28
+  }, {
+    "sourceID" : 29,
+    "targetID" : 30
+  }, {
+    "sourceID" : 32,
+    "targetID" : 33
+  }, {
+    "sourceID" : 34,
+    "targetID" : 36
+  }, {
+    "sourceID" : 37,
+    "targetID" : 38
+  }, {
+    "sourceID" : 38,
+    "targetID" : 39
+  }, {
+    "sourceID" : 39,
+    "targetID" : 40
+  }, {
+    "sourceID" : 40,
+    "targetID" : 41
+  }, {
+    "sourceID" : 41,
+    "targetID" : 42
+  }, {
+    "sourceID" : 42,
+    "targetID" : 43
+  }, {
+    "sourceID" : 43,
+    "targetID" : 44
+  }, {
+    "sourceID" : 45,
+    "targetID" : 11
+  }, {
+    "sourceID" : 33,
+    "targetID" : 47
+  }, {
+    "sourceID" : 47,
+    "targetID" : 34
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 14,
+    "optionID" : 1,
+    "targetID" : 15
+  }, {
+    "sourceID" : 14,
+    "optionID" : 0,
+    "targetID" : 17
+  }, {
+    "sourceID" : 7,
+    "optionID" : 1,
+    "targetID" : 18
+  }, {
+    "sourceID" : 26,
+    "optionID" : 1,
+    "targetID" : 10
+  }, {
+    "sourceID" : 26,
+    "optionID" : 0,
+    "targetID" : 27
+  }, {
+    "sourceID" : 28,
+    "optionID" : 1,
+    "targetID" : 29
+  }, {
+    "sourceID" : 28,
+    "optionID" : 0,
+    "targetID" : 31
+  }, {
+    "sourceID" : 31,
+    "optionID" : 1,
+    "targetID" : 32
+  }, {
+    "sourceID" : 31,
+    "optionID" : 0,
+    "targetID" : 37
+  }, {
+    "sourceID" : 7,
+    "optionID" : 0,
+    "targetID" : 45
+  }, {
+    "sourceID" : 19,
+    "optionID" : 0,
+    "targetID" : 45
+  }, {
+    "sourceID" : 19,
+    "optionID" : 1,
+    "targetID" : 20
+  } ],
+  "uiMetadata" : {
+    "0" : {
+      "x" : -941.8784496521414,
+      "y" : 58.04351898149531
+    },
+    "1" : {
+      "x" : 5154.6086827419,
+      "y" : 459.03366613666714
+    },
+    "2" : {
+      "x" : 395.46997747761304,
+      "y" : 440.9690273482557
+    },
+    "3" : {
+      "x" : 818.1281836035566,
+      "y" : 442.0500610351567
+    },
+    "4" : {
+      "x" : 1212.2521962881033,
+      "y" : 442.8000559813605
+    },
+    "5" : {
+      "x" : 1602.0575756640123,
+      "y" : 452.6406806561999
+    },
+    "7" : {
+      "x" : 2523.872995990489,
+      "y" : 435.54341261107237
+    },
+    "8" : {
+      "x" : 1997.6053267830719,
+      "y" : 445.7807090974277
+    },
+    "10" : {
+      "x" : -40.06579036718105,
+      "y" : 463.9318153892423
+    },
+    "11" : {
+      "x" : 3360.6749986681734,
+      "y" : 511.1835014916392
+    },
+    "12" : {
+      "x" : 3748.72806341875,
+      "y" : 455.48228931811525
+    },
+    "14" : {
+      "x" : 4262.95599991081,
+      "y" : 430.03567709891047
+    },
+    "15" : {
+      "x" : 3843.145102907759,
+      "y" : 756.9945225409009
+    },
+    "16" : {
+      "x" : 4311.405573460543,
+      "y" : 791.5573486663213
+    },
+    "17" : {
+      "x" : 4730.344789966024,
+      "y" : 463.05552895974984
+    },
+    "18" : {
+      "x" : 2282.360995159559,
+      "y" : 761.925090058764
+    },
+    "19" : {
+      "x" : 2796.913233921117,
+      "y" : 853.2236825691713
+    },
+    "20" : {
+      "x" : 3324.4517889398167,
+      "y" : 1042.3049391106492
+    },
+    "21" : {
+      "x" : 4300.574333252636,
+      "y" : 1069.1772995702186
+    },
+    "22" : {
+      "x" : 4777.644445100757,
+      "y" : 1081.4319458395673
+    },
+    "23" : {
+      "x" : 3830.7959505021913,
+      "y" : 1060.8015717562853
+    },
+    "26" : {
+      "x" : -500.9497183676025,
+      "y" : 35.59612013070413
+    },
+    "27" : {
+      "x" : 31.509671020507938,
+      "y" : -182.25525512695316
+    },
+    "28" : {
+      "x" : 549.9788085937499,
+      "y" : -218.99472045898435
+    },
+    "29" : {
+      "x" : 997.2287266484095,
+      "y" : 28.773974112063808
+    },
+    "30" : {
+      "x" : 1436.6342036343788,
+      "y" : 33.76932865096145
+    },
+    "31" : {
+      "x" : 1020.1093994140629,
+      "y" : -361.36019134521496
+    },
+    "32" : {
+      "x" : 1464.588623046875,
+      "y" : -210.3244659574467
+    },
+    "33" : {
+      "x" : 1905.5991943359375,
+      "y" : -211.40767683616903
+    },
+    "34" : {
+      "x" : 2796.111497336649,
+      "y" : -190.12141287724268
+    },
+    "36" : {
+      "x" : 3247.9986681762134,
+      "y" : -192.50885170263982
+    },
+    "37" : {
+      "x" : 1478.2965471658083,
+      "y" : -450.0563280572339
+    },
+    "38" : {
+      "x" : 1912.905722475318,
+      "y" : -461.42347242569605
+    },
+    "39" : {
+      "x" : 2371.498094128234,
+      "y" : -464.14583424514007
+    },
+    "40" : {
+      "x" : 2799.5707568659795,
+      "y" : -464.51720218615924
+    },
+    "41" : {
+      "x" : 3249.772304762776,
+      "y" : -447.3976939408162
+    },
+    "42" : {
+      "x" : 3700.244736094367,
+      "y" : -448.31621801314606
+    },
+    "43" : {
+      "x" : 4163.137886194174,
+      "y" : -445.9673725872856
+    },
+    "44" : {
+      "x" : 4615.426603506507,
+      "y" : -440.5958937130435
+    },
+    "45" : {
+      "x" : 2976.7122105702865,
+      "y" : 600.5577887184022
+    },
+    "47" : {
+      "x" : 2361.6425521080832,
+      "y" : -208.2875908380912
+    }
+  }
+}

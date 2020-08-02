@@ -51,7 +51,7 @@ class Inventory<T>(var capacity: Int) {
 
     @JvmOverloads fun add(item: T, name: String = "", description: String = "", view: Node = EmptyView, quantity: Int = 1): Boolean {
         if (item in items) {
-            getData(item).get().quantity++
+            getData(item).get().quantity += quantity
             return true
         }
 

@@ -36,6 +36,6 @@ class NPCs {
             textureName = "chars/npcs/sarah.png"
         }
 
-        dialogueName = "dialogues/charles.json"
+        dialogueName = "dialogues/sarah.json"
     }
 }

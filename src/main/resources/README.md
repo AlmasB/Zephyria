@@ -12,6 +12,8 @@
 - animated tree - https://opengameart.org/content/animated-tree-and-water
 - save/load symbol - https://opengameart.org/content/pixel-book-animated
 - animated flame - https://opengameart.org/content/lpc-flames
+- portal aura - https://opengameart.org/content/explosion-effects-and-more
+- camp_fire - https://opengameart.org/content/camp-fire-animation-for-rpgs-finished
 
 ## NPCs
 

@@ -52,7 +52,7 @@ class ZephyriaApp : GameApplication() {
                 return ZephLoadingScene()
             }
         }
-        settings.applicationMode = ApplicationMode.RELEASE
+        settings.applicationMode = ApplicationMode.DEVELOPER
     }
 
     override fun onPreInit() {

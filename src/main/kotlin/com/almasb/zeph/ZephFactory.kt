@@ -3,9 +3,6 @@ package com.almasb.zeph
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
-import com.almasb.fxgl.cutscene.Cutscene
-import com.almasb.fxgl.cutscene.dialogue.DialogueGraphSerializer
-import com.almasb.fxgl.cutscene.dialogue.SerializableGraph
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
@@ -31,6 +28,7 @@ import com.almasb.zeph.Config.SKILL_PROJECTILE_SPEED
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
+import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
 import com.almasb.zeph.Config.Z_INDEX_DECOR_BELOW_PLAYER
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
@@ -50,7 +48,6 @@ import com.almasb.zeph.data.Data
 
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
 import javafx.geometry.Rectangle2D
@@ -364,11 +361,24 @@ class ZephFactory : EntityFactory {
                 data.get<Double>("width") - TILE_SIZE *2, data.get<Double>("height") - TILE_SIZE
         )
 
+        val channel = AnimationChannel(image("portal_aura.png"),
+                framesPerRow = 8,
+                frameWidth = 128, frameHeight = 128,
+                channelDuration = Duration.seconds(1.0),
+                startFrame = 0, endFrame = 31
+        )
+        val auraTexture = AnimatedTexture(channel).loop()
+        auraTexture.translateX = -3.0
+        auraTexture.translateY = -93.0
+        auraTexture.scaleX = 1.5
+        auraTexture.scaleY = 1.5
+
         return entityBuilder(data)
                 .type(PORTAL)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
                 .with("interactionCollisionBox", interactionCollisionBox)
                 .with(PortalComponent(data.get("mapName"), data.get("toCellX"), data.get("toCellY")))
+                .onActive { it.viewComponent.addChild(auraTexture) }
                 .build()
     }
 
@@ -421,20 +431,35 @@ class ZephFactory : EntityFactory {
                 .build()
     }
 
-    @Spawns("animated_flame")
+    @Spawns("camp_fire")
     fun newAnimatedFlame(data: SpawnData): Entity {
         // TODO: add simpler ctor without framesWidth / height, start / end
-        val channel = AnimationChannel(image("animated_flame.png"),
-                framesPerRow = 4,
-                frameWidth = 16, frameHeight = 24,
-                channelDuration = Duration.seconds(1.0),
-                startFrame = 0, endFrame = 11
+//        val channel = AnimationChannel(image("animated_flame.png"),
+//                framesPerRow = 4,
+//                frameWidth = 16, frameHeight = 24,
+//                channelDuration = Duration.seconds(1.0),
+//                startFrame = 0, endFrame = 11
+//        )
+//        val texture = AnimatedTexture(channel).loop()
+//        texture.translateX = -TILE_SIZE / 4.0
+//        texture.translateY = -TILE_SIZE / 4.0
+
+        val channel = AnimationChannel(image("camp_fire.png"),
+                framesPerRow = 5,
+                frameWidth = 64, frameHeight = 64,
+                channelDuration = Duration.seconds(0.8),
+                startFrame = 0, endFrame = 4
         )
         val texture = AnimatedTexture(channel).loop()
+        texture.translateX = -TILE_SIZE * 1.0
+        texture.translateY = -TILE_SIZE * 1.5
 
         return entityBuilder(data)
-                .view(texture)
-                .scale(2.0, 2.0)
+                .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
+                .onActive {
+                    it.viewComponent.clearChildren()
+                    it.viewComponent.addChild(texture)
+                }
                 .build()
     }
 }

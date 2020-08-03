@@ -95,6 +95,10 @@ class ZephyriaApp : GameApplication() {
             onKeyDown(KeyCode.ENTER) {
                 getSceneService().pushSubScene(devScene!!)
             }
+
+            onKeyDown(KeyCode.F) {
+                spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
+            }
         }
     }
 

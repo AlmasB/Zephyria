@@ -12,6 +12,7 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.Spawns
+import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.CollidableComponent
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
@@ -21,6 +22,9 @@ import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
 import com.almasb.fxgl.procedural.HeightMapGenerator
+import com.almasb.fxgl.texture.AnimatedTexture
+import com.almasb.fxgl.texture.AnimationChannel
+import com.almasb.fxgl.texture.Texture
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.SKILL_PROJECTILE_SPEED
@@ -400,6 +404,42 @@ class ZephFactory : EntityFactory {
                 .collidable()
                 .with(ProjectileComponent(data.get("dir"), SKILL_PROJECTILE_SPEED))
                 .build()
+    }
+
+    // TODO: check fxgl can load margin-based tiles correctly
+    // TODO: allow tmx / fxgl to use standalone animated textures
+    // should tmx parsing be done in from(data) so that devs can make use of the tmx view in this function?
+    @Spawns("anim_tree")
+    fun newAnimatedTree(data: SpawnData): Entity {
+        val texture = texture("animated_tree.png").subTexture(Rectangle2D(0.0, 0.0, 100.0, 32.0))
+
+        return entityBuilder(data)
+                .onActive { it.addComponent(AnimatedTreeComponent(texture)) }
+                .build()
+    }
+
+    @Spawns("animated_flame")
+    fun newAnimatedFlame(data: SpawnData): Entity {
+        // TODO: add simpler ctor without framesWidth / height, start / end
+        val channel = AnimationChannel(image("animated_flame.png"),
+                framesPerRow = 4,
+                frameWidth = 16, frameHeight = 24,
+                channelDuration = Duration.seconds(1.0),
+                startFrame = 0, endFrame = 11
+        )
+        val texture = AnimatedTexture(channel).loop()
+
+        return entityBuilder(data)
+                .view(texture)
+                .scale(2.0, 2.0)
+                .build()
+    }
+}
+
+private class AnimatedTreeComponent(private val texture: Texture) : Component() {
+    override fun onAdded() {
+        entity.viewComponent.clearChildren()
+        entity.viewComponent.addChild(texture.toAnimatedTexture(3, Duration.seconds(0.5)).loop())
     }
 }
 

@@ -9,6 +9,9 @@
 - Voice sounds - https://bckr.itch.io/sdap Dillon Becker
 - Sound effects - https://olexmazur.itch.io/fantasy-card-game Olex Mazur
 - Textures - https://opengameart.org/content/skill-item-and-spell-icons
+- animated tree - https://opengameart.org/content/animated-tree-and-water
+- save/load symbol - https://opengameart.org/content/pixel-book-animated
+- animated flame - https://opengameart.org/content/lpc-flames
 
 ## NPCs
 

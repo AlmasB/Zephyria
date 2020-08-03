@@ -98,7 +98,7 @@ object EventHandlers {
 
         if (isReleaseMode()) {
             onEvent(Events.ON_ITEM_PICKED_UP) {
-                play("pick_up_item.wav");
+                play("pick_up_item.wav")
             }
 
             onEvent(Events.ON_SKILL_LEARNED) {
@@ -121,6 +121,14 @@ object EventHandlers {
                 if (it.char.isPlayer) {
                     val num = random(0, 1)
                     play("voice/male/move${num}_alex.wav")
+                }
+            }
+
+            onEvent(Events.ON_ITEM_USED) {
+                val soundName = it.item.data.useSoundName
+
+                if (soundName.isNotEmpty()) {
+                    play(soundName)
                 }
             }
         }

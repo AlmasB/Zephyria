@@ -17,6 +17,8 @@ import com.almasb.zeph.events.Events.ON_SKILL_LEARNED
 import com.almasb.zeph.events.Events.ON_WEAPON_EQUIPPED
 import com.almasb.zeph.events.Events.ON_XP_RECEIVED
 import com.almasb.zeph.item.Armor
+import com.almasb.zeph.item.Item
+import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.skill.Skill
 import javafx.event.Event
@@ -82,12 +84,12 @@ class OnBeingKilledEvent(
 
 class OnItemPickedUpEvent(
         val user: CharacterEntity,
-        val item: Entity
+        val item: Item
 ) : GameEvent(ON_ITEM_PICKED_UP)
 
 class OnItemUsedEvent(
         val user: CharacterEntity,
-        val item: Entity
+        val item: UsableItem
 ) : GameEvent(ON_ITEM_USED)
 
 class OnWeaponEquippedEvent(

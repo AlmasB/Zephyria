@@ -458,5 +458,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     fun useItem(item: UsableItem) {
         item.onUse(char)
         inventory.incrementQuantity(item, -1)
+
+        fire(OnItemUsedEvent(char, item))
     }
 }

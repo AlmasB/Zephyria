@@ -215,6 +215,9 @@ class ZephFactory : EntityFactory {
         player.inventory.add(newDagger(Element.AIR))
         player.inventory.add(newDagger(Element.WATER))
 
+        player.inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
+        player.inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
+
         player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
         player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
         player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))

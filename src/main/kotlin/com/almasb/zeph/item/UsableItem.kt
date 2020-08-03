@@ -45,6 +45,7 @@ class MiscItem(val data: MiscItemData) : Item(data.description) {
 @DataDSL
 class UsableItemDataBuilder(
         var description: Description = emptyDescription,
+        var useSoundName: String = "",
         var beforeUseScript: (CharacterEntity) -> Boolean = { true },
         var onUseScript: (CharacterEntity) -> Unit = { }
 ) {
@@ -56,7 +57,9 @@ class UsableItemDataBuilder(
     }
 
     fun build(): UsableItemData {
-        return UsableItemData(description, beforeUseScript, onUseScript)
+        val soundName = if (useSoundName.isEmpty()) useSoundName else "items/$useSoundName"
+
+        return UsableItemData(description, soundName, beforeUseScript, onUseScript)
     }
 }
 
@@ -98,6 +101,7 @@ fun miscItem(setup: MiscItemDataBuilder.() -> Unit): MiscItemData {
 
 data class UsableItemData(
         override val description: Description,
+        val useSoundName: String,
         val beforeUseScript: (CharacterEntity) -> Boolean,
         val onUseScript: (CharacterEntity) -> Unit
 ) : ItemData

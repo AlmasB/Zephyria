@@ -242,21 +242,27 @@ class CharacterActionComponent : Component() {
     private fun pickUp(item: Entity) {
         item.getPropertyOptional<Weapon>("weapon").ifPresent {
             char.inventory.add(it)
+
+            fire(OnItemPickedUpEvent(char, it))
         }
 
         item.getPropertyOptional<Armor>("armor").ifPresent {
             char.inventory.add(it)
+
+            fire(OnItemPickedUpEvent(char, it))
         }
 
         item.getPropertyOptional<UsableItem>("usable").ifPresent {
             char.inventory.add(it)
+
+            fire(OnItemPickedUpEvent(char, it))
         }
 
         item.getPropertyOptional<MiscItem>("misc").ifPresent {
             char.inventory.add(it)
-        }
 
-        fire(OnItemPickedUpEvent(char, item))
+            fire(OnItemPickedUpEvent(char, it))
+        }
 
         item.removeFromWorld()
 

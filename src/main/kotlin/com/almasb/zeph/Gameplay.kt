@@ -195,8 +195,8 @@ object Gameplay {
 //
 //        addMoney(questData.rewardMoney)
     }
-//
-//    fun fail_quest() {
-//
-//    }
+
+    fun failQuest(questID: Int) {
+
+    }
 }

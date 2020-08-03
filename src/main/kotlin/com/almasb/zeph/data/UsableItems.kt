@@ -30,6 +30,8 @@ class UsableItems {
             textureName = "items/usable/healing_potion.png"
         }
 
+        useSoundName = "bottle.wav"
+
         beforeUseScript = {
             // everyone can use it
             true
@@ -48,6 +50,8 @@ class UsableItems {
             textureName = "items/usable/mana_potion.png"
         }
 
+        useSoundName = "bottle.wav"
+
         onUseScript = {
             it.sp.restore(30.0)
         }
@@ -60,6 +64,8 @@ class UsableItems {
             description = "An old box that may contain valuable items. Gives a random equipment item when opened."
             textureName = "items/usable/treasure_box.png"
         }
+
+        useSoundName = "treasure_box.wav"
 
         onUseScript = {
             val isWeapon = GameMath.checkChance(50)
@@ -96,6 +102,8 @@ class UsableItems {
             description = "Teleports the stone user to a random location on the map."
             textureName = "items/usable/teleportation_stone.png"
         }
+
+        useSoundName = "teleportation_stone.wav"
 
         onUseScript = {
             val grid = Gameplay.currentMap.grid

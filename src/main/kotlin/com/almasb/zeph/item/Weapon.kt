@@ -52,9 +52,7 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
 
         // TODO: this is still static for now, we need to listen for any changes in dynamicDescription and update
 
-        dynamicTextFlow.children.setAll(
-                getUIFactoryService().newText(description.name + "\n", Color.WHITE, 16.0),
-                getUIFactoryService().newText(description.description + "\n", Color.DARKGRAY, 14.0),
+        dynamicTextFlow.children.addAll(
                 getUIFactoryService().newText("Element: ", Color.WHITE, 14.0),
                 getUIFactoryService().newText("", 16.0).also {
                     it.fillProperty().bind(Bindings.createObjectBinding(Callable { element.value.color }, element))

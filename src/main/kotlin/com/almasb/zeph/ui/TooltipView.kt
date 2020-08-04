@@ -1,6 +1,7 @@
 package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.getUIFactoryService
+import com.almasb.zeph.Description
 import com.almasb.zeph.getUITooltip
 import com.almasb.zeph.item.Item
 import javafx.beans.value.ChangeListener
@@ -95,5 +96,21 @@ fun Node.setOnTooltipHover(tooltipAction: (TooltipView) -> Unit) {
         } else {
             tooltip.hide()
         }
+    }
+}
+
+private val NAME_COLOR = Color.WHITE
+private val DESCRIPTION_COLOR = Color.DARKGRAY
+
+private val NAME_FONT_SIZE = 16.0
+private val DESCRIPTION_FONT_SIZE = 14.0
+
+class TooltipTextFlow(val description: Description) : TextFlow() {
+
+    init {
+        children.setAll(
+                getUIFactoryService().newText(description.name + "\n", NAME_COLOR, NAME_FONT_SIZE),
+                getUIFactoryService().newText(description.description + "\n", DESCRIPTION_COLOR, DESCRIPTION_FONT_SIZE)
+        )
     }
 }

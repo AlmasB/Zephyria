@@ -2,6 +2,7 @@ package com.almasb.zeph.skill
 
 import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.ui.TooltipTextFlow
 import javafx.beans.property.SimpleDoubleProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
@@ -17,7 +18,7 @@ class Skill(val data: SkillData) {
 
     val dynamicDescription = SimpleStringProperty(data.description.description)
 
-    val dynamicTextFlow = TextFlow()
+    val dynamicTextFlow = TooltipTextFlow(data.description)
 
     val levelProperty = SimpleIntegerProperty()
     val manaCost = levelProperty.multiply(data.manaCost)
@@ -41,9 +42,7 @@ class Skill(val data: SkillData) {
 
         // TODO: this is still static for now, we need to listen for any changes in dynamicDescription and update
 
-        dynamicTextFlow.children.setAll(
-                getUIFactoryService().newText(data.description.name + "\n", Color.WHITE, 16.0),
-                getUIFactoryService().newText(data.description.description + "\n", Color.DARKGRAY, 14.0),
+        dynamicTextFlow.children.addAll(
                 getUIFactoryService().newText("Level: ", Color.WHITE, 14.0),
                 getUIFactoryService().newText("", Color.GREEN, 16.0).also { it.textProperty().bind(levelProperty.asString("%d\n")) },
                 getUIFactoryService().newText("Cost: ", Color.WHITE, 14.0),

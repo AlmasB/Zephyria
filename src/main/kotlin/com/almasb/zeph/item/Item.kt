@@ -1,16 +1,15 @@
 package com.almasb.zeph.item
 
-import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.zeph.Config.MAX_ESSENCES
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Essence
 import com.almasb.zeph.combat.GameMath
 import com.almasb.zeph.combat.Rune
+import com.almasb.zeph.ui.TooltipTextFlow
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleStringProperty
 import javafx.collections.FXCollections
-import javafx.scene.text.Text
 import javafx.scene.text.TextFlow
 
 enum class ItemLevel constructor(
@@ -42,7 +41,7 @@ abstract class Item(val description: Description) {
      */
     val dynamicDescription = SimpleStringProperty(description.name + "\n" + description.description)
 
-    val dynamicTextFlow: TextFlow = TextFlow(getUIFactoryService().newText(dynamicDescription))
+    val dynamicTextFlow: TextFlow = TooltipTextFlow(description)
 }
 
 abstract class EquipItem(

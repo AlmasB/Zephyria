@@ -77,6 +77,10 @@ class CharacterEntity : Entity() {
 
     fun orderMove(cellX: Int, cellY: Int) = actionComponent.orderMove(cellX, cellY)
 
+    fun dealPureDamage(target: CharacterEntity, damage: Double) {
+        characterComponent.dealPureDamage(target, damage)
+    }
+
     fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element = Element.NEUTRAL): DamageResult {
         return characterComponent.dealPhysicalDamage(target, baseDamage, element)
     }

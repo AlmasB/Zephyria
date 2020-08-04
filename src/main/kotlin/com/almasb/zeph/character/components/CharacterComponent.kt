@@ -396,15 +396,15 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         return DamageResult(DamageType.MAGICAL, element, totalDamage, crit)
     }
 
-//    /**
-//     * Deals the exact amount of [value] damage to [target].
-//     */
-//    fun dealPureDamage(target: CharacterEntity, value: Double): DamageResult {
-//        val amount = value.toInt()
-//        (target).hp.damage(amount.toDouble())
-//
-//        return DamageResult(DamageType.PURE, Element.NEUTRAL, amount, false)
-//    }
+    /**
+     * Deals the exact amount of [value] damage to [target].
+     */
+    fun dealPureDamage(target: CharacterEntity, value: Double) {
+        target.hp.damage(value)
+
+        // TODO:
+        //fire(OnPhysicalDamageDealtEvent(char, target, totalDamage, crit))
+    }
 
     fun useSelfSkill(index: Int): SkillUseResult {
         val skill = skills[index]

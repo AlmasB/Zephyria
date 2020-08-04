@@ -181,11 +181,8 @@ class Crusader {
         targetTypes = of(ENEMY)
 
         onCastScript = { caster, target, skill ->
-
-            // TODO: Deals armor ignoring damage based on STR.
-
-            //                float dmg = caster.getTotalStat(Stat.ATK) + (caster.getTotalAttribute(Attribute.STRENGTH) / 10) * level;
-            //                caster.dealPureDamage(target, dmg);
+            val dmg = caster.getTotal(ATK) + (caster.getTotal(STRENGTH) / 10) * skill.level
+            caster.dealPureDamage(target, dmg.toDouble())
         }
     }
 
@@ -231,7 +228,7 @@ class Gladiator {
 
         onCastScript = { caster, target, skill ->
             val dmg = (1 + (15 + 5*skill.level) / 100.0) * caster.getTotal(ATK)
-            val result = caster.characterComponent.dealPhysicalDamage(target, dmg)
+            caster.dealPhysicalDamage(target, dmg)
 
             target.addEffect(effect(description) {
                 status = STUNNED
@@ -277,12 +274,10 @@ class Gladiator {
         targetTypes = of(ENEMY)
 
         onCastScript = { caster, target, skill ->
+            val dmg = (0.1 + 0.02 * skill.level) * caster.hp.value
 
-            // float dmg = (0.1f + 0.02f * level) * caster.getHP();
-//                    caster.setHP(Math.round(caster.getHP() - dmg));
-//                    caster.dealPureDamage(target, 2*dmg);
-//
-//                    useResult = new SkillUseResult(2*dmg + ",PURE");
+            caster.hp.damage(dmg)
+            caster.dealPureDamage(target, 2*dmg)
         }
     }
 
@@ -350,7 +345,7 @@ class Mage {
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) + skill.level * 20.0
 
-            caster.characterComponent.dealMagicalDamage(target, dmg, FIRE)
+            caster.dealMagicalDamage(target, dmg, FIRE)
         }
     }
 
@@ -368,7 +363,7 @@ class Mage {
 
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) * 2 + skill.level * 10.0
-            val result = caster.characterComponent.dealMagicalDamage(target, dmg, WATER)
+            caster.dealMagicalDamage(target, dmg, WATER)
         }
     }
 
@@ -386,7 +381,7 @@ class Mage {
 
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) * 1.5 + skill.level * 8.0
-            val result = caster.characterComponent.dealMagicalDamage(target, dmg, AIR)
+            caster.dealMagicalDamage(target, dmg, AIR)
         }
     }
 
@@ -404,7 +399,7 @@ class Mage {
 
         onCastScript = { caster, target, skill ->
             val dmg = caster.getTotal(MATK) + skill.level * 25.0
-            val result = caster.characterComponent.dealMagicalDamage(target, dmg, EARTH)
+            caster.dealMagicalDamage(target, dmg, EARTH)
         }
     }
 }
@@ -457,11 +452,8 @@ class Wizard {
         cooldown = 10.0
 
         onCastScript = { caster, target, skill ->
-
-            // TODO: deal pure damage based on MATK
-
-            //                float dmg = caster.getTotalStat(Stat.MATK) * (1 + level*0.1f);
-            //                caster.dealPureDamage(target, dmg);
+            val dmg = caster.getTotal(MATK) * (1 + skill.level*0.1)
+            caster.dealPureDamage(target, dmg)
         }
     }
 
@@ -478,13 +470,10 @@ class Wizard {
         cooldown = 20.0
 
         onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(MATK) * (1.0 + skill.level*0.15)
 
-            // TODO:
-            //                float dmg = caster.getTotalStat(Stat.MATK) * (1.0f + level*0.15f);
-            //                int dmg1 = caster.dealMagicalDamage(target, dmg, Element.FIRE);
-            //                int dmg2 = caster.dealMagicalDamage(target, dmg, Element.AIR);
-            //
-            //                useResult = new SkillUseResult(dmg1 + "," + dmg2);
+            caster.dealMagicalDamage(target, dmg, FIRE)
+            caster.dealMagicalDamage(target, dmg, AIR)
         }
     }
 
@@ -501,13 +490,10 @@ class Wizard {
         cooldown = 20.0
 
         onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(MATK) * (1.0 + skill.level*0.15)
 
-            // TODO:
-            //                float dmg = caster.getTotalStat(Stat.MATK) * (1.0f + level*0.15f);
-            //                int dmg1 = caster.dealMagicalDamage(target, dmg, Element.WATER);
-            //                int dmg2 = caster.dealMagicalDamage(target, dmg, Element.EARTH);
-            //
-            //                useResult = new SkillUseResult(dmg1 + "," + dmg2);
+            caster.dealMagicalDamage(target, dmg, WATER)
+            caster.dealMagicalDamage(target, dmg, EARTH)
         }
     }
 }
@@ -691,15 +677,15 @@ class Rogue {
         targetTypes = of(ENEMY)
 
         onCastScript = { caster, target, skill ->
-            //                float dmg = caster.getTotalStat(Stat.ATK);
-            //                float casterHPFactor = caster.getHP() / caster.getTotalStat(Stat.MAX_HP);
-            //                float targetHPFactor = target.getHP() / target.getTotalStat(Stat.MAX_HP);
-            //                if (casterHPFactor > targetHPFactor) {
-            //                    dmg += level * 0.1f * (casterHPFactor - targetHPFactor) * dmg;
-            //                }
-            //
-            //                int d = caster.dealPhysicalDamage(target, dmg);
-            //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
+            var dmg = caster.getTotal(ATK).toDouble()
+            val casterHPFactor = caster.hp.value / caster.getTotal(MAX_HP)
+            val targetHPFactor = target.hp.value / target.getTotal(MAX_HP)
+            
+            if (casterHPFactor > targetHPFactor) {
+                dmg += skill.level * 0.1 * (casterHPFactor - targetHPFactor) * dmg
+            }
+
+            caster.dealPhysicalDamage(target, dmg)
         }
     }
 
@@ -739,7 +725,7 @@ class Rogue {
 
         targetTypes = of(ENEMY)
 
-        //                float dmg = caster.getTotalStat(Stat.ATK);
+        //                float dmg = caster.getTotal(ATK);
         //                if (target.hasStatusEffect(Status.STUNNED)) {
         //                    dmg += level * 15;
         //                }
@@ -763,10 +749,10 @@ class Rogue {
 
         targetTypes = of(ENEMY)
 
-        //                float dmg = caster.getTotalStat(Stat.ATK) + 15 + 5 * level;
-        //                caster.addBonusStat(Stat.CRIT_CHANCE, 50 + level * 3);
+        //                float dmg = caster.getTotal(ATK) + 15 + 5 * level;
+        //                caster.addBonusStat(CRIT_CHANCE, 50 + level * 3);
         //                int d = caster.dealPhysicalDamage(target, dmg);
-        //                caster.addBonusStat(Stat.CRIT_CHANCE, -(50 + level * 3));
+        //                caster.addBonusStat(CRIT_CHANCE, -(50 + level * 3));
         //
         //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
     }
@@ -783,7 +769,7 @@ class Rogue {
 
         targetTypes = of(ENEMY)
 
-        //                float dmg = 20 + level*30 - target.getTotalStat(Stat.ARM);
+        //                float dmg = 20 + level*30 - target.getTotal(ARM);
         //                int d = caster.dealPhysicalDamage(target, dmg);
         //
         //                useResult = new SkillUseResult(GameMath.normalizeDamage(d));
@@ -827,7 +813,7 @@ class Ranger {
 
         onCastScript = { caster, target, skill ->
             // TODO:
-            //                float dmg = 100 + 0.2f*level * caster.getTotalAttribute(Attribute.DEXTERITY) - target.getTotalStat(GameCharacter.DEF);
+            //                float dmg = 100 + 0.2f*level * caster.getTotal(DEXTERITY) - target.getTotal(GameCharacter.DEF);
             //                caster.dealPureDamage(target, dmg);
             //
             //                useResult = new SkillUseResult(dmg + ",PURE");
@@ -870,7 +856,7 @@ class Ranger {
 
         onCastScript = { caster, target, skill ->
             // TODO:
-            //                float duration = target.getTotalStat(Stat.ARM) * 0.1f;
+            //                float duration = target.getTotal(ARM) * 0.1f;
             //                target.addStatusEffect(new StatusEffect(Status.STUNNED, duration));
             //
             //                useResult = new SkillUseResult("STUNNED");
@@ -884,6 +870,6 @@ class Ranger {
             description = "Passively increases ATK based on DEX."
         }
 
-        // TODO: value = (int)(caster.getTotalAttribute(Attribute.DEXTERITY) * level * 0.1f);
+        // TODO: value = (int)(caster.getTotal(DEXTERITY) * level * 0.1f);
     }
 }

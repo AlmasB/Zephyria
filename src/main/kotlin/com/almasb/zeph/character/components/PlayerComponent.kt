@@ -12,10 +12,7 @@ import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
-import com.almasb.zeph.events.OnArmorEquippedEvent
-import com.almasb.zeph.events.OnMoneyReceivedEvent
-import com.almasb.zeph.events.OnSkillLearnedEvent
-import com.almasb.zeph.events.OnWeaponEquippedEvent
+import com.almasb.zeph.events.*
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
@@ -38,9 +35,30 @@ class PlayerComponent : Component() {
     val money = SimpleIntegerProperty(STARTING_MONEY)
     val weapon = SimpleObjectProperty<Weapon>()
 
-    override fun onAdded() {
-        super.onAdded()
+    /**
+     * Holds experience needed for each level
+     */
+    private val EXP_NEEDED_BASE = IntArray(Config.MAX_LEVEL_BASE)
+    private val EXP_NEEDED_STAT = IntArray(Config.MAX_LEVEL_ATTR)
+    private val EXP_NEEDED_JOB = IntArray(Config.MAX_LEVEL_JOB)
 
+    init {
+        EXP_NEEDED_BASE[0] = Config.EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_STAT[0] = Config.EXP_NEEDED_FOR_LEVEL2;
+        EXP_NEEDED_JOB[0] = Config.EXP_NEEDED_FOR_LEVEL2;
+
+        for (i in 1..EXP_NEEDED_BASE.size - 1) {
+            EXP_NEEDED_BASE[i] = (EXP_NEEDED_BASE[i - 1] * Config.EXP_NEEDED_INC_BASE + 2 * i).toInt();
+
+            if (i < EXP_NEEDED_STAT.size)
+                EXP_NEEDED_STAT[i] = (EXP_NEEDED_STAT[i - 1] * Config.EXP_NEEDED_INC_STAT + i).toInt();
+
+            if (i < EXP_NEEDED_JOB.size)
+                EXP_NEEDED_JOB[i] = (EXP_NEEDED_JOB[i - 1] * Config.EXP_NEEDED_INC_JOB + 3 * i).toInt();
+        }
+    }
+
+    override fun onAdded() {
         player = entity as CharacterEntity
 
         EquipPlace.values().forEach {
@@ -74,29 +92,6 @@ class PlayerComponent : Component() {
         money.value += amount
 
         fire(OnMoneyReceivedEvent(player, amount))
-    }
-
-    /**
-     * Holds experience needed for each level
-     */
-    private val EXP_NEEDED_BASE = IntArray(Config.MAX_LEVEL_BASE)
-    private val EXP_NEEDED_STAT = IntArray(Config.MAX_LEVEL_ATTR)
-    private val EXP_NEEDED_JOB = IntArray(Config.MAX_LEVEL_JOB)
-
-    init {
-        EXP_NEEDED_BASE[0] = Config.EXP_NEEDED_FOR_LEVEL2;
-        EXP_NEEDED_STAT[0] = Config.EXP_NEEDED_FOR_LEVEL2;
-        EXP_NEEDED_JOB[0] = Config.EXP_NEEDED_FOR_LEVEL2;
-
-        for (i in 1..EXP_NEEDED_BASE.size - 1) {
-            EXP_NEEDED_BASE[i] = (EXP_NEEDED_BASE[i - 1] * Config.EXP_NEEDED_INC_BASE + 2 * i).toInt();
-
-            if (i < EXP_NEEDED_STAT.size)
-                EXP_NEEDED_STAT[i] = (EXP_NEEDED_STAT[i - 1] * Config.EXP_NEEDED_INC_STAT + i).toInt();
-
-            if (i < EXP_NEEDED_JOB.size)
-                EXP_NEEDED_JOB[i] = (EXP_NEEDED_JOB[i - 1] * Config.EXP_NEEDED_INC_JOB + 3 * i).toInt();
-        }
     }
 
     /**
@@ -151,7 +146,7 @@ class PlayerComponent : Component() {
 
             if (player.attrXP.value >= expNeededForNextStatLevel()) {
                 player.attrXP.value = 0
-                statLevelUp();
+                statLevelUp()
             }
         }
 
@@ -160,7 +155,7 @@ class PlayerComponent : Component() {
 
             if (player.jobXP.value >= expNeededForNextJobLevel()) {
                 player.jobXP.value = 0
-                jobLevelUp();
+                jobLevelUp()
             }
         }
 
@@ -169,7 +164,7 @@ class PlayerComponent : Component() {
 
             if (player.baseXP.value >= expNeededForNextBaseLevel()) {
                 player.baseXP.value = 0
-                baseLevelUp();
+                baseLevelUp()
                 baseLevelUp = true
             }
         }
@@ -182,16 +177,22 @@ class PlayerComponent : Component() {
 
         player.hp.restorePercentageMax(100.0)
         player.sp.restorePercentageMax(100.0)
+
+        fire(OnLevelUpEvent(player))
     }
 
     private fun statLevelUp() {
         player.statLevel.value++
         attributePoints.value += Config.ATTRIBUTE_POINTS_PER_LEVEL
+
+        fire(OnLevelUpEvent(player))
     }
 
     private fun jobLevelUp() {
         player.jobLevel.value++
         skillPoints.value++
+
+        fire(OnLevelUpEvent(player))
     }
 
     val equip = HashMap<EquipPlace, Item>()

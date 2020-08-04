@@ -1,9 +1,6 @@
 package com.almasb.zeph.events
 
-import com.almasb.fxgl.dsl.isReleaseMode
-import com.almasb.fxgl.dsl.onEvent
-import com.almasb.fxgl.dsl.play
-import com.almasb.fxgl.dsl.random
+import com.almasb.fxgl.dsl.*
 import com.almasb.zeph.EntityType.PLAYER
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.Gameplay.spawnItem
@@ -62,6 +59,10 @@ object EventHandlers {
 
         onEvent(Events.ON_MONEY_RECEIVED) {
             Gameplay.showMoneyEarned(it.amount, it.receiver.position)
+        }
+
+        onEvent(Events.ON_LEVEL_UP) {
+            spawn("level_up", it.char.center)
         }
 
         onEvent(Events.ON_BEING_KILLED) {

@@ -4,6 +4,7 @@ import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
+import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
@@ -460,6 +461,23 @@ class ZephFactory : EntityFactory {
                     it.viewComponent.clearChildren()
                     it.viewComponent.addChild(texture)
                 }
+                .build()
+    }
+
+    @Spawns("level_up")
+    fun newLevelUpAnim(data: SpawnData): Entity {
+        val channel = AnimationChannel(image("level_up_anim.png"),
+                framesPerRow = 4,
+                frameWidth = 128, frameHeight = 128,
+                channelDuration = Duration.seconds(1.0),
+                startFrame = 0, endFrame = 15
+        )
+
+        return entityBuilder(data)
+                .at(data.x - 64.0, data.y - 64.0)
+                .view(AnimatedTexture(channel).play())
+                .with(ExpireCleanComponent(Duration.seconds(1.0)))
+                .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
                 .build()
     }
 }

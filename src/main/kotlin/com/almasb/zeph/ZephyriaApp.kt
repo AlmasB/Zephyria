@@ -20,6 +20,7 @@ import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
+import com.almasb.zeph.events.OnLevelUpEvent
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.BasicInfoView
@@ -98,6 +99,10 @@ class ZephyriaApp : GameApplication() {
 
             onKeyDown(KeyCode.F) {
                 spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
+            }
+
+            onKeyDown(KeyCode.L) {
+                fire(OnLevelUpEvent(player))
             }
         }
     }

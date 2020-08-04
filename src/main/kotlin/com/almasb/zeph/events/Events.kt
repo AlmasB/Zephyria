@@ -9,6 +9,7 @@ import com.almasb.zeph.events.Events.ON_BEFORE_SKILL_CAST
 import com.almasb.zeph.events.Events.ON_BEING_KILLED
 import com.almasb.zeph.events.Events.ON_ITEM_PICKED_UP
 import com.almasb.zeph.events.Events.ON_ITEM_USED
+import com.almasb.zeph.events.Events.ON_LEVEL_UP
 import com.almasb.zeph.events.Events.ON_MAGICAL_DAMAGE_DEALT
 import com.almasb.zeph.events.Events.ON_MONEY_RECEIVED
 import com.almasb.zeph.events.Events.ON_ORDERED_MOVE
@@ -52,6 +53,8 @@ object Events {
 
     val ON_XP_RECEIVED = EventType<OnXPReceivedEvent>(ANY, "ON_XP_RECEIVED")
     val ON_MONEY_RECEIVED = EventType<OnMoneyReceivedEvent>(ANY, "ON_MONEY_RECEIVED")
+
+    val ON_LEVEL_UP = EventType<OnLevelUpEvent>(ANY, "ON_LEVEL_UP")
 
     val ON_SKILL_LEARNED = EventType<OnSkillLearnedEvent>(ANY, "ON_SKILL_LEARNED")
 
@@ -140,3 +143,7 @@ class OnOrderedMoveEvent(
         val char: CharacterEntity
 // TODO: where moving?
 ) : GameEvent(ON_ORDERED_MOVE)
+
+class OnLevelUpEvent(
+        val char: CharacterEntity
+) : GameEvent(ON_LEVEL_UP)

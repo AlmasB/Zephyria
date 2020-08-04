@@ -44,13 +44,20 @@ object Gameplay {
         addUINode(storageView, 200.0, 200.0)
     }
 
+    fun where() {
+        log.info("Player is at ${player.cellX},${player.cellY}")
+    }
+
     fun goto(toCellX: Int, toCellY: Int) {
         player.actionComponent.orderIdle()
         player.setPositionToCell(toCellX, toCellY)
     }
 
     fun gotoMap(mapName: String, toCellX: Int, toCellY: Int) {
+        // TODO: should Level be an abstraction, then we can have TiledMapLevel and other types
         val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
+
+        log.info("Loaded level $mapName: " + level.width + "x" + level.height)
 
         if (FXGL.getWorldProperties().exists(GAME_MAP)) {
             currentMap.exit()
@@ -66,6 +73,8 @@ object Gameplay {
 
         player.actionComponent.orderIdle()
         player.setPositionToCell(toCellX, toCellY)
+
+        getGameScene().viewport.setBounds(0, 0, level.width, level.height)
     }
 
     fun showDamage(damage: Int, isCritical: Boolean, position: Point2D, color: Color = Color.WHITE) {

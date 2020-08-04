@@ -41,6 +41,9 @@ class TiledMapLayerOptimizerComponent : Component() {
     private lateinit var mapView: ImageView
 
     override fun onAdded() {
+        // TODO: this component shouldn't be added if viewport is larger than map size
+        // check and crash as needed
+
         mapView = entity.viewComponent.children[0] as ImageView
         entity.viewComponent.removeChild(mapView)
 
@@ -92,15 +95,23 @@ class TiledMapLayerOptimizerComponent : Component() {
         val srcX = (viewportOrigin.x - TILE_SIZE * MARGIN_TILES).toInt()
         val srcY = (viewportOrigin.y - TILE_SIZE * MARGIN_TILES).toInt()
 
+        // if negative source values, then offset as needed, else start drawing from 0
         val dstX = if (srcX < 0) -srcX else 0
         val dstY = if (srcY < 0) -srcY else 0
+
+        val w = minOf(W - dstX, mapView.image.width.toInt() - srcX)
+        val h = minOf(H - dstY, mapView.image.height.toInt() - srcY)
 
         (backBufferView.image as WritableImage).pixelWriter.setPixels(
                 dstX,
                 dstY,
-                minOf(W - dstX, mapView.image.width.toInt() - srcX),
-                minOf(H - dstY, mapView.image.height.toInt() - srcY),
+
+                // don't draw more than our image allows
+                minOf(w, mapView.image.width.toInt()),
+                minOf(h, mapView.image.height.toInt()),
                 mapView.image.pixelReader,
+
+                // draw at least from 0,0, can't draw with negative source values
                 maxOf(srcX, 0),
                 maxOf(srcY, 0)
         )

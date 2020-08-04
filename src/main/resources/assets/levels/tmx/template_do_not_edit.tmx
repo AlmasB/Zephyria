@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="2">
+ <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
+  <image source="RPG Nature Tileset.png" width="641" height="288"/>
+ </tileset>
+ <tileset firstgid="181" name="mountain_landscape" tilewidth="32" tileheight="32" tilecount="256" columns="16">
+  <image source="mountain_landscape.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="437" name="teleport_128" tilewidth="128" tileheight="64" tilecount="5" columns="1">
+  <image source="teleport_128.png" width="128" height="320"/>
+ </tileset>
+ <tileset firstgid="442" name="animated_tree" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="6" columns="3">
+  <image source="animated_tree.png" trans="ff00ff" width="100" height="85"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAMCXARkAAAE=
+  </data>
+ </layer>
+ <layer id="2" name="Tile Layer 2" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAMCXARkAAAE=
+  </data>
+ </layer>
+ <layer id="3" name="Tile Layer 3" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAMCXARkAAAE=
+  </data>
+ </layer>
+ <layer id="4" name="Decor_below_player" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAMCXARkAAAE=
+  </data>
+ </layer>
+ <layer id="5" name="Decor_above_player" width="40" height="40">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAMCXARkAAAE=
+  </data>
+ </layer>
+ <objectgroup id="6" name="Interactive"/>
+ <objectgroup id="7" name="Decor_objects_above_player"/>
+ <objectgroup id="8" name="Walkable_areas">
+  <object id="1" type="nav" x="1088" y="0" width="192" height="192"/>
+ </objectgroup>
+</map>

@@ -157,18 +157,17 @@ class ZephyriaApp : GameApplication() {
     override fun initGame() {
         devScene = DevScene()
 
-        // TODO: allow test map loading for quick prototype testing
         getGameWorld().addEntityFactory(ZephFactory())
 
         val player = spawn("player") as CharacterEntity
 
         spawn("cellSelection")
 
-        getGameScene().viewport.setBounds(0, 0, MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE)
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("test_map.tmx", 2, 6)
+        gotoMap("tutorial.tmx", 2, 6)
+        //gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

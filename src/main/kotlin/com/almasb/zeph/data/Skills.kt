@@ -514,10 +514,12 @@ class Enchanter {
 
         onCastScript = { caster, target, skill ->
 
-            caster.addEffect(effect(description) {
-                duration = 30.0
+            val bonus = caster.getTotal(WILLPOWER) / 2 + skill.level
 
-                // TODO:
+            caster.addEffect(effect(description) {
+                duration = 5.0 * skill.level
+
+                ARM +bonus
             })
         }
     }
@@ -546,10 +548,12 @@ class Enchanter {
 
         onCastScript = { caster, target, skill ->
 
-            caster.addEffect(effect(description) {
+            target.sp.damagePercentageCurrent(8.0 * skill.level)
+
+            target.addEffect(effect(description) {
                 duration = 30.0
 
-                // TODO:
+                MDEF +-2*skill.level
             })
         }
     }
@@ -558,7 +562,7 @@ class Enchanter {
         desc {
             id = 7223
             name = "Curse of Knowledge"
-            description = "Deals damage based on target's INT, WIS and WIL."
+            description = "Deals NEUTRAL damage based on target's INT, WIS and WIL."
         }
 
         manaCost = 65
@@ -568,7 +572,10 @@ class Enchanter {
 
         onCastScript = { caster, target, skill ->
 
-            // TODO:
+            val value = target.getTotal(INTELLECT) + target.getTotal(WISDOM) + target.getTotal(WILLPOWER)
+            val dmg = value * 0.2*skill.level
+
+            caster.dealMagicalDamage(target, dmg)
         }
     }
 
@@ -586,12 +593,9 @@ class Enchanter {
 
         onCastScript = { caster, target, skill ->
 
-            // TODO:
-            //                int oldSP = target.getSP();
-            //                target.setSP(Math.max(oldSP - 50 * level, 0));
-            //                int dmg = caster.dealMagicalDamage(target, oldSP-target.getSP(), Element.NEUTRAL);
-            //
-            //                useResult = new SkillUseResult(dmg);
+            val burnedSP = 50.0 * skill.level
+            target.sp.damage(burnedSP)
+            caster.dealMagicalDamage(target, burnedSP)
         }
     }
 }
@@ -701,16 +705,16 @@ class Rogue {
 
         targetTypes = of(ENEMY)
 
-        //                int dmg1 = caster.attack(target);
-        //                int dmg2 = caster.attack(target);
-        //                boolean stun = false;
-        //                if (GameMath.checkChance(level*5)) {
-        //                    target.addStatusEffect(new StatusEffect(Status.STUNNED, 2.5f));
-        //                    stun = true;
-        //                }
-        //
-        //                useResult = new SkillUseResult(GameMath.normalizeDamage(dmg1) + "," + GameMath.normalizeDamage(dmg2)
-        //                        + (stun ? ",STUNNED" : ",X2"));
+        onCastScript = { caster, target, skill ->
+            val dmg = caster.getTotal(ATK) * 0.15 * skill.level
+
+            caster.dealPhysicalDamage(target, dmg)
+            caster.dealPhysicalDamage(target, dmg)
+
+            runIfChance(skill.level * 5) {
+                // TODO: stun target
+            }
+        }
     }
 
     val TRIPLE_STRIKE = activeSkill {
@@ -725,16 +729,17 @@ class Rogue {
 
         targetTypes = of(ENEMY)
 
-        //                float dmg = caster.getTotal(ATK);
-        //                if (target.hasStatusEffect(Status.STUNNED)) {
-        //                    dmg += level * 15;
-        //                }
-        //
-        //                int dmg1 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
-        //                int dmg2 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
-        //                int dmg3 = GameMath.normalizeDamage(caster.dealPhysicalDamage(target, dmg));
-        //
-        //                useResult = new SkillUseResult(dmg1 + "," + dmg2 + "," + dmg3 + ",X3");
+        onCastScript = { caster, target, skill ->
+            var dmg = caster.getTotal(ATK) * 0.2 * skill.level
+
+            if (target.hasStatus(STUNNED)) {
+                dmg += skill.level * 4
+            }
+
+            repeat(3) {
+                caster.dealPhysicalDamage(target, dmg)
+            }
+        }
     }
 
     val CRITICAL_STRIKE = activeSkill {
@@ -748,6 +753,11 @@ class Rogue {
         cooldown = 15.0
 
         targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+
+        }
 
         //                float dmg = caster.getTotal(ATK) + 15 + 5 * level;
         //                caster.addBonusStat(CRIT_CHANCE, 50 + level * 3);
@@ -768,6 +778,11 @@ class Rogue {
         cooldown = 7.0
 
         targetTypes = of(ENEMY)
+
+        onCastScript = { caster, target, skill ->
+
+
+        }
 
         //                float dmg = 20 + level*30 - target.getTotal(ARM);
         //                int d = caster.dealPhysicalDamage(target, dmg);

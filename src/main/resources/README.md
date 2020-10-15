@@ -18,6 +18,7 @@
 - Houses - https://szadiart.itch.io/houses-pack
 - Tiny RPG town - https://ansimuz.itch.io/tiny-rpg-town
 - Chests - https://opengameart.org/content/treasure-chests-32x32-and-16x16
+- Fence - https://opengameart.org/content/barbed-wire-fence
 
 ## NPCs
 

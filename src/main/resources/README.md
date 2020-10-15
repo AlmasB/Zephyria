@@ -14,6 +14,8 @@
 - animated flame - https://opengameart.org/content/lpc-flames
 - various auras - https://opengameart.org/content/explosion-effects-and-more
 - camp_fire - https://opengameart.org/content/camp-fire-animation-for-rpgs-finished
+- Epic rpg equipment - https://opengameart.org/content/epic-rpg-equipment
+- Houses - https://szadiart.itch.io/houses-pack
 
 ## NPCs
 

@@ -7,9 +7,6 @@ import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
-import com.almasb.zeph.Config.MAP_HEIGHT
-import com.almasb.zeph.Config.MAP_WIDTH
-import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.EntityType.SKILL_PROJECTILE
 import com.almasb.zeph.Gameplay.currentMap
@@ -44,10 +41,6 @@ class ZephyriaApp : GameApplication() {
         settings.setHeightFromRatio(16 / 9.0)
         settings.title = "Zephyria RPG"
         settings.version = "0.1 Pre-alpha"
-        //settings.setIntroEnabled(true);
-        //settings.setManualResizeEnabled(true);
-        //settings.setPreserveResizeRatio(true);
-        //settings.setProfilingEnabled(true);
         settings.sceneFactory = object : SceneFactory() {
             override fun newLoadingScene(): LoadingScene {
                 return ZephLoadingScene()
@@ -166,8 +159,8 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("tutorial.tmx", 2, 6)
-        //gotoMap("test_map.tmx", 2, 6)
+        //gotoMap("tutorial.tmx", 2, 6)
+        gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

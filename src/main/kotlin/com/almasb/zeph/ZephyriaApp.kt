@@ -7,6 +7,7 @@ import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
+import com.almasb.fxgl.entity.SpawnData
 import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.EntityType.SKILL_PROJECTILE
 import com.almasb.zeph.Gameplay.currentMap
@@ -96,6 +97,10 @@ class ZephyriaApp : GameApplication() {
 
             onKeyDown(KeyCode.L) {
                 fire(OnLevelUpEvent(player))
+            }
+
+            onKeyDown(KeyCode.T) {
+                spawn("treasureChest", SpawnData(0.0, 0.0).put("cellX", player.cellX).put("cellY", player.cellY))
             }
         }
     }

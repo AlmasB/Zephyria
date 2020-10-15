@@ -16,6 +16,8 @@
 - camp_fire - https://opengameart.org/content/camp-fire-animation-for-rpgs-finished
 - Epic rpg equipment - https://opengameart.org/content/epic-rpg-equipment
 - Houses - https://szadiart.itch.io/houses-pack
+- Tiny RPG town - https://ansimuz.itch.io/tiny-rpg-town
+- Chests - https://opengameart.org/content/treasure-chests-32x32-and-16x16
 
 ## NPCs
 

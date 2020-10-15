@@ -4,6 +4,7 @@ import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
+import com.almasb.fxgl.dsl.components.ActivatorComponent
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
@@ -16,6 +17,7 @@ import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
+import com.almasb.fxgl.pathfinding.CellState
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
@@ -478,6 +480,33 @@ class ZephFactory : EntityFactory {
                 .view(AnimatedTexture(channel).play())
                 .with(ExpireCleanComponent(Duration.seconds(1.0)))
                 .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
+                .build()
+    }
+
+    @Spawns("treasureChest")
+    fun newTreasureChest(data: SpawnData): Entity {
+        val cellX = data.get<Int>("cellX")
+        val cellY = data.get<Int>("cellY")
+
+        val gold = if (data.hasKey("gold")) data.get<Int>("gold") else 1
+
+        val cell = Gameplay.currentMap.grid.get(cellX, cellY)
+        cell.state = CellState.NOT_WALKABLE
+
+        return entityBuilder(data)
+                .at(cellX * TILE_SIZE.toDouble(), cellY * TILE_SIZE.toDouble())
+                .type(TREASURE_CHEST)
+                .viewWithBBox("chest_closed.png")
+                .collidable()
+                .with("cell", cell)
+                .onClick {
+                    Gameplay.addMoney(gold)
+
+                    it.viewComponent.clearChildren()
+                    it.viewComponent.addChild(texture("chest_open_full.png"))
+                    it.addComponent(ExpireCleanComponent(Duration.seconds(1.0)).animateOpacity())
+                }
+                .onNotActive { cell.state = CellState.WALKABLE }
                 .build()
     }
 }

@@ -7,7 +7,7 @@ package com.almasb.zeph
  */
 enum class EntityType {
     PLAYER, MONSTER, NPC,
-    ITEM,
+    ITEM, TREASURE_CHEST,
     PROJECTILE, SKILL_PROJECTILE,
     NAV, PORTAL, CELL_SELECTION
 }

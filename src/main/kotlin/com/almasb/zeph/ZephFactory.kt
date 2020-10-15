@@ -494,7 +494,6 @@ class ZephFactory : EntityFactory {
         cell.state = CellState.NOT_WALKABLE
 
         return entityBuilder(data)
-                .at(cellX * TILE_SIZE.toDouble(), cellY * TILE_SIZE.toDouble())
                 .type(TREASURE_CHEST)
                 .viewWithBBox("chest_closed.png")
                 .collidable()

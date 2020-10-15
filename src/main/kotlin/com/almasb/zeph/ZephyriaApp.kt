@@ -100,7 +100,7 @@ class ZephyriaApp : GameApplication() {
             }
 
             onKeyDown(KeyCode.T) {
-                spawn("treasureChest", SpawnData(0.0, 0.0).put("cellX", player.cellX).put("cellY", player.cellY))
+                Gameplay.spawn("treasureChest", player.cellX, player.cellY)
             }
         }
     }

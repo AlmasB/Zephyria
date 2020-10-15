@@ -5,6 +5,7 @@ import com.almasb.fxgl.app.scene.GameView
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
+import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
@@ -138,6 +139,14 @@ object Gameplay {
                 .from(Point2D(0.5, 1.2))
                 .to(Point2D(1.0, 1.0))
                 .buildAndPlay()
+    }
+
+    fun spawn(entityType: String, cellX: Int, cellY: Int) {
+        spawn(entityType,
+                SpawnData(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
+                        .put("cellX", cellX)
+                        .put("cellY", cellY)
+        )
     }
 
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {

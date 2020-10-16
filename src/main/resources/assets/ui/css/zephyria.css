@@ -1,0 +1,30 @@
+ /*
+  * FXGLButton
+  */
+.fxgl_button {
+    -fx-padding: 5 22 5 22;
+    -fx-border-width: 2;
+    -fx-border-color: white;
+
+    -fx-background-color: black;
+    -fx-text-fill: #a9a9a9;
+}
+
+.fxgl_button:hover {
+    -fx-background-color: rgba(150, 0, 50, 0.9);
+    -fx-text-fill: white;
+}
+
+.fxgl_button:pressed, .fxgl_button:default:hover:pressed {
+    -fx-background-color: rgba(255, 215, 25, 0.8);
+    -fx-text-fill: white;
+}
+
+.fxgl_button:focused {
+    -fx-text-fill: white;
+}
+
+.fxgl_button:disabled, .fxgl_button:default:disabled {
+    -fx-opacity: 0.4;
+    -fx-text-fill: #a9a9a9;
+}

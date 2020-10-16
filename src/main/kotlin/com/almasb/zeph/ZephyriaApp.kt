@@ -39,6 +39,7 @@ class ZephyriaApp : GameApplication() {
         settings.setHeightFromRatio(16 / 9.0)
         settings.title = "Zephyria RPG"
         settings.version = "0.1 Pre-alpha"
+        settings.cssList += "zephyria.css"
         settings.sceneFactory = object : SceneFactory() {
             override fun newLoadingScene(): LoadingScene {
                 return ZephLoadingScene()
@@ -165,8 +166,8 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        //gotoMap("tutorial.tmx", 2, 6)
-        gotoMap("test_map.tmx", 2, 6)
+        gotoMap("tutorial.tmx", 2, 6)
+        //gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

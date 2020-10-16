@@ -19,6 +19,7 @@
 - Tiny RPG town - https://ansimuz.itch.io/tiny-rpg-town
 - Chests - https://opengameart.org/content/treasure-chests-32x32-and-16x16
 - Fence - https://opengameart.org/content/barbed-wire-fence
+- Character portraits - https://cazwolf.itch.io/rmmv-portraits
 
 ## NPCs
 

@@ -95,7 +95,7 @@ object Vars {
 }
 
 private val tooltipView by lazy {
-    TooltipView().also {
+    TooltipView(300.0).also {
         it.hide()
         addUINode(it, FXGL.getAppWidth() - 300.0, 0.0)
     }

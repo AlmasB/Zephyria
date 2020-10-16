@@ -6,6 +6,7 @@ import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ActivatorComponent
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
+import com.almasb.fxgl.dsl.components.LiftComponent
 import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
@@ -51,11 +52,15 @@ import com.almasb.zeph.data.Data
 
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
+import com.almasb.zeph.ui.TooltipView
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
+import javafx.geometry.Pos
 import javafx.geometry.Rectangle2D
 import javafx.scene.ImageCursor
+import javafx.scene.control.Button
 import javafx.scene.input.MouseEvent
+import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
@@ -506,6 +511,33 @@ class ZephFactory : EntityFactory {
                     it.addComponent(ExpireCleanComponent(Duration.seconds(1.0)).animateOpacity())
                 }
                 .onNotActive { cell.state = CellState.WALKABLE }
+                .build()
+    }
+
+    @Spawns("textTriggerBox")
+    fun newTextTriggerBox(data: SpawnData): Entity {
+        return entityBuilder(data)
+                .type(TEXT_TRIGGER_BOX)
+                .build()
+    }
+
+    @Spawns("textBox")
+    fun newTextBox(data: SpawnData): Entity {
+        val text = data.get<String>("text")
+
+        val tooltip = TooltipView(150.0)
+        tooltip.setNode(getUIFactoryService().newTextFlow().append(text, Color.AQUAMARINE, 11.0))
+
+        val button = Button("X")
+
+        val stack = StackPane(tooltip, button)
+        stack.alignment = Pos.TOP_RIGHT
+
+        return entityBuilder(data)
+                .type(TEXT_BOX)
+                .view(stack)
+                .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
+                .with(LiftComponent().yAxisDistanceDuration(10.0, Duration.seconds(2.0)))
                 .build()
     }
 }

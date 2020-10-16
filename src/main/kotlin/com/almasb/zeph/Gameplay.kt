@@ -149,6 +149,15 @@ object Gameplay {
         )
     }
 
+    fun spawnTextBox(text: String, cellX: Int, cellY: Int) {
+        spawn("textBox",
+                SpawnData(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
+                        .put("cellX", cellX)
+                        .put("cellY", cellY)
+                        .put("text", text)
+        )
+    }
+
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }

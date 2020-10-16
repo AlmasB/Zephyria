@@ -17,18 +17,16 @@ import javafx.scene.text.TextFlow
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class TooltipView : Parent(), ChangeListener<Bounds> {
+class TooltipView(val viewWidth: Double) : Parent(), ChangeListener<Bounds> {
 
-    private val WIDTH = 300.0
-
-    private val bg = Rectangle(WIDTH, 0.0)
+    private val bg = Rectangle(viewWidth, 0.0)
     private val text = getUIFactoryService().newText("", Color.WHITE, 16.0)
 
     init {
         isMouseTransparent = true
 
         text.relocate(10.0, 10.0)
-        text.wrappingWidth = WIDTH - 15*2
+        text.wrappingWidth = viewWidth - 15*2
 
         bg.arcWidth = 15.0
         bg.arcHeight = 15.0
@@ -55,7 +53,7 @@ class TooltipView : Parent(), ChangeListener<Bounds> {
         node.relocate(10.0, 10.0)
 
         if (node is TextFlow) {
-            node.prefWidth = WIDTH - 15*2
+            node.prefWidth = viewWidth - 15*2
         }
 
         children.set(1, node)

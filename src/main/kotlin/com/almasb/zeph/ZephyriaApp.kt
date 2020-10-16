@@ -21,10 +21,7 @@ import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.events.OnLevelUpEvent
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
-import com.almasb.zeph.ui.BasicInfoView
-import com.almasb.zeph.ui.HotbarView
-import com.almasb.zeph.ui.InventoryView
-import com.almasb.zeph.ui.ZephLoadingScene
+import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode
 import kotlin.collections.set
@@ -101,6 +98,10 @@ class ZephyriaApp : GameApplication() {
 
             onKeyDown(KeyCode.T) {
                 Gameplay.spawn("treasureChest", player.cellX, player.cellY)
+            }
+
+            onKeyDown(KeyCode.Y) {
+                getSceneService().pushSubScene(CharSelectSubScene())
             }
         }
     }

@@ -150,10 +150,14 @@ object Gameplay {
     }
 
     fun spawnTextBox(text: String, cellX: Int, cellY: Int) {
+        spawnTextBox(text, cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
+    }
+
+    fun spawnTextBox(text: String, x: Double, y: Double) {
         spawn("textBox",
-                SpawnData(cellX * Config.TILE_SIZE.toDouble(), cellY * Config.TILE_SIZE.toDouble())
-                        .put("cellX", cellX)
-                        .put("cellY", cellY)
+                SpawnData(x, y)
+                        .put("cellX", x / Config.TILE_SIZE)
+                        .put("cellY", y / Config.TILE_SIZE)
                         .put("text", text)
         )
     }

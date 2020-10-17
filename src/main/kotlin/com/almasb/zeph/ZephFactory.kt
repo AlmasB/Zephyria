@@ -16,6 +16,8 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.CollidableComponent
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.particle.ParticleComponent
+import com.almasb.fxgl.particle.ParticleEmitters
 import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.pathfinding.CellState
@@ -59,6 +61,7 @@ import javafx.geometry.Pos
 import javafx.geometry.Rectangle2D
 import javafx.scene.ImageCursor
 import javafx.scene.control.Button
+import javafx.scene.effect.BlendMode
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.StackPane
 import javafx.scene.paint.Color
@@ -471,6 +474,35 @@ class ZephFactory : EntityFactory {
                 .build()
     }
 
+    @Spawns("smoke")
+    fun newSmoke(data: SpawnData): Entity {
+        val t = FXGL.texture("particles/smoke.png", 128.0, 128.0).brighter().brighter()
+
+        val emitter = ParticleEmitters.newFireEmitter()
+        emitter.blendMode = BlendMode.SRC_OVER
+        emitter.setSourceImage(t.getImage())
+        emitter.setSize(TILE_SIZE / 4.0, TILE_SIZE / 2.0)
+        emitter.numParticles = 10
+        emitter.emissionRate = 0.02
+        emitter.setVelocityFunction { i -> Point2D(FXGL.random() * 2.5, -FXGL.random() * FXGL.random(30, 50)) }
+        emitter.setExpireFunction { i -> Duration.seconds(FXGL.random(2, 4).toDouble()) }
+        emitter.setScaleFunction { i -> Point2D(0.15, 0.10) }
+        //emitter.setSpawnPointFunction { i -> Point2D(FXGL.random(0.0, appWidth - 200.0), 120.0) }
+
+        val comp = ParticleComponent(emitter)
+
+        return entityBuilder(data)
+                .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
+                .with(comp)
+                .onActive {
+                    it.viewComponent.parent.isMouseTransparent = true
+
+                    comp.parent.z = Z_INDEX_DECOR_ABOVE_PLAYER
+                    comp.parent.viewComponent.parent.isMouseTransparent = true
+                }
+                .build()
+    }
+
     @Spawns("level_up")
     fun newLevelUpAnim(data: SpawnData): Entity {
         val channel = AnimationChannel(image("level_up_anim.png"),
@@ -518,6 +550,8 @@ class ZephFactory : EntityFactory {
     fun newTextTriggerBox(data: SpawnData): Entity {
         return entityBuilder(data)
                 .type(TEXT_TRIGGER_BOX)
+                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .collidable()
                 .build()
     }
 
@@ -533,12 +567,16 @@ class ZephFactory : EntityFactory {
         val stack = StackPane(tooltip, button)
         stack.alignment = Pos.TOP_RIGHT
 
-        return entityBuilder(data)
+        val e = entityBuilder(data)
                 .type(TEXT_BOX)
                 .view(stack)
                 .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
                 .with(LiftComponent().yAxisDistanceDuration(10.0, Duration.seconds(2.0)))
                 .build()
+
+        button.setOnAction { e.removeFromWorld() }
+
+        return e
     }
 }
 

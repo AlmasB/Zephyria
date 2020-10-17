@@ -13,6 +13,7 @@ import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
+import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.npc.NPCData
@@ -80,7 +81,7 @@ class GameMap(private val level: Level) : EntityWorldListener {
     }
 
     override fun onEntityAdded(e: Entity) {
-        if (!e.isType(EntityType.MONSTER)) {
+        if (!e.isType(MONSTER)) {
             return
         }
 
@@ -90,7 +91,7 @@ class GameMap(private val level: Level) : EntityWorldListener {
     }
 
     override fun onEntityRemoved(e: Entity) {
-        if (!e.isType(EntityType.MONSTER)) {
+        if (!e.isType(MONSTER)) {
             return
         }
 
@@ -110,7 +111,7 @@ class GameMap(private val level: Level) : EntityWorldListener {
         getGameWorld().setLevel(level)
 
         grid = AStarGrid.fromWorld(FXGL.getGameWorld(), MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, TILE_SIZE) { type: Any ->
-            if (type == EntityType.NAV || type == EntityType.PORTAL)
+            if (type == NAV || type == PORTAL || type == TEXT_TRIGGER_BOX)
                 return@fromWorld CellState.WALKABLE
 
             CellState.NOT_WALKABLE

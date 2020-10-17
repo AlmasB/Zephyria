@@ -7,12 +7,13 @@ import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
+import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
 import com.almasb.fxgl.entity.SpawnData
-import com.almasb.zeph.EntityType.MONSTER
-import com.almasb.zeph.EntityType.SKILL_PROJECTILE
+import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
+import com.almasb.zeph.Gameplay.spawnTextBox
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
@@ -24,6 +25,7 @@ import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode
+import java.util.function.Consumer
 import kotlin.collections.set
 
 /**
@@ -166,8 +168,8 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("tutorial.tmx", 2, 6)
-        //gotoMap("test_map.tmx", 2, 6)
+        //gotoMap("tutorial.tmx", 2, 6)
+        gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {
@@ -180,6 +182,10 @@ class ZephyriaApp : GameApplication() {
             proj.removeFromWorld()
             player.characterComponent.useTargetSkill(geti(SELECTED_SKILL_INDEX), (target as CharacterEntity))
         }
+
+        onCollisionCollectible(PLAYER, TEXT_TRIGGER_BOX, Consumer {
+            spawnTextBox(it.getString("text"), it.x, it.y)
+        })
     }
 
     override fun initUI() {

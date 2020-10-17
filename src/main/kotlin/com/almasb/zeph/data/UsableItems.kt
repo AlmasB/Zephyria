@@ -93,7 +93,44 @@ class UsableItems {
         }
     }
 
-    // TODO: mixtures 6004-6006
+    val WATER_MIXTURE = usableItem {
+        desc {
+            id = 6004
+            name = "Water Mixture"
+            description = "Imbues the equipped weapon with the WATER element for 2 minutes"
+            textureName = "items/usable/water_mixture.png"
+        }
+
+        onUseScript = {
+            it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.WATER, Duration.minutes(2.0)))
+        }
+    }
+
+    val AIR_MIXTURE = usableItem {
+        desc {
+            id = 6005
+            name = "Air Mixture"
+            description = "Imbues the equipped weapon with the AIR element for 2 minutes"
+            textureName = "items/usable/air_mixture.png"
+        }
+
+        onUseScript = {
+            it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.AIR, Duration.minutes(2.0)))
+        }
+    }
+
+    val EARTH_MIXTURE = usableItem {
+        desc {
+            id = 6006
+            name = "Earth Mixture"
+            description = "Imbues the equipped weapon with the EARTH element for 2 minutes"
+            textureName = "items/usable/earth_mixture.png"
+        }
+
+        onUseScript = {
+            it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.EARTH, Duration.minutes(2.0)))
+        }
+    }
 
     val TELEPORTATION_STONE = usableItem {
         desc {

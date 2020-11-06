@@ -13,6 +13,7 @@ import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.Skill
@@ -55,6 +56,15 @@ object Gameplay {
     }
 
     fun gotoMap(mapName: String, toCellX: Int, toCellY: Int) {
+        // handle case where destination is the current map
+        if (FXGL.getWorldProperties().exists(GAME_MAP)) {
+            if (currentMap.name == mapName) {
+                goto(toCellX, toCellY)
+                return
+            }
+        }
+
+
         // TODO: should Level be an abstraction, then we can have TiledMapLevel and other types
         val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
 
@@ -64,7 +74,7 @@ object Gameplay {
             currentMap.exit()
         }
 
-        val newMap = GameMap(level)
+        val newMap = GameMap(mapName, level)
         newMap.enter()
 
         set(GAME_MAP, newMap)
@@ -166,6 +176,12 @@ object Gameplay {
         val graph = getAssetLoader().loadDialogueGraph(dialogueFileName)
 
         getCutsceneService().startDialogueScene(graph, CommandHandler)
+    }
+
+    fun enablePortal(id: Int) {
+        FXGL.byID("portal", id).ifPresent {
+            it.getComponent(PortalComponent::class.java).turnOn()
+        }
     }
 
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {

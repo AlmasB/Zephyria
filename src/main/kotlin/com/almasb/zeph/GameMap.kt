@@ -31,7 +31,7 @@ import java.util.function.Predicate
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class GameMap(private val level: Level) : EntityWorldListener {
+class GameMap(val name: String, private val level: Level) : EntityWorldListener {
 
     private val log = Logger.get(javaClass)
 

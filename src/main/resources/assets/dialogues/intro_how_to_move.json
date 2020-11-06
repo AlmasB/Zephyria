@@ -1,5 +1,5 @@
 {
-  "uniqueID" : 11,
+  "uniqueID" : 25,
   "nodes" : {
     "0" : {
       "type" : "START",
@@ -11,7 +11,7 @@
     },
     "2" : {
       "type" : "END",
-      "text" : "Sample end text"
+      "text" : "It's working now. Go on, try it."
     },
     "4" : {
       "type" : "TEXT",
@@ -24,6 +24,42 @@
     "6" : {
       "type" : "TEXT",
       "text" : "\"Ah. I forgot this is your first time.\" - He looks in the direction of the nearest island and says: \"Right, see that thing over there?\" - he points at the oval-shaped device near you."
+    },
+    "11" : {
+      "type" : "TEXT",
+      "text" : "Hmm, this one seems disabled. Let's see if I can get it working again. *He tinkers with the portal for a few seconds, then turns to you with a proud look.*"
+    },
+    "12" : {
+      "type" : "TEXT",
+      "text" : "\"Really?\" - his eyes light up. \"We should get going immediately. We should be able to use this portal to get there.\" - he points at the oval-shaped device near you."
+    },
+    "13" : {
+      "type" : "FUNCTION",
+      "text" : "enablePortal 10"
+    },
+    "14" : {
+      "type" : "TEXT",
+      "text" : "\"Right, let's use this portal.\" - he points at the oval-shaped device near you."
+    },
+    "15" : {
+      "type" : "TEXT",
+      "text" : "\"You've got to stop with the questions now!\" - he's become very serious. \"We should try and use this portal to get to other islands.\""
+    },
+    "18" : {
+      "type" : "FUNCTION",
+      "text" : "set isSuspicious true"
+    },
+    "20" : {
+      "type" : "TEXT",
+      "text" : "\"Just use this portal.\" - he casually waves his hand towards the oval-shaped device located close to you."
+    },
+    "21" : {
+      "type" : "TEXT",
+      "text" : "\"You are welcome!\" - he says with a grin. \"Have you tried using the portal?\" - he points at the oval-shaped device near you."
+    },
+    "23" : {
+      "type" : "TEXT",
+      "text" : "He stares at you for a while, as if thinking: \"... then why haven't you moved to other islands\", but then quickly realises something."
     }
   },
   "choiceNodes" : {
@@ -47,7 +83,7 @@
     },
     "7" : {
       "type" : "CHOICE",
-      "text" : "He ponders what to do next for a few seconds. Then, encouragingly, says: \"Look, let's find what we came here for and get out of here. I'll explain everyhing later. We are not quite on a vacation here.\" ",
+      "text" : "He ponders what to do next for a few seconds. Then, encouragingly, says: \"Look, let's find what we came here for and get out of here. I'll explain everyhing later. It is not like we are on a vacation here.\" ",
       "options" : {
         "0" : "Sure, lead the way!",
         "1" : "You didn't answer the question.",
@@ -61,21 +97,23 @@
     },
     "8" : {
       "type" : "CHOICE",
-      "text" : "I'm your ... friend. ",
+      "text" : "Fine, I guess we are safe here for now. Ask away, but make it quick!",
       "options" : {
-        "0" : "",
-        "1" : ""
+        "0" : "Just tell me who you are.",
+        "1" : "What are we looking for?",
+        "2" : "Where are we? Is this another dimension?"
       },
       "conditions" : {
         "0" : "",
-        "1" : ""
+        "1" : "",
+        "2" : ""
       }
     },
     "9" : {
       "type" : "CHOICE",
-      "text" : "\"Hey! I'm talking to you!\" - he exclaims. He is certainly trying to get your attention. It seems, he's in a hurry.",
+      "text" : "\"Hey! I'm talking to you!\" - he exclaims. He is certainly trying to get your attention. It seems he's in a hurry.",
       "options" : {
-        "0" : "TODO",
+        "0" : "Can you leave me alone? I'm trying to think here.",
         "1" : "*You get an idea* - Yes, yes, I've found it! It's waaaay over there on that island, but I can't get to it."
       },
       "conditions" : {
@@ -89,6 +127,54 @@
       "options" : {
         "0" : "Appeared out of nowhere.",
         "1" : "Moved between islands."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "16" : {
+      "type" : "CHOICE",
+      "text" : "I'm ... your friend. Now let's get going. Once we are out of here, you will remember everything.",
+      "options" : {
+        "0" : "Yes, alright, I want to leave this place as quickly as possible.",
+        "1" : "Why are we in a hurry?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "17" : {
+      "type" : "CHOICE",
+      "text" : "You could say so. Let's move.",
+      "options" : {
+        "0" : "Wow. That was ... unhelpful.",
+        "1" : "What's with the rush?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "19" : {
+      "type" : "CHOICE",
+      "text" : "What could you possibly be thinking about in this place?",
+      "options" : {
+        "0" : "How to get out of it.",
+        "1" : "What is this place anyway? Is this another dimension?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "24" : {
+      "type" : "CHOICE",
+      "text" : "A memory.",
+      "options" : {
+        "0" : "What memory?",
+        "1" : "*You slowly start to realise where you are* - Are we in ..."
       },
       "conditions" : {
         "0" : "",
@@ -108,6 +194,36 @@
   }, {
     "sourceID" : 6,
     "targetID" : 4
+  }, {
+    "sourceID" : 4,
+    "targetID" : 11
+  }, {
+    "sourceID" : 11,
+    "targetID" : 13
+  }, {
+    "sourceID" : 13,
+    "targetID" : 2
+  }, {
+    "sourceID" : 12,
+    "targetID" : 4
+  }, {
+    "sourceID" : 14,
+    "targetID" : 11
+  }, {
+    "sourceID" : 18,
+    "targetID" : 14
+  }, {
+    "sourceID" : 20,
+    "targetID" : 11
+  }, {
+    "sourceID" : 21,
+    "targetID" : 11
+  }, {
+    "sourceID" : 15,
+    "targetID" : 11
+  }, {
+    "sourceID" : 23,
+    "targetID" : 6
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
@@ -137,6 +253,70 @@
     "sourceID" : 10,
     "optionID" : 1,
     "targetID" : 6
+  }, {
+    "sourceID" : 9,
+    "optionID" : 1,
+    "targetID" : 12
+  }, {
+    "sourceID" : 7,
+    "optionID" : 0,
+    "targetID" : 14
+  }, {
+    "sourceID" : 7,
+    "optionID" : 1,
+    "targetID" : 8
+  }, {
+    "sourceID" : 8,
+    "optionID" : 0,
+    "targetID" : 16
+  }, {
+    "sourceID" : 7,
+    "optionID" : 2,
+    "targetID" : 18
+  }, {
+    "sourceID" : 8,
+    "optionID" : 2,
+    "targetID" : 17
+  }, {
+    "sourceID" : 9,
+    "optionID" : 0,
+    "targetID" : 19
+  }, {
+    "sourceID" : 19,
+    "optionID" : 1,
+    "targetID" : 17
+  }, {
+    "sourceID" : 19,
+    "optionID" : 0,
+    "targetID" : 20
+  }, {
+    "sourceID" : 17,
+    "optionID" : 0,
+    "targetID" : 21
+  }, {
+    "sourceID" : 16,
+    "optionID" : 1,
+    "targetID" : 15
+  }, {
+    "sourceID" : 17,
+    "optionID" : 1,
+    "targetID" : 15
+  }, {
+    "sourceID" : 16,
+    "optionID" : 0,
+    "targetID" : 23
+  }, {
+    "sourceID" : 8,
+    "optionID" : 1,
+    "targetID" : 24
+  }, {
+    "sourceID" : 24,
+    "optionID" : 0,
+    "targetID" : 15
+  }, {
+    "sourceID" : 24,
+    "optionID" : 1,
+    "targetID" : 15
   } ],
   "version" : 1,
   "uiMetadata" : {
@@ -149,8 +329,8 @@
       "y" : 440.0
     },
     "2" : {
-      "x" : 2440.0,
-      "y" : 160.0
+      "x" : 4306.854309350794,
+      "y" : 504.27703883411334
     },
     "3" : {
       "x" : 840.0,
@@ -158,14 +338,14 @@
     },
     "4" : {
       "x" : 2000.0,
-      "y" : 400.0
+      "y" : 600.0
     },
     "5" : {
       "x" : 1240.0,
       "y" : 160.0
     },
     "6" : {
-      "x" : 1640.0,
+      "x" : 1960.0,
       "y" : 360.0
     },
     "7" : {
@@ -173,16 +353,68 @@
       "y" : -160.0
     },
     "8" : {
-      "x" : 2320.0,
+      "x" : 2120.0,
       "y" : -280.0
     },
     "9" : {
-      "x" : 1280.0,
+      "x" : 1240.0,
       "y" : 600.0
     },
     "10" : {
       "x" : 1240.0,
       "y" : 320.0
+    },
+    "11" : {
+      "x" : 3560.0,
+      "y" : 480.0
+    },
+    "12" : {
+      "x" : 1640.0,
+      "y" : 600.0
+    },
+    "13" : {
+      "x" : 3946.8543093507906,
+      "y" : 504.27703883411334
+    },
+    "14" : {
+      "x" : 2160.0,
+      "y" : 160.0
+    },
+    "15" : {
+      "x" : 3440.0,
+      "y" : -120.0
+    },
+    "16" : {
+      "x" : 2520.0,
+      "y" : -560.0
+    },
+    "17" : {
+      "x" : 2640.0,
+      "y" : 40.0
+    },
+    "18" : {
+      "x" : 1800.0,
+      "y" : 200.0
+    },
+    "19" : {
+      "x" : 1640.0,
+      "y" : 920.0
+    },
+    "20" : {
+      "x" : 2120.0,
+      "y" : 1000.0
+    },
+    "21" : {
+      "x" : 3120.0,
+      "y" : 160.0
+    },
+    "23" : {
+      "x" : 2880.0,
+      "y" : -720.0
+    },
+    "24" : {
+      "x" : 2920.0,
+      "y" : -160.0
     }
   }
 }

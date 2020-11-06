@@ -372,24 +372,11 @@ class ZephFactory : EntityFactory {
                 data.get<Double>("width") - TILE_SIZE *2, data.get<Double>("height") - TILE_SIZE
         )
 
-        val channel = AnimationChannel(image("portal_aura.png"),
-                framesPerRow = 8,
-                frameWidth = 128, frameHeight = 128,
-                channelDuration = Duration.seconds(1.0),
-                startFrame = 0, endFrame = 31
-        )
-        val auraTexture = AnimatedTexture(channel).loop()
-        auraTexture.translateX = -3.0
-        auraTexture.translateY = -93.0
-        auraTexture.scaleX = 1.5
-        auraTexture.scaleY = 1.5
-
         return entityBuilder(data)
                 .type(PORTAL)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
                 .with("interactionCollisionBox", interactionCollisionBox)
                 .with(PortalComponent(data.get("mapName"), data.get("toCellX"), data.get("toCellY")))
-                .onActive { it.viewComponent.addChild(auraTexture) }
                 .build()
     }
 

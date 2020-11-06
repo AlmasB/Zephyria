@@ -162,6 +162,12 @@ object Gameplay {
         )
     }
 
+    fun startDialogue(dialogueFileName: String) {
+        val graph = getAssetLoader().loadDialogueGraph(dialogueFileName)
+
+        getCutsceneService().startDialogueScene(graph, CommandHandler)
+    }
+
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }

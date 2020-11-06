@@ -15,6 +15,7 @@ import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
 import com.almasb.zeph.Gameplay.spawnTextBox
+import com.almasb.zeph.Gameplay.startDialogue
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
@@ -28,6 +29,7 @@ import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode
+import javafx.scene.paint.Color
 import java.util.function.Consumer
 import kotlin.collections.set
 
@@ -164,8 +166,14 @@ class ZephyriaApp : GameApplication() {
         }
     }
 
+
+
+    // TODO: dialogue system values (set / get, compare?)
+
     override fun initGame() {
         devScene = DevScene()
+
+        getGameScene().setBackgroundColor(Color.BLACK)
 
         getGameWorld().addEntityFactory(ZephFactory())
 
@@ -176,7 +184,7 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("tutorial.tmx", 20, 20)
+        gotoMap("tutorial.tmx", 8, 6)
         //gotoMap("test_map.tmx", 2, 6)
     }
 
@@ -193,6 +201,10 @@ class ZephyriaApp : GameApplication() {
 
         onCollisionCollectible(PLAYER, TEXT_TRIGGER_BOX, Consumer {
             spawnTextBox(it.getString("text"), it.x, it.y)
+        })
+
+        onCollisionCollectible(PLAYER, DIALOGUE, Consumer {
+            startDialogue(it.getString("text"))
         })
     }
 

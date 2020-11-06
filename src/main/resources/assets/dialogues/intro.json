@@ -1,0 +1,41 @@
+{
+  "uniqueID" : 4,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "You wake up after a seemingly infinite sleep. You feel weakened."
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "You find yourself on an island, isolated in the void. You look around. There are other similar looking islands in your vicinity, but they don't seem to be connected."
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "You regain some muscle strength and attempt to walk around and explore your current situation."
+    }
+  },
+  "choiceNodes" : { },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 1
+  }, {
+    "sourceID" : 1,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ ],
+  "version" : 1,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "1" : {
+      "x" : 400.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 840.0,
+      "y" : 440.0
+    }
+  }
+}

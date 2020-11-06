@@ -578,6 +578,17 @@ class ZephFactory : EntityFactory {
 
         return e
     }
+
+    @Spawns("dialogue")
+    fun newDialogue(data: SpawnData): Entity {
+        val text = data.get<String>("text")
+
+        return entityBuilder(data)
+                .type(DIALOGUE)
+                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .collidable()
+                .build()
+    }
 }
 
 private class AnimatedTreeComponent(private val texture: Texture) : Component() {

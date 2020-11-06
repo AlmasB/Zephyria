@@ -17,7 +17,7 @@ import javafx.util.Duration
  */
 class MinimizeButton(key: String, x: Double, y: Double, minimizedX: Double, private val minimizedY: Double, private val root: Parent) : StackPane() {
 
-    var isMinimized = false
+    var isMinimized = true
         private set
 
     private val bg = Rectangle(30.0, 20.0)
@@ -28,6 +28,9 @@ class MinimizeButton(key: String, x: Double, y: Double, minimizedX: Double, priv
         val btnText = getUIFactoryService().newText(key)
 
         relocate(x, y)
+        root.translateX = minimizedX
+        root.translateY = minimizedY
+
         setOnMouseClicked { onClick() }
 
         children.addAll(bg, btnText)

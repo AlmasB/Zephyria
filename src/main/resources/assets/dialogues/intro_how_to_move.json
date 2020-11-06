@@ -1,0 +1,188 @@
+{
+  "uniqueID" : 11,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "You want to escape this place, but see no way of getting to other islands."
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "Suddenly, out of thin air, a young man appears behind you. He looks at you and says:\n\"Is it here?\""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "Sample end text"
+    },
+    "4" : {
+      "type" : "TEXT",
+      "text" : "This is a portal. It allows you to move between places in an instant. All you need to do is walk over it."
+    },
+    "5" : {
+      "type" : "TEXT",
+      "text" : "What? Do you not remember? She did say there might be side-effects and temporary memory loss."
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "\"Ah. I forgot this is your first time.\" - He looks in the direction of the nearest island and says: \"Right, see that thing over there?\" - he points at the oval-shaped device near you."
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "\"Did you find it?\" - he asks, eagerly awaiting for your response.",
+      "options" : {
+        "0" : "Who are you?",
+        "1" : "What is \"it\"?",
+        "2" : "What is this place?",
+        "3" : "How did you do that?",
+        "4" : "*Ignore him and focus on figuring out how to get out of here.*"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : "",
+        "3" : "",
+        "4" : ""
+      }
+    },
+    "7" : {
+      "type" : "CHOICE",
+      "text" : "He ponders what to do next for a few seconds. Then, encouragingly, says: \"Look, let's find what we came here for and get out of here. I'll explain everyhing later. We are not quite on a vacation here.\" ",
+      "options" : {
+        "0" : "Sure, lead the way!",
+        "1" : "You didn't answer the question.",
+        "2" : "*You find this person suspicious, but decide to play along for now* - Yes, let's go."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      }
+    },
+    "8" : {
+      "type" : "CHOICE",
+      "text" : "I'm your ... friend. ",
+      "options" : {
+        "0" : "",
+        "1" : ""
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "9" : {
+      "type" : "CHOICE",
+      "text" : "\"Hey! I'm talking to you!\" - he exclaims. He is certainly trying to get your attention. It seems, he's in a hurry.",
+      "options" : {
+        "0" : "TODO",
+        "1" : "*You get an idea* - Yes, yes, I've found it! It's waaaay over there on that island, but I can't get to it."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    },
+    "10" : {
+      "type" : "CHOICE",
+      "text" : "Did what?",
+      "options" : {
+        "0" : "Appeared out of nowhere.",
+        "1" : "Moved between islands."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      }
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 1
+  }, {
+    "sourceID" : 1,
+    "targetID" : 3
+  }, {
+    "sourceID" : 5,
+    "targetID" : 7
+  }, {
+    "sourceID" : 6,
+    "targetID" : 4
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 5
+  }, {
+    "sourceID" : 3,
+    "optionID" : 4,
+    "targetID" : 9
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 5
+  }, {
+    "sourceID" : 3,
+    "optionID" : 2,
+    "targetID" : 5
+  }, {
+    "sourceID" : 3,
+    "optionID" : 3,
+    "targetID" : 10
+  }, {
+    "sourceID" : 10,
+    "optionID" : 0,
+    "targetID" : 6
+  }, {
+    "sourceID" : 10,
+    "optionID" : 1,
+    "targetID" : 6
+  } ],
+  "version" : 1,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "1" : {
+      "x" : 440.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 2440.0,
+      "y" : 160.0
+    },
+    "3" : {
+      "x" : 840.0,
+      "y" : 80.0
+    },
+    "4" : {
+      "x" : 2000.0,
+      "y" : 400.0
+    },
+    "5" : {
+      "x" : 1240.0,
+      "y" : 160.0
+    },
+    "6" : {
+      "x" : 1640.0,
+      "y" : 360.0
+    },
+    "7" : {
+      "x" : 1640.0,
+      "y" : -160.0
+    },
+    "8" : {
+      "x" : 2320.0,
+      "y" : -280.0
+    },
+    "9" : {
+      "x" : 1280.0,
+      "y" : 600.0
+    },
+    "10" : {
+      "x" : 1240.0,
+      "y" : 320.0
+    }
+  }
+}

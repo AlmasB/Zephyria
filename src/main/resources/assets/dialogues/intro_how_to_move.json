@@ -1,5 +1,5 @@
 {
-  "uniqueID" : 25,
+  "uniqueID" : 26,
   "nodes" : {
     "0" : {
       "type" : "START",
@@ -60,6 +60,10 @@
     "23" : {
       "type" : "TEXT",
       "text" : "He stares at you for a while, as if thinking: \"... then why haven't you moved to other islands\", but then quickly realises something."
+    },
+    "25" : {
+      "type" : "FUNCTION",
+      "text" : "spawnNPC 2501 6 7"
     }
   },
   "choiceNodes" : {
@@ -186,9 +190,6 @@
     "sourceID" : 0,
     "targetID" : 1
   }, {
-    "sourceID" : 1,
-    "targetID" : 3
-  }, {
     "sourceID" : 5,
     "targetID" : 7
   }, {
@@ -224,6 +225,12 @@
   }, {
     "sourceID" : 23,
     "targetID" : 6
+  }, {
+    "sourceID" : 1,
+    "targetID" : 25
+  }, {
+    "sourceID" : 25,
+    "targetID" : 3
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
@@ -321,12 +328,12 @@
   "version" : 1,
   "uiMetadata" : {
     "0" : {
-      "x" : 40.0,
-      "y" : 440.0
+      "x" : -369.76136009591676,
+      "y" : -14.283053525267473
     },
     "1" : {
-      "x" : 440.0,
-      "y" : 440.0
+      "x" : 30.238639904083243,
+      "y" : -14.283053525267473
     },
     "2" : {
       "x" : 4306.854309350794,
@@ -415,6 +422,10 @@
     "24" : {
       "x" : 2920.0,
       "y" : -160.0
+    },
+    "25" : {
+      "x" : 390.23863990408427,
+      "y" : 25.71694647473243
     }
   }
 }

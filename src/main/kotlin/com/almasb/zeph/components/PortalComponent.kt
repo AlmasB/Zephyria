@@ -3,12 +3,12 @@ package com.almasb.zeph.components
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.getGameWorld
 import com.almasb.fxgl.dsl.image
+import com.almasb.fxgl.dsl.runOnce
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.zeph.EntityType
 import com.almasb.zeph.Gameplay
-import com.almasb.zeph.ZephyriaApp
 import javafx.geometry.Rectangle2D
 import javafx.util.Duration
 
@@ -52,7 +52,7 @@ class PortalComponent(
         auraTexture.scaleY = 1.5
 
         if (isCollidable) {
-            entity.viewComponent.addChild(auraTexture)
+            runOnce({ entity.viewComponent.addChild(auraTexture) }, Duration.millis(100.0))
         }
     }
 

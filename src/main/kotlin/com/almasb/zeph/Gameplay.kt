@@ -184,6 +184,10 @@ object Gameplay {
         }
     }
 
+    fun spawnNPC(id: Int, cellX: Int, cellY: Int) {
+        currentMap.spawnNPC(cellX, cellY, Data.getNPCData(id))
+    }
+
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }

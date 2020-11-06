@@ -2,25 +2,29 @@ package com.almasb.zeph.ui
 
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.Vec2
-import com.almasb.fxgl.dsl.*
+import com.almasb.fxgl.dsl.animationBuilder
+import com.almasb.fxgl.dsl.getAppHeight
+import com.almasb.fxgl.dsl.getAppWidth
+import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.fxgl.scene.SubScene
+import com.almasb.zeph.character.CharacterClass
 import javafx.animation.FillTransition
 import javafx.animation.ParallelTransition
-import javafx.animation.RotateTransition
 import javafx.animation.TranslateTransition
-import javafx.beans.binding.Bindings
 import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.ReadOnlyBooleanWrapper
 import javafx.beans.value.ObservableValue
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Point2D
+import javafx.geometry.Pos
 import javafx.scene.Parent
 import javafx.scene.effect.DropShadow
 import javafx.scene.effect.Glow
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
+import javafx.scene.layout.VBox
 import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import javafx.scene.shape.Line
@@ -32,14 +36,22 @@ import javafx.util.Duration
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class CharSelectSubScene : SubScene() {
+class CharSelectSubScene(val first: CharacterClass, vararg classes: CharacterClass) : SubScene() {
+
+    private var selected: CharClassView
+
+    var onSelected: (CharacterClass) -> Unit = {}
 
     init {
+        // CIRCLE BEGIN
         val circleRoot = Pane()
 
         val bg = Rectangle(getAppWidth() / 1.5, getAppHeight() / 1.5)
         bg.strokeWidth = 2.0
         bg.stroke = Color.LIGHTBLUE
+
+        contentRoot.translateX = getAppWidth() / 2.0 - bg.width / 2.0
+        contentRoot.translateY = getAppHeight() / 2.0 - bg.height / 2.0
 
         val circle = Circle(bg.width / 2.0, bg.height / 2.0, 250.0, null)
         circle.stroke = Color.WHITE
@@ -56,60 +68,51 @@ class CharSelectSubScene : SubScene() {
             circleRoot.children += line
         }
 
+        circleRoot.children += circle
+
         addChild(bg)
 
+        // CIRCLE END
 
+        val numItems = 1 + classes.size
+        val interval = 360.0 / numItems
 
-        contentRoot.translateX = getAppWidth() / 2.0 - bg.width / 2.0
-        contentRoot.translateY = getAppHeight() / 2.0 - bg.height / 2.0
+        val views = (listOf(first) + classes).mapIndexed { index, type ->
 
-        val vector = Point2D(0.0, 1.0).multiply(circle.radius)
+            val point = Point2D(circle.centerX, circle.centerY).add(
+                    Vec2.fromAngle(90.0 + interval * (index)).toPoint2D().multiply(circle.radius)
+            )
 
-        val firstPoint = Point2D(circle.centerX, circle.centerY).add(vector)
+            val view = CharClassView(type)
+            view.translateX = point.x - view.frameWidth / 2.0
+            view.translateY = point.y - view.frameHeight / 2.0
 
+            view.rotate = interval * (index)
 
+            view.setOnMouseClicked {
+                selected = view
 
-        circleRoot.children += circle
-        circleRoot.children += Card(Color.BLUE).also {
-            it.translateX = firstPoint.x - 120.0
-            it.translateY = firstPoint.y - 150.0
-        }
-
-        // TODO: 120 is hardcoded = 360.0 / num_items
-        val secondPoint = Point2D(circle.centerX, circle.centerY).add(
-                Vec2.fromAngle(90.0 + 120).toPoint2D().multiply(circle.radius)
-        )
-
-        circleRoot.children += Card(Color.RED).also { card ->
-            card.translateX = secondPoint.x - 120.0
-            card.translateY = secondPoint.y - 150.0
-
-            card.rotate = 120.0
-
-            card.setOnMouseClicked {
                 animationBuilder(this)
                         .duration(Duration.seconds(1.2))
                         .interpolator(Interpolators.EXPONENTIAL.EASE_OUT())
                         .rotate(circleRoot)
-                        .from(0.0)
-                        .to(-card.rotate)
+                        .from(
+                                if (circleRoot.transforms.isNotEmpty())
+                                    (circleRoot.transforms[0] as Rotate).angle
+                                else
+                                    0.0
+                        )
+                        .to(-view.rotate)
                         .origin(Point2D(circle.centerX, circle.centerY))
                         .buildAndPlay()
             }
+
+            circleRoot.children += view
+
+            view
         }
 
-        // 3rd
-        // TODO: 120 is hardcoded = 360.0 / num_items
-        val thirdPoint = Point2D(circle.centerX, circle.centerY).add(
-                Vec2.fromAngle(90.0 + 120 + 120).toPoint2D().multiply(circle.radius)
-        )
-
-        circleRoot.children += Card(Color.GREEN).also {
-            it.translateX = thirdPoint.x - 120.0
-            it.translateY = thirdPoint.y - 150.0
-
-            it.rotate = 120.0 + 120.0
-        }
+        selected = views.first()
 
         addChild(circleRoot)
 
@@ -122,36 +125,38 @@ class CharSelectSubScene : SubScene() {
         switch.translateY = 50.0
         addChild(switch)
 
-
         val btnSelect = getUIFactoryService().newButton("Select")
         btnSelect.translateX = bg.width - 220.0
         btnSelect.translateY = bg.height - 60.0
+        btnSelect.setOnAction {
+            onSelected.invoke(selected.type)
+        }
+
         addChild(btnSelect)
 
         contentRoot.effect = DropShadow(30.0, Color.BLACK)
     }
 }
 
-private class Card(color: Color) : Parent() {
+private class CharClassView(val type: CharacterClass) : Parent() {
 
     private val glow = Glow(0.8)
 
-    private val t1 = texture("chars/class_portraits/warrior_male.png")
-    private val t2 = texture("chars/class_portraits/warrior_female.png").also { it.scaleX = -1.0 }
-
-    private var isMale = true
+    val frameWidth = 250.0
+    val frameHeight = 300.0
 
     init {
-        val bg = Rectangle(240.0, 300.0)
-        bg.fill = color
+        val frame = Rectangle(frameWidth, frameHeight, Color.BLACK)
+        frame.stroke = Color.MEDIUMAQUAMARINE
 
-        val tBG = Rectangle(229.0, 226.0, null)
-        tBG.stroke = Color.MEDIUMAQUAMARINE
+        val title = getUIFactoryService().newText(type.toString(), 22.0)
 
-        val stack = StackPane(tBG, t1)
+        val text = getUIFactoryService().newText(type.description)
+        text.wrappingWidth = frame.width - 15.0
 
+        val stack = StackPane(frame, VBox(title, text).also { it.alignment = Pos.CENTER })
 
-        children.addAll(bg, stack)
+        children.addAll(stack)
 
         setOnMouseEntered {
             effect = glow
@@ -161,18 +166,18 @@ private class Card(color: Color) : Parent() {
             effect = null
         }
 
-        setOnMouseClicked {
-            isMale = !isMale
-
-            stack.children.removeAt(1)
-
-            val rt = RotateTransition(Duration.seconds(0.4), stack)
-            rt.axis = Rotate.Y_AXIS
-            rt.fromAngle = if (!isMale) 0.0 else 180.0
-            rt.toAngle = if (!isMale) 180.0 else 0.0
-            rt.setOnFinished { stack.children.add(if (isMale) t1 else t2) }
-            rt.play()
-        }
+//        setOnMouseClicked {
+//            isMale = !isMale
+//
+//            stack.children.removeAt(1)
+//
+//            val rt = RotateTransition(Duration.seconds(0.4), stack)
+//            rt.axis = Rotate.Y_AXIS
+//            rt.fromAngle = if (!isMale) 0.0 else 180.0
+//            rt.toAngle = if (!isMale) 180.0 else 0.0
+//            rt.setOnFinished { stack.children.add(if (isMale) t1 else t2) }
+//            rt.play()
+//        }
 
         // TODO: isSelected
 //        scaleXProperty().bind(
@@ -182,12 +187,32 @@ private class Card(color: Color) : Parent() {
 //        scaleYProperty().bind(
 //                Bindings.`when`(hoverProperty()).then(1.0).otherwise(0.75)
 //        )
-    }
 
-    private fun flip() {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /**

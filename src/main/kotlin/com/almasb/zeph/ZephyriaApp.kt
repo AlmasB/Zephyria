@@ -10,6 +10,7 @@ import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.zeph.EntityType.*
+import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
@@ -17,6 +18,8 @@ import com.almasb.zeph.Gameplay.spawnTextBox
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
+import com.almasb.zeph.character.CharacterClass
+import com.almasb.zeph.character.CharacterClass.*
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.events.OnLevelUpEvent
@@ -104,7 +107,12 @@ class ZephyriaApp : GameApplication() {
             }
 
             onKeyDown(KeyCode.Y) {
-                getSceneService().pushSubScene(CharSelectSubScene())
+                val scene = CharSelectSubScene(WARRIOR, SCOUT, MAGE)
+                scene.onSelected = {
+                    println(it)
+                }
+
+                getSceneService().pushSubScene(scene)
             }
         }
     }

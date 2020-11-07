@@ -207,41 +207,40 @@ class ZephFactory : EntityFactory {
 
         player.viewComponent.parent.isMouseTransparent = true
 
-        // TODO: TEST DATA BEGIN
+        // add dev stuff if not on release
+        if (!isReleaseMode()) {
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
+            player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
 
-        player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-        player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
-        player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
-        player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
+            player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
 
-        player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
-        player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
-        player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
-        player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
-        player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
+            player.inventory.add(newDagger(Element.NEUTRAL))
+            player.inventory.add(newDagger(Element.FIRE))
+            player.inventory.add(newDagger(Element.EARTH))
+            player.inventory.add(newDagger(Element.AIR))
+            player.inventory.add(newDagger(Element.WATER))
 
-        player.inventory.add(newDagger(Element.NEUTRAL))
-        player.inventory.add(newDagger(Element.FIRE))
-        player.inventory.add(newDagger(Element.EARTH))
-        player.inventory.add(newDagger(Element.AIR))
-        player.inventory.add(newDagger(Element.WATER))
+            player.inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
+            player.inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
 
-        player.inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
-        player.inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
+            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+            player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
+            player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
 
-        player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-        player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-        player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
-        player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
-        player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
-        player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
-        player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+            player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
 
-        player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
-
-        player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
-
-        // TEST DATA END
+            player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
+        }
 
         return player
     }
@@ -532,11 +531,14 @@ class ZephFactory : EntityFactory {
                 .collidable()
                 .with("cell", cell)
                 .onClick {
-                    Gameplay.addMoney(gold)
 
-                    it.viewComponent.clearChildren()
-                    it.viewComponent.addChild(texture("chest_open_full.png"))
-                    it.addComponent(ExpireCleanComponent(Duration.seconds(1.0)).animateOpacity())
+                    if (Gameplay.player.distance(cellX, cellY) < 2) {
+                        Gameplay.addMoney(gold)
+
+                        it.viewComponent.clearChildren()
+                        it.viewComponent.addChild(texture("chest_open_full.png"))
+                        it.addComponent(ExpireCleanComponent(Duration.seconds(1.0)).animateOpacity())
+                    }
                 }
                 .onNotActive { cell.state = CellState.WALKABLE }
                 .build()
@@ -582,6 +584,20 @@ class ZephFactory : EntityFactory {
         return entityBuilder(data)
                 .type(DIALOGUE)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .collidable()
+                .build()
+    }
+
+    @Spawns("memory")
+    fun newMemory(data: SpawnData): Entity {
+        val emitter = ParticleEmitters.newFireEmitter()
+        emitter.startColor = Color.ANTIQUEWHITE
+        emitter.endColor = Color.WHEAT
+
+        return entityBuilder(data)
+                .type(MEMORY)
+                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
+                .with(ParticleComponent(emitter))
                 .collidable()
                 .build()
     }

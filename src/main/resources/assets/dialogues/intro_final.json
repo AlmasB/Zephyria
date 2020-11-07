@@ -1,0 +1,105 @@
+{
+  "uniqueID" : 7,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "*Your follower seems to be taking his time going through the last portal.* \"Look, I've got to take care of something. I think we're being followed.\""
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "Not quite, but don't worry, I'll watch your back. Now go."
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "*Alone again, you muster your confidence and head out.*"
+    },
+    "4" : {
+      "type" : "TEXT",
+      "text" : "I'll be fine. Now go."
+    },
+    "5" : {
+      "type" : "FUNCTION",
+      "text" : "setNotVisible 2501"
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "*The man tilts his head towards the next portal and smiles ever so slightly before disappearing.*"
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "\"Find the memory and exit this place as quickly as you can.\" - he instructs you.",
+      "options" : {
+        "0" : "*Nod and continue your search*",
+        "1" : "Am I safe here?",
+        "2" : "Are you going be alright?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      }
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 3
+  }, {
+    "sourceID" : 5,
+    "targetID" : 2
+  }, {
+    "sourceID" : 1,
+    "targetID" : 6
+  }, {
+    "sourceID" : 4,
+    "targetID" : 6
+  }, {
+    "sourceID" : 6,
+    "targetID" : 5
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 1
+  }, {
+    "sourceID" : 3,
+    "optionID" : 2,
+    "targetID" : 4
+  }, {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 6
+  } ],
+  "version" : 1,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "1" : {
+      "x" : 920.0,
+      "y" : 640.0
+    },
+    "2" : {
+      "x" : 2040.0,
+      "y" : 560.0
+    },
+    "3" : {
+      "x" : 520.0,
+      "y" : 520.0
+    },
+    "4" : {
+      "x" : 920.0,
+      "y" : 760.0
+    },
+    "5" : {
+      "x" : 1680.0,
+      "y" : 560.0
+    },
+    "6" : {
+      "x" : 1320.0,
+      "y" : 560.0
+    }
+  }
+}

@@ -111,7 +111,7 @@ class GameMap(val name: String, private val level: Level) : EntityWorldListener 
         getGameWorld().setLevel(level)
 
         grid = AStarGrid.fromWorld(FXGL.getGameWorld(), MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, TILE_SIZE) { type: Any ->
-            if (type == NAV || type == PORTAL || type == TEXT_TRIGGER_BOX || type == DIALOGUE)
+            if (type == NAV || type == PORTAL || type == TEXT_TRIGGER_BOX || type == DIALOGUE || type == MEMORY)
                 return@fromWorld CellState.WALKABLE
 
             CellState.NOT_WALKABLE

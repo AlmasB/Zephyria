@@ -200,6 +200,16 @@ object Gameplay {
         }
     }
 
+    /**
+     * Make the entity with given [id] invisible.
+     */
+    fun setNotVisible(id: Int) {
+        // TODO: generalize?
+        FXGL.byID("NPC", id).ifPresent {
+            it.isVisible = false
+        }
+    }
+
     fun spawnNPC(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnNPC(cellX, cellY, Data.getNPCData(id))
     }

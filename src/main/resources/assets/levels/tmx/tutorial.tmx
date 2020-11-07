@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="18">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="21">
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>
  </tileset>
@@ -18,11 +18,11 @@
  <tileset firstgid="1472" name="fence_barbed" tilewidth="32" tileheight="32" tilecount="15" columns="5">
   <image source="fence_barbed.png" width="160" height="96"/>
  </tileset>
- <tileset firstgid="1487" name="tileset-world" tilewidth="32" tileheight="32" tilecount="119" columns="7">
-  <image source="tileset-world.png" width="224" height="544"/>
- </tileset>
- <tileset firstgid="1606" name="misc_decor" tilewidth="32" tileheight="32" tilecount="99" columns="11">
+ <tileset firstgid="1487" name="misc_decor" tilewidth="32" tileheight="32" tilecount="99" columns="11">
   <image source="tileset.png" width="352" height="288"/>
+ </tileset>
+ <tileset firstgid="1586" name="tileset-world" tilewidth="32" tileheight="32" tilecount="119" columns="7">
+  <image source="tileset-world.png" trans="ffffff" width="224" height="544"/>
  </tileset>
  <layer id="1" name="Tile Layer 1" width="40" height="40">
   <data encoding="base64" compression="zlib">
@@ -87,6 +87,7 @@
   </object>
   <object id="14" name="portal" type="portal" gid="441" x="64" y="1024" width="128" height="64">
    <properties>
+    <property name="isCollidable" type="bool" value="false"/>
     <property name="mapName" value="tutorial.tmx"/>
     <property name="toCellX" type="int" value="12"/>
     <property name="toCellY" type="int" value="22"/>
@@ -102,6 +103,13 @@
   <object id="16" type="dialogue" x="640" y="320" width="192" height="128">
    <text wrap="1">intro2.json</text>
   </object>
+  <object id="18" type="dialogue" x="1024" y="512" width="192" height="128">
+   <text wrap="1">intro3.json</text>
+  </object>
+  <object id="19" type="dialogue" x="224" y="576" width="192" height="160">
+   <text wrap="1">intro_final.json</text>
+  </object>
+  <object id="20" type="memory" x="224" y="960" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="7" name="Decor_objects_above_player"/>
  <objectgroup id="8" name="Walkable_areas" visible="0">

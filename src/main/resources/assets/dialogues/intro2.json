@@ -1,0 +1,79 @@
+{
+  "uniqueID" : 6,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "The person you just met follows you through the portal."
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "See? Portals are useful to move around, though they can cause disorientation at times. Here's another one and it seems to be functional. After you."
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "Oh, one more thing. Some portals, like these ones, are only one-way. So make sure you've done everything you need to do before moving on."
+    },
+    "3" : {
+      "type" : "FUNCTION",
+      "text" : "teleport 2501 20 11"
+    },
+    "4" : {
+      "type" : "BRANCH",
+      "text" : "get isTrickedToMove"
+    },
+    "5" : {
+      "type" : "FUNCTION",
+      "text" : "spawn treasureChest 20 7"
+    }
+  },
+  "choiceNodes" : { },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 3
+  }, {
+    "sourceID" : 3,
+    "targetID" : 4
+  }, {
+    "sourceID" : 1,
+    "targetID" : 5
+  }, {
+    "sourceID" : 5,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 4,
+    "optionID" : 0,
+    "targetID" : 1
+  }, {
+    "sourceID" : 4,
+    "optionID" : 1,
+    "targetID" : 1
+  } ],
+  "version" : 1,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "1" : {
+      "x" : 1240.0,
+      "y" : 240.0
+    },
+    "2" : {
+      "x" : 2000.0,
+      "y" : 200.0
+    },
+    "3" : {
+      "x" : 440.0,
+      "y" : 280.0
+    },
+    "4" : {
+      "x" : 840.0,
+      "y" : 200.0
+    },
+    "5" : {
+      "x" : 1640.0,
+      "y" : 120.0
+    }
+  }
+}

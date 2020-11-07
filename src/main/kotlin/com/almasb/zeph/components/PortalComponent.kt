@@ -63,9 +63,15 @@ class PortalComponent(
         val player = getGameWorld().getSingleton(EntityType.PLAYER)
 
         if (interactionCollisionBox.contains(player.anchoredPosition)) {
-            FXGL.getGameController().gotoLoading(Runnable {
+            // if on same map, just move the character
+            // else we are loading a new map, so do that in the background while showing a loading screen
+            if (mapName == Gameplay.currentMap.name) {
                 Gameplay.gotoMap(mapName, toCellX, toCellY)
-            })
+            } else {
+                FXGL.getGameController().gotoLoading(Runnable {
+                    Gameplay.gotoMap(mapName, toCellX, toCellY)
+                })
+            }
         }
     }
 

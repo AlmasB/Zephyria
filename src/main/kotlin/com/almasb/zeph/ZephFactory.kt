@@ -14,6 +14,7 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.Spawns
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.CollidableComponent
+import com.almasb.fxgl.entity.components.IDComponent
 import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.particle.ParticleComponent
@@ -68,6 +69,7 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import java.util.function.Supplier
+import kotlin.math.roundToInt
 
 /**
  * Creates all entities.
@@ -85,6 +87,7 @@ class ZephFactory : EntityFactory {
 
         val entity = entityBuilder()
                 .type(NPC)
+                .with(IDComponent("NPC", npcData.description.id))
                 .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
                 .with(AnimationComponent(npcData.description.textureName))
@@ -507,8 +510,14 @@ class ZephFactory : EntityFactory {
                 .build()
     }
 
+    /**
+     * Only spawned dynamically. This is not currently spawned from .tmx file.
+     */
     @Spawns("treasureChest")
     fun newTreasureChest(data: SpawnData): Entity {
+//        val cellX = if (data.hasKey("cellX")) data.get<Int>("cellX") else coordToCell(data.x)
+//        val cellY = if (data.hasKey("cellY")) data.get<Int>("cellY") else coordToCell(data.y)
+
         val cellX = data.get<Int>("cellX")
         val cellY = data.get<Int>("cellY")
 
@@ -617,3 +626,5 @@ private fun newDagger(element: Element): Weapon {
     weapon.element.set(element)
     return weapon
 }
+
+fun coordToCell(value: Double): Int = (value / Config.TILE_SIZE).roundToInt()

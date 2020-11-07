@@ -6,6 +6,7 @@ import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.entity.SpawnData
+import com.almasb.fxgl.entity.action.ActionComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
@@ -13,6 +14,7 @@ import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.quest.QuestData
@@ -23,8 +25,6 @@ import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
 
-// TODO: dialogue bug when using keys to advance choice node while the text is being animated
-
 /**
  * Functions of this object are automatically parsed to be available from the command line
  * and in-game dialogues.
@@ -32,6 +32,8 @@ import javafx.util.Duration
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 object Gameplay {
+
+    // TODO: dialogue system, set nodes invisible if not drawing to optimise scene graph
 
     private val log = Logger.get(javaClass)
 
@@ -48,6 +50,18 @@ object Gameplay {
 
     fun where() {
         log.info("Player is at ${player.cellX},${player.cellY}")
+    }
+
+    fun teleport(id: Int, toCellX: Int, toCellY: Int) {
+        // TODO: generalise?
+
+        log.debug("teleport($id, $toCellX, $toCellY)")
+
+        FXGL.byID("NPC", id).ifPresent {
+            log.debug("Teleporting NPC $id to $toCellX, $toCellY")
+
+            it.getComponent(AStarMoveComponent::class.java).stopMovementAt(toCellX, toCellY)
+        }
     }
 
     fun goto(toCellX: Int, toCellY: Int) {
@@ -173,6 +187,8 @@ object Gameplay {
     }
 
     fun startDialogue(dialogueFileName: String) {
+        log.debug("Starting dialogue: $dialogueFileName")
+
         val graph = getAssetLoader().loadDialogueGraph(dialogueFileName)
 
         getCutsceneService().startDialogueScene(graph, CommandHandler)

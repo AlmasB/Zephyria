@@ -840,7 +840,7 @@
     <property name="toCellY" type="int" value="82"/>
    </properties>
   </object>
-  <object id="280" type="anim_tree" gid="442" x="288" y="256" width="32" height="32"/>
+  <object id="280" type="anim_tree" gid="442" x="4096" y="224" width="32" height="32"/>
   <object id="332" type="textTriggerBox" x="160" y="448" width="160" height="19">
    <text wrap="1" color="#7d0000">Welcome to Zephyria!</text>
   </object>

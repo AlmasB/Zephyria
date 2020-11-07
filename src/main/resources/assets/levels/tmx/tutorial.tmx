@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="16">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="18">
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>
  </tileset>
@@ -98,6 +98,9 @@
     <property name="toCellX" type="int" value="2"/>
     <property name="toCellY" type="int" value="6"/>
    </properties>
+  </object>
+  <object id="16" type="dialogue" x="640" y="320" width="192" height="128">
+   <text wrap="1">intro2.json</text>
   </object>
  </objectgroup>
  <objectgroup id="7" name="Decor_objects_above_player"/>

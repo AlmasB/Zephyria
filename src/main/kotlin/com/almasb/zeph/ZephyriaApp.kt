@@ -8,7 +8,6 @@ import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
-import com.almasb.fxgl.entity.SpawnData
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.Gameplay.currentMap
@@ -19,7 +18,6 @@ import com.almasb.zeph.Gameplay.startDialogue
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
-import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterClass.*
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
@@ -52,7 +50,7 @@ class ZephyriaApp : GameApplication() {
                 return ZephLoadingScene()
             }
         }
-        settings.applicationMode = ApplicationMode.RELEASE
+        settings.applicationMode = ApplicationMode.DEVELOPER
     }
 
     override fun onPreInit() {
@@ -88,6 +86,12 @@ class ZephyriaApp : GameApplication() {
         onKeyDown(KeyCode.S) {
             getGameScene().uiNodes
                     .filterIsInstance(HotbarView::class.java)
+                    .forEach { it.minBtn.onClick() }
+        }
+
+        onKeyDown(KeyCode.V) {
+            getGameScene().uiNodes
+                    .filterIsInstance(MessagesView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
         
@@ -184,8 +188,9 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("tutorial.tmx", 8, 6)
-        //gotoMap("test_map.tmx", 2, 6)
+        //gotoMap("dev_world.tmx", 8, 6)
+        //gotoMap("tutorial.tmx", 8, 6)
+        gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {
@@ -215,7 +220,8 @@ class ZephyriaApp : GameApplication() {
         getGameScene().addUINodes(
                 BasicInfoView(player),
                 InventoryView(player),
-                HotbarView(player)
+                HotbarView(player),
+                MessagesView()
         )
     }
 

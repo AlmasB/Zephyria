@@ -127,7 +127,7 @@ class GameMap(val name: String, private val level: Level) : EntityWorldListener 
                 .filter { it.getObject<Layer>("layer").name == "Decor_above_player" }
                 .forEach {
                     it.viewComponent.parent.isMouseTransparent = true
-                    it.z = Z_INDEX_DECOR_ABOVE_PLAYER
+                    it.zIndex = Z_INDEX_DECOR_ABOVE_PLAYER
                 }
 
         spawnMobs(level)

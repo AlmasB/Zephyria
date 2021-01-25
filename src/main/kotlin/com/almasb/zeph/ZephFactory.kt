@@ -486,7 +486,7 @@ class ZephFactory : EntityFactory {
                 .onActive {
                     it.viewComponent.parent.isMouseTransparent = true
 
-                    comp.parent.z = Z_INDEX_DECOR_ABOVE_PLAYER
+                    comp.parent.zIndex = Z_INDEX_DECOR_ABOVE_PLAYER
                     comp.parent.viewComponent.parent.isMouseTransparent = true
                 }
                 .build()

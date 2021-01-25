@@ -87,7 +87,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        entity.z = entity.getComponent(CellMoveComponent::class.java).cellY + 5000
+        entity.zIndex = entity.getComponent(CellMoveComponent::class.java).cellY + 5000
     }
 
     fun playDeath(onFinished: Runnable) {

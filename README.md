@@ -2,17 +2,18 @@
 
 ![Screenshot](https://raw.githubusercontent.com/AlmasB/git-server/master/storage/images/zephyria.png)
 
-## Build
+## Run
 
-You need JDK 11+ to build and run the game.
+You need JDK 11+ to run the game.
 
 ```bash
-mvn package
+mvn javafx:run
 ```
 
-## Run
+## Package
+
 ```bash
-java -jar Zephyria-0.1-SNAPSHOT.jar
+mvn javafx:jlink
 ```
 
 ## Current State

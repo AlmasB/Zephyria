@@ -433,23 +433,12 @@ class ZephFactory : EntityFactory {
 
     @Spawns("camp_fire")
     fun newAnimatedFlame(data: SpawnData): Entity {
-        // TODO: add simpler ctor without framesWidth / height, start / end
-//        val channel = AnimationChannel(image("animated_flame.png"),
-//                framesPerRow = 4,
-//                frameWidth = 16, frameHeight = 24,
-//                channelDuration = Duration.seconds(1.0),
-//                startFrame = 0, endFrame = 11
-//        )
-//        val texture = AnimatedTexture(channel).loop()
-//        texture.translateX = -TILE_SIZE / 4.0
-//        texture.translateY = -TILE_SIZE / 4.0
-
-        val channel = AnimationChannel(image("camp_fire.png"),
-                framesPerRow = 5,
-                frameWidth = 64, frameHeight = 64,
-                channelDuration = Duration.seconds(0.8),
-                startFrame = 0, endFrame = 4
+        val channel = AnimationChannel(
+                image("camp_fire.png"),
+                Duration.seconds(0.8),
+                5
         )
+
         val texture = AnimatedTexture(channel).loop()
         texture.translateX = -TILE_SIZE * 1.0
         texture.translateY = -TILE_SIZE * 1.5

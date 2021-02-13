@@ -169,6 +169,8 @@ class PlayerComponent : Component() {
             }
         }
 
+        fire(OnXPReceivedEvent(player, gainedXP))
+
         return baseLevelUp
     }
 

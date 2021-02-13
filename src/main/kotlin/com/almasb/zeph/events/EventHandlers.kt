@@ -7,6 +7,7 @@ import com.almasb.zeph.Gameplay.spawnItem
 import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.combat.runIfChance
 import com.almasb.zeph.item.ArmorType.*
+import com.almasb.zeph.pushMessage
 import javafx.scene.paint.Color
 import java.util.function.Consumer
 
@@ -57,11 +58,23 @@ object EventHandlers {
             Gameplay.showSkillCast(it.skill, it.caster.center.subtract(0.0, 35.0))
         }
 
+        onEvent(Events.ON_XP_RECEIVED) {
+            pushMessage("Received: ${it.xp.base} XP")
+        }
+
         onEvent(Events.ON_MONEY_RECEIVED) {
+            pushMessage("Received: ${it.amount} gold")
+
             Gameplay.showMoneyEarned(it.amount, it.receiver.position)
         }
 
+        onEvent(Events.ON_ITEM_PICKED_UP) {
+            pushMessage("Got: ${it.item.description.name}")
+        }
+
         onEvent(Events.ON_LEVEL_UP) {
+            pushMessage("Level Up!")
+
             spawn("level_up", it.char.center)
         }
 

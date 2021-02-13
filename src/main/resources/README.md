@@ -20,6 +20,7 @@
 - Chests - https://opengameart.org/content/treasure-chests-32x32-and-16x16
 - Fence - https://opengameart.org/content/barbed-wire-fence
 - Character portraits - https://cazwolf.itch.io/rmmv-portraits
+- Sword cursor - https://opengameart.org/content/lpc-items-and-game-effects
 
 ## NPCs
 

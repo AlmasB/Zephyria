@@ -152,6 +152,8 @@ class ZephFactory : EntityFactory {
 
         entity.setPositionToCell(cellX, cellY)
 
+        entity.viewComponent.parent.cursor = ImageCursor(image("ui/cursors/attack.png"), 1.0, 1.0)
+
         // TODO: do not allow click if dying ...
         // TODO: convenience methods on mouse click
         entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {

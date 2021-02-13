@@ -116,6 +116,10 @@ class ZephFactory : EntityFactory {
 //            getCutsceneService().startDialogueScene(graph, CommandHandler, Runnable { removeUINode(fullTexture) })
         })
 
+        runOnce({
+            entity.addComponent(LiftComponent().yAxisDistanceDuration(1.0, Duration.seconds(0.4)))
+        }, Duration.seconds(random(0.01, 1.0)))
+
         return entity
     }
 

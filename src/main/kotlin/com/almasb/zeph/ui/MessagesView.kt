@@ -24,6 +24,11 @@ class MessagesView() : Parent() {
 
     val minBtn = MinimizeButton("V", BG_WIDTH / 2.0 - 15.5, -22.0, 0.0, BG_HEIGHT - 5, this)
 
+    private val text = getUIFactoryService().newText(
+            "In-game messages area:\n",
+            Color.WHITE, FontType.TEXT, 14.0
+    )
+
     init {
         initView()
         initScrollPane()
@@ -46,22 +51,6 @@ class MessagesView() : Parent() {
     }
 
     private fun initScrollPane() {
-        val text = getUIFactoryService().newText(
-                "In-game messages area:\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n"
-                        + "Some test text\n",
-                Color.WHITE, FontType.TEXT, 14.0)
         text.wrappingWidth = BG_WIDTH - 50.0
 
         val scrollPane = FXGLScrollPane(text)
@@ -71,5 +60,9 @@ class MessagesView() : Parent() {
         //scrollPane.padding = Insets(10.0)
 
         children += scrollPane
+    }
+
+    fun appendMessage(message: String) {
+        text.text += "$message\n"
     }
 }

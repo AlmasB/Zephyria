@@ -2,6 +2,7 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.addUINode
+import com.almasb.fxgl.logging.Logger
 import com.almasb.zeph.ui.TooltipView
 
 /**
@@ -103,4 +104,14 @@ private val tooltipView by lazy {
     }
 }
 
+private val log = Logger.get("Zephyria")
+
 fun getUITooltip() = tooltipView
+
+/**
+ * Push given [message] to in-game message view.
+ */
+fun pushMessage(message: String) {
+    // for now we just make use of the logger to unify all message calls to this function
+    log.info(message)
+}

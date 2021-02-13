@@ -33,8 +33,6 @@ import javafx.util.Duration
  */
 object Gameplay {
 
-    // TODO: dialogue system, set nodes invisible if not drawing to optimise scene graph
-
     private val log = Logger.get(javaClass)
 
     val player: CharacterEntity by lazy { getGameWorld().getSingleton(EntityType.PLAYER) as CharacterEntity }

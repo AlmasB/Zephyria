@@ -8,6 +8,9 @@ import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
+import com.almasb.fxgl.logging.Logger
+import com.almasb.fxgl.logging.LoggerLevel
+import com.almasb.fxgl.logging.LoggerOutput
 import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.Gameplay.currentMap
@@ -40,7 +43,7 @@ class ZephyriaApp : GameApplication() {
     private var devScene: DevScene? = null
 
     override fun initSettings(settings: GameSettings) {
-        settings.width = 1700
+        settings.width = 1800
         settings.setHeightFromRatio(16 / 9.0)
         settings.title = "Zephyria RPG"
         settings.version = "0.1 Pre-alpha"
@@ -223,6 +226,19 @@ class ZephyriaApp : GameApplication() {
                 HotbarView(player),
                 MessagesView()
         )
+
+        // add visual output to logger
+        Logger.addOutput(object : LoggerOutput {
+            override fun append(message: String) {
+                getExecutor().startAsyncFX {
+                    getGameScene().uiNodes
+                            .filterIsInstance(MessagesView::class.java)
+                            .forEach { it.appendMessage(message.drop(70)) }
+                }
+            }
+
+            override fun close() { }
+        }, LoggerLevel.INFO)
     }
 
     override fun onUpdate(tpf: Double) {

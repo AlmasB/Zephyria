@@ -6,6 +6,7 @@ import com.almasb.fxgl.dsl.components.ManaDoubleComponent
 import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.components.ViewComponent
+import com.almasb.fxgl.inventory.Inventory
 import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
@@ -13,7 +14,6 @@ import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.events.*
-import com.almasb.zeph.fxglinventory.Inventory
 import com.almasb.zeph.item.Item
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill

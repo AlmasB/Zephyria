@@ -20,7 +20,7 @@
         <mainClassName>com.almasb.zeph.ZephyriaAppKt</mainClassName>
 
         <fxgl.version>dev-SNAPSHOT</fxgl.version>
-        <kotlin.version>1.4.10</kotlin.version>
+        <kotlin.version>1.4.30</kotlin.version>
         <jackson.version>2.11.1</jackson.version>
     </properties>
 

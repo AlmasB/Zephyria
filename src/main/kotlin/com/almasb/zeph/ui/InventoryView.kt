@@ -137,7 +137,9 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         view.cursor = Cursor.HAND
 
         val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
-        text.textProperty().bind(player.inventory.getData(item).get().quantityProperty().asString())
+
+        // TODO: inventory API upgrade
+        //text.textProperty().bind(player.inventory.getData(item).get().quantityProperty().asString())
         text.strokeWidth = 1.5
 
         view.children.addAll(text)

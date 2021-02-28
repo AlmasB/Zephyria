@@ -225,14 +225,13 @@ object Gameplay {
     }
 
     @JvmOverloads fun hasItem(itemID: Int, amount: Int = 1): Boolean {
-        val itemData = player.inventory
+        val itemEntry = player.inventory
                 .allData
                 .entries
                 .find { it.key.description.id == itemID }
-                ?.value
                 ?: return false
 
-        return itemData.quantity >= amount
+        return player.inventory.getItemQuantity(itemEntry.key) >= amount
     }
 
     @JvmOverloads fun addItem(itemID: Int, amount: Int = 1): Boolean {

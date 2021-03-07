@@ -21,7 +21,7 @@
 
         <fxgl.version>dev-SNAPSHOT</fxgl.version>
         <kotlin.version>1.4.30</kotlin.version>
-        <jackson.version>2.11.1</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
     </properties>
 
     <dependencies>
@@ -29,12 +29,6 @@
             <groupId>com.github.almasb</groupId>
             <artifactId>fxgl</artifactId>
             <version>${fxgl.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>

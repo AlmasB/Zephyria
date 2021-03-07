@@ -1,6 +1,7 @@
 package com.almasb.zeph
 
 import com.almasb.fxgl.animation.Interpolators
+import com.almasb.fxgl.core.collection.grid.Cell
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
@@ -19,7 +20,6 @@ import com.almasb.fxgl.entity.components.IrremovableComponent
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.particle.ParticleComponent
 import com.almasb.fxgl.particle.ParticleEmitters
-import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.pathfinding.CellState
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent

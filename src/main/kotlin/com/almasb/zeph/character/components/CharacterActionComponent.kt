@@ -1,5 +1,6 @@
 package com.almasb.zeph.character.components
 
+import com.almasb.fxgl.core.collection.grid.Cell
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.dsl.spawn
@@ -8,7 +9,6 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
-import com.almasb.fxgl.pathfinding.Cell
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.Config

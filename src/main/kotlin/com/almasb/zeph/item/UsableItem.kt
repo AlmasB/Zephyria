@@ -129,24 +129,6 @@ fun usableItem(setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
     return builder.build()
 }
 
-//@DataDSL
-//fun usableItemRestoreHP(setupHP: UsableItemRestoreHPBuilder.() -> Unit, setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
-//    val hpRestoreBuilder = UsableItemRestoreHPBuilder()
-//    hpRestoreBuilder.setupHP()
-//
-//    val builder = UsableItemDataBuilder()
-//    builder.setup()
-//    builder.description = builder.description.copy(description = "Restores ${hpRestoreBuilder.hpToRestore} HP")
-//
-//    val tmp = builder.onUseScript
-//    builder.onUseScript = {
-//        it.hp.restore(hpRestoreBuilder.hpToRestore)
-//        tmp.invoke(it)
-//    }
-//
-//    return builder.build()
-//}
-
 @DataDSL
 fun miscItem(setup: MiscItemDataBuilder.() -> Unit): MiscItemData {
     val builder = MiscItemDataBuilder()

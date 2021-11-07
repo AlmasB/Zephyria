@@ -274,7 +274,7 @@ class UsableItems {
 
     val CODEFEST_CHALLENGE1 = usableItem {
         desc {
-            id = 6999
+            id = 6997
             name = "Codefest Challenge 1"
             description = "A mysterious parchment with ancient text. Read it!"
             textureName = "items/usable/parchment.png"
@@ -284,6 +284,44 @@ class UsableItems {
 
         onUseScript {
             val lines = getAssetLoader().loadText("challenge1.txt")
+
+            getDialogService().showMessageBox(
+                    lines.fold("") { acc, item -> acc + "\n" + item }
+            )
+        }
+    }
+
+    val CODEFEST_CHALLENGE2 = usableItem {
+        desc {
+            id = 6998
+            name = "Codefest Challenge 2"
+            description = "A mysterious parchment with ancient text. Read it!"
+            textureName = "items/usable/parchment.png"
+        }
+
+        isPermanentUse = true
+
+        onUseScript {
+            val lines = getAssetLoader().loadText("challenge2.txt")
+
+            getDialogService().showMessageBox(
+                    lines.fold("") { acc, item -> acc + "\n" + item }
+            )
+        }
+    }
+
+    val CODEFEST_CHALLENGE3 = usableItem {
+        desc {
+            id = 6999
+            name = "Codefest Challenge 3"
+            description = "A mysterious parchment with ancient text. Read it!"
+            textureName = "items/usable/parchment.png"
+        }
+
+        isPermanentUse = true
+
+        onUseScript {
+            val lines = getAssetLoader().loadText("challenge3.txt")
 
             getDialogService().showMessageBox(
                     lines.fold("") { acc, item -> acc + "\n" + item }

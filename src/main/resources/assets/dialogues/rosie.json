@@ -1,71 +1,64 @@
 {
-  "uniqueID" : 17,
+  "uniqueID" : 12,
   "nodes" : {
     "0" : {
       "type" : "START",
-      "text" : "Hello, $playerName, I am Rosie! I am, what people call, a Job Master. Job Masters give out quests that allow a character to change their Job. "
+      "text" : "Hello $playerName. I'm Rosie. Welcome to Brighton University Codefest 2021 X-mas edition!"
     },
-    "16" : {
+    "2" : {
       "type" : "END",
-      "text" : "You have started your Job quest. Goodbye!"
+      "text" : "Good luck!"
     },
-    "1" : {
-      "type" : "END",
-      "text" : "No problem, come back when you want to know more about Jobs or would like to start a Job quest."
+    "5" : {
+      "type" : "FUNCTION",
+      "text" : "isCodefestEnabled = true"
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "No problem! This Codefest is a team-based exercise and there are 3 challenges in total. So a team of 3 is a perfect fit, because each person can solve 1 challenge. However, each challenge has a dependency on the other challenges, so make sure you work as a team!"
+    },
+    "7" : {
+      "type" : "TEXT",
+      "text" : "The challenges themselves look like parchment items that you need to collect and they are placed somewhere on this map. They are currently invisible, so if your game crashes or you exit the game, you will still need to talk to me (but you can skip this intro) to \"enable\" the challenges."
     },
     "9" : {
       "type" : "TEXT",
-      "text" : "Warriors are strong and can withstand a great deal of damage. They rely on their STR and VIT to defeat their foes. Warriors can train to become Crusaders or Gladiators."
+      "text" : "I am enabling challenges now. They are now visible in the world."
     },
-    "12" : {
+    "10" : {
       "type" : "TEXT",
-      "text" : "Scouts are quick and agile, they make the most use out of DEX and AGI. Scouts can progress to Rogues or Rangers."
+      "text" : "That would be too easy! Because of that comment I'm adding a 4th challenge!"
     },
-    "13" : {
+    "11" : {
       "type" : "TEXT",
-      "text" : "Mages may be physically weaker than other Jobs, but their magic skills are second to none. With high INT and WIL, they can obliterate an entire army within seconds. Trained Mages can become Wizards or Enchanters."
-    },
-    "15" : {
-      "type" : "FUNCTION",
-      "text" : "ADD_QUEST TODO"
+      "text" : "Just kidding! Anyway..."
     }
   },
   "choiceNodes" : {
     "3" : {
       "type" : "CHOICE",
-      "text" : "Would you like to know more about Jobs?",
+      "text" : "I will walk you through the basics and explain how challenges work this time. But, if you have done this before, you can skip the basics and I will enable all challenges immediately. Would you like to continue the introduction?",
       "options" : {
-        "0" : "Yes, please!",
-        "1" : "I would like to start a Job quest.",
-        "2" : "No, thank you."
+        "0" : "Yes, please, I'm new here.",
+        "1" : "No thanks. Please skip the intro and enable challenges."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
       }
     },
     "8" : {
       "type" : "CHOICE",
-      "text" : "Which Job would you like me to talk about?",
-      "options" : {
-        "0" : "Warrior",
-        "1" : "Scout",
-        "2" : "Mage",
-        "3" : "Thanks, I know enough about Jobs."
-      }
-    },
-    "11" : {
-      "type" : "CHOICE",
-      "text" : "Would you like to start a Job quest?",
+      "text" : "To recap, look for 3 items on this map. Pick them up and read them. To solve each challenge you will need to communicate with your team members. Got it?",
       "options" : {
         "0" : "Yes.",
-        "1" : "No, I have to go now."
-      }
-    },
-    "14" : {
-      "type" : "CHOICE",
-      "text" : "Please choose your Job quest.",
-      "options" : {
-        "0" : "Warrior",
-        "1" : "Scout",
-        "2" : "Mage",
-        "3" : "Sorry, I've changed my mind, I do not want a Job quest."
+        "1" : "H.E.L.P",
+        "2" : "Uhh, maybe you can just give me the answers?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
       }
     }
   },
@@ -73,111 +66,86 @@
     "sourceID" : 0,
     "targetID" : 3
   }, {
+    "sourceID" : 5,
+    "targetID" : 2
+  }, {
+    "sourceID" : 6,
+    "targetID" : 7
+  }, {
+    "sourceID" : 7,
+    "targetID" : 8
+  }, {
     "sourceID" : 9,
-    "targetID" : 8
+    "targetID" : 5
   }, {
-    "sourceID" : 12,
-    "targetID" : 8
+    "sourceID" : 10,
+    "targetID" : 11
   }, {
-    "sourceID" : 13,
-    "targetID" : 8
-  }, {
-    "sourceID" : 15,
-    "targetID" : 16
+    "sourceID" : 11,
+    "targetID" : 9
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
     "optionID" : 0,
-    "targetID" : 8
+    "targetID" : 6
   }, {
     "sourceID" : 3,
-    "optionID" : 2,
-    "targetID" : 1
+    "optionID" : 1,
+    "targetID" : 9
   }, {
     "sourceID" : 8,
     "optionID" : 0,
     "targetID" : 9
   }, {
-    "sourceID" : 11,
-    "optionID" : 1,
-    "targetID" : 1
-  }, {
-    "sourceID" : 8,
-    "optionID" : 3,
-    "targetID" : 11
-  }, {
     "sourceID" : 8,
     "optionID" : 1,
-    "targetID" : 12
+    "targetID" : 6
   }, {
     "sourceID" : 8,
     "optionID" : 2,
-    "targetID" : 13
-  }, {
-    "sourceID" : 11,
-    "optionID" : 0,
-    "targetID" : 14
-  }, {
-    "sourceID" : 14,
-    "optionID" : 3,
-    "targetID" : 1
-  }, {
-    "sourceID" : 14,
-    "optionID" : 0,
-    "targetID" : 15
-  }, {
-    "sourceID" : 14,
-    "optionID" : 1,
-    "targetID" : 15
-  }, {
-    "sourceID" : 14,
-    "optionID" : 2,
-    "targetID" : 15
+    "targetID" : 10
   } ],
+  "version" : 1,
   "uiMetadata" : {
     "0" : {
-      "x" : -96.0,
-      "y" : 300.5
+      "x" : 40.0,
+      "y" : 440.0
     },
-    "16" : {
-      "x" : 2453.4172595057394,
-      "y" : 263.32336274510203
-    },
-    "1" : {
-      "x" : 1199.4005856183833,
-      "y" : 788.2718329457867
+    "2" : {
+      "x" : 2585.935191594406,
+      "y" : 292.45869447235606
     },
     "3" : {
-      "x" : 305.22961225117956,
-      "y" : 265.08720422610554
+      "x" : 440.0,
+      "y" : 440.0
+    },
+    "5" : {
+      "x" : 2225.935191594406,
+      "y" : 292.45869447235606
+    },
+    "6" : {
+      "x" : 600.0,
+      "y" : 0.0
+    },
+    "7" : {
+      "x" : 1000.0,
+      "y" : -80.0
     },
     "8" : {
-      "x" : 704.8222294957,
-      "y" : 110.32594506775227
+      "x" : 1360.0,
+      "y" : -600.0
     },
     "9" : {
-      "x" : 973.9479671265534,
-      "y" : -209.43176754672044
+      "x" : 1840.0,
+      "y" : 320.0
+    },
+    "10" : {
+      "x" : 1840.0,
+      "y" : -240.0
     },
     "11" : {
-      "x" : 1059.2898084944452,
-      "y" : 395.72616439532646
-    },
-    "12" : {
-      "x" : 593.5129695865712,
-      "y" : -259.68714658167727
-    },
-    "13" : {
-      "x" : 1150.562591226881,
-      "y" : -25.857610182634687
-    },
-    "14" : {
-      "x" : 1523.4524766012094,
-      "y" : 234.46084556789705
-    },
-    "15" : {
-      "x" : 2021.110406391034,
-      "y" : 283.52463375600047
+      "x" : 2200.0,
+      "y" : -160.0
     }
   }
 }

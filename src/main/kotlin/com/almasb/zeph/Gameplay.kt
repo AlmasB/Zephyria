@@ -5,6 +5,7 @@ import com.almasb.fxgl.app.scene.GameView
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
+import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.action.ActionComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
@@ -216,8 +217,8 @@ object Gameplay {
         currentMap.spawnMonster(cellX, cellY, Data.getCharacterData(id))
     }
 
-    fun spawnItem(id: Int, cellX: Int, cellY: Int) {
-        currentMap.spawnItem(cellX, cellY, Data.getItemData(id))
+    fun spawnItem(id: Int, cellX: Int, cellY: Int): Entity {
+        return currentMap.spawnItem(cellX, cellY, Data.getItemData(id))
     }
 
     fun addMoney(amount: Int) {

@@ -184,13 +184,13 @@ class GameMap(val name: String, private val level: Level) : EntityWorldListener 
         spawn("npc", data)
     }
 
-    fun spawnItem(cellX: Int, cellY: Int, itemData: ItemData) {
+    fun spawnItem(cellX: Int, cellY: Int, itemData: ItemData): Entity {
         log.debug("spawnItem ${itemData.description.name} (${itemData.description.id}) at $cellX,$cellY")
 
         val data = SpawnData(cellX * TILE_SIZE * 1.0, cellY * TILE_SIZE * 1.0)
         data.put("itemData", itemData)
 
-        val itemEntity = spawn("item", data)
+        return spawn("item", data)
     }
 
     // TODO: showGrid() add a check box to DevPane

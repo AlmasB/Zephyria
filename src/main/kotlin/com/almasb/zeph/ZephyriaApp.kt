@@ -8,6 +8,8 @@ import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
+import com.almasb.fxgl.input.InputSequence
+import com.almasb.fxgl.input.UserAction
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.logging.LoggerLevel
 import com.almasb.fxgl.logging.LoggerOutput
@@ -30,7 +32,9 @@ import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode
+import javafx.scene.input.KeyCode.*
 import javafx.scene.paint.Color
+import javafx.util.Duration
 import java.util.function.Consumer
 import kotlin.collections.set
 
@@ -53,7 +57,7 @@ class ZephyriaApp : GameApplication() {
                 return ZephLoadingScene()
             }
         }
-        settings.applicationMode = ApplicationMode.DEVELOPER
+        settings.applicationMode = ApplicationMode.RELEASE
     }
 
     override fun onPreInit() {
@@ -66,7 +70,7 @@ class ZephyriaApp : GameApplication() {
 
     override fun initInput() {
         for (i in 1..9) {
-            val key = KeyCode.getKeyCode(i.toString() + "")
+            val key = getKeyCode(i.toString() + "")
             val index = i - 1
 
             onKeyDown(key, "Hotbar Skill $i") {
@@ -74,55 +78,66 @@ class ZephyriaApp : GameApplication() {
             }
         }
 
-        onKeyDown(KeyCode.C) {
+        onKeyDown(C) {
             getGameScene().uiNodes
                     .filterIsInstance(BasicInfoView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
 
-        onKeyDown(KeyCode.I) {
+        onKeyDown(I) {
             getGameScene().uiNodes
                     .filterIsInstance(InventoryView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
 
-        onKeyDown(KeyCode.S) {
+        onKeyDown(S) {
             getGameScene().uiNodes
                     .filterIsInstance(HotbarView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
 
-        onKeyDown(KeyCode.V) {
+        onKeyDown(V) {
             getGameScene().uiNodes
                     .filterIsInstance(MessagesView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
-        
+
+        getInput().addAction(
+                object : UserAction("Codefest2021") {
+                    override fun onActionBegin() {
+                        if (player.cellX in 90..94 && player.cellY in 125..129) {
+                            showMessage("Congratulations on getting this far! The keyword is:\n10,5,11,12,1,8,3,7")
+                        }
+                    }
+                },
+                InputSequence(C,O,D,E,F,E,S,T,DIGIT2,DIGIT0,DIGIT2,DIGIT1)
+        )
+
         if (!isReleaseMode()) {
-            onKeyDown(KeyCode.ENTER) {
+            onKeyDown(ENTER) {
                 getSceneService().pushSubScene(devScene!!)
             }
 
-            onKeyDown(KeyCode.F) {
-                spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
-            }
-
-            onKeyDown(KeyCode.L) {
-                fire(OnLevelUpEvent(player))
-            }
-
-            onKeyDown(KeyCode.T) {
-                Gameplay.spawn("treasureChest", player.cellX, player.cellY)
-            }
-
-            onKeyDown(KeyCode.Y) {
-                val scene = CharSelectSubScene(WARRIOR, SCOUT, MAGE)
-                scene.onSelected = {
-                    println(it)
-                }
-
-                getSceneService().pushSubScene(scene)
-            }
+//            onKeyDown(F) {
+//                spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
+//            }
+//
+//            onKeyDown(T) {
+//                Gameplay.spawn("treasureChest", player.cellX, player.cellY)
+//            }
+//
+//            onKeyDown(L) {
+//                fire(OnLevelUpEvent(player))
+//            }
+//
+//            onKeyDown(Y) {
+//                val scene = CharSelectSubScene(WARRIOR, SCOUT, MAGE)
+//                scene.onSelected = {
+//                    println(it)
+//                }
+//
+//                getSceneService().pushSubScene(scene)
+//            }
         }
     }
 
@@ -130,6 +145,8 @@ class ZephyriaApp : GameApplication() {
         vars[IS_SELECTING_SKILL_TARGET_AREA] = false
         vars[IS_SELECTING_SKILL_TARGET_CHAR] = false
         vars[SELECTED_SKILL_INDEX] = -1
+
+        vars["isCodefestEnabled"] = false
     }
 
     private fun onHotbarSkill(index: Int) {
@@ -194,6 +211,23 @@ class ZephyriaApp : GameApplication() {
         //gotoMap("dev_world.tmx", 8, 6)
         //gotoMap("tutorial.tmx", 8, 6)
         gotoMap("test_map.tmx", 2, 6)
+
+        // Codefest stuff
+        if (isReleaseMode()) {
+            val c1 = Gameplay.spawnItem(6997, 2, 8)
+            val c2 = Gameplay.spawnItem(6998, 2, 10)
+            val c3 = Gameplay.spawnItem(6999, 2, 12)
+
+            c1.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
+            c2.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
+            c3.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
+
+            runOnce({
+                getDialogService().showInputBox("Please enter your name") { name ->
+                    set("playerName", name)
+                }
+            }, Duration.millis(10.0))
+        }
     }
 
     override fun initPhysics() {

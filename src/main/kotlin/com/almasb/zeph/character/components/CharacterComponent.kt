@@ -457,7 +457,10 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
     fun useItem(item: UsableItem) {
         item.onUse(char)
-        inventory.incrementQuantity(item, -1)
+
+        if (!item.data.isPermanentUse) {
+            inventory.incrementQuantity(item, -1)
+        }
 
         fire(OnItemUsedEvent(char, item))
     }

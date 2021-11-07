@@ -3,6 +3,8 @@ package com.almasb.zeph.data
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
+import com.almasb.fxgl.dsl.getAssetLoader
+import com.almasb.fxgl.dsl.getDialogService
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.ZephyriaApp
@@ -303,6 +305,27 @@ class UsableItems {
 
         onUseScript = {
             it.hp.restore(10.0)
+        }
+    }
+
+    // custom
+
+    val CODEFEST_CHALLENGE1 = usableItem {
+        desc {
+            id = 6999
+            name = "Codefest Challenge 1"
+            description = "A mysterious parchment with ancient text. Read it!"
+            textureName = "items/usable/parchment.png"
+        }
+
+        isPermanentUse = true
+
+        onUseScript = {
+            val lines = getAssetLoader().loadText("challenge1.txt")
+
+            getDialogService().showMessageBox(
+                    lines.fold("") { acc, item -> acc + "\n" + item }
+            )
         }
     }
 }

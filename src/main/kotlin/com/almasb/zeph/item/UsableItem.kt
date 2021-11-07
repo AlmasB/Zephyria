@@ -7,7 +7,6 @@ import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.emptyDescription
 
 /**
- *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
 class UsableItem(val data: UsableItemData) : Item(data.description) {
@@ -45,6 +44,7 @@ class MiscItem(val data: MiscItemData) : Item(data.description) {
 @DataDSL
 class UsableItemDataBuilder(
         var description: Description = emptyDescription,
+        var isPermanentUse: Boolean = false,
         var useSoundName: String = "",
         var beforeUseScript: (CharacterEntity) -> Boolean = { true },
         var onUseScript: (CharacterEntity) -> Unit = { }
@@ -59,7 +59,7 @@ class UsableItemDataBuilder(
     fun build(): UsableItemData {
         val soundName = if (useSoundName.isEmpty()) useSoundName else "items/$useSoundName"
 
-        return UsableItemData(description, soundName, beforeUseScript, onUseScript)
+        return UsableItemData(description, isPermanentUse, soundName, beforeUseScript, onUseScript)
     }
 }
 
@@ -101,6 +101,11 @@ fun miscItem(setup: MiscItemDataBuilder.() -> Unit): MiscItemData {
 
 data class UsableItemData(
         override val description: Description,
+
+        /**
+         * If true, using this item does not consume it.
+         */
+        val isPermanentUse: Boolean,
         val useSoundName: String,
         val beforeUseScript: (CharacterEntity) -> Boolean,
         val onUseScript: (CharacterEntity) -> Unit

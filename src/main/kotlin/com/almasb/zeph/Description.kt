@@ -9,6 +9,7 @@ val emptyDescription = Description(
         ""
 )
 
+// TODO: extract hardcoded text and in appendDescription() below
 @DataDSL
 class DescriptionBuilder(
         var id: Int = 0,
@@ -30,4 +31,12 @@ data class Description(
         val name: String,
         val description: String,
         val textureName: String
-)
+) {
+
+    fun appendDescription(descriptionText: String): Description {
+        if (description == "No description")
+            return copy(description = descriptionText)
+
+        return copy(description = this.description + "\n$descriptionText")
+    }
+}

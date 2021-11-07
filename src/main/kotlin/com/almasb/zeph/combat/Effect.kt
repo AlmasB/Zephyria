@@ -78,6 +78,11 @@ class EffectDataBuilder(
     }
 
     fun build(): EffectData {
+        description = description.appendDescription(
+                (runes.map { "$it" } + essences.map { "$it" }).joinToString(", ")
+                        + "\nDuration: $duration seconds"
+        )
+
         return EffectData(description, duration, status, runes, essences)
     }
 }

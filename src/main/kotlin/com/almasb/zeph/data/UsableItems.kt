@@ -1,17 +1,18 @@
 package com.almasb.zeph.data
 
-import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.dsl.getAssetLoader
 import com.almasb.fxgl.dsl.getDialogService
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Gameplay
-import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
-import com.almasb.zeph.combat.Stat.*
+import com.almasb.zeph.combat.Element
+import com.almasb.zeph.combat.GameMath
+import com.almasb.zeph.combat.Stat.ATK
+import com.almasb.zeph.combat.Stat.MAX_SP
+import com.almasb.zeph.combat.effect
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.item.usableItem
@@ -28,35 +29,24 @@ class UsableItems {
         desc {
             id = 6000
             name = "Healing Potion"
-            description = "Restores 50 HP"
             textureName = "items/usable/healing_potion.png"
         }
 
         useSoundName = "bottle.wav"
-
-        beforeUseScript = {
-            // everyone can use it
-            true
-        }
-
-        onUseScript = {
-            it.hp.restore(50.0)
-        }
+        
+        restoreHP(50.0)
     }
 
     val MANA_POTION = usableItem {
         desc {
             id = 6001
             name = "Mana Potion"
-            description = "Restores 30 SP"
             textureName = "items/usable/mana_potion.png"
         }
 
         useSoundName = "bottle.wav"
 
-        onUseScript = {
-            it.sp.restore(30.0)
-        }
+        restoreSP(30.0)
     }
 
     val TREASURE_BOX = usableItem {
@@ -69,7 +59,7 @@ class UsableItems {
 
         useSoundName = "treasure_box.wav"
 
-        onUseScript = {
+        onUseScript {
             val isWeapon = GameMath.checkChance(50)
 
             val item =
@@ -90,7 +80,7 @@ class UsableItems {
             textureName = "items/usable/fire_mixture.png"
         }
 
-        onUseScript = {
+        onUseScript {
             it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.FIRE, Duration.minutes(2.0)))
         }
     }
@@ -103,7 +93,7 @@ class UsableItems {
             textureName = "items/usable/water_mixture.png"
         }
 
-        onUseScript = {
+        onUseScript {
             it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.WATER, Duration.minutes(2.0)))
         }
     }
@@ -116,7 +106,7 @@ class UsableItems {
             textureName = "items/usable/air_mixture.png"
         }
 
-        onUseScript = {
+        onUseScript {
             it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.AIR, Duration.minutes(2.0)))
         }
     }
@@ -129,7 +119,7 @@ class UsableItems {
             textureName = "items/usable/earth_mixture.png"
         }
 
-        onUseScript = {
+        onUseScript {
             it.getComponent(EffectComponent::class.java).startEffect(WeaponElementChangeEffect(it, Element.EARTH, Duration.minutes(2.0)))
         }
     }
@@ -144,7 +134,7 @@ class UsableItems {
 
         useSoundName = "teleportation_stone.wav"
 
-        onUseScript = {
+        onUseScript {
             val grid = Gameplay.currentMap.grid
 
             val cell = grid.getRandomCell { it.isWalkable }.get()
@@ -154,21 +144,17 @@ class UsableItems {
         }
     }
 
-    // TODO: possibly generate description from effect data?
     val MUSHROOM = usableItem {
         desc {
             id = 6008
             name = "Mushroom"
-            description = "WIL +2 for 60 seconds"
             textureName = "items/usable/mushroom.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 60.0
 
-                WILLPOWER +2
-            })
+            WILLPOWER +2
         }
     }
 
@@ -176,17 +162,14 @@ class UsableItems {
         desc {
             id = 6009
             name = "Banana"
-            description = "VIT +1, ATK +3 for 60 seconds"
             textureName = "items/usable/banana.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                VITALITY +1
-                ATK +3
-            })
+            VITALITY +1
+            ATK +3
         }
     }
 
@@ -194,17 +177,14 @@ class UsableItems {
         desc {
             id = 6010
             name = "Lemon"
-            description = "DEX +1, AGI +1 for 60 seconds"
             textureName = "items/usable/lemon.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                DEXTERITY +1
-                AGILITY +1
-            })
+            DEXTERITY +1
+            AGILITY +1
         }
     }
 
@@ -212,16 +192,13 @@ class UsableItems {
         desc {
             id = 6011
             name = "Pineapple"
-            description = "STR +2 for 60 seconds"
             textureName = "items/usable/pineapple.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                STRENGTH +2
-            })
+            STRENGTH +2
         }
     }
 
@@ -229,17 +206,14 @@ class UsableItems {
         desc {
             id = 6012
             name = "Watermelon"
-            description = "WIS +1, PER +1 for 60 seconds"
             textureName = "items/usable/watermelon.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                WISDOM +1
-                PERCEPTION +1
-            })
+            WISDOM +1
+            PERCEPTION +1
         }
     }
 
@@ -247,17 +221,14 @@ class UsableItems {
         desc {
             id = 6013
             name = "Cheese"
-            description = "INT +1, MAX SP +5 for 60 seconds"
             textureName = "items/usable/cheese.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                INTELLECT +1
-                MAX_SP +5
-            })
+            INTELLECT +1
+            MAX_SP +5
         }
     }
 
@@ -265,16 +236,13 @@ class UsableItems {
         desc {
             id = 6014
             name = "Carrot"
-            description = "PER +2 for 60 seconds"
             textureName = "items/usable/carrot.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                PERCEPTION +2
-            })
+            PERCEPTION +2
         }
     }
 
@@ -282,16 +250,13 @@ class UsableItems {
         desc {
             id = 6015
             name = "Strawberry"
-            description = "LUC +2 for 60 seconds"
             textureName = "items/usable/strawberry.png"
         }
 
-        onUseScript = {
-            it.addEffect(effect(description) {
-                duration = 1.0 * 60
+        addEffect {
+            duration = 1.0 * 60
 
-                LUCK +2
-            })
+            LUCK +2
         }
     }
 
@@ -299,13 +264,10 @@ class UsableItems {
         desc {
             id = 6016
             name = "Healing Herbs"
-            description = "Restores 10 HP"
             textureName = "items/usable/healing_herbs.png"
         }
 
-        onUseScript = {
-            it.hp.restore(10.0)
-        }
+        restoreHP(10.0)
     }
 
     // custom
@@ -320,7 +282,7 @@ class UsableItems {
 
         isPermanentUse = true
 
-        onUseScript = {
+        onUseScript {
             val lines = getAssetLoader().loadText("challenge1.txt")
 
             getDialogService().showMessageBox(

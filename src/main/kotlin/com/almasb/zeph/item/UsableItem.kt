@@ -4,6 +4,8 @@ import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.combat.Effect
+import com.almasb.zeph.combat.EffectDataBuilder
 import com.almasb.zeph.emptyDescription
 
 /**
@@ -12,7 +14,7 @@ import com.almasb.zeph.emptyDescription
 class UsableItem(val data: UsableItemData) : Item(data.description) {
 
     fun onUse(char: CharacterEntity) {
-        data.onUseScript.invoke(char)
+        data.onUseScripts.forEach { it.invoke(char) }
     }
 
     override fun hashCode(): Int {
@@ -47,7 +49,7 @@ class UsableItemDataBuilder(
         var isPermanentUse: Boolean = false,
         var useSoundName: String = "",
         var beforeUseScript: (CharacterEntity) -> Boolean = { true },
-        var onUseScript: (CharacterEntity) -> Unit = { }
+        private val onUseScripts: MutableList<(CharacterEntity) -> Unit> = arrayListOf()
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -56,12 +58,47 @@ class UsableItemDataBuilder(
         description = builder.build()
     }
 
+    fun restoreHP(amount: Double) {
+        appendDescription("Restores $amount HP.")
+        onUseScript { it.hp.restore(amount) }
+    }
+
+    fun restoreSP(amount: Double) {
+        appendDescription("Restores $amount SP.")
+        onUseScript { it.sp.restore(amount) }
+    }
+
+    fun addEffect(setup: EffectDataBuilder.() -> Unit) {
+        val builder = EffectDataBuilder()
+        builder.description = description
+        builder.setup()
+
+        val effect = Effect(builder.build())
+
+        description = builder.description
+
+        onUseScript { it.addEffect(effect) }
+    }
+
+    fun onUseScript(script: (CharacterEntity) -> Unit) {
+        onUseScripts += script
+    }
+
+    private fun appendDescription(text: String) {
+        description = description.appendDescription(text)
+    }
+
     fun build(): UsableItemData {
         val soundName = if (useSoundName.isEmpty()) useSoundName else "items/$useSoundName"
 
-        return UsableItemData(description, isPermanentUse, soundName, beforeUseScript, onUseScript)
+        return UsableItemData(description, isPermanentUse, soundName, beforeUseScript, onUseScripts)
     }
 }
+
+@DataDSL
+class UsableItemRestoreHPBuilder(
+        var hpToRestore: Double = 0.0
+)
 
 @DataDSL
 class MiscItemDataBuilder(
@@ -92,6 +129,24 @@ fun usableItem(setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
     return builder.build()
 }
 
+//@DataDSL
+//fun usableItemRestoreHP(setupHP: UsableItemRestoreHPBuilder.() -> Unit, setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
+//    val hpRestoreBuilder = UsableItemRestoreHPBuilder()
+//    hpRestoreBuilder.setupHP()
+//
+//    val builder = UsableItemDataBuilder()
+//    builder.setup()
+//    builder.description = builder.description.copy(description = "Restores ${hpRestoreBuilder.hpToRestore} HP")
+//
+//    val tmp = builder.onUseScript
+//    builder.onUseScript = {
+//        it.hp.restore(hpRestoreBuilder.hpToRestore)
+//        tmp.invoke(it)
+//    }
+//
+//    return builder.build()
+//}
+
 @DataDSL
 fun miscItem(setup: MiscItemDataBuilder.() -> Unit): MiscItemData {
     val builder = MiscItemDataBuilder()
@@ -108,7 +163,8 @@ data class UsableItemData(
         val isPermanentUse: Boolean,
         val useSoundName: String,
         val beforeUseScript: (CharacterEntity) -> Boolean,
-        val onUseScript: (CharacterEntity) -> Unit
+
+        val onUseScripts: List<(CharacterEntity) -> Unit>
 ) : ItemData
 
 data class MiscItemData(

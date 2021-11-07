@@ -4,6 +4,7 @@ import com.almasb.fxgl.dsl.components.Effect
 import com.almasb.fxgl.dsl.components.EffectComponent
 import com.almasb.fxgl.dsl.getAssetLoader
 import com.almasb.fxgl.dsl.getDialogService
+import com.almasb.fxgl.dsl.getUIFactoryService
 import com.almasb.fxgl.entity.Entity
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.character.CharacterEntity
@@ -16,6 +17,7 @@ import com.almasb.zeph.combat.effect
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.item.usableItem
+import javafx.scene.control.TextArea
 import javafx.util.Duration
 
 /**
@@ -304,9 +306,16 @@ class UsableItems {
         onUseScript {
             val lines = getAssetLoader().loadText("challenge2.txt")
 
-            getDialogService().showMessageBox(
-                    lines.fold("") { acc, item -> acc + "\n" + item }
-            )
+            if (lines.size == 3) {
+                val textArea = TextArea(lines[0] + "\n" + lines[2])
+                textArea.prefWidth = 400.0
+                textArea.isWrapText = true
+
+                getDialogService().showBox("Message", textArea, getUIFactoryService().newButton("OK"))
+
+            } else {
+                getDialogService().showMessageBox("Encountered a bug, please report to Almas")
+            }
         }
     }
 

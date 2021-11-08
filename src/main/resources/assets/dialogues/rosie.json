@@ -1,9 +1,9 @@
 {
-  "uniqueID" : 12,
+  "uniqueID" : 15,
   "nodes" : {
     "0" : {
       "type" : "START",
-      "text" : "Hello $playerName. I'm Rosie. Welcome to Brighton University Codefest 2021 X-mas edition!"
+      "text" : "Hello $playerName. I'm Rosie. Welcome to Belong at Brighton University Codefest 2021 X-mas edition!"
     },
     "2" : {
       "type" : "END",
@@ -15,11 +15,11 @@
     },
     "6" : {
       "type" : "TEXT",
-      "text" : "No problem! This Codefest is a team-based exercise and there are 3 challenges in total. So a team of 3 is a perfect fit, because each person can solve 1 challenge. However, each challenge has a dependency on the other challenges, so make sure you work as a team!"
+      "text" : "No problem! This Codefest is a team-based exercise and there are 3 challenges in total. So a team of 3 is a perfect fit, because each person can work on 1 challenge. However, each challenge has a dependency on the other challenges, so make sure you work as a team! "
     },
     "7" : {
       "type" : "TEXT",
-      "text" : "The challenges themselves look like parchment items that you need to collect and they are placed somewhere on this map. They are currently invisible, so if your game crashes or you exit the game, you will still need to talk to me (but you can skip this intro) to \"enable\" the challenges."
+      "text" : "The challenges themselves look like parchment items that you need to collect and they are placed somewhere on this map. They are currently invisible, so if your game crashes or you exit the game, you will still need to talk to me (but you can skip this intro text by selecting a different option) to \"enable\" the challenges."
     },
     "9" : {
       "type" : "TEXT",
@@ -27,17 +27,29 @@
     },
     "10" : {
       "type" : "TEXT",
-      "text" : "That would be too easy! Because of that comment I'm adding a 4th challenge!"
+      "text" : "Yeaaah, no. That would be too easy! Because of that comment I'm adding a new super difficult challenge!"
     },
     "11" : {
       "type" : "TEXT",
       "text" : "Just kidding! Anyway..."
+    },
+    "12" : {
+      "type" : "TEXT",
+      "text" : "The entire event is self-contained and does not require external hints or guidance. As such, tutors will refrain from providing any hints or communication to ensure fairness and consistency."
+    },
+    "13" : {
+      "type" : "TEXT",
+      "text" : "In addition, you will need to find a treasure box. The box is also on this map, you may even find it while searching for the challenges. You should definitely pick it up when you see it. However, you can only unlock it with the results from challenge 1 and 2."
+    },
+    "14" : {
+      "type" : "TEXT",
+      "text" : "Once you unlock the box, it will tell you where the final challenge is. To unlock the final challenge, use the result you obtain from challenge 3."
     }
   },
   "choiceNodes" : {
     "3" : {
       "type" : "CHOICE",
-      "text" : "I will walk you through the basics and explain how challenges work this time. But, if you have done this before, you can skip the basics and I will enable all challenges immediately. Would you like to continue the introduction?",
+      "text" : "I will walk you through the basics and explain how challenges work this time. But, if you have done this before (for example, game crashed), you can skip the basics and I will enable all challenges immediately. Would you like to continue the introduction?",
       "options" : {
         "0" : "Yes, please, I'm new here.",
         "1" : "No thanks. Please skip the intro and enable challenges."
@@ -69,12 +81,6 @@
     "sourceID" : 5,
     "targetID" : 2
   }, {
-    "sourceID" : 6,
-    "targetID" : 7
-  }, {
-    "sourceID" : 7,
-    "targetID" : 8
-  }, {
     "sourceID" : 9,
     "targetID" : 5
   }, {
@@ -83,6 +89,21 @@
   }, {
     "sourceID" : 11,
     "targetID" : 9
+  }, {
+    "sourceID" : 6,
+    "targetID" : 12
+  }, {
+    "sourceID" : 12,
+    "targetID" : 7
+  }, {
+    "sourceID" : 7,
+    "targetID" : 13
+  }, {
+    "sourceID" : 14,
+    "targetID" : 8
+  }, {
+    "sourceID" : 13,
+    "targetID" : 14
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
@@ -112,24 +133,24 @@
       "y" : 440.0
     },
     "2" : {
-      "x" : 2585.935191594406,
-      "y" : 292.45869447235606
+      "x" : 2600.0,
+      "y" : 280.0
     },
     "3" : {
       "x" : 440.0,
       "y" : 440.0
     },
     "5" : {
-      "x" : 2225.935191594406,
-      "y" : 292.45869447235606
+      "x" : 2240.0,
+      "y" : 280.0
     },
     "6" : {
-      "x" : 600.0,
-      "y" : 0.0
+      "x" : 13.676192408133147,
+      "y" : -56.013867018951444
     },
     "7" : {
-      "x" : 1000.0,
-      "y" : -80.0
+      "x" : 720.0,
+      "y" : -40.0
     },
     "8" : {
       "x" : 1360.0,
@@ -144,8 +165,20 @@
       "y" : -240.0
     },
     "11" : {
-      "x" : 2200.0,
-      "y" : -160.0
+      "x" : 2240.0,
+      "y" : -240.0
+    },
+    "12" : {
+      "x" : 373.67619240813326,
+      "y" : -16.013867018951444
+    },
+    "13" : {
+      "x" : 1080.0,
+      "y" : -40.0
+    },
+    "14" : {
+      "x" : 1440.0,
+      "y" : -40.0
     }
   }
 }

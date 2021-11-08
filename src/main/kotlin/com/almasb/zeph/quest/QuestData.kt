@@ -55,6 +55,14 @@ class QuestDataBuilder(
     }
 
     fun build(): QuestData {
+        requiredItems.forEach { (itemData, numItems) ->
+            description = description.appendDescription("Collect: ${itemData.description.name} x$numItems")
+        }
+
+        requiredMonsters.forEach { (mobData, numItems) ->
+            description = description.appendDescription("Kill: ${mobData.description.name} x$numItems")
+        }
+
         return QuestData(
                 description,
                 rewardMoney,

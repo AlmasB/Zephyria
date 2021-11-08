@@ -14,7 +14,6 @@ import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.logging.LoggerLevel
 import com.almasb.fxgl.logging.LoggerOutput
 import com.almasb.zeph.EntityType.*
-import com.almasb.zeph.EntityType.MONSTER
 import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
@@ -23,15 +22,13 @@ import com.almasb.zeph.Gameplay.startDialogue
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
-import com.almasb.zeph.character.CharacterClass.*
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.data.Data
 import com.almasb.zeph.events.EventHandlers
-import com.almasb.zeph.events.OnLevelUpEvent
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
-import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyCode.*
 import javafx.scene.paint.Color
 import javafx.util.Duration
@@ -57,7 +54,7 @@ class ZephyriaApp : GameApplication() {
                 return ZephLoadingScene()
             }
         }
-        settings.applicationMode = ApplicationMode.RELEASE
+        settings.applicationMode = ApplicationMode.DEVELOPER
     }
 
     override fun onPreInit() {
@@ -118,9 +115,12 @@ class ZephyriaApp : GameApplication() {
                 getSceneService().pushSubScene(devScene!!)
             }
 
-//            onKeyDown(F) {
-//                spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
-//            }
+            onKeyDown(F) {
+                val quest = com.almasb.zeph.quest.Quest(Data.Quests.TUTORIAL_KILLS)
+
+                println(quest.data.description)
+                //spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
+            }
 //
 //            onKeyDown(T) {
 //                Gameplay.spawn("treasureChest", player.cellX, player.cellY)

@@ -2,6 +2,7 @@ package com.almasb.zeph.data
 
 import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data.UsableItems
+import com.almasb.zeph.data.Data.Monsters
 import com.almasb.zeph.quest.quest
 
 /**
@@ -12,13 +13,9 @@ import com.almasb.zeph.quest.quest
 class Quests {
 
     val SARAH_HEALING_HERBS = quest {
-
-        // TODO: auto-generate description from collect{}?
-
         desc {
             id = 7500
             name = "A cure..."
-            description = "Collect 5 healing herbs for Sarah."
         }
 
         rewardMoney = 50
@@ -26,6 +23,20 @@ class Quests {
 
         collect {
             UsableItems.HEALING_HERBS x 5
+        }
+    }
+
+    val TUTORIAL_KILLS = quest {
+        desc {
+            id = 7501
+            name = "A new beginning"
+        }
+
+        rewardMoney = 70
+        rewardXP = Experience(2, 2, 2)
+
+        kill {
+            Monsters.SKELETON_WARRIOR x 3
         }
     }
 }

@@ -29,20 +29,6 @@ class UsableItem(val data: UsableItemData) : Item(data.description) {
     }
 }
 
-class MiscItem(val data: MiscItemData) : Item(data.description) {
-
-    override fun hashCode(): Int {
-        return description.id
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (other !is MiscItem)
-            return false
-
-        return this.description.id == other.description.id
-    }
-}
-
 @DataDSL
 class UsableItemDataBuilder(
         var description: Description = emptyDescription,
@@ -96,42 +82,8 @@ class UsableItemDataBuilder(
 }
 
 @DataDSL
-class UsableItemRestoreHPBuilder(
-        var hpToRestore: Double = 0.0
-)
-
-@DataDSL
-class MiscItemDataBuilder(
-        var description: Description = emptyDescription
-) {
-
-    fun desc(setup: DescriptionBuilder.() -> Unit) {
-        val builder = DescriptionBuilder()
-        builder.setup()
-        description = builder.build()
-    }
-
-    fun build(): MiscItemData {
-        if (description.textureName.isEmpty()) {
-            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
-
-            description = description.copy(textureName = "items/misc/$fileName")
-        }
-
-        return MiscItemData(description)
-    }
-}
-
-@DataDSL
 fun usableItem(setup: UsableItemDataBuilder.() -> Unit): UsableItemData {
     val builder = UsableItemDataBuilder()
-    builder.setup()
-    return builder.build()
-}
-
-@DataDSL
-fun miscItem(setup: MiscItemDataBuilder.() -> Unit): MiscItemData {
-    val builder = MiscItemDataBuilder()
     builder.setup()
     return builder.build()
 }
@@ -147,8 +99,4 @@ data class UsableItemData(
         val beforeUseScript: (CharacterEntity) -> Boolean,
 
         val onUseScripts: List<(CharacterEntity) -> Unit>
-) : ItemData
-
-data class MiscItemData(
-        override val description: Description
 ) : ItemData

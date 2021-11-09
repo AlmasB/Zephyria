@@ -272,6 +272,28 @@ class UsableItems {
         restoreHP(10.0)
     }
 
+    val COOKED_MEAT = usableItem {
+        desc {
+            id = 6017
+            name = "Cooked Meat"
+            description = "A piece of deliciously cooked meat."
+            textureName = "items/usable/cooked_meat.png"
+        }
+
+        restoreHP(35.0)
+
+        addEffect {
+            duration = 2.0 * 60
+
+            STRENGTH +2
+            VITALITY +2
+        }
+    }
+
+
+
+
+
     // custom
 
     val CODEFEST_CHALLENGE1 = usableItem {

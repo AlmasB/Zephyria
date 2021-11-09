@@ -28,7 +28,6 @@ class MiscItems {
         desc {
             id = 6502
             name = "Gold Ingot"
-            textureName = "items/misc/gold_ingot.png"
             description = "A block of pure gold that can be used in a refining process."
         }
     }
@@ -37,8 +36,39 @@ class MiscItems {
         desc {
             id = 6503
             name = "Silver Ingot"
-            textureName = "items/misc/silver_ingot.png"
             description = "A block of pure silver that can be used in a refining process."
+        }
+    }
+
+    val ACORN = miscItem {
+        desc {
+            id = 6504
+            name = "Acorn"
+            description = "A smooth oval nut in a rough cup-shaped base."
+        }
+    }
+
+    val RAW_MEAT = miscItem {
+        desc {
+            id = 6505
+            name = "Raw Meat"
+            description = "A piece of uncooked meat."
+        }
+    }
+
+    val DIAMOND = miscItem {
+        desc {
+            id = 6506
+            name = "Diamond"
+            description = "A rare precious stone of very high value to merchants."
+        }
+    }
+
+    val MIRROR = miscItem {
+        desc {
+            id = 6507
+            name = "Mirror"
+            description = "An ordinary mirror."
         }
     }
 }

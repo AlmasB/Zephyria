@@ -29,9 +29,11 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
 
     val pureDamage = SimpleIntegerProperty()
 
-    val range = data.type.range
+    val range
+        get() = data.type.range
 
-    val type = data.type
+    val type
+        get() = data.type
 
     init {
         pureDamage.bind(refineLevel.multiply(Bindings
@@ -50,8 +52,6 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
                 .concat(essences)
         )
 
-        // TODO: this is still static for now, we need to listen for any changes in dynamicDescription and update
-
         dynamicTextFlow.children.addAll(
                 getUIFactoryService().newText("Element: ", Color.WHITE, 14.0),
                 getUIFactoryService().newText("", 16.0).also {
@@ -59,7 +59,9 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
                     it.textProperty().bind(element.asString("%s\n"))
                 },
                 getUIFactoryService().newText("Damage: ", Color.WHITE, 14.0),
-                getUIFactoryService().newText("${pureDamage.value}\n", Color.WHITE, 16.0)
+                getUIFactoryService().newText("", Color.WHITE, 16.0).also {
+                    it.textProperty().bind(pureDamage.asString("%d\n"))
+                }
         )
     }
 

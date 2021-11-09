@@ -6,8 +6,10 @@ import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.combat.*
+import com.almasb.zeph.data.MapPoint
 import com.almasb.zeph.emptyDescription
 import com.almasb.zeph.item.*
+import javafx.geometry.Point2D
 
 /**
  *
@@ -47,7 +49,7 @@ class QuestDataBuilder(
     }
 
     fun go(setup: GoQuestDataBuilder.() -> Unit) {
-        TODO()
+        //TODO()
     }
 
     fun talk(setup: TalkQuestDataBuilder.() -> Unit) {
@@ -104,6 +106,11 @@ class TalkQuestDataBuilder {
 @DataDSL
 class GoQuestDataBuilder {
 
+    infix fun com.almasb.zeph.data.Map.at(point: MapPoint) {
+
+    }
+
+    fun p(x: Int, y: Int) = MapPoint(x, y)
 }
 
 @DataDSL

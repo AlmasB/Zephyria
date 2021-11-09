@@ -62,6 +62,9 @@ object Data {
     @JvmField
     val Quests = Quests()
 
+    @JvmField
+    val Maps = Maps()
+
     val allSkillData by lazy { dbSkills.values.toList() }
     val allWeaponData by lazy { dbWeapons.values.toList() }
     val allArmorData by lazy { dbArmors.values.toList() }

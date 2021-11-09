@@ -7,3 +7,5 @@ package com.almasb.zeph.combat
  */
 class Experience(var base: Int, var stat: Int, var job: Int) {
 }
+
+typealias XP = Experience

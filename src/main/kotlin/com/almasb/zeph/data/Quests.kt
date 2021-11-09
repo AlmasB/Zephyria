@@ -1,6 +1,7 @@
 package com.almasb.zeph.data
 
-import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.combat.XP
+import com.almasb.zeph.data.Data.Maps
 import com.almasb.zeph.data.Data.UsableItems
 import com.almasb.zeph.data.Data.Monsters
 import com.almasb.zeph.quest.quest
@@ -19,7 +20,7 @@ class Quests {
         }
 
         rewardMoney = 50
-        rewardXP = Experience(1, 1, 5)
+        rewardXP = XP(1, 1, 5)
 
         collect {
             UsableItems.HEALING_HERBS x 5
@@ -33,10 +34,25 @@ class Quests {
         }
 
         rewardMoney = 70
-        rewardXP = Experience(2, 2, 2)
+        rewardXP = XP(2, 2, 2)
 
         kill {
             Monsters.SKELETON_WARRIOR x 3
+        }
+    }
+
+    val TUTORIAL_GOTO = quest {
+        desc {
+            id = 7502
+            name = "Finding your way"
+            description = "This tutorial tells you how to move around."
+        }
+
+        rewardMoney = 10
+        rewardXP = XP(3, 2, 1)
+
+        go {
+            Maps.TUTORIAL_MAP at p(5, 5)
         }
     }
 }

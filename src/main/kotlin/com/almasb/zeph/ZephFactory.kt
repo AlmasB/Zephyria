@@ -155,14 +155,13 @@ class ZephFactory : EntityFactory {
         entity.viewComponent.parent.cursor = ImageCursor(image("ui/cursors/attack.png"), 1.0, 1.0)
 
         // TODO: do not allow click if dying ...
-        // TODO: convenience methods on mouse click
-        entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
 
+        entity.viewComponent.addOnClickHandler {
             val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
 
             // TODO: handle differently?
             if (player === entity)
-                return@EventHandler
+                return@addOnClickHandler
 
             // TODO: check for skill range
             if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
@@ -172,7 +171,7 @@ class ZephFactory : EntityFactory {
             } else {
                 player.actionComponent.orderAttack(entity)
             }
-        })
+        }
 
         animationBuilder()
                 .fadeIn(entity)

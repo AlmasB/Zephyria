@@ -60,10 +60,11 @@ object Data {
     val NPCs = NPCs()
 
     @JvmField
-    val Quests = Quests()
-
-    @JvmField
     val Maps = Maps()
+
+    // quests can use references to above, so it should be inited last
+    @JvmField
+    val Quests = Quests()
 
     val allSkillData by lazy { dbSkills.values.toList() }
     val allWeaponData by lazy { dbWeapons.values.toList() }

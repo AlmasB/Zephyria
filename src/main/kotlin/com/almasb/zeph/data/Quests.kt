@@ -4,6 +4,7 @@ import com.almasb.zeph.combat.XP
 import com.almasb.zeph.data.Data.Maps
 import com.almasb.zeph.data.Data.UsableItems
 import com.almasb.zeph.data.Data.Monsters
+import com.almasb.zeph.data.Data.NPCs
 import com.almasb.zeph.quest.quest
 
 /**
@@ -54,5 +55,18 @@ class Quests {
         go {
             Maps.TUTORIAL_MAP at p(5, 5)
         }
+    }
+
+    val TUTORIAL_TALKTO = quest {
+        desc {
+            id = 7503
+            name = "Networking is good"
+            description = "This tutorial tells you how to talk to NPCs."
+        }
+
+        rewardMoney = 20
+        rewardXP = XP(1, 2, 4)
+
+        talk(NPCs.SARAH)
     }
 }

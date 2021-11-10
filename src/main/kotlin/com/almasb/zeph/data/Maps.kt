@@ -7,12 +7,12 @@ package com.almasb.zeph.data
 class Maps {
 
     // TODO: DSL map { }
-    val TUTORIAL_MAP = Map()
+    val TUTORIAL_MAP = MapData()
 }
 
 // TODO: extract from package?
 
-class Map(var name: String = "") {
+class MapData(var name: String = "") {
 
 }
 

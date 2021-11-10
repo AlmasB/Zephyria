@@ -3,20 +3,18 @@ package com.almasb.zeph.quest
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterData
-import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
-import com.almasb.zeph.combat.*
+import com.almasb.zeph.character.npc.NPCData
+import com.almasb.zeph.combat.Experience
+import com.almasb.zeph.data.MapData
 import com.almasb.zeph.data.MapPoint
 import com.almasb.zeph.emptyDescription
-import com.almasb.zeph.item.*
-import javafx.geometry.Point2D
+import com.almasb.zeph.item.ItemData
 
 /**
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-
-
 
 @DataDSL
 class QuestDataBuilder(
@@ -25,7 +23,9 @@ class QuestDataBuilder(
         var rewardXP: Experience = Experience(0, 0, 0),
         val rewardItems: MutableList<ItemData> = arrayListOf(),
         val requiredItems: MutableMap<ItemData, Int> = linkedMapOf(),
-        val requiredMonsters: MutableMap<CharacterData, Int> = linkedMapOf()
+        val requiredMonsters: MutableMap<CharacterData, Int> = linkedMapOf(),
+        val requiredTalkNPCs: MutableList<NPCData> = arrayListOf(),
+        val requiredLocations: MutableMap<MapData, MapPoint> = linkedMapOf()
 ) {
 
     fun desc(setup: DescriptionBuilder.() -> Unit) {
@@ -49,11 +49,14 @@ class QuestDataBuilder(
     }
 
     fun go(setup: GoQuestDataBuilder.() -> Unit) {
-        //TODO()
+        val builder = GoQuestDataBuilder()
+        builder.setup()
+
+        requiredLocations.putAll(builder.requiredLocations)
     }
 
-    fun talk(setup: TalkQuestDataBuilder.() -> Unit) {
-        TODO()
+    fun talk(vararg npcs: NPCData) {
+        requiredTalkNPCs += npcs
     }
 
     fun build(): QuestData {
@@ -65,6 +68,10 @@ class QuestDataBuilder(
             description = description.appendDescription("Kill: ${mobData.description.name} x$numItems")
         }
 
+        requiredLocations.forEach { (map, point) ->
+            description = description.appendDescription("Go to: $map at $point")
+        }
+
         return QuestData(
                 description,
                 rewardMoney,
@@ -72,8 +79,8 @@ class QuestDataBuilder(
                 rewardItems,
                 requiredItems,
                 requiredMonsters,
-                arrayListOf(),
-                ""
+                requiredTalkNPCs,
+                requiredLocations
         )
     }
 }
@@ -99,15 +106,12 @@ class KillQuestDataBuilder {
 }
 
 @DataDSL
-class TalkQuestDataBuilder {
-
-}
-
-@DataDSL
 class GoQuestDataBuilder {
 
-    infix fun com.almasb.zeph.data.Map.at(point: MapPoint) {
+    val requiredLocations: MutableMap<MapData, MapPoint> = linkedMapOf()
 
+    infix fun MapData.at(point: MapPoint) {
+        requiredLocations[this] = point
     }
 
     fun p(x: Int, y: Int) = MapPoint(x, y)
@@ -129,9 +133,7 @@ data class QuestData(
         val requiredItems: Map<ItemData, Int>,
         val requiredMonsters: Map<CharacterData, Int>,
 
-        // TODO: talk to quests
-        val requiredTalkNPCs: List<Any>,
+        val requiredTalkNPCs: List<NPCData>,
 
-        // TODO: go to quests
-        val requiredLocations: Any
+        val requiredLocations: Map<MapData, MapPoint>
 )

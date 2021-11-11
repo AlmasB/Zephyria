@@ -2,11 +2,9 @@ package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.texture
+import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.item.Armor
-import com.almasb.zeph.item.Item
-import com.almasb.zeph.item.UsableItem
-import com.almasb.zeph.item.Weapon
+import com.almasb.zeph.item.*
 import javafx.collections.ListChangeListener
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -58,7 +56,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
         children.addAll(borderShape, background, equipView, itemGroup, minBtn)
 
-        for (i in 0..29) {
+        for (i in 0 until Config.MAX_INVENTORY_SIZE) {
             slots[i] = true
         }
 
@@ -88,13 +86,14 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
             }
         }
 
-        player.inventory.itemsProperty().forEach(Consumer { item: Item -> addItem(item) })
+        player.inventory.itemsProperty().forEach { addItem(it) }
         player.inventory.itemsProperty().addListener(listener)
     }
 
     private fun getNextFreeSlot(): Int {
-        for (i in 0..29) {
-            if (slots[i]!!) return i
+        for (i in 0 until Config.MAX_INVENTORY_SIZE) {
+            if (slots[i]!!)
+                return i
         }
         return -1
     }
@@ -109,6 +108,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         view.translateX = index % 5 * 40 + 3.toDouble()
         view.translateY = index / 5 * 40 + 3.toDouble()
         view.isPickOnBounds = true
+        view.cursor = Cursor.HAND
 
         view.setOnTooltipHover { t: TooltipView ->
             t.setItem(item)
@@ -129,12 +129,12 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
                         player.characterComponent.useItem(item)
                     }
 
-                    // TODO: other usable types
+                    is MiscItem -> {
+                        // ignore misc items, can't interact
+                    }
                 }
             }
         }
-
-        view.cursor = Cursor.HAND
 
         val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
 

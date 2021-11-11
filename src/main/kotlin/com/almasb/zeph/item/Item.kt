@@ -28,11 +28,11 @@ enum class ItemLevel constructor(
 }
 
 /**
- *
+ * Currently the subtypes are only: EquipItem (Weapon/Armor), UsableItem, MiscItem.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-abstract class Item(val description: Description) {
+sealed class Item(val description: Description) {
 
     /**
      * A property populated with dynamic description.
@@ -44,7 +44,10 @@ abstract class Item(val description: Description) {
     val dynamicTextFlow: TextFlow = TooltipTextFlow(description)
 }
 
-abstract class EquipItem(
+/**
+ * Subtypes are only: Weapon, Armor.
+ */
+sealed class EquipItem(
         description: Description,
         val itemLevel: ItemLevel,
         dataRunes: List<Rune>,

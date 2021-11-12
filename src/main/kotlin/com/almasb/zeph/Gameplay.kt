@@ -248,9 +248,9 @@ object Gameplay {
 
         player.inventory
                 .itemsProperty()
-                .find { it.description.id == itemID }
+                .find { it.userItem.description.id == itemID }
                 ?.let {
-                    player.inventory.incrementQuantity(it, -amount)
+                    player.inventory.incrementQuantity(it.userItem, -amount)
                 }
     }
 

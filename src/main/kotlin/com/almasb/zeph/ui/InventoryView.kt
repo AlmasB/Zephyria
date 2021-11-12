@@ -2,6 +2,7 @@ package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.texture
+import com.almasb.fxgl.inventory.ItemStack
 import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.item.*
@@ -34,7 +35,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
     private val slots: MutableMap<Int, Boolean> = HashMap()
 
     private val itemGroup = Group()
-    private val listener: ListChangeListener<Item>
+    private val listener: ListChangeListener<ItemStack<Item>>
 
     init {
         relocate(FXGL.getAppWidth() - 200.toDouble(), FXGL.getAppHeight() - 240.toDouble())
@@ -68,13 +69,13 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
                         addItem(item)
                     }
                 } else if (change.wasRemoved()) {
-                    for (item in change.removed) {
+                    for (stack in change.removed) {
                         val it = itemGroup.children.iterator()
                         while (it.hasNext()) {
                             val node = it.next()
                             if (node.userData != null) {
-                                val data = node.userData as Pair<Item, Int>
-                                if (data.key === item) {
+                                val data = node.userData as Pair<ItemStack<Item>, Int>
+                                if (data.key === stack) {
                                     slots[data.value] = true
                                     it.remove()
                                     break
@@ -98,13 +99,15 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         return -1
     }
 
-    private fun addItem(item: Item) {
+    private fun addItem(stack: ItemStack<Item>) {
+        val item = stack.userItem
+
         val index = getNextFreeSlot()
         slots[index] = false
 
         val view = StackPane(FXGL.texture(item.description.textureName))
         view.alignment = Pos.BOTTOM_RIGHT
-        view.userData = Pair(item, index)
+        view.userData = Pair(stack, index)
         view.translateX = index % 5 * 40 + 3.toDouble()
         view.translateY = index / 5 * 40 + 3.toDouble()
         view.isPickOnBounds = true
@@ -138,8 +141,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
         val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
 
-        // TODO: inventory API upgrade
-        //text.textProperty().bind(player.inventory.getData(item).get().quantityProperty().asString())
+        text.textProperty().bind(player.inventory.getData(item).get().quantityProperty().asString())
         text.strokeWidth = 1.5
 
         view.children.addAll(text)

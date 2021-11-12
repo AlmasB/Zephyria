@@ -45,7 +45,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     val weaponElement = SimpleObjectProperty(data.element)
     val armorElement = SimpleObjectProperty(data.element)
 
-    val inventory = Inventory<Item>(Config.MAX_INVENTORY_SIZE).also { it.isRemoveItemsIfQty0 = true }
+    val inventory = Inventory<Item>(Config.MAX_INVENTORY_SIZE)
     val skills = FXCollections.observableArrayList<Skill>()
 
     // what XP does this char give on death

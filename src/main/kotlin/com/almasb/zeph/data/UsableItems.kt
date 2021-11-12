@@ -17,6 +17,7 @@ import com.almasb.zeph.combat.effect
 import com.almasb.zeph.item.Armor
 import com.almasb.zeph.item.Weapon
 import com.almasb.zeph.item.usableItem
+import com.almasb.zeph.pushMessage
 import javafx.scene.control.TextArea
 import javafx.util.Duration
 
@@ -60,6 +61,16 @@ class UsableItems {
         }
 
         useSoundName = "treasure_box.wav"
+
+        beforeUseScript = {
+            val isInventoryFull = it.inventory.isFull
+
+            if (isInventoryFull) {
+                pushMessage("Cannot open treasure box. Inventory is full.")
+            }
+
+            !isInventoryFull
+        }
 
         onUseScript {
             val isWeapon = GameMath.checkChance(50)

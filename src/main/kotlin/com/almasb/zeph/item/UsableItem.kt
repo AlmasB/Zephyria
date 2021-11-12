@@ -96,6 +96,11 @@ data class UsableItemData(
          */
         val isPermanentUse: Boolean,
         val useSoundName: String,
+
+        /**
+         * If returns true, can be used.
+         * If returns false, item cannot be used and won't be consumed.
+         */
         val beforeUseScript: (CharacterEntity) -> Boolean,
 
         val onUseScripts: List<(CharacterEntity) -> Unit>

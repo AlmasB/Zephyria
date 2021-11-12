@@ -456,6 +456,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     }
 
     fun useItem(item: UsableItem) {
+        if (!item.data.beforeUseScript(char))
+            return
+
         item.onUse(char)
 
         if (!item.data.isPermanentUse) {

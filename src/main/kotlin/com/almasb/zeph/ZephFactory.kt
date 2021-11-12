@@ -237,7 +237,11 @@ class ZephFactory : EntityFactory {
             player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
             player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
             player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
-            player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+
+            repeat(100) {
+                player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+            }
+
             player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
             player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
             player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))

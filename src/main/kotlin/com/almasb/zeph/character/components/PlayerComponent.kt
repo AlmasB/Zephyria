@@ -310,5 +310,17 @@ class PlayerComponent : Component() {
 
     fun isFree(place: EquipPlace) = getEquip(place).description.id == place.emptyID
 
+
+
+    /**
+     * Called when player has been dealt a killing blow.
+     */
+    fun kill() {
+        // TODO: move to last registered respawn point, for now just move to 2,6
+
+        player.actionComponent.orderIdle()
+        player.setPositionToCell(2, 6)
+    }
+
     // TODO: player version of canAttack that uses aspd of both weapons
 }

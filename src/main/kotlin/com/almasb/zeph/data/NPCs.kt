@@ -45,6 +45,8 @@ class NPCs {
             name = "Jules"
             textureName = "chars/npcs/jules.png"
         }
+
+        dialogueName = "dialogues/jules.json"
     }
 
     val CORAGH = npc {

@@ -84,6 +84,7 @@ object Config {
     const val MAX_STORAGE_SIZE = 100
     const val MAX_INVENTORY_SIZE = 30
     const val MAX_ESSENCES = 3
+    const val MAX_ITEM_REFINE_LEVEL = 5
 
     const val SKILL_PROJECTILE_SPEED = 1000.0
 }

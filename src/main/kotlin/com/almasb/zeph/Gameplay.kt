@@ -15,9 +15,11 @@ import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.EquipPlace
 import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.item.MiscItem
 import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.ui.StorageView
@@ -279,5 +281,26 @@ object Gameplay {
 
     fun failQuest(questID: Int) {
 
+    }
+
+    // TODO: dialogue-driven functions below, consider extracting / refactoring
+
+    fun isPlayerWeaponEquipped(): Boolean {
+        return !player.playerComponent!!.isFree(EquipPlace.RIGHT_HAND)
+    }
+
+    fun checkCanRefine(): Boolean {
+        return player.characterComponent.hasItem(
+                Data.MiscItems.SILVER_INGOT.description.id
+        )
+    }
+
+    fun refineRightHandWeapon(): Boolean {
+        player.inventory.incrementQuantity(
+                MiscItem(Data.MiscItems.SILVER_INGOT),
+                -1
+        )
+
+        return player.playerComponent!!.getRightWeapon().refine()
     }
 }

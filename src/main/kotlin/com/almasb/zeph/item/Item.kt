@@ -1,6 +1,7 @@
 package com.almasb.zeph.item
 
 import com.almasb.zeph.Config.MAX_ESSENCES
+import com.almasb.zeph.Config.MAX_ITEM_REFINE_LEVEL
 import com.almasb.zeph.Description
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.Essence
@@ -142,7 +143,7 @@ sealed class EquipItem(
      * @return true if refine succeeded
      */
     fun refine(): Boolean {
-        if (refineLevel.value >= 5)
+        if (refineLevel.value >= MAX_ITEM_REFINE_LEVEL)
             return false
 
         if (GameMath.checkChance(100 - refineLevel.value * itemLevel.refineChanceReduction)) {

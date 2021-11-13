@@ -1,0 +1,111 @@
+{
+  "uniqueID" : 9,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Hello, I'm a blacksmith and I can refine your equipment items."
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "No worries, feel free to come back later."
+    },
+    "4" : {
+      "type" : "END",
+      "text" : "All refined, see you later."
+    },
+    "5" : {
+      "type" : "BRANCH",
+      "text" : "refineRightHandWeapon"
+    },
+    "6" : {
+      "type" : "END",
+      "text" : "Sorry, refinement failed."
+    },
+    "7" : {
+      "type" : "BRANCH",
+      "text" : "checkCanRefine"
+    },
+    "8" : {
+      "type" : "END",
+      "text" : "Sorry, you don't have the neccesary items to refine your equipment."
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "Which item of equipment would you like me to refine?",
+      "options" : {
+        "0" : "None at the moment, thank you.",
+        "1" : "Refine TODO:weaponName, please."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "isPlayerWeaponEquipped"
+      }
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 3
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 2
+  }, {
+    "sourceID" : 5,
+    "optionID" : 0,
+    "targetID" : 4
+  }, {
+    "sourceID" : 5,
+    "optionID" : 1,
+    "targetID" : 6
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 7
+  }, {
+    "sourceID" : 7,
+    "optionID" : 0,
+    "targetID" : 5
+  }, {
+    "sourceID" : 7,
+    "optionID" : 1,
+    "targetID" : 8
+  } ],
+  "version" : 1,
+  "uiMetadata" : {
+    "0" : {
+      "x" : -120.0,
+      "y" : 400.0
+    },
+    "2" : {
+      "x" : 1360.0,
+      "y" : -40.0
+    },
+    "3" : {
+      "x" : 320.0,
+      "y" : 120.0
+    },
+    "4" : {
+      "x" : 1360.0,
+      "y" : 120.0
+    },
+    "5" : {
+      "x" : 960.0,
+      "y" : 240.0
+    },
+    "6" : {
+      "x" : 1360.0,
+      "y" : 360.0
+    },
+    "7" : {
+      "x" : 560.0,
+      "y" : 400.0
+    },
+    "8" : {
+      "x" : 1360.0,
+      "y" : 520.0
+    }
+  }
+}

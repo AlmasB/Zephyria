@@ -15,6 +15,7 @@ import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Stat.*
 import com.almasb.zeph.events.*
 import com.almasb.zeph.item.Item
+import com.almasb.zeph.item.ItemData
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.skill.SkillUseResult
@@ -345,8 +346,11 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
             char.actionComponent.orderIdle()
 
-            if (!target.isPlayer)
+            if (!target.isPlayer) {
                 target.characterComponent.kill()
+            } else {
+                target.playerComponent!!.kill()
+            }
         }
 
         return DamageResult(DamageType.PHYSICAL, element, totalDamage, crit)
@@ -466,5 +470,15 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         }
 
         fire(OnItemUsedEvent(char, item))
+    }
+
+    /**
+     * @param id is item id
+     */
+    fun hasItem(id: Int): Boolean {
+        // TODO: add inventory API, hasItem() ....
+
+        return id in inventory.itemsProperty()
+                        .map { it.userItem.description.id }
     }
 }

@@ -24,6 +24,7 @@ import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.data.NPCs
 import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
@@ -214,6 +215,9 @@ class ZephyriaApp : GameApplication() {
         gotoMap("dev_world.tmx", 8, 6)
         //gotoMap("tutorial.tmx", 8, 6)
         //gotoMap("test_map.tmx", 2, 6)
+
+        Gameplay.spawnNPC(Data.NPCs.JULES.description.id, 10, 6)
+
 
         // Codefest stuff
         if (isReleaseMode()) {

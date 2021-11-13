@@ -7,6 +7,7 @@ import javafx.beans.binding.Bindings
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.beans.property.SimpleStringProperty
+import javafx.beans.value.ChangeListener
 import javafx.scene.paint.Color
 import java.util.concurrent.Callable
 
@@ -35,6 +36,8 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
     val type
         get() = data.type
 
+    private var damageListener: ChangeListener<Number>? = null
+
     init {
         pureDamage.bind(refineLevel.multiply(Bindings
                 .`when`(refineLevel.greaterThan(2))
@@ -53,6 +56,9 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
         )
 
         dynamicTextFlow.children.addAll(
+                getUIFactoryService().newText("", Color.WHITE, 14.0).also {
+                    it.textProperty().bind(refineLevel.asString("Refinement Level: %d\n"))
+                },
                 getUIFactoryService().newText("Element: ", Color.WHITE, 14.0),
                 getUIFactoryService().newText("", 16.0).also {
                     it.fillProperty().bind(Bindings.createObjectBinding(Callable { element.value.color }, element))
@@ -73,11 +79,23 @@ class Weapon(private val data: WeaponData) : EquipItem(data.description, data.it
         super.onEquip(char)
 
         char.addBonus(Stat.ATK, pureDamage.value)
+
+        // TODO: the same thing for Armor equipment
+        damageListener = ChangeListener<Number> { _, oldDamage, newDamage ->
+            char.addBonus(Stat.ATK, -oldDamage.toInt())
+            char.addBonus(Stat.ATK, newDamage.toInt())
+        }
+
+        pureDamage.addListener(damageListener)
     }
 
     override fun onUnEquip(char: CharacterEntity) {
         super.onUnEquip(char)
 
         char.addBonus(Stat.ATK, -pureDamage.value)
+
+        damageListener?.let {
+            pureDamage.removeListener(it)
+        }
     }
 }

@@ -8,7 +8,6 @@ import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.SpawnData
-import com.almasb.fxgl.entity.action.ActionComponent
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
@@ -17,15 +16,12 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.EquipPlace
-import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.EquipItem
 import com.almasb.zeph.item.MiscItem
-import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.ui.StorageView
-
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
@@ -314,5 +310,12 @@ object Gameplay : FunctionCallDelegate {
         }
 
         return false
+    }
+}
+
+object CommandHandler : FunctionCallHandler() {
+
+    init {
+        addFunctionCallDelegate(Gameplay)
     }
 }

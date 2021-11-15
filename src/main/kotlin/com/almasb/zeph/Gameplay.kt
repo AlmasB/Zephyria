@@ -2,6 +2,7 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.app.scene.GameView
+import com.almasb.fxgl.cutscene.dialogue.FunctionCallDelegate
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
@@ -19,6 +20,7 @@ import com.almasb.zeph.character.EquipPlace
 import com.almasb.zeph.character.components.CharacterActionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
+import com.almasb.zeph.item.EquipItem
 import com.almasb.zeph.item.MiscItem
 import com.almasb.zeph.quest.QuestData
 import com.almasb.zeph.skill.Skill
@@ -34,7 +36,7 @@ import javafx.util.Duration
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-object Gameplay {
+object Gameplay : FunctionCallDelegate {
 
     private val log = Logger.get(javaClass)
 
@@ -192,7 +194,7 @@ object Gameplay {
 
         val graph = getAssetLoader().loadDialogueGraph(dialogueFileName)
 
-        getCutsceneService().startDialogueScene(graph, CommandHandler)
+        getCutsceneService().startDialogueScene(graph, functionHandler = CommandHandler)
     }
 
     fun enablePortal(id: Int) {
@@ -285,22 +287,32 @@ object Gameplay {
 
     // TODO: dialogue-driven functions below, consider extracting / refactoring
 
-    fun isPlayerWeaponEquipped(): Boolean {
-        return !player.playerComponent!!.isFree(EquipPlace.RIGHT_HAND)
+    fun isEquipped(placeName: String): Boolean {
+        try {
+            val equipPlace = EquipPlace.valueOf(placeName)
+
+            return !player.playerComponent!!.isFree(equipPlace)
+        } catch (e: Exception) {
+            log.warning("Could not query if $placeName is equipped. Returning false", e)
+        }
+
+        return false
     }
 
-    fun checkCanRefine(): Boolean {
-        return player.characterComponent.hasItem(
-                Data.MiscItems.SILVER_INGOT.description.id
-        )
-    }
+    fun refine(placeName: String): Boolean {
+        try {
+            val equipPlace = EquipPlace.valueOf(placeName)
 
-    fun refineRightHandWeapon(): Boolean {
-        player.inventory.incrementQuantity(
-                MiscItem(Data.MiscItems.SILVER_INGOT),
-                -1
-        )
+            player.inventory.incrementQuantity(
+                    MiscItem(Data.MiscItems.SILVER_INGOT),
+                    -1
+            )
 
-        return player.playerComponent!!.getRightWeapon().refine()
+            return (player.playerComponent!!.getEquip(equipPlace) as EquipItem).refine()
+        } catch (e: Exception) {
+            log.warning("Could not refine $placeName. Returning false", e)
+        }
+
+        return false
     }
 }

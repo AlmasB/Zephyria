@@ -52,7 +52,7 @@ class DevScene : SubScene() {
         val tokens = input.split(" +".toRegex())
         val cmd = tokens[0]
 
-        val result = CommandHandler.handle(cmd, tokens.drop(1).map { it.trim() }.toTypedArray())
+        val result = CommandHandler.call(cmd, tokens.drop(1).map { it.trim() }.toTypedArray())
 
         log.debug("Handled command: $input. Result: $result")
     }

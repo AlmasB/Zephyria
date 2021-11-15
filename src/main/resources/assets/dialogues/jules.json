@@ -1,5 +1,5 @@
 {
-  "uniqueID" : 9,
+  "uniqueID" : 15,
   "nodes" : {
     "0" : {
       "type" : "START",
@@ -15,7 +15,7 @@
     },
     "5" : {
       "type" : "BRANCH",
-      "text" : "refineRightHandWeapon"
+      "text" : "refine $refineType"
     },
     "6" : {
       "type" : "END",
@@ -23,11 +23,31 @@
     },
     "7" : {
       "type" : "BRANCH",
-      "text" : "checkCanRefine"
+      "text" : "hasItem 6503"
     },
     "8" : {
       "type" : "END",
       "text" : "Sorry, you don't have the neccesary items to refine your equipment."
+    },
+    "10" : {
+      "type" : "FUNCTION",
+      "text" : "refineType = HELM"
+    },
+    "11" : {
+      "type" : "FUNCTION",
+      "text" : "refineType = BODY"
+    },
+    "12" : {
+      "type" : "FUNCTION",
+      "text" : "refineType = SHOES"
+    },
+    "13" : {
+      "type" : "FUNCTION",
+      "text" : "refineType = RIGHT_HAND"
+    },
+    "14" : {
+      "type" : "FUNCTION",
+      "text" : "refineType = LEFT_HAND"
     }
   },
   "choiceNodes" : {
@@ -36,17 +56,40 @@
       "text" : "Which item of equipment would you like me to refine?",
       "options" : {
         "0" : "None at the moment, thank you.",
-        "1" : "Refine TODO:weaponName, please."
+        "1" : "Refine my helmet please.",
+        "2" : "Refine my armor please.",
+        "3" : "I'd like to improve my shoes.",
+        "4" : "My right hand weapon.",
+        "5" : "My left hand weapon."
       },
       "conditions" : {
         "0" : "",
-        "1" : "isPlayerWeaponEquipped"
+        "1" : "isEquipped HELM",
+        "2" : "isEquipped BODY",
+        "3" : "isEquipped SHOES",
+        "4" : "isEquipped RIGHT_HAND",
+        "5" : "isEquipped LEFT_HAND"
       }
     }
   },
   "edges" : [ {
     "sourceID" : 0,
     "targetID" : 3
+  }, {
+    "sourceID" : 10,
+    "targetID" : 7
+  }, {
+    "sourceID" : 11,
+    "targetID" : 7
+  }, {
+    "sourceID" : 12,
+    "targetID" : 7
+  }, {
+    "sourceID" : 13,
+    "targetID" : 7
+  }, {
+    "sourceID" : 14,
+    "targetID" : 7
   } ],
   "choiceEdges" : [ {
     "sourceID" : 3,
@@ -61,10 +104,6 @@
     "optionID" : 1,
     "targetID" : 6
   }, {
-    "sourceID" : 3,
-    "optionID" : 1,
-    "targetID" : 7
-  }, {
     "sourceID" : 7,
     "optionID" : 0,
     "targetID" : 5
@@ -72,6 +111,26 @@
     "sourceID" : 7,
     "optionID" : 1,
     "targetID" : 8
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 10
+  }, {
+    "sourceID" : 3,
+    "optionID" : 2,
+    "targetID" : 11
+  }, {
+    "sourceID" : 3,
+    "optionID" : 3,
+    "targetID" : 12
+  }, {
+    "sourceID" : 3,
+    "optionID" : 4,
+    "targetID" : 13
+  }, {
+    "sourceID" : 3,
+    "optionID" : 5,
+    "targetID" : 14
   } ],
   "version" : 1,
   "uiMetadata" : {
@@ -80,32 +139,52 @@
       "y" : 400.0
     },
     "2" : {
-      "x" : 1360.0,
-      "y" : -40.0
+      "x" : 400.0,
+      "y" : -360.0
     },
     "3" : {
-      "x" : 320.0,
-      "y" : 120.0
+      "x" : 200.0,
+      "y" : -80.0
     },
     "4" : {
-      "x" : 1360.0,
-      "y" : 120.0
+      "x" : 1840.0,
+      "y" : -160.0
     },
     "5" : {
-      "x" : 960.0,
-      "y" : 240.0
+      "x" : 1400.0,
+      "y" : -120.0
     },
     "6" : {
-      "x" : 1360.0,
-      "y" : 360.0
+      "x" : 1840.0,
+      "y" : 120.0
     },
     "7" : {
-      "x" : 560.0,
-      "y" : 400.0
+      "x" : 1000.0,
+      "y" : -40.0
     },
     "8" : {
-      "x" : 1360.0,
-      "y" : 520.0
+      "x" : 1770.0000000000005,
+      "y" : 351.05263157894734
+    },
+    "10" : {
+      "x" : 600.0,
+      "y" : -240.0
+    },
+    "11" : {
+      "x" : 600.0,
+      "y" : -120.0
+    },
+    "12" : {
+      "x" : 600.0,
+      "y" : 0.0
+    },
+    "13" : {
+      "x" : 600.0,
+      "y" : 120.0
+    },
+    "14" : {
+      "x" : 600.0,
+      "y" : 240.0
     }
   }
 }

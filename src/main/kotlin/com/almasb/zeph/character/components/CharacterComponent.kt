@@ -471,14 +471,4 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         fire(OnItemUsedEvent(char, item))
     }
-
-    /**
-     * @param id is item id
-     */
-    fun hasItem(id: Int): Boolean {
-        // TODO: add inventory API, hasItem() ....
-
-        return id in inventory.itemsProperty()
-                        .map { it.userItem.description.id }
-    }
 }

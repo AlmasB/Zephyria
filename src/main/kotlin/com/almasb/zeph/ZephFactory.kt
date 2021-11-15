@@ -111,9 +111,11 @@ class ZephFactory : EntityFactory {
 //                removeUINode(fullTexture)
 //            }, Duration.seconds(0.05))
 //
-            val graph = getAssetLoader().loadDialogueGraph(npcData.dialogueName.removePrefix("dialogues/"))
+            Gameplay.startDialogue(npcData.dialogueName.removePrefix("dialogues/"))
 
-            getCutsceneService().startDialogueScene(graph, CommandHandler)
+//            val graph = getAssetLoader().loadDialogueGraph(npcData.dialogueName.removePrefix("dialogues/"))
+//
+//            getCutsceneService().startDialogueScene(graph, functionHandler = CommandHandler)
         })
 
         runOnce({

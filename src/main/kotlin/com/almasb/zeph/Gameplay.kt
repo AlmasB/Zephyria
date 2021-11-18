@@ -79,7 +79,7 @@ object Gameplay : FunctionCallDelegate {
 
 
         // TODO: should Level be an abstraction, then we can have TiledMapLevel and other types
-        val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader())
+        val level = getAssetLoader().loadLevel("tmx/$mapName", TMXLevelLoader(true))
 
         log.info("Loaded level $mapName: " + level.width + "x" + level.height)
 

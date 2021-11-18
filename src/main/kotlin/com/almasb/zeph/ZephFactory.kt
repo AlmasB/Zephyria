@@ -91,6 +91,7 @@ class ZephFactory : EntityFactory {
                 .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
                 .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
                 .with(AnimationComponent(npcData.description.textureName))
+                .with(NPCChildViewComponent(npcData.description.name))
                 .build()
 
         entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)

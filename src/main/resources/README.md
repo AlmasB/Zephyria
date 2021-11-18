@@ -22,6 +22,7 @@
 - Character portraits - https://cazwolf.itch.io/rmmv-portraits
 - Sword cursor - https://opengameart.org/content/lpc-items-and-game-effects
 - Parchment - by [Chun Ho Choi](https://chc40.brighton.domains/Index.html)
+- Random tiles - https://pipoya.itch.io/pipoya-rpg-tileset-32x32
 
 ## NPCs
 

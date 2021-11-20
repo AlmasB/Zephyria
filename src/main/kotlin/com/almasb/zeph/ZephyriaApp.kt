@@ -30,7 +30,14 @@ import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
+import javafx.scene.control.Button
+import javafx.scene.control.TextField
+import javafx.scene.effect.BlendMode
 import javafx.scene.input.KeyCode.*
+import javafx.scene.layout.VBox
+import javafx.scene.media.Media
+import javafx.scene.media.MediaPlayer
+import javafx.scene.media.MediaView
 import javafx.scene.paint.Color
 import javafx.util.Duration
 import java.util.function.Consumer
@@ -121,7 +128,9 @@ class ZephyriaApp : GameApplication() {
 
                 //println(quest.data.description)
 
-                println(player.inventory.itemsProperty())
+                val videoScene = VideoSubScene()
+
+                getSceneService().pushSubScene(videoScene)
 
                 //spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
             }
@@ -216,9 +225,6 @@ class ZephyriaApp : GameApplication() {
         //gotoMap("tutorial.tmx", 8, 6)
         gotoMap("test_map.tmx", 2, 6)
 
-        Gameplay.spawnNPC(Data.NPCs.JULES.description.id, 10, 6)
-
-
         // Codefest stuff
         if (isReleaseMode()) {
             val c1 = Gameplay.spawnItem(6997, 2, 8)
@@ -229,10 +235,38 @@ class ZephyriaApp : GameApplication() {
             c2.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
             c3.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
 
+            val treasure = entityBuilder()
+                    .atAnchored(Point2D(16.0, 16.0), Point2D(3.0 * 32.0, 8.0 * 32.0))
+                    .viewWithBBox("chest_closed.png")
+                    .onClick {
+                        val textField1 = TextField().also { it.prefWidth = 250.0 }
+                        val textField2 = TextField().also { it.prefWidth = 250.0 }
+
+                        val button = getUIFactoryService().newButton("Submit")
+                        button.setOnAction {
+                            // TODO: load from text
+                            if (true) {
+                                showMessage("Well Done! The final link is: ")
+                            }
+                        }
+
+                        getDialogService().showBox("Enter results for challenges 1 and 2 in order: ", VBox(5.0, textField1, textField2), button)
+                    }
+                    .buildAndAttach()
+
+            treasure.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
+
             runOnce({
                 getDialogService().showInputBox("Please enter your name") { name ->
                     set("playerName", name)
                 }
+
+                runOnce({
+                    val videoScene = VideoSubScene()
+
+                    getSceneService().pushSubScene(videoScene)
+                }, Duration.millis(150.0))
+
             }, Duration.millis(10.0))
         }
     }

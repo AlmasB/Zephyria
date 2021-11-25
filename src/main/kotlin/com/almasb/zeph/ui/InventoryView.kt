@@ -141,7 +141,7 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
         val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
 
-        text.textProperty().bind(player.inventory.getData(item).get().quantityProperty().asString())
+        text.textProperty().bind(stack.quantityProperty().asString())
         text.strokeWidth = 1.5
 
         view.children.addAll(text)

@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader
 import com.almasb.fxgl.logging.Logger
+import com.almasb.fxgl.particle.ParticleComponent
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
@@ -94,6 +95,10 @@ object Gameplay : FunctionCallDelegate {
 
         if (FXGL.getWorldProperties().exists(GAME_MAP)) {
             currentMap.exit()
+
+            // pre-remove any particle effects, as their implementation of onRemoved() can cause CME
+            getGameWorld().getEntitiesByComponent(ParticleComponent::class.java)
+                    .forEach { it.removeFromWorld() }
         }
 
         val newMap = GameMap(mapName, level)

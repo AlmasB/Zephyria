@@ -188,9 +188,9 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        gotoMap("dev_world.tmx", 8, 6)
+        //gotoMap("dev_world.tmx", 8, 6)
         //gotoMap("tutorial.tmx", 8, 6)
-        //gotoMap("test_map.tmx", 2, 6)
+        gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

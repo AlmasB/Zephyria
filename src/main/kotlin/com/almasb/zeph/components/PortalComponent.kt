@@ -54,9 +54,6 @@ class PortalComponent(
     }
 
     override fun onUpdate(tpf: Double) {
-        if (isReleaseMode())
-            return
-
         if (!isCollidable)
             return
 

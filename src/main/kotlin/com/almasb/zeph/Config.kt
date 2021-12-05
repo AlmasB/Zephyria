@@ -2,7 +2,9 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.addUINode
+import com.almasb.fxgl.inventory.Inventory
 import com.almasb.fxgl.logging.Logger
+import com.almasb.zeph.item.Item
 import com.almasb.zeph.ui.TooltipView
 
 /**
@@ -115,4 +117,16 @@ fun getUITooltip() = tooltipView
 fun pushMessage(message: String) {
     // for now we just make use of the logger to unify all message calls to this function
     log.info(message)
+}
+
+/**
+ * @return if item was successfully transferred from [fromInventory] to this character's inventory
+ */
+fun <T> Inventory<T>.transferItemFrom(item: T, fromInventory: Inventory<T>): Boolean {
+    if (this.isFull)
+        return false
+
+    // TODO: if failed, we need to revert operation for [fromInventory], can be moved to FXGL?
+    fromInventory.incrementQuantity(item, -1)
+    return this.add(item)
 }

@@ -471,4 +471,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         fire(OnItemUsedEvent(char, item))
     }
+
+
 }

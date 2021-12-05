@@ -8,8 +8,6 @@ import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
-import com.almasb.fxgl.input.InputSequence
-import com.almasb.fxgl.input.UserAction
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.logging.LoggerLevel
 import com.almasb.fxgl.logging.LoggerOutput
@@ -23,23 +21,13 @@ import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.data.Data
-import com.almasb.zeph.data.NPCs
 import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
 import javafx.geometry.Point2D
-import javafx.scene.control.Button
-import javafx.scene.control.TextField
-import javafx.scene.effect.BlendMode
 import javafx.scene.input.KeyCode.*
-import javafx.scene.layout.VBox
-import javafx.scene.media.Media
-import javafx.scene.media.MediaPlayer
-import javafx.scene.media.MediaView
 import javafx.scene.paint.Color
-import javafx.util.Duration
 import java.util.function.Consumer
 import kotlin.collections.set
 
@@ -107,17 +95,6 @@ class ZephyriaApp : GameApplication() {
                     .forEach { it.minBtn.onClick() }
         }
 
-        getInput().addAction(
-                object : UserAction("Codefest2021") {
-                    override fun onActionBegin() {
-                        if (player.cellX in 90..94 && player.cellY in 125..129) {
-                            showMessage("Congratulations on getting this far! The keyword is:\n10,5,11,12,1,8,3,7")
-                        }
-                    }
-                },
-                InputSequence(C,O,D,E,F,E,S,T,DIGIT2,DIGIT0,DIGIT2,DIGIT1)
-        )
-
         if (!isReleaseMode()) {
             onKeyDown(ENTER) {
                 getSceneService().pushSubScene(devScene!!)
@@ -128,11 +105,7 @@ class ZephyriaApp : GameApplication() {
 
                 //println(quest.data.description)
 
-                val videoScene = VideoSubScene()
-
-                getSceneService().pushSubScene(videoScene)
-
-                //spawn("animated_flame", getInput().mouseXWorld, getInput().mouseYWorld)
+                Gameplay.openStorage()
             }
 //
 //            onKeyDown(T) {
@@ -158,8 +131,6 @@ class ZephyriaApp : GameApplication() {
         vars[IS_SELECTING_SKILL_TARGET_AREA] = false
         vars[IS_SELECTING_SKILL_TARGET_CHAR] = false
         vars[SELECTED_SKILL_INDEX] = -1
-
-        vars["isCodefestEnabled"] = false
     }
 
     private fun onHotbarSkill(index: Int) {
@@ -203,10 +174,6 @@ class ZephyriaApp : GameApplication() {
         }
     }
 
-
-
-    // TODO: dialogue system values (set / get, compare?)
-
     override fun initGame() {
         devScene = DevScene()
 
@@ -221,54 +188,9 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
-        //gotoMap("dev_world.tmx", 8, 6)
+        gotoMap("dev_world.tmx", 8, 6)
         //gotoMap("tutorial.tmx", 8, 6)
-        gotoMap("test_map.tmx", 2, 6)
-
-        // Codefest stuff
-        if (isReleaseMode()) {
-            val c1 = Gameplay.spawnItem(6997, 2, 8)
-            val c2 = Gameplay.spawnItem(6998, 2, 10)
-            val c3 = Gameplay.spawnItem(6999, 2, 12)
-
-            c1.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
-            c2.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
-            c3.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
-
-            val treasure = entityBuilder()
-                    .atAnchored(Point2D(16.0, 16.0), Point2D(3.0 * 32.0, 8.0 * 32.0))
-                    .viewWithBBox("chest_closed.png")
-                    .onClick {
-                        val textField1 = TextField().also { it.prefWidth = 250.0 }
-                        val textField2 = TextField().also { it.prefWidth = 250.0 }
-
-                        val button = getUIFactoryService().newButton("Submit")
-                        button.setOnAction {
-                            // TODO: load from text
-                            if (true) {
-                                showMessage("Well Done! The final link is: ")
-                            }
-                        }
-
-                        getDialogService().showBox("Enter results for challenges 1 and 2 in order: ", VBox(5.0, textField1, textField2), button)
-                    }
-                    .buildAndAttach()
-
-            treasure.viewComponent.visibleProperty.bind(getbp("isCodefestEnabled"))
-
-            runOnce({
-                getDialogService().showInputBox("Please enter your name") { name ->
-                    set("playerName", name)
-                }
-
-                runOnce({
-                    val videoScene = VideoSubScene()
-
-                    getSceneService().pushSubScene(videoScene)
-                }, Duration.millis(150.0))
-
-            }, Duration.millis(10.0))
-        }
+        //gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

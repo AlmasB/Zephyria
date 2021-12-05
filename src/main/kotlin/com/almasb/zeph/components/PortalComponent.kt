@@ -1,9 +1,6 @@
 package com.almasb.zeph.components
 
-import com.almasb.fxgl.dsl.FXGL
-import com.almasb.fxgl.dsl.getGameWorld
-import com.almasb.fxgl.dsl.image
-import com.almasb.fxgl.dsl.runOnce
+import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
@@ -57,6 +54,9 @@ class PortalComponent(
     }
 
     override fun onUpdate(tpf: Double) {
+        if (isReleaseMode())
+            return
+
         if (!isCollidable)
             return
 

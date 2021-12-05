@@ -207,6 +207,7 @@ class ZephFactory : EntityFactory {
         player.type = PLAYER
         player.removeComponent(RandomWanderComponent::class.java)
         player.addComponent(PlayerComponent())
+        player.addComponent(PlayerWorldComponent())
         player.addComponent(IrremovableComponent())
 
         player.viewComponent.parent.isMouseTransparent = true

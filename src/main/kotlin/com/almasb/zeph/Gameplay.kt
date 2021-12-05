@@ -16,12 +16,12 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.EquipPlace
+import com.almasb.zeph.character.components.PlayerWorldComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.EquipItem
 import com.almasb.zeph.item.MiscItem
 import com.almasb.zeph.skill.Skill
-import com.almasb.zeph.ui.StorageView
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
@@ -42,9 +42,18 @@ object Gameplay : FunctionCallDelegate {
         get() = geto(GAME_MAP)
 
     fun openStorage() {
-        val storageView = StorageView()
+        if (player.getComponent(PlayerWorldComponent::class.java).isStorageOpen)
+            return
 
-        addUINode(storageView, 200.0, 200.0)
+        val storageView = player.getComponent(PlayerWorldComponent::class.java).storageWindow
+
+        addUINode(storageView)
+    }
+
+    fun closeStorage() {
+        val storageView = player.getComponent(PlayerWorldComponent::class.java).storageWindow
+
+        removeUINode(storageView)
     }
 
     fun where() {

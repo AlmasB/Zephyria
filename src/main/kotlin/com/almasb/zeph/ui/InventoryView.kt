@@ -4,8 +4,11 @@ import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.inventory.ItemStack
 import com.almasb.zeph.Config
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.components.PlayerWorldComponent
 import com.almasb.zeph.item.*
+import com.almasb.zeph.transferItemFrom
 import javafx.collections.ListChangeListener
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -119,21 +122,31 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
         view.setOnMouseClicked {
             if (it.button == MouseButton.PRIMARY) {
-                when (item) {
-                    is Weapon -> {
-                        player.playerComponent!!.equipWeapon(item)
-                    }
+                if (player.getComponent(PlayerWorldComponent::class.java).isStorageOpen) {
 
-                    is Armor -> {
-                        player.playerComponent!!.equipArmor(item)
-                    }
+                    player.getComponent(PlayerWorldComponent::class.java)
+                            .storage
+                            .inventory
+                            .transferItemFrom(item, player.inventory)
 
-                    is UsableItem -> {
-                        player.characterComponent.useItem(item)
-                    }
+                } else {
 
-                    is MiscItem -> {
-                        // ignore misc items, can't interact
+                    when (item) {
+                        is Weapon -> {
+                            player.playerComponent!!.equipWeapon(item)
+                        }
+
+                        is Armor -> {
+                            player.playerComponent!!.equipArmor(item)
+                        }
+
+                        is UsableItem -> {
+                            player.characterComponent.useItem(item)
+                        }
+
+                        is MiscItem -> {
+                            // ignore misc items, can't interact
+                        }
                     }
                 }
             }

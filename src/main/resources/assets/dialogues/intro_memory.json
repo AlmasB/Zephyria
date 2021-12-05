@@ -1,0 +1,91 @@
+{
+  "uniqueID" : 9,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "*You see a bright white orb floating in front of you. Perhaps, this is the memory you are meant to find.*",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "*You feel like your recollection of this place and the man is improving. Still, you need to leave this place quickly.*",
+      "audio" : ""
+    },
+    "5" : {
+      "type" : "FUNCTION",
+      "text" : "tutorialCollectMemory\nenablePortal 14",
+      "audio" : ""
+    },
+    "7" : {
+      "type" : "END",
+      "text" : "*You ignore the orb and head towards the portal.*",
+      "audio" : ""
+    },
+    "8" : {
+      "type" : "FUNCTION",
+      "text" : "enablePortal 14",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "*It seems you have a choice to make. Collect the memory or run for the portal.*",
+      "options" : {
+        "0" : "\"Collect memory\" - that's why you are here.",
+        "1" : "\"Run for the portal\" - you don't trust the orb."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 3
+  }, {
+    "sourceID" : 8,
+    "targetID" : 7
+  }, {
+    "sourceID" : 5,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 5
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 8
+  } ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 1480.0,
+      "y" : 200.0
+    },
+    "3" : {
+      "x" : 520.0,
+      "y" : 480.0
+    },
+    "5" : {
+      "x" : 960.0,
+      "y" : 160.0
+    },
+    "7" : {
+      "x" : 1480.0,
+      "y" : 560.0
+    },
+    "8" : {
+      "x" : 1040.0,
+      "y" : 520.0
+    }
+  }
+}

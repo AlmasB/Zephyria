@@ -325,6 +325,10 @@ object Gameplay : FunctionCallDelegate {
 
         return false
     }
+
+    fun tutorialCollectMemory() {
+        FXGL.byType(EntityType.MEMORY).forEach { it.removeFromWorld() }
+    }
 }
 
 object CommandHandler : FunctionCallHandler() {

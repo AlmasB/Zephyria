@@ -1,0 +1,44 @@
+{
+  "uniqueID" : 7,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "*You find yourself in, yet another, unfamiliar place. You see the man you've met before and a woman beside him.*",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "*You decide to walk up to the two people and ask what is going on.*",
+      "audio" : ""
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "*You slowly realise that there are skeletons roaming the land near and far. They do not seem to be aggressive however.*",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : { },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 6
+  }, {
+    "sourceID" : 6,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 920.0,
+      "y" : 440.0
+    },
+    "6" : {
+      "x" : 520.0,
+      "y" : 440.0
+    }
+  }
+}

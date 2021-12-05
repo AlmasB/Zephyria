@@ -50,7 +50,7 @@ class ZephyriaApp : GameApplication() {
                 return ZephLoadingScene()
             }
         }
-        settings.applicationMode = ApplicationMode.DEVELOPER
+        settings.applicationMode = ApplicationMode.RELEASE
     }
 
     override fun onPreInit() {
@@ -189,8 +189,8 @@ class ZephyriaApp : GameApplication() {
         getGameScene().viewport.setZoom(1.5)
 
         //gotoMap("dev_world.tmx", 8, 6)
-        //gotoMap("tutorial.tmx", 8, 6)
-        gotoMap("test_map.tmx", 2, 6)
+        gotoMap("tutorial.tmx", 8, 6)
+        //gotoMap("test_map.tmx", 2, 6)
     }
 
     override fun initPhysics() {

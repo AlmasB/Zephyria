@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="430">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="431">
  <properties>
   <property name="2004" type="int" value="50"/>
   <property name="2005" type="int" value="40"/>
@@ -15,7 +15,7 @@
   <property name="2015" type="int" value="0"/>
   <property name="2500" value="11,9"/>
   <property name="2501" value="10,9"/>
-  <property name="2502" value="9,14"/>
+  <property name="2502" value="33,8"/>
   <property name="2503" value="19,22"/>
   <property name="2504" value="21,9"/>
  </properties>
@@ -851,6 +851,9 @@
   <object id="280" type="anim_tree" gid="442" x="4096" y="224" width="32" height="32"/>
   <object id="332" type="textTriggerBox" x="32" y="192" width="192" height="96">
    <text wrap="1" color="#7d0000">Thank you for completing the Zephyria Demo! This map is under development and some actions may crash the game.</text>
+  </object>
+  <object id="430" type="dialogue" x="32" y="192" width="192" height="160">
+   <text wrap="1">intro_level1.json</text>
   </object>
  </objectgroup>
  <objectgroup id="9" name="Decor_objects_above_player">

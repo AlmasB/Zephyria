@@ -78,6 +78,7 @@ import kotlin.math.roundToInt
  */
 class ZephFactory : EntityFactory {
 
+    // TODO: use .tmx object or similar to place NPCs, so they are visible in Tiled
     @Spawns("npc")
     fun newNPC(data: SpawnData): Entity {
         val cellX = data.get<Int>("cellX")

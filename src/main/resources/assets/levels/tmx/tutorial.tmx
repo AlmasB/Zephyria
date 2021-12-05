@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="21">
+<map version="1.4" tiledversion="1.4.2" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="9" nextobjectid="22">
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>
  </tileset>
@@ -110,6 +110,9 @@
    <text wrap="1">intro_final.json</text>
   </object>
   <object id="20" type="memory" x="224" y="960" width="32" height="32"/>
+  <object id="21" type="dialogue" x="64" y="1024" width="192" height="160">
+   <text wrap="1">intro_memory.json</text>
+  </object>
  </objectgroup>
  <objectgroup id="7" name="Decor_objects_above_player"/>
  <objectgroup id="8" name="Walkable_areas" visible="0">

@@ -140,8 +140,9 @@ class OnBeforeSkillCastEvent(
 ) : GameEvent(ON_BEFORE_SKILL_CAST)
 
 class OnOrderedMoveEvent(
-        val char: CharacterEntity
-// TODO: where moving?
+        val char: CharacterEntity,
+        val cellX: Int,
+        val cellY: Int
 ) : GameEvent(ON_ORDERED_MOVE)
 
 class OnLevelUpEvent(

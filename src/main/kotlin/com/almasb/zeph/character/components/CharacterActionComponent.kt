@@ -114,7 +114,7 @@ class CharacterActionComponent : Component() {
     }
 
     fun orderMove(x: Int, y: Int) {
-        fire(OnOrderedMoveEvent(char))
+        fire(OnOrderedMoveEvent(char, x, y))
 
         reset()
         state.changeState(MOVE)

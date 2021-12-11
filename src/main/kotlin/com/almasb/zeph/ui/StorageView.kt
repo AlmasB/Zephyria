@@ -10,13 +10,11 @@ import com.almasb.zeph.Config
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.*
-import com.almasb.zeph.transferItemFrom
 import javafx.collections.ListChangeListener
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.Group
 import javafx.scene.Parent
-import javafx.scene.control.Button
 import javafx.scene.input.MouseButton
 import javafx.scene.layout.StackPane
 import javafx.scene.layout.VBox
@@ -142,7 +140,7 @@ class StorageView(val inventory: Inventory<Item>) : Parent() {
 
         view.setOnMouseClicked {
             if (it.button == MouseButton.PRIMARY) {
-                Gameplay.player.inventory.transferItemFrom(item, inventory)
+                Gameplay.player.inventory.transferFrom(inventory, item)
             }
         }
 

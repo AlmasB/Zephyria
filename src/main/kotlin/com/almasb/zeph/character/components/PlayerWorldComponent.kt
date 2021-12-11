@@ -18,10 +18,10 @@ class PlayerWorldComponent : Component() {
 
     val storageWindow = MDIWindow().also {
         it.title = "Storage"
-        it.canClose = false
-        it.canResize = false
-        it.canMinimize = false
-        it.canMove = true
+        it.isCloseable = false
+        it.isManuallyResizable = false
+        it.isMinimizable = false
+        it.isMovable = true
         it.contentPane = Pane(storage)
 
         it.setPrefSize(213.0, 420.0)

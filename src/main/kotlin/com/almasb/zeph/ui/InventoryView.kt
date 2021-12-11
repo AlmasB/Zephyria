@@ -3,13 +3,12 @@ package com.almasb.zeph.ui
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.inventory.ItemStack
-import com.almasb.zeph.Config
-import com.almasb.zeph.Gameplay
+import com.almasb.zeph.MouseGestures
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.components.PlayerWorldComponent
 import com.almasb.zeph.item.*
-import com.almasb.zeph.transferItemFrom
 import javafx.collections.ListChangeListener
+import javafx.geometry.Point2D
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.Group
@@ -20,8 +19,6 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Circle
 import javafx.scene.shape.Rectangle
 import javafx.scene.shape.Shape
-import javafx.util.Pair
-import java.util.function.Consumer
 
 /**
  *
@@ -35,10 +32,15 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
     val minBtn = MinimizeButton("I", BG_WIDTH - 46.0, -22.0, 0.0, BG_HEIGHT, this)
 
     // K - index, V - if free? TODO: double check
-    private val slots: MutableMap<Int, Boolean> = HashMap()
+    //private val slots: MutableMap<Int, Boolean> = HashMap()
 
     private val itemGroup = Group()
     private val listener: ListChangeListener<ItemStack<Item>>
+
+    private val itemPanes
+        get() = itemGroup.children.map { it as ItemPane }
+
+    private val mouseGestures = MouseGestures(itemGroup)
 
     init {
         relocate(FXGL.getAppWidth() - 200.toDouble(), FXGL.getAppHeight() - 240.toDouble())
@@ -60,11 +62,31 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
         children.addAll(borderShape, background, equipView, itemGroup, minBtn)
 
-        for (i in 0 until Config.MAX_INVENTORY_SIZE) {
-            slots[i] = true
+        // populate item panes
+        for (y in 0..5) {
+            for (x in 0..4) {
+                val pane = ItemPane()
+                pane.translateX = x * 40 + 3.toDouble()
+                pane.translateY = y * 40 + 3.toDouble()
+
+                mouseGestures.makeDraggable(pane) {
+                    swap(pane)
+                }
+
+                pane.setOnMouseClicked {
+                    if (pane.isEmpty)
+                        return@setOnMouseClicked
+
+                    if (it.button == MouseButton.PRIMARY && it.clickCount == 2) {
+                        val item = pane.itemStack!!.userItem
+                        onItemClicked(item)
+                    }
+                }
+
+                itemGroup.children += pane
+            }
         }
 
-        // TODO: refactor
         listener = ListChangeListener { change ->
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -73,18 +95,10 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
                     }
                 } else if (change.wasRemoved()) {
                     for (stack in change.removed) {
-                        val it = itemGroup.children.iterator()
-                        while (it.hasNext()) {
-                            val node = it.next()
-                            if (node.userData != null) {
-                                val data = node.userData as Pair<ItemStack<Item>, Int>
-                                if (data.key === stack) {
-                                    slots[data.value] = true
-                                    it.remove()
-                                    break
+                        itemPanes.filter { it.itemStack === stack}
+                                .forEach {
+                                    it.itemStack = null
                                 }
-                            }
-                        }
                     }
                 }
             }
@@ -94,71 +108,110 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         player.inventory.itemsProperty().addListener(listener)
     }
 
-    private fun getNextFreeSlot(): Int {
-        for (i in 0 until Config.MAX_INVENTORY_SIZE) {
-            if (slots[i]!!)
-                return i
-        }
-        return -1
+    private fun swap(pane: ItemPane) {
+        val closestPane = itemPanes
+                .sortedBy {
+                    Point2D(it.translateX, it.translateY)
+                            .distance(Point2D(pane.layoutX + pane.translateX, pane.layoutY + pane.translateY))
+                }
+                .first()
+
+        pane.relocate(0.0, 0.0)
+
+        if (closestPane === pane)
+            return
+
+        // TODO: implement proper swap, now we need to set to null to clean up
+        val stack = pane.itemStack
+
+        pane.itemStack = null
+        pane.itemStack = closestPane.itemStack
+        closestPane.itemStack = null
+        closestPane.itemStack = stack
     }
 
-    private fun addItem(stack: ItemStack<Item>) {
-        val item = stack.userItem
+    private fun onItemClicked(item: Item) {
+        if (player.getComponent(PlayerWorldComponent::class.java).isStorageOpen) {
 
-        val index = getNextFreeSlot()
-        slots[index] = false
+            player.getComponent(PlayerWorldComponent::class.java)
+                    .storage
+                    .inventory
+                    .transferFrom(player.inventory, item)
 
-        val view = StackPane(FXGL.texture(item.description.textureName))
-        view.alignment = Pos.BOTTOM_RIGHT
-        view.userData = Pair(stack, index)
-        view.translateX = index % 5 * 40 + 3.toDouble()
-        view.translateY = index / 5 * 40 + 3.toDouble()
-        view.isPickOnBounds = true
-        view.cursor = Cursor.HAND
+        } else {
 
-        view.setOnTooltipHover { t: TooltipView ->
-            t.setItem(item)
-        }
+            when (item) {
+                is Weapon -> {
+                    player.playerComponent!!.equipWeapon(item)
+                }
 
-        view.setOnMouseClicked {
-            if (it.button == MouseButton.PRIMARY) {
-                if (player.getComponent(PlayerWorldComponent::class.java).isStorageOpen) {
+                is Armor -> {
+                    player.playerComponent!!.equipArmor(item)
+                }
 
-                    player.getComponent(PlayerWorldComponent::class.java)
-                            .storage
-                            .inventory
-                            .transferItemFrom(item, player.inventory)
+                is UsableItem -> {
+                    player.characterComponent.useItem(item)
+                }
 
-                } else {
-
-                    when (item) {
-                        is Weapon -> {
-                            player.playerComponent!!.equipWeapon(item)
-                        }
-
-                        is Armor -> {
-                            player.playerComponent!!.equipArmor(item)
-                        }
-
-                        is UsableItem -> {
-                            player.characterComponent.useItem(item)
-                        }
-
-                        is MiscItem -> {
-                            // ignore misc items, can't interact
-                        }
-                    }
+                is MiscItem -> {
+                    // ignore misc items, can't interact
                 }
             }
         }
+    }
 
-        val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
+    private fun getNextFreeSlot(): ItemPane? {
+        return itemPanes.find { it.isEmpty }
+    }
 
-        text.textProperty().bind(stack.quantityProperty().asString())
+    private fun addItem(stack: ItemStack<Item>) {
+        getNextFreeSlot()?.let {
+            it.itemStack = stack
+        }
+    }
+}
+
+private class ItemPane : StackPane() {
+
+    private val text = FXGL.getUIFactoryService().newText("", Color.WHITE, 12.0)
+
+    var itemStack: ItemStack<Item>? = null
+        set(value) {
+            if (value == null) {
+
+                if (itemStack != null) {
+                    children.removeAt(0)
+
+                    text.textProperty().unbind()
+                    text.text = ""
+                }
+
+            } else {
+                val view = FXGL.texture(value.userItem.description.textureName)
+
+                children.add(0, view)
+
+                text.textProperty().bind(value.quantityProperty().asString())
+
+                // TODO: remove when value == null?
+                setOnTooltipHover { t: TooltipView ->
+                    t.setItem(value.userItem)
+                }
+            }
+
+            field = value
+        }
+
+    val isEmpty: Boolean
+        get() = itemStack == null
+
+    init {
+        alignment = Pos.BOTTOM_RIGHT
+        isPickOnBounds = true
+        cursor = Cursor.HAND
+
         text.strokeWidth = 1.5
 
-        view.children.addAll(text)
-
-        itemGroup.children.add(view)
+        children += text
     }
 }

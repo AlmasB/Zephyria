@@ -1,38 +1,44 @@
 package com.almasb.zeph.ui
 
 import com.almasb.fxgl.dsl.FXGL
-import com.almasb.fxgl.dsl.texture
+import com.almasb.fxgl.dsl.getUIFactoryService
+import com.almasb.fxgl.dsl.image
+import com.almasb.fxgl.inventory.Inventory
 import com.almasb.fxgl.inventory.ItemStack
+import com.almasb.fxgl.ui.FXGLScrollPane
+import com.almasb.zeph.Gameplay
 import com.almasb.zeph.MouseGestures
-import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.character.components.PlayerWorldComponent
-import com.almasb.zeph.item.*
+import com.almasb.zeph.data.Data
+import com.almasb.zeph.item.Item
+import com.almasb.zeph.item.UsableItem
+import com.almasb.zeph.item.Weapon
 import javafx.collections.ListChangeListener
 import javafx.geometry.Point2D
 import javafx.geometry.Pos
 import javafx.scene.Cursor
 import javafx.scene.Group
 import javafx.scene.Parent
+import javafx.scene.control.ScrollPane
 import javafx.scene.input.MouseButton
-import javafx.scene.layout.StackPane
+import javafx.scene.layout.*
 import javafx.scene.paint.Color
-import javafx.scene.shape.Circle
 import javafx.scene.shape.Rectangle
-import javafx.scene.shape.Shape
+import javafx.scene.text.Font
 
 /**
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
-class InventoryView(private val player: CharacterEntity) : Parent() {
+class InventoryView(val inventory: Inventory<Item>,
 
-    private val BG_WIDTH = 200.0
-    private val BG_HEIGHT = 240.0
+                    /**
+                     * Width and height in number of cells.
+                     */
+                    val widthInCells: Int, val heightInCells: Int) : Parent() {
 
-    val minBtn = MinimizeButton("I", BG_WIDTH - 46.0, -22.0, 0.0, BG_HEIGHT, this)
+    private val contentPane = Pane()
 
-    // K - index, V - if free? TODO: double check
-    //private val slots: MutableMap<Int, Boolean> = HashMap()
+    private val scrollPane = FXGLScrollPane(contentPane)
 
     private val itemGroup = Group()
     private val listener: ListChangeListener<ItemStack<Item>>
@@ -42,29 +48,36 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
 
     private val mouseGestures = MouseGestures(itemGroup)
 
+    var onItemClicked: (Item) -> Unit = {}
+
+    val layoutWidth: Double
+        get() = scrollPane.prefWidth
+
+    val layoutHeight: Double
+        get() = scrollPane.prefHeight
+
     init {
-        relocate(FXGL.getAppWidth() - 200.toDouble(), FXGL.getAppHeight() - 240.toDouble())
+        val bg = Rectangle(40.0 * widthInCells, inventory.capacity / widthInCells * 40.0)
+        bg.arcWidth = 15.0
+        bg.arcHeight = 15.0
+        bg.stroke = Color.AQUA
+        bg.strokeWidth = 1.5
 
-        val border = Rectangle(BG_WIDTH * 2 + 3, BG_HEIGHT + 5)
-        border.strokeWidth = 2.0
-        border.arcWidth = 10.0
-        border.arcHeight = 10.0
 
-        val borderShape = Shape.union(border, Circle((BG_WIDTH * 2 + 3 - 30), 0.0, 30.0))
-        borderShape.fill = Color.rgb(25, 25, 25, 0.8)
-        borderShape.stroke = Color.WHITE
-        borderShape.translateX = -BG_WIDTH - 3
+        scrollPane.setPrefSize(bg.width + bg.strokeWidth * 2 + 10.0, 40.0 * heightInCells)
+        scrollPane.hbarPolicy = ScrollPane.ScrollBarPolicy.NEVER
 
-        val background = texture("ui/inventory_right.png")
+        contentPane.background = Background(BackgroundImage(image("ui/item_frame.png"),
+                BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, null, null))
 
-        val equipView = EquipmentView(player)
-        equipView.translateX = -BG_WIDTH
+        children += scrollPane
 
-        children.addAll(borderShape, background, equipView, itemGroup, minBtn)
+        contentPane.setPrefSize(bg.width, bg.height)
+        contentPane.maxHeight = bg.height
 
         // populate item panes
-        for (y in 0..5) {
-            for (x in 0..4) {
+        for (y in 0 until inventory.capacity / widthInCells) {
+            for (x in 0 until widthInCells) {
                 val pane = ItemPane()
                 pane.translateX = x * 40 + 3.toDouble()
                 pane.translateY = y * 40 + 3.toDouble()
@@ -87,6 +100,8 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
             }
         }
 
+        contentPane.children += itemGroup
+
         listener = ListChangeListener { change ->
             while (change.next()) {
                 if (change.wasAdded()) {
@@ -104,8 +119,17 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
             }
         }
 
-        player.inventory.itemsProperty().forEach { addItem(it) }
-        player.inventory.itemsProperty().addListener(listener)
+        inventory.itemsProperty().forEach { addItem(it) }
+        inventory.itemsProperty().addListener(listener)
+        
+        // TEST
+
+        inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
+        inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
+
+        inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+        inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+        inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
     }
 
     private fun swap(pane: ItemPane) {
@@ -128,36 +152,6 @@ class InventoryView(private val player: CharacterEntity) : Parent() {
         pane.itemStack = closestPane.itemStack
         closestPane.itemStack = null
         closestPane.itemStack = stack
-    }
-
-    private fun onItemClicked(item: Item) {
-        if (player.getComponent(PlayerWorldComponent::class.java).isStorageOpen) {
-
-            player.getComponent(PlayerWorldComponent::class.java)
-                    .storage
-                    .inventory
-                    .transferFrom(player.inventory, item)
-
-        } else {
-
-            when (item) {
-                is Weapon -> {
-                    player.playerComponent!!.equipWeapon(item)
-                }
-
-                is Armor -> {
-                    player.playerComponent!!.equipArmor(item)
-                }
-
-                is UsableItem -> {
-                    player.characterComponent.useItem(item)
-                }
-
-                is MiscItem -> {
-                    // ignore misc items, can't interact
-                }
-            }
-        }
     }
 
     private fun getNextFreeSlot(): ItemPane? {
@@ -213,5 +207,25 @@ private class ItemPane : StackPane() {
         text.strokeWidth = 1.5
 
         children += text
+    }
+}
+
+class StorageView(val inventory: Inventory<Item>) : Parent() {
+    val inventoryView = InventoryView(inventory, 20, 4)
+
+    val closeButton = getUIFactoryService().newButton("Close")
+
+    init {
+        closeButton.fontProperty().unbind()
+        closeButton.font = Font.font(11.0)
+        closeButton.setPrefSize(213.0, 13.0)
+        closeButton.setOnAction {
+            Gameplay.closeStorage()
+        }
+
+        val vbox = VBox(inventoryView, closeButton)
+        vbox.alignment = Pos.TOP_CENTER
+
+        children += vbox
     }
 }

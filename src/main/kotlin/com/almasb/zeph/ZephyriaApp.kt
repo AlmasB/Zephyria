@@ -79,7 +79,7 @@ class ZephyriaApp : GameApplication() {
 
         onKeyDown(I) {
             getGameScene().uiNodes
-                    .filterIsInstance(InventoryView::class.java)
+                    .filterIsInstance(PlayerInventoryView::class.java)
                     .forEach { it.minBtn.onClick() }
         }
 
@@ -219,7 +219,7 @@ class ZephyriaApp : GameApplication() {
 
         getGameScene().addUINodes(
                 BasicInfoView(player),
-                InventoryView(player),
+                PlayerInventoryView(player),
                 HotbarView(player),
                 MessagesView()
         )

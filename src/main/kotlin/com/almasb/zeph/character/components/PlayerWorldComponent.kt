@@ -4,6 +4,7 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.inventory.Inventory
 import com.almasb.fxgl.ui.MDIWindow
 import com.almasb.zeph.Config
+import com.almasb.zeph.ui.InventoryView
 import com.almasb.zeph.ui.StorageView
 import javafx.scene.layout.Pane
 
@@ -24,7 +25,7 @@ class PlayerWorldComponent : Component() {
         it.isMovable = true
         it.contentPane = Pane(storage)
 
-        it.setPrefSize(213.0, 420.0)
+        it.setPrefSize(storage.inventoryView.layoutWidth, storage.inventoryView.layoutHeight + 25.0)
     }
 
     val isStorageOpen: Boolean

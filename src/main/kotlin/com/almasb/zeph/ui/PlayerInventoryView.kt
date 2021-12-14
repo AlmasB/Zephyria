@@ -40,7 +40,11 @@ class PlayerInventoryView(private val player: CharacterEntity) : Parent() {
         val inventoryView = InventoryView(player.inventory, widthInCells = 5, heightInCells = 6)
         inventoryView.onItemClicked = this::onItemClicked
 
-        children.addAll(borderShape, equipView, inventoryView, minBtn)
+        val sortBtn = SortButton(inventoryView)
+        sortBtn.translateX = -40.0
+        sortBtn.translateY = 5.0
+
+        children.addAll(borderShape, equipView, inventoryView, sortBtn, minBtn)
     }
 
     private fun onItemClicked(item: Item) {

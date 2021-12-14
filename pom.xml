@@ -19,8 +19,8 @@
         <jfx.maven.plugin.version>0.0.4</jfx.maven.plugin.version>
         <mainClassName>com.almasb.zeph.ZephyriaAppKt</mainClassName>
 
-        <fxgl.version>11+dev-SNAPSHOT</fxgl.version>
-        <kotlin.version>1.5.10</kotlin.version>
+        <fxgl.version>17+dev-SNAPSHOT</fxgl.version>
+        <kotlin.version>1.5.32</kotlin.version>
         <jackson.version>2.12.1</jackson.version>
     </properties>
 

@@ -12,6 +12,7 @@ import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.Item
 import com.almasb.zeph.item.UsableItem
 import com.almasb.zeph.item.Weapon
+import javafx.beans.binding.Bindings
 import javafx.collections.ListChangeListener
 import javafx.geometry.Point2D
 import javafx.geometry.Pos
@@ -163,6 +164,17 @@ class InventoryView(val inventory: Inventory<Item>,
             it.itemStack = stack
         }
     }
+
+    fun sort() {
+        itemPanes.forEach {
+            it.itemStack = null
+        }
+
+        inventory.itemsProperty()
+                .sortedBy { it.userItem.description.id }
+                .zip(itemPanes)
+                .forEach { (stack, pane) -> pane.itemStack = stack }
+    }
 }
 
 private class ItemPane : StackPane() {
@@ -227,5 +239,34 @@ class StorageView(val inventory: Inventory<Item>) : Parent() {
         vbox.alignment = Pos.TOP_CENTER
 
         children += vbox
+    }
+}
+
+class SortButton(val inventoryView: InventoryView) : Parent() {
+
+    init {
+        val bg = Rectangle(32.0, 32.0)
+        bg.arcWidth = 10.0
+        bg.arcHeight = 10.0
+        bg.fillProperty().bind(
+                Bindings.`when`(hoverProperty()).then(Color.DARKGRAY).otherwise(Color.LIGHTGRAY)
+        )
+
+        children += bg
+
+        repeat(4) {
+            val rect = Rectangle(5.0, 5.0, Color.BLACK)
+            val x = it % 2 + 1
+            val y = it / 2 + 1
+
+            rect.translateX = x * 9.0
+            rect.translateY = y * 9.0
+
+            children += rect
+        }
+
+        setOnMouseClicked {
+            inventoryView.sort()
+        }
     }
 }

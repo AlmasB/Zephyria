@@ -7,6 +7,7 @@ import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
+import com.almasb.fxgl.dsl.FXGL.Companion.getService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.logging.LoggerLevel
@@ -22,6 +23,8 @@ import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
+import com.almasb.zeph.gameplay.ClockService
+import com.almasb.zeph.gameplay.TextClockView
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
@@ -45,6 +48,7 @@ class ZephyriaApp : GameApplication() {
         settings.title = "Zephyria RPG"
         settings.version = "0.1 Pre-alpha"
         settings.cssList += "zephyria.css"
+        settings.addEngineService(ClockService::class.java)
         settings.sceneFactory = object : SceneFactory() {
             override fun newLoadingScene(): LoadingScene {
                 return ZephLoadingScene()
@@ -105,7 +109,14 @@ class ZephyriaApp : GameApplication() {
 
                 //println(quest.data.description)
 
-                Gameplay.openStorage()
+                //Gameplay.openStorage()
+
+                val clockService = getService(ClockService::class.java)
+                clockService.clock.runAt(12, 0) {
+                    pushMessage("It's 12:00!")
+                }
+
+                addUINode(TextClockView(clockService.clock), 300.0, 300.0)
             }
 //
 //            onKeyDown(T) {

@@ -10,13 +10,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <source.version>11</source.version>
+        <source.version>17</source.version>
 
         <!-- plugins -->
         <maven.compiler.version>3.8.0</maven.compiler.version>
         <maven.shade.version>2.4.2</maven.shade.version>
 		
-        <jfx.maven.plugin.version>0.0.4</jfx.maven.plugin.version>
+        <jfx.maven.plugin.version>0.0.6</jfx.maven.plugin.version>
         <mainClassName>com.almasb.zeph.ZephyriaAppKt</mainClassName>
 
         <fxgl.version>17+dev-SNAPSHOT</fxgl.version>
@@ -41,7 +41,7 @@
     <repositories>
         <repository>
             <id>oss.sonatype.org-snapshot</id>
-            <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
     </repositories>
 
@@ -69,6 +69,7 @@
                         <configuration>
                             <sourceDirs>
                                 <source>src/main/kotlin</source>
+                                <source>src/main/java</source>
                             </sourceDirs>
                         </configuration>
                     </execution>

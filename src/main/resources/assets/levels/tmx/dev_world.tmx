@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" infinite="0" nextlayerid="19" nextobjectid="2">
+ <properties>
+  <property name="2500" value="11,9"/>
+ </properties>
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>
  </tileset>

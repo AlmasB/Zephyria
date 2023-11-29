@@ -29,7 +29,8 @@ import java.util.concurrent.Callable
 
 open class CharacterComponent(val data: CharacterData) : Component() {
 
-    private lateinit var char: CharacterEntity
+    lateinit var char: CharacterEntity
+        private set
 
     val charClass = SimpleObjectProperty(data.charClass)
 

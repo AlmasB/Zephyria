@@ -1,0 +1,469 @@
+{
+  "uniqueID" : 36,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Dear adventurer, my name is Cedric. I will be aiding you in your CI628 quest. If the game crashes, please tell Almas straight away, so the crash can be logged and later fixed. Before we begin, you must have a lot of questions.",
+      "audio" : ""
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "Curious indeed. Fear not, for memory can be a fickle companion, especially in realms touched by magic. Perhaps our journey through Zephyria will jog the recollections loose. In the meantime, we tread the path, and who knows what revelations await us beneath the sun and sky.",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "She will help you uncover the truths that lie ahead!",
+      "audio" : ""
+    },
+    "4" : {
+      "type" : "TEXT",
+      "text" : "A straightforward approach, I admire that. To action, then! May our path be clear, and our endeavors in Zephyria be as swift as the wind. Lead on, and I shall follow. As we journey through Zephyria, know that my knowledge is always at your disposal.",
+      "audio" : ""
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "But of course! After all, I am your guide.",
+      "audio" : ""
+    },
+    "8" : {
+      "type" : "TEXT",
+      "text" : "Fair point, noble adventurer. It seems we're embarking on a quest with a touch of mystery. Fear not, for I shall aid you in unraveling the threads of forgotten purpose.",
+      "audio" : ""
+    },
+    "9" : {
+      "type" : "TEXT",
+      "text" : "In light of your memory's haze, perhaps seeking guidance from a wise source is in order.",
+      "audio" : ""
+    },
+    "10" : {
+      "type" : "TEXT",
+      "text" : "Intriguing yet vague. Perhaps as we progress through Zephyria, the pieces of this enigmatic puzzle will fall into place. Until then, we forge ahead, guided by the winds of fate and the promise of discovery.",
+      "audio" : ""
+    },
+    "13" : {
+      "type" : "TEXT",
+      "text" : "Hmm... It is settled then! We shall make our way to see the powerful sorceress Elara Shadowclaw. Her knowledge of Zephyria's arcane currents may illuminate the shadows that obscure your purpose.",
+      "audio" : ""
+    },
+    "15" : {
+      "type" : "TEXT",
+      "text" : "You must make haste to the east! Remember, her name is Elara. Talk to her as soon you find her.",
+      "audio" : ""
+    },
+    "16" : {
+      "type" : "TEXT",
+      "text" : "I am sorry, but it doesn't work like that.",
+      "audio" : ""
+    },
+    "18" : {
+      "type" : "TEXT",
+      "text" : "Through the quest, you will have an opporunity to strengthen your coursework report and therefore improve your mark.",
+      "audio" : ""
+    },
+    "21" : {
+      "type" : "TEXT",
+      "text" : "I will take this as a compliment.",
+      "audio" : ""
+    },
+    "22" : {
+      "type" : "TEXT",
+      "text" : "I just wanted to help set the scene, hehe.",
+      "audio" : ""
+    },
+    "26" : {
+      "type" : "TEXT",
+      "text" : "I don't know what you are talking about and don't you dare ask me about this again! I'm serious, don't ask me about cheats.",
+      "audio" : ""
+    },
+    "29" : {
+      "type" : "FUNCTION",
+      "text" : "numTimesAskedCheats = 0",
+      "audio" : ""
+    },
+    "30" : {
+      "type" : "FUNCTION",
+      "text" : "numTimesAskedCheats = 1",
+      "audio" : ""
+    },
+    "31" : {
+      "type" : "BRANCH",
+      "text" : "$numTimesAskedCheats > 0",
+      "audio" : ""
+    },
+    "32" : {
+      "type" : "TEXT",
+      "text" : "I told you already! Stop asking about cheats!",
+      "audio" : ""
+    },
+    "33" : {
+      "type" : "BRANCH",
+      "text" : "$numTimesAskedCheats == 1",
+      "audio" : ""
+    },
+    "34" : {
+      "type" : "FUNCTION",
+      "text" : "numTimesAskedCheats = 2",
+      "audio" : ""
+    },
+    "35" : {
+      "type" : "TEXT",
+      "text" : "I'm just going to ignore that.",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "Please ask away.",
+      "options" : {
+        "0" : "Can you give me some of them cheats?",
+        "1" : "What is this world? Will I need to fight any enemies?",
+        "2" : "What do I get for completing the quest?",
+        "3" : "I don't want to talk. No questions. I'll just go where I want!",
+        "4" : "I don't have any more questions. Please tell me where to go.",
+        "5" : "Come on, give me some cheats."
+      },
+      "conditions" : {
+        "0" : "$numTimesAskedCheats == 0",
+        "1" : "",
+        "2" : "",
+        "3" : "",
+        "4" : "",
+        "5" : "$numTimesAskedCheats > 0"
+      },
+      "audio" : ""
+    },
+    "7" : {
+      "type" : "CHOICE",
+      "text" : "You really do not remember why you are here?",
+      "options" : {
+        "0" : "If I did, I wouldn't be asking you, now would I?",
+        "1" : "Condescending much?!",
+        "2" : "I am afraid not."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      },
+      "audio" : ""
+    },
+    "11" : {
+      "type" : "CHOICE",
+      "text" : "Can you recall anything at all about the task that brought you to Zephyria?",
+      "options" : {
+        "0" : "Something about a prophecy, an artifact, and a looming darkness. But the details slip through my grasp.",
+        "1" : "Well, I'm just trying to complete something about the CI628 report."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "12" : {
+      "type" : "CHOICE",
+      "text" : "Let us go forth!",
+      "options" : {
+        "0" : "We still don't know where to go. Your optimism is reassuring...",
+        "1" : "Where are we going?",
+        "2" : "You lead, I follow."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      },
+      "audio" : ""
+    },
+    "17" : {
+      "type" : "CHOICE",
+      "text" : "Are you sure? You may miss vital information and may get lost!",
+      "options" : {
+        "0" : "Yes, I am sure. I just want to explore and find answers on my own.",
+        "1" : "Actually, on second thought, I would like some guidance."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "20" : {
+      "type" : "CHOICE",
+      "text" : "Ah, Zephyria, a realm woven with threads of magic and mystery. It is a land where the winds carry not only whispers but also the very essence of the extraordinary. The boundaries between reality and the mystical are blurred, and our journey through it is bound to be one of both wonder and challenge. You won't fight anyone. The quest will take you to a few locations and I'll try my best to aid you in your endeavours.",
+      "options" : {
+        "0" : "Sorry, this isn't very helpful.",
+        "1" : "You really have a way with words, you know that?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 8,
+    "targetID" : 11
+  }, {
+    "sourceID" : 1,
+    "targetID" : 11
+  }, {
+    "sourceID" : 10,
+    "targetID" : 12
+  }, {
+    "sourceID" : 9,
+    "targetID" : 13
+  }, {
+    "sourceID" : 6,
+    "targetID" : 9
+  }, {
+    "sourceID" : 16,
+    "targetID" : 9
+  }, {
+    "sourceID" : 13,
+    "targetID" : 15
+  }, {
+    "sourceID" : 4,
+    "targetID" : 15
+  }, {
+    "sourceID" : 15,
+    "targetID" : 2
+  }, {
+    "sourceID" : 18,
+    "targetID" : 3
+  }, {
+    "sourceID" : 22,
+    "targetID" : 3
+  }, {
+    "sourceID" : 21,
+    "targetID" : 3
+  }, {
+    "sourceID" : 26,
+    "targetID" : 3
+  }, {
+    "sourceID" : 0,
+    "targetID" : 29
+  }, {
+    "sourceID" : 29,
+    "targetID" : 3
+  }, {
+    "sourceID" : 30,
+    "targetID" : 26
+  }, {
+    "sourceID" : 32,
+    "targetID" : 3
+  }, {
+    "sourceID" : 34,
+    "targetID" : 32
+  }, {
+    "sourceID" : 35,
+    "targetID" : 3
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 7,
+    "optionID" : 0,
+    "targetID" : 8
+  }, {
+    "sourceID" : 7,
+    "optionID" : 1,
+    "targetID" : 8
+  }, {
+    "sourceID" : 11,
+    "optionID" : 0,
+    "targetID" : 10
+  }, {
+    "sourceID" : 11,
+    "optionID" : 1,
+    "targetID" : 10
+  }, {
+    "sourceID" : 7,
+    "optionID" : 2,
+    "targetID" : 1
+  }, {
+    "sourceID" : 12,
+    "optionID" : 0,
+    "targetID" : 6
+  }, {
+    "sourceID" : 12,
+    "optionID" : 1,
+    "targetID" : 9
+  }, {
+    "sourceID" : 12,
+    "optionID" : 2,
+    "targetID" : 16
+  }, {
+    "sourceID" : 17,
+    "optionID" : 0,
+    "targetID" : 4
+  }, {
+    "sourceID" : 17,
+    "optionID" : 1,
+    "targetID" : 3
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 20
+  }, {
+    "sourceID" : 20,
+    "optionID" : 1,
+    "targetID" : 21
+  }, {
+    "sourceID" : 20,
+    "optionID" : 0,
+    "targetID" : 22
+  }, {
+    "sourceID" : 3,
+    "optionID" : 4,
+    "targetID" : 7
+  }, {
+    "sourceID" : 3,
+    "optionID" : 2,
+    "targetID" : 18
+  }, {
+    "sourceID" : 3,
+    "optionID" : 3,
+    "targetID" : 17
+  }, {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 31
+  }, {
+    "sourceID" : 31,
+    "optionID" : 1,
+    "targetID" : 30
+  }, {
+    "sourceID" : 31,
+    "optionID" : 0,
+    "targetID" : 33
+  }, {
+    "sourceID" : 33,
+    "optionID" : 0,
+    "targetID" : 34
+  }, {
+    "sourceID" : 33,
+    "optionID" : 1,
+    "targetID" : 35
+  }, {
+    "sourceID" : 3,
+    "optionID" : 5,
+    "targetID" : 31
+  } ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : -1440.0,
+      "y" : 160.0
+    },
+    "1" : {
+      "x" : 920.0,
+      "y" : -120.0
+    },
+    "2" : {
+      "x" : 4360.0,
+      "y" : -120.0
+    },
+    "3" : {
+      "x" : -200.0,
+      "y" : 120.0
+    },
+    "4" : {
+      "x" : 1400.0,
+      "y" : 600.0
+    },
+    "6" : {
+      "x" : 2720.0,
+      "y" : -520.0
+    },
+    "7" : {
+      "x" : 440.0,
+      "y" : -320.0
+    },
+    "8" : {
+      "x" : 960.0,
+      "y" : -400.0
+    },
+    "9" : {
+      "x" : 3120.0,
+      "y" : -400.0
+    },
+    "10" : {
+      "x" : 1800.0,
+      "y" : -360.0
+    },
+    "11" : {
+      "x" : 1360.0,
+      "y" : -320.0
+    },
+    "12" : {
+      "x" : 2280.0,
+      "y" : -320.0
+    },
+    "13" : {
+      "x" : 3480.0,
+      "y" : -440.0
+    },
+    "15" : {
+      "x" : 3880.0,
+      "y" : -160.0
+    },
+    "16" : {
+      "x" : 2760.0,
+      "y" : -160.0
+    },
+    "17" : {
+      "x" : 400.0,
+      "y" : 720.0
+    },
+    "18" : {
+      "x" : -240.0,
+      "y" : 600.0
+    },
+    "20" : {
+      "x" : 480.0,
+      "y" : 80.0
+    },
+    "21" : {
+      "x" : 1800.0,
+      "y" : 360.0
+    },
+    "22" : {
+      "x" : 1760.0,
+      "y" : 0.0
+    },
+    "26" : {
+      "x" : -40.0,
+      "y" : -400.0
+    },
+    "29" : {
+      "x" : -1280.0,
+      "y" : -40.0
+    },
+    "30" : {
+      "x" : -440.0,
+      "y" : -400.0
+    },
+    "31" : {
+      "x" : -920.0,
+      "y" : -360.0
+    },
+    "32" : {
+      "x" : 0.0,
+      "y" : -760.0
+    },
+    "33" : {
+      "x" : -760.0,
+      "y" : -680.0
+    },
+    "34" : {
+      "x" : -360.0,
+      "y" : -720.0
+    },
+    "35" : {
+      "x" : -440.0,
+      "y" : -960.0
+    }
+  }
+}

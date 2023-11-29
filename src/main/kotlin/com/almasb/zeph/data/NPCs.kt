@@ -56,4 +56,14 @@ class NPCs {
             textureName = "chars/npcs/coragh.png"
         }
     }
+
+    val CEDRIC = npc {
+        desc {
+            id = 2505
+            name = "Cedric"
+            textureName = "chars/npcs/cedric.png"
+        }
+
+        dialogueName = "dialogues/cedric.json"
+    }
 }

@@ -49,6 +49,8 @@ class DevScene : SubScene() {
     }
 
     private fun handleCommand(input: String) {
+        log.debug("Handling dev command: $input")
+
         val tokens = input.split(" +".toRegex())
         val cmd = tokens[0]
 

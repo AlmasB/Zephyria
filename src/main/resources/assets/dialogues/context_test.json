@@ -1,0 +1,32 @@
+{
+  "uniqueID" : 3,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Hello, my npc id is $id!",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "My data is $npcData.",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : { },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 560.0,
+      "y" : 400.0
+    }
+  }
+}

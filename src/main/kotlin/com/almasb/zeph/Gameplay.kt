@@ -2,6 +2,8 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.app.scene.GameView
+import com.almasb.fxgl.core.collection.PropertyMap
+import com.almasb.fxgl.cutscene.dialogue.DialogueContext
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallDelegate
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
@@ -17,6 +19,7 @@ import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.EquipPlace
+import com.almasb.zeph.character.components.NPCFollowComponent
 import com.almasb.zeph.character.components.PlayerWorldComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
@@ -200,11 +203,25 @@ object Gameplay : FunctionCallDelegate {
     }
 
     fun startDialogue(dialogueFileName: String) {
+        startDialogue(dialogueFileName, PropertyMap())
+    }
+
+    fun startDialogueNPC(dialogueFileName: String, id: Int) {
+        FXGL.byID("NPC", id).ifPresent {
+            startDialogue(dialogueFileName, it.properties)
+        }
+    }
+
+    fun startDialogue(dialogueFileName: String, character: CharacterEntity) {
+        startDialogue(dialogueFileName, character.properties)
+    }
+
+    fun startDialogue(dialogueFileName: String, contextVars: PropertyMap) {
         log.debug("Starting dialogue: $dialogueFileName")
 
         val graph = getAssetLoader().loadDialogueGraph(dialogueFileName)
 
-        getCutsceneService().startDialogueScene(graph, functionHandler = CommandHandler)
+        getCutsceneService().startDialogueScene(graph, context = { contextVars }, functionHandler = CommandHandler)
     }
 
     fun enablePortal(id: Int) {
@@ -268,8 +285,15 @@ object Gameplay : FunctionCallDelegate {
                 }
     }
 
+    fun npcStartFollowPlayer(id: Int) {
+        log.info("Asking NPC $id to follow player")
 
-//            }
+        FXGL.byID("NPC", id).ifPresent {
+            log.debug("npcStartFollowPlayer $id")
+
+            it.getComponent(NPCFollowComponent::class.java).startFollow(player)
+        }
+    }
 
     // TODO: implement
     private val quests = arrayListOf<Int>()

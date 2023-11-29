@@ -35,4 +35,6 @@ Konett's Lemma Soft thread: https://lemmasoft.renai.us/forums/viewtopic.php?f=52
 
 https://lunalucid.itch.io/
                     
-- ...
+- Character sprite sheets generated using this tool: https://github.com/sanderfrenken/Universal-LPC-Spritesheet-Character-Generator
+
+The link also provides the credits file that lists all authors 

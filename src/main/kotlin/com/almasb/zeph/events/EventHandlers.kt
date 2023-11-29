@@ -18,6 +18,8 @@ import java.util.function.Consumer
 object EventHandlers {
 
     fun initialize() {
+        getEventBus().isLoggingEnabled = false
+
         onEvent(Events.ON_ATTACK) {
             if (it.attacker.isType(PLAYER)) {
                 it.attacker.playerComponent!!.weapon.value.onAttack(it.attacker, it.target)

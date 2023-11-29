@@ -105,18 +105,20 @@ class ZephyriaApp : GameApplication() {
             }
 
             onKeyDown(F) {
+                Gameplay.startDialogueNPC("context_test.json", 2505)
+
                 //val quest = com.almasb.zeph.quest.Quest(Data.Quests.TUTORIAL_KILLS)
 
                 //println(quest.data.description)
 
                 //Gameplay.openStorage()
 
-                val clockService = getService(ClockService::class.java)
-                clockService.clock.runAt(12, 0) {
-                    pushMessage("It's 12:00!")
-                }
-
-                addUINode(TextClockView(clockService.clock), 300.0, 300.0)
+//                val clockService = getService(ClockService::class.java)
+//                clockService.clock.runAt(12, 0) {
+//                    pushMessage("It's 12:00!")
+//                }
+//
+//                addUINode(TextClockView(clockService.clock), 300.0, 300.0)
             }
 //
 //            onKeyDown(T) {
@@ -220,7 +222,7 @@ class ZephyriaApp : GameApplication() {
         })
 
         onCollisionCollectible(PLAYER, DIALOGUE, Consumer {
-            startDialogue(it.getString("text"))
+            //startDialogue(it.getString("text"))
         })
     }
 

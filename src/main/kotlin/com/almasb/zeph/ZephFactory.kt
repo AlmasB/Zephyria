@@ -5,7 +5,6 @@ import com.almasb.fxgl.core.collection.grid.Cell
 import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
-import com.almasb.fxgl.dsl.components.ActivatorComponent
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.dsl.components.LiftComponent
 import com.almasb.fxgl.dsl.components.ProjectileComponent
@@ -86,14 +85,43 @@ class ZephFactory : EntityFactory {
 
         val npcData = data.get<NPCData>("npcData")
 
-        val entity = entityBuilder()
-                .type(NPC)
-                .with(IDComponent("NPC", npcData.description.id))
-                .with(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-                .with(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
-                .with(AnimationComponent(npcData.description.textureName))
-                .with(NPCChildViewComponent(npcData.description.name))
-                .build()
+        val charData = char {
+            desc {
+                id = npcData.description.id
+                name = npcData.description.name
+                description = npcData.description.description
+                textureName = npcData.description.textureName
+            }
+
+            charClass = CharacterClass.NOVICE
+
+            attributes {
+                Attribute.values().forEach {
+                    it +1
+                }
+            }
+        }
+
+        data.put("charData", charData)
+
+        // TODO: separate newMonster to newCharacter?
+        val npc = newMonster(data) as CharacterEntity
+
+        npc.setProperty("id", npcData.description.id)
+
+        // TODO: duplicate here as in newMonster
+        data.data.forEach { npc.setProperty(it.key, it.value) }
+
+        npc.type = NPC
+        npc.removeComponent(RandomWanderComponent::class.java)
+
+        with(npc) {
+            addComponent(IDComponent("NPC", npcData.description.id))
+            addComponent(NPCFollowComponent())
+            addComponent(NPCChildViewComponent(npcData.description.name))
+        }
+
+        val entity = npc
 
         entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
         entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
@@ -113,7 +141,7 @@ class ZephFactory : EntityFactory {
 //                removeUINode(fullTexture)
 //            }, Duration.seconds(0.05))
 //
-            Gameplay.startDialogue(npcData.dialogueName.removePrefix("dialogues/"))
+            Gameplay.startDialogue(npcData.dialogueName.removePrefix("dialogues/"), npc)
         })
 
         runOnce({
@@ -131,6 +159,9 @@ class ZephFactory : EntityFactory {
         val cellY = data.get<Int>("cellY")
 
         val entity = CharacterEntity()
+
+        data.data.forEach { entity.setProperty(it.key, it.value) }
+
         entity.type = MONSTER
         entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
         entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
@@ -169,7 +200,8 @@ class ZephFactory : EntityFactory {
 
                 player.actionComponent.orderSkillCast(geti(SELECTED_SKILL_INDEX), entity)
             } else {
-                player.actionComponent.orderAttack(entity)
+                if (entity.isType(MONSTER))
+                    player.actionComponent.orderAttack(entity)
             }
         }
 

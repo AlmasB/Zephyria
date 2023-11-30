@@ -1,0 +1,363 @@
+{
+  "uniqueID" : 26,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Elara: Ah, Cedric Ironheart, what brings you to my humble abode with such urgency?",
+      "audio" : ""
+    },
+    "1" : {
+      "type" : "TEXT",
+      "text" : "Cedric: Greetings, Lady Elara. We seek your wisdom, for my companion has lost the threads of their purpose in Zephyria. A veil of forgetfulness shrouds their memories.",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "Elara: Adventurer, Cedric, The threads of your purpose are now unravelled, and only swift action will help you. Go, now!",
+      "audio" : ""
+    },
+    "6" : {
+      "type" : "TEXT",
+      "text" : "*Player approaches, and Elara's eyes glow with a subtle arcane light as she concentrates*.",
+      "audio" : ""
+    },
+    "10" : {
+      "type" : "TEXT",
+      "text" : "Cedric: Lady Elara, is there a way to unravel the mysteries that bind our companion?",
+      "audio" : ""
+    },
+    "14" : {
+      "type" : "TEXT",
+      "text" : "Elara: Magic. You wouldn't get it.",
+      "audio" : ""
+    },
+    "15" : {
+      "type" : "TEXT",
+      "text" : "Elara: No. In the future, I would advise not to fight, unless you really don't like having your own teeth.",
+      "audio" : ""
+    },
+    "16" : {
+      "type" : "TEXT",
+      "text" : "Elara: *turning to Cedric* Sir Cedric, the key lies in the convergence of magical energies.",
+      "audio" : ""
+    },
+    "17" : {
+      "type" : "TEXT",
+      "text" : "Elara: Now listen, adventurer. I see your quest related to the CI628 report. You must write one page, around 5 paragraphs on any multiplayer game. You will need to research online to complete this.",
+      "audio" : ""
+    },
+    "20" : {
+      "type" : "TEXT",
+      "text" : "Elara: Are you even listening to me? I told you one page, 5 paragraphs.",
+      "audio" : ""
+    },
+    "21" : {
+      "type" : "TEXT",
+      "text" : "Elara: This is in addition to anything you may have written so far. Trust me, it will improve your work.",
+      "audio" : ""
+    },
+    "22" : {
+      "type" : "TEXT",
+      "text" : "Elara: Paragraph 1 (P1) introduces what the game is. P2 is for how it relates to your project game. P3 is for how its multiplayer is implemented. P4 is for one good feature the game has. P5 is for what aspects of the game you will use in your own project.",
+      "audio" : ""
+    },
+    "23" : {
+      "type" : "TEXT",
+      "text" : "Elara: Any multiplayer game is fine. Bonus points for any recent games.",
+      "audio" : ""
+    },
+    "24" : {
+      "type" : "TEXT",
+      "text" : "Elara: In your Development section of the report, or in the Research (sub)section if you have one.",
+      "audio" : ""
+    },
+    "25" : {
+      "type" : "TEXT",
+      "text" : "Elara: As per Learning Outcomes and Marking Criteria, the independent research, if properly undertaken, can improve your submission by up to 7%.",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : {
+    "5" : {
+      "type" : "CHOICE",
+      "text" : "Elara: (studying the player) A curious predicament, indeed. Step forward, adventurer. Let me gaze into the currents of magic that surround you.",
+      "options" : {
+        "0" : "*Step forward*.",
+        "1" : "*Stay silent*.",
+        "2" : "*Let Cedric handle this*."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      },
+      "audio" : ""
+    },
+    "8" : {
+      "type" : "CHOICE",
+      "text" : "Elara: Your aura is touched by a complex weave of destiny and obscured memories. Threads of prophecy entwined with shadows of the forgotten. What quest brought you to Zephyria?",
+      "options" : {
+        "0" : "Well, actually, that's why we are here. I don't remember.",
+        "1" : "I wish to improve my CI628 report."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "9" : {
+      "type" : "CHOICE",
+      "text" : "Elara: (nodding knowingly) The winds have whispered of your arrival, seeker of lost purpose. Your quest is entwined with the very fabric of this realm. Fear not, for the answers you seek may yet be revealed.",
+      "options" : {
+        "0" : "Maybe you could do the revealing a bit quicker, I am in a hurry.",
+        "1" : "Where can I find the answers?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "12" : {
+      "type" : "CHOICE",
+      "text" : "Elara: Time is of the essence, adventurer. The currents of destiny wait for no one. ",
+      "options" : {
+        "0" : "*Step forward*.",
+        "1" : "*Let Cedric handle this*."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "13" : {
+      "type" : "CHOICE",
+      "text" : "*Elara starts whispering a spell*.",
+      "options" : {
+        "0" : "What are you doing?",
+        "1" : "Oh, are we about to fight some enemies?"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "19" : {
+      "type" : "CHOICE",
+      "text" : "Elara: Any questions?",
+      "options" : {
+        "0" : "How many pages? How many paragraphs?",
+        "1" : "What games are suitable for this?",
+        "2" : "Where do I add this?",
+        "3" : "How will this improve my report?",
+        "4" : "No more questions. I am happy to proceed."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : "",
+        "3" : "",
+        "4" : ""
+      },
+      "audio" : ""
+    }
+  },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 1
+  }, {
+    "sourceID" : 1,
+    "targetID" : 5
+  }, {
+    "sourceID" : 6,
+    "targetID" : 8
+  }, {
+    "sourceID" : 10,
+    "targetID" : 16
+  }, {
+    "sourceID" : 16,
+    "targetID" : 13
+  }, {
+    "sourceID" : 14,
+    "targetID" : 17
+  }, {
+    "sourceID" : 15,
+    "targetID" : 17
+  }, {
+    "sourceID" : 20,
+    "targetID" : 19
+  }, {
+    "sourceID" : 21,
+    "targetID" : 19
+  }, {
+    "sourceID" : 17,
+    "targetID" : 22
+  }, {
+    "sourceID" : 22,
+    "targetID" : 21
+  }, {
+    "sourceID" : 23,
+    "targetID" : 19
+  }, {
+    "sourceID" : 24,
+    "targetID" : 19
+  }, {
+    "sourceID" : 25,
+    "targetID" : 19
+  } ],
+  "choiceEdges" : [ {
+    "sourceID" : 5,
+    "optionID" : 0,
+    "targetID" : 6
+  }, {
+    "sourceID" : 8,
+    "optionID" : 0,
+    "targetID" : 9
+  }, {
+    "sourceID" : 5,
+    "optionID" : 2,
+    "targetID" : 10
+  }, {
+    "sourceID" : 5,
+    "optionID" : 1,
+    "targetID" : 12
+  }, {
+    "sourceID" : 12,
+    "optionID" : 1,
+    "targetID" : 10
+  }, {
+    "sourceID" : 12,
+    "optionID" : 0,
+    "targetID" : 6
+  }, {
+    "sourceID" : 8,
+    "optionID" : 1,
+    "targetID" : 9
+  }, {
+    "sourceID" : 13,
+    "optionID" : 0,
+    "targetID" : 14
+  }, {
+    "sourceID" : 13,
+    "optionID" : 1,
+    "targetID" : 15
+  }, {
+    "sourceID" : 9,
+    "optionID" : 0,
+    "targetID" : 13
+  }, {
+    "sourceID" : 9,
+    "optionID" : 1,
+    "targetID" : 13
+  }, {
+    "sourceID" : 19,
+    "optionID" : 0,
+    "targetID" : 20
+  }, {
+    "sourceID" : 19,
+    "optionID" : 4,
+    "targetID" : 2
+  }, {
+    "sourceID" : 19,
+    "optionID" : 1,
+    "targetID" : 23
+  }, {
+    "sourceID" : 19,
+    "optionID" : 2,
+    "targetID" : 24
+  }, {
+    "sourceID" : 19,
+    "optionID" : 3,
+    "targetID" : 25
+  } ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : -360.0,
+      "y" : 440.0
+    },
+    "1" : {
+      "x" : 80.0,
+      "y" : 400.0
+    },
+    "2" : {
+      "x" : 4880.0,
+      "y" : 880.0
+    },
+    "5" : {
+      "x" : 560.0,
+      "y" : 480.0
+    },
+    "6" : {
+      "x" : 960.0,
+      "y" : 320.0
+    },
+    "8" : {
+      "x" : 1400.0,
+      "y" : 360.0
+    },
+    "9" : {
+      "x" : 1840.0,
+      "y" : 520.0
+    },
+    "10" : {
+      "x" : 1160.0,
+      "y" : 1000.0
+    },
+    "12" : {
+      "x" : 520.0,
+      "y" : 1000.0
+    },
+    "13" : {
+      "x" : 2120.0,
+      "y" : 920.0
+    },
+    "14" : {
+      "x" : 2520.0,
+      "y" : 680.0
+    },
+    "15" : {
+      "x" : 2520.0,
+      "y" : 1000.0
+    },
+    "16" : {
+      "x" : 1600.0,
+      "y" : 1160.0
+    },
+    "17" : {
+      "x" : 2880.0,
+      "y" : 840.0
+    },
+    "19" : {
+      "x" : 3760.0,
+      "y" : 720.0
+    },
+    "20" : {
+      "x" : 4240.0,
+      "y" : 1040.0
+    },
+    "21" : {
+      "x" : 3400.0,
+      "y" : 360.0
+    },
+    "22" : {
+      "x" : 3040.0,
+      "y" : 440.0
+    },
+    "23" : {
+      "x" : 3920.0,
+      "y" : 400.0
+    },
+    "24" : {
+      "x" : 4280.0,
+      "y" : 480.0
+    },
+    "25" : {
+      "x" : 4240.0,
+      "y" : 720.0
+    }
+  }
+}

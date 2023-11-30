@@ -1,5 +1,5 @@
 {
-  "uniqueID" : 36,
+  "uniqueID" : 39,
   "nodes" : {
     "0" : {
       "type" : "START",
@@ -110,6 +110,21 @@
       "type" : "TEXT",
       "text" : "I'm just going to ignore that.",
       "audio" : ""
+    },
+    "36" : {
+      "type" : "TEXT",
+      "text" : "Not going to happen, but...",
+      "audio" : ""
+    },
+    "37" : {
+      "type" : "TEXT",
+      "text" : "No chance!",
+      "audio" : ""
+    },
+    "38" : {
+      "type" : "FUNCTION",
+      "text" : "npcStartFollowPlayer $id",
+      "audio" : ""
     }
   },
   "choiceNodes" : {
@@ -122,7 +137,8 @@
         "2" : "What do I get for completing the quest?",
         "3" : "I don't want to talk. No questions. I'll just go where I want!",
         "4" : "I don't have any more questions. Please tell me where to go.",
-        "5" : "Come on, give me some cheats."
+        "5" : "Come on, give me some cheats.",
+        "6" : "Can't you just give me the reward?"
       },
       "conditions" : {
         "0" : "$numTimesAskedCheats == 0",
@@ -130,7 +146,8 @@
         "2" : "",
         "3" : "",
         "4" : "",
-        "5" : "$numTimesAskedCheats > 0"
+        "5" : "$numTimesAskedCheats > 0",
+        "6" : ""
       },
       "audio" : ""
     },
@@ -182,11 +199,13 @@
       "text" : "Are you sure? You may miss vital information and may get lost!",
       "options" : {
         "0" : "Yes, I am sure. I just want to explore and find answers on my own.",
-        "1" : "Actually, on second thought, I would like some guidance."
+        "1" : "Actually, on second thought, I would like some guidance.",
+        "2" : "What part of \"no questions\" did you not understand?"
       },
       "conditions" : {
         "0" : "",
-        "1" : ""
+        "1" : "",
+        "2" : ""
       },
       "audio" : ""
     },
@@ -195,11 +214,13 @@
       "text" : "Ah, Zephyria, a realm woven with threads of magic and mystery. It is a land where the winds carry not only whispers but also the very essence of the extraordinary. The boundaries between reality and the mystical are blurred, and our journey through it is bound to be one of both wonder and challenge. You won't fight anyone. The quest will take you to a few locations and I'll try my best to aid you in your endeavours.",
       "options" : {
         "0" : "Sorry, this isn't very helpful.",
-        "1" : "You really have a way with words, you know that?"
+        "1" : "You really have a way with words, you know that?",
+        "2" : "If we freeze to death and get eaten by wolves, I'm blaming you."
       },
       "conditions" : {
         "0" : "",
-        "1" : ""
+        "1" : "",
+        "2" : ""
       },
       "audio" : ""
     }
@@ -228,9 +249,6 @@
   }, {
     "sourceID" : 4,
     "targetID" : 15
-  }, {
-    "sourceID" : 15,
-    "targetID" : 2
   }, {
     "sourceID" : 18,
     "targetID" : 3
@@ -261,6 +279,18 @@
   }, {
     "sourceID" : 35,
     "targetID" : 3
+  }, {
+    "sourceID" : 36,
+    "targetID" : 21
+  }, {
+    "sourceID" : 37,
+    "targetID" : 3
+  }, {
+    "sourceID" : 15,
+    "targetID" : 38
+  }, {
+    "sourceID" : 38,
+    "targetID" : 2
   } ],
   "choiceEdges" : [ {
     "sourceID" : 7,
@@ -350,6 +380,18 @@
     "sourceID" : 3,
     "optionID" : 5,
     "targetID" : 31
+  }, {
+    "sourceID" : 17,
+    "optionID" : 2,
+    "targetID" : 4
+  }, {
+    "sourceID" : 20,
+    "optionID" : 2,
+    "targetID" : 36
+  }, {
+    "sourceID" : 3,
+    "optionID" : 6,
+    "targetID" : 37
   } ],
   "version" : 2,
   "uiMetadata" : {
@@ -362,12 +404,12 @@
       "y" : -120.0
     },
     "2" : {
-      "x" : 4360.0,
-      "y" : -120.0
+      "x" : 4760.0,
+      "y" : -240.0
     },
     "3" : {
-      "x" : -200.0,
-      "y" : 120.0
+      "x" : -400.0,
+      "y" : 40.0
     },
     "4" : {
       "x" : 1400.0,
@@ -464,6 +506,18 @@
     "35" : {
       "x" : -440.0,
       "y" : -960.0
+    },
+    "36" : {
+      "x" : 1040.0,
+      "y" : 480.0
+    },
+    "37" : {
+      "x" : -800.0,
+      "y" : 640.0
+    },
+    "38" : {
+      "x" : 4320.0,
+      "y" : -240.0
     }
   }
 }

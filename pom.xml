@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <source.version>17</source.version>
+        <source.version>21</source.version>
 
         <!-- plugins -->
         <maven.compiler.version>3.8.0</maven.compiler.version>
@@ -19,7 +19,7 @@
         <jfx.maven.plugin.version>0.0.8</jfx.maven.plugin.version>
         <mainClassName>com.almasb.zeph.ZephyriaAppKt</mainClassName>
 
-        <fxgl.version>17+dev-SNAPSHOT</fxgl.version>
+        <fxgl.version>21+dev-SNAPSHOT</fxgl.version>
         <kotlin.version>1.8.10</kotlin.version>
         <jackson.version>2.14.2</jackson.version>
     </properties>

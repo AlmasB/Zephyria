@@ -131,17 +131,7 @@ class ZephFactory : EntityFactory {
         entity.viewComponent.parent.cursor = ImageCursor(image("ui/chat.png"), 16.0, 16.0)
 
         entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
-            // TODO: order player to move/talk to NPC
-
-//            val fullTexture = texture(npcData.textureNameFull, 948.0 * 0.25, 1920.0 * 0.25).outline(Color.BLACK, 2)
-//
-//            addUINode(fullTexture, getAppWidth() - fullTexture.width, getAppHeight() - fullTexture.height)
-//
-//            runOnce({
-//                removeUINode(fullTexture)
-//            }, Duration.seconds(0.05))
-//
-            Gameplay.startDialogue(npcData.dialogueName.removePrefix("dialogues/"), npc)
+            Gameplay.player.actionComponent.orderStartDialogue(npc)
         })
 
         runOnce({

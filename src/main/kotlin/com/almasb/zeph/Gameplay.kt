@@ -216,6 +216,14 @@ object Gameplay : FunctionCallDelegate {
         startDialogue(dialogueFileName, character.properties)
     }
 
+//            val fullTexture = texture(npcData.textureNameFull, 948.0 * 0.25, 1920.0 * 0.25).outline(Color.BLACK, 2)
+//
+//            addUINode(fullTexture, getAppWidth() - fullTexture.width, getAppHeight() - fullTexture.height)
+//
+//            runOnce({
+//                removeUINode(fullTexture)
+//            }, Duration.seconds(0.05))
+
     fun startDialogue(dialogueFileName: String, contextVars: PropertyMap) {
         log.debug("Starting dialogue: $dialogueFileName")
 

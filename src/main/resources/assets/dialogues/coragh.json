@@ -1,0 +1,32 @@
+{
+  "uniqueID" : 3,
+  "nodes" : {
+    "0" : {
+      "type" : "START",
+      "text" : "Yes, my name is Coragh and no, I don't want to talk.",
+      "audio" : ""
+    },
+    "2" : {
+      "type" : "END",
+      "text" : "Go away.",
+      "audio" : ""
+    }
+  },
+  "choiceNodes" : { },
+  "edges" : [ {
+    "sourceID" : 0,
+    "targetID" : 2
+  } ],
+  "choiceEdges" : [ ],
+  "version" : 2,
+  "uiMetadata" : {
+    "0" : {
+      "x" : 40.0,
+      "y" : 440.0
+    },
+    "2" : {
+      "x" : 520.0,
+      "y" : 440.0
+    }
+  }
+}

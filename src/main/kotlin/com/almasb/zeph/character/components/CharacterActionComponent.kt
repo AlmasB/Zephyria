@@ -1,7 +1,6 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.core.collection.grid.Cell
-import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.fire
 import com.almasb.fxgl.dsl.spawn
 import com.almasb.fxgl.entity.Entity
@@ -9,12 +8,14 @@ import com.almasb.fxgl.entity.SpawnData
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
+import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.Config
+import com.almasb.zeph.EntityType
 import com.almasb.zeph.Gameplay
-import com.almasb.zeph.ZephyriaApp
 import com.almasb.zeph.character.CharacterEntity
+import com.almasb.zeph.character.npc.NPCData
 import com.almasb.zeph.events.OnItemPickedUpEvent
 import com.almasb.zeph.events.OnOrderedMoveEvent
 
@@ -31,8 +32,11 @@ import javafx.geometry.Point2D
  */
 class CharacterActionComponent : Component() {
 
+    private val log = Logger.get("CharacterActionComponent")
+
     private var skillCastTarget: CharacterEntity? = null
     private var attackTarget: CharacterEntity? = null
+    private var dialogueTarget: CharacterEntity? = null
     private var pickUpTarget: Entity? = null
     private var moveTarget: Point2D? = null
 
@@ -58,6 +62,8 @@ class CharacterActionComponent : Component() {
                     attack(attackTarget!!)
                 } else if (pickUpTarget != null) {
                     pickUp(pickUpTarget!!)
+                } else if (dialogueTarget != null) {
+                    startDialogue(dialogueTarget!!)
                 } else {
                     state.changeStateToIdle()
                 }
@@ -68,6 +74,15 @@ class CharacterActionComponent : Component() {
 
                     if (attackTarget!!.distance(moveCellX, moveCellY) > char.characterComponent.attackRange) {
                         orderAttack(attackTarget!!)
+                    }
+                }
+
+                if (dialogueTarget != null) {
+                    val moveCellX = moveTarget!!.x.toInt()
+                    val moveCellY = moveTarget!!.y.toInt()
+
+                    if (dialogueTarget!!.distance(moveCellX, moveCellY) > 1) {
+                        orderStartDialogue(dialogueTarget!!)
                     }
                 }
             }
@@ -129,16 +144,17 @@ class CharacterActionComponent : Component() {
             attack(attackTarget!!)
         } else {
 
-            val cell = findNearestCell(attackTarget!!)
+            val cell = findNearestWalkableCell(attackTarget!!)
 
             move(cell.x, cell.y)
         }
     }
 
-    private fun findNearestCell(target: CharacterEntity): Cell {
+    private fun findNearestWalkableCell(target: CharacterEntity): Cell {
         return Gameplay.currentMap
                 .grid
                 .getNeighbors(target.cellX, target.cellY)
+                .filter { it.isWalkable }
                 .sortedBy { char.distance(it.x, it.y) }
                 .first()
     }
@@ -213,14 +229,27 @@ class CharacterActionComponent : Component() {
         }
     }
 
+    fun orderStartDialogue(target: CharacterEntity) {
+        reset()
+        dialogueTarget = target
+
+        if (char.distance(target) <= Config.SPRITE_SIZE) {
+            startDialogue(dialogueTarget!!)
+        } else {
+            val cell = findNearestWalkableCell(dialogueTarget!!)
+
+            move(cell.x, cell.y)
+        }
+    }
+
     fun orderIdle() {
         state.changeStateToIdle()
     }
 
     private fun move(cellX: Int, cellY: Int) {
         moveTarget = Point2D(cellX.toDouble(), cellY.toDouble())
-        state.changeState(MOVE)
         entity.getComponent(AStarMoveComponent::class.java).moveToCell(cellX, cellY)
+        state.changeState(MOVE)
     }
 
     private fun attack(target: CharacterEntity) {
@@ -269,10 +298,24 @@ class CharacterActionComponent : Component() {
         state.changeStateToIdle()
     }
 
+    private fun startDialogue(npc: CharacterEntity) {
+        state.changeStateToIdle()
+
+        if (!npc.isType(EntityType.NPC)) {
+            log.warning("Cannot start dialogue because $npc is not NPC type")
+            return
+        }
+
+        val npcData = npc.getObject<NPCData>("npcData")
+
+        Gameplay.startDialogue(npcData.dialogueName.removePrefix("dialogues/"), npc)
+    }
+
     private fun reset() {
         skillCastTarget = null
         attackTarget = null
         pickUpTarget = null
+        dialogueTarget = null
         moveTarget = null
     }
 }

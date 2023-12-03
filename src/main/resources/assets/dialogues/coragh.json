@@ -1,32 +1,151 @@
 {
-  "uniqueID" : 3,
+  "uniqueID" : 13,
   "nodes" : {
     "0" : {
       "type" : "START",
-      "text" : "Yes, my name is Coragh and no, I don't want to talk.",
+      "text" : "Yes, my name is Coragh...",
       "audio" : ""
     },
     "2" : {
       "type" : "END",
-      "text" : "Go away.",
+      "text" : "*Coragh goes back to his thoughts*.",
+      "audio" : ""
+    },
+    "10" : {
+      "type" : "TEXT",
+      "text" : "Actually, I am not ready yet. Come back later...",
       "audio" : ""
     }
   },
-  "choiceNodes" : { },
+  "choiceNodes" : {
+    "3" : {
+      "type" : "CHOICE",
+      "text" : "... and I want to play a game. This is the most exciting game you will ever play.",
+      "options" : {
+        "0" : "I am all ears.",
+        "1" : "*Stay silent and nod*.",
+        "2" : "No."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : "",
+        "2" : ""
+      },
+      "audio" : ""
+    },
+    "4" : {
+      "type" : "CHOICE",
+      "text" : "Oh, come on! I am just trying to be fun.",
+      "options" : {
+        "0" : "Well, ok, I'll play your game.",
+        "1" : "Try to be quiet, instead."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "5" : {
+      "type" : "CHOICE",
+      "text" : "You are no fun!",
+      "options" : {
+        "0" : "I'm sorry, let's play.",
+        "1" : "Your powers of observation are unparalleled. Nothing gets by you, does it?!"
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    },
+    "7" : {
+      "type" : "CHOICE",
+      "text" : "Enough already, I don't want to play with you anymore. Just go east, your actual quest is there.",
+      "options" : {
+        "0" : "Next time, lead with that.",
+        "1" : "*Take your leave*."
+      },
+      "conditions" : {
+        "0" : "",
+        "1" : ""
+      },
+      "audio" : ""
+    }
+  },
   "edges" : [ {
     "sourceID" : 0,
+    "targetID" : 3
+  }, {
+    "sourceID" : 10,
     "targetID" : 2
   } ],
-  "choiceEdges" : [ ],
+  "choiceEdges" : [ {
+    "sourceID" : 3,
+    "optionID" : 2,
+    "targetID" : 4
+  }, {
+    "sourceID" : 4,
+    "optionID" : 1,
+    "targetID" : 5
+  }, {
+    "sourceID" : 5,
+    "optionID" : 1,
+    "targetID" : 7
+  }, {
+    "sourceID" : 7,
+    "optionID" : 1,
+    "targetID" : 2
+  }, {
+    "sourceID" : 7,
+    "optionID" : 0,
+    "targetID" : 2
+  }, {
+    "sourceID" : 3,
+    "optionID" : 1,
+    "targetID" : 10
+  }, {
+    "sourceID" : 3,
+    "optionID" : 0,
+    "targetID" : 10
+  }, {
+    "sourceID" : 4,
+    "optionID" : 0,
+    "targetID" : 10
+  }, {
+    "sourceID" : 5,
+    "optionID" : 0,
+    "targetID" : 10
+  } ],
   "version" : 2,
   "uiMetadata" : {
     "0" : {
-      "x" : 40.0,
-      "y" : 440.0
+      "x" : -440.0,
+      "y" : 120.0
     },
     "2" : {
-      "x" : 520.0,
-      "y" : 440.0
+      "x" : 2480.0,
+      "y" : 480.0
+    },
+    "3" : {
+      "x" : 120.0,
+      "y" : 120.0
+    },
+    "4" : {
+      "x" : 760.0,
+      "y" : 400.0
+    },
+    "5" : {
+      "x" : 1160.0,
+      "y" : 600.0
+    },
+    "7" : {
+      "x" : 1640.0,
+      "y" : 640.0
+    },
+    "10" : {
+      "x" : 1880.0,
+      "y" : 160.0
     }
   }
 }

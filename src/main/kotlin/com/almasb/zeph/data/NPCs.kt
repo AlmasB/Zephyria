@@ -69,7 +69,6 @@ class NPCs {
         dialogueName = "dialogues/cedric.json"
     }
 
-    // TODO: 132,7
     val ELARA = npc {
         desc {
             id = 2506

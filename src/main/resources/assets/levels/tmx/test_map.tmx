@@ -19,7 +19,7 @@
   <property name="2503" value="19,22"/>
   <property name="2504" value="21,9"/>
   <property name="2505" value="11,13"/>
-  <property name="2506" value="6,13"/>
+  <property name="2506" value="132,7"/>
  </properties>
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
   <image source="RPG Nature Tileset.png" width="641" height="288"/>

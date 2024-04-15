@@ -20,7 +20,7 @@ object Config {
     /**
      * Pixels per seconds.
      */
-    const val CHAR_MOVE_SPEED = TILE_SIZE * 4.0
+    const val CHAR_MOVE_SPEED = TILE_SIZE * 8.0
 
     /**
      * How much time a char does not move (in seconds) before randomly moving.

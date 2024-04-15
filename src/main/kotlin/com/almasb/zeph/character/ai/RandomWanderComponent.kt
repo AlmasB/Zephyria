@@ -2,6 +2,7 @@ package com.almasb.zeph.character.ai
 
 import com.almasb.fxgl.dsl.random
 import com.almasb.fxgl.entity.component.Component
+import com.almasb.fxgl.pathfinding.astar.AStarCell
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.character.CharacterEntity
@@ -15,7 +16,7 @@ import com.almasb.zeph.character.components.CharacterActionComponent
  */
 class RandomWanderComponent : Component() {
 
-    private lateinit var astar: AStarMoveComponent
+    private lateinit var astar: AStarMoveComponent<AStarCell>
     private lateinit var action: CharacterActionComponent
 
     private var time = 0.0

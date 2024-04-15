@@ -7,7 +7,6 @@ import com.almasb.fxgl.app.scene.LoadingScene
 import com.almasb.fxgl.app.scene.SceneFactory
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.FXGL.Companion.getSceneService
-import com.almasb.fxgl.dsl.FXGL.Companion.getService
 import com.almasb.fxgl.dsl.FXGL.Companion.onCollisionCollectible
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.logging.LoggerLevel
@@ -17,17 +16,16 @@ import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
 import com.almasb.zeph.Gameplay.spawnTextBox
-import com.almasb.zeph.Gameplay.startDialogue
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
 import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
 import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.gameplay.ClockService
-import com.almasb.zeph.gameplay.TextClockView
 import com.almasb.zeph.skill.SkillTargetType
 import com.almasb.zeph.skill.SkillType
 import com.almasb.zeph.ui.*
+import com.almasb.zeph.ui.scenes.ZephLoadingScene
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode.*
 import javafx.scene.paint.Color
@@ -105,7 +103,9 @@ class ZephyriaApp : GameApplication() {
             }
 
             onKeyDown(F) {
-                Gameplay.startDialogueNPC("context_test.json", 2505)
+                //Gameplay.startDialogueNPC("context_test.json", 2505)
+
+                Gameplay.startCombat(player, getGameWorld().getClosestEntity(player) { it.isType(MONSTER) }.get() as CharacterEntity)
 
                 //val quest = com.almasb.zeph.quest.Quest(Data.Quests.TUTORIAL_KILLS)
 
@@ -198,12 +198,17 @@ class ZephyriaApp : GameApplication() {
 
         spawn("cellSelection")
 
+        getGameScene().viewport.isLazy = true
         getGameScene().viewport.bindToEntity(player, getAppWidth() / 2.toDouble(), getAppHeight() / 2.toDouble())
         getGameScene().viewport.setZoom(1.5)
 
         //gotoMap("dev_world.tmx", 8, 6)
         //gotoMap("tutorial.tmx", 8, 6)
         gotoMap("test_map.tmx", 2, 6)
+
+        getExecutor().startAsyncFX {
+            FXGL.getNotificationService().pushNotification("Certain actions may crash the game.")
+        }
     }
 
     override fun initPhysics() {

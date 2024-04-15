@@ -1,4 +1,4 @@
-package com.almasb.zeph.ui
+package com.almasb.zeph.ui.scenes
 
 import com.almasb.fxgl.animation.AnimatedValue
 import com.almasb.fxgl.animation.Interpolators

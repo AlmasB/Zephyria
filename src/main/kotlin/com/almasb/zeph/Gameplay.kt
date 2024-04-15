@@ -3,7 +3,6 @@ package com.almasb.zeph
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.app.scene.GameView
 import com.almasb.fxgl.core.collection.PropertyMap
-import com.almasb.fxgl.cutscene.dialogue.DialogueContext
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallDelegate
 import com.almasb.fxgl.cutscene.dialogue.FunctionCallHandler
 import com.almasb.fxgl.dsl.*
@@ -26,6 +25,7 @@ import com.almasb.zeph.data.Data
 import com.almasb.zeph.item.EquipItem
 import com.almasb.zeph.item.MiscItem
 import com.almasb.zeph.skill.Skill
+import com.almasb.zeph.ui.scenes.CombatSubScene
 import javafx.geometry.Point2D
 import javafx.scene.paint.Color
 import javafx.util.Duration
@@ -291,6 +291,15 @@ object Gameplay : FunctionCallDelegate {
                 ?.let {
                     player.inventory.incrementQuantity(it.userItem, -amount)
                 }
+    }
+
+    fun startCombat(char1: CharacterEntity, char2: CharacterEntity) {
+        log.info("Starting combat ${char1.name} vs ${char2.name}")
+
+        val scene = CombatSubScene()
+        scene.start(char1, char2)
+
+        FXGL.getSceneService().pushSubScene(scene)
     }
 
     fun npcStartFollowPlayer(id: Int) {

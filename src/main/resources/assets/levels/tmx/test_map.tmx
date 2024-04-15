@@ -22,7 +22,7 @@
   <property name="2506" value="132,7"/>
  </properties>
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
-  <image source="RPG Nature Tileset.png" width="641" height="288"/>
+  <image source="RPG_Nature_Tileset.png" width="641" height="288"/>
  </tileset>
  <tileset firstgid="181" name="mountain_landscape" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="mountain_landscape.png" width="512" height="512"/>
@@ -46,10 +46,10 @@
   <image source="fence_barbed.png" width="160" height="96"/>
  </tileset>
  <tileset firstgid="1705" name="RandomTiles" tilewidth="32" tileheight="32" tilecount="1064" columns="8">
-  <image source="[Base]BaseChip_pipo.png" trans="ffffff" width="256" height="4256"/>
+  <image source="BaseChip_pipo.png" trans="ffffff" width="256" height="4256"/>
  </tileset>
  <tileset firstgid="2769" name="OverlayFlowers" tilewidth="32" tileheight="32" tilecount="96" columns="8">
-  <image source="[A]Flower_pipo.png" trans="ffffff" width="256" height="384"/>
+  <image source="Flower_pipo.png" trans="ffffff" width="256" height="384"/>
  </tileset>
  <layer id="1" name="Tile Layer 1" width="150" height="150">
   <data encoding="csv">
@@ -851,9 +851,6 @@
    </properties>
   </object>
   <object id="280" type="anim_tree" gid="442" x="4096" y="224" width="32" height="32"/>
-  <object id="332" type="textTriggerBox" x="32" y="192" width="192" height="96">
-   <text wrap="1" color="#7d0000">Thank you for completing the Zephyria Demo! This map is under development and some actions may crash the game.</text>
-  </object>
   <object id="430" type="dialogue" x="32" y="192" width="192" height="160">
    <text wrap="1">intro_level1.json</text>
   </object>

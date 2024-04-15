@@ -1,4 +1,4 @@
-package com.almasb.zeph.ui
+package com.almasb.zeph.ui.scenes
 
 import com.almasb.fxgl.animation.Interpolators
 import com.almasb.fxgl.core.math.Vec2

@@ -10,6 +10,7 @@ import com.almasb.fxgl.entity.state.EntityState
 import com.almasb.fxgl.entity.state.StateComponent
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.pathfinding.CellMoveComponent
+import com.almasb.fxgl.pathfinding.astar.AStarCell
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.zeph.Config
 import com.almasb.zeph.EntityType
@@ -45,8 +46,8 @@ class CharacterActionComponent : Component() {
     private lateinit var animationComponent: AnimationComponent
     private lateinit var moveComponent: CellMoveComponent
 
-    private val astar: AStarMoveComponent
-        get() = entity.getComponent(AStarMoveComponent::class.java)
+    private val astar: AStarMoveComponent<AStarCell>
+        get() = entity.getComponent(AStarMoveComponent::class.java) as AStarMoveComponent<AStarCell>
 
     private val CASTING: EntityState = object : EntityState() {
 

@@ -1,10 +1,11 @@
-package com.almasb.zeph
+package com.almasb.zeph.ui.scenes
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.getAppHeight
 import com.almasb.fxgl.dsl.getAppWidth
 import com.almasb.fxgl.logging.Logger
 import com.almasb.fxgl.scene.SubScene
+import com.almasb.zeph.CommandHandler
 import javafx.scene.control.TextField
 import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle

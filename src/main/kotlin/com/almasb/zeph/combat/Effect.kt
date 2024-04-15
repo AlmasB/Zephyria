@@ -5,7 +5,6 @@ import com.almasb.zeph.DescriptionBuilder
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.DataDSL
 import com.almasb.zeph.emptyDescription
-import com.almasb.zeph.skill.SkillDataBuilder
 
 enum class Status {
 

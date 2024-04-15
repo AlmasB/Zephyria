@@ -93,12 +93,7 @@ class CharacterActionComponent : Component() {
     private val ATTACK: EntityState = object : EntityState() {
         override fun onUpdate(tpf: Double) {
             if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
-
-                if (char.characterComponent.canAttack()) {
-                    val dmg = char.characterComponent.attack(attackTarget!!)
-
-                    char.characterComponent.resetAtkTick()
-                }
+                val dmg = char.characterComponent.attack(attackTarget!!)
 
             } else {
                 orderAttack(attackTarget!!)

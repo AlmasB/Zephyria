@@ -71,6 +71,7 @@ class CombatSubScene : SubScene() {
                         char1.characterComponent.attack(char2)
 
                         // TODO: check if dead
+                        // TODO: getTotal(ASPD) / 100.0 to determine how many attacks per turn
 
                         animationBuilder(this)
                                 .onFinished {

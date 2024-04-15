@@ -16,21 +16,19 @@ import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
 import com.almasb.zeph.Gameplay.spawnTextBox
-import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_AREA
-import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
-import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.events.EventHandlers
 import com.almasb.zeph.gameplay.ClockService
-import com.almasb.zeph.skill.SkillTargetType
-import com.almasb.zeph.skill.SkillType
-import com.almasb.zeph.ui.*
+import com.almasb.zeph.ui.BasicInfoView
+import com.almasb.zeph.ui.HotbarView
+import com.almasb.zeph.ui.MessagesView
+import com.almasb.zeph.ui.PlayerInventoryView
+import com.almasb.zeph.ui.scenes.DevScene
 import com.almasb.zeph.ui.scenes.ZephLoadingScene
 import javafx.geometry.Point2D
 import javafx.scene.input.KeyCode.*
 import javafx.scene.paint.Color
 import java.util.function.Consumer
-import kotlin.collections.set
 
 /**
  *
@@ -64,15 +62,6 @@ class ZephyriaApp : GameApplication() {
     }
 
     override fun initInput() {
-        for (i in 1..9) {
-            val key = getKeyCode(i.toString() + "")
-            val index = i - 1
-
-            onKeyDown(key, "Hotbar Skill $i") {
-                onHotbarSkill(index)
-            }
-        }
-
         onKeyDown(C) {
             getGameScene().uiNodes
                     .filterIsInstance(BasicInfoView::class.java)
@@ -141,50 +130,7 @@ class ZephyriaApp : GameApplication() {
     }
 
     override fun initGameVars(vars: MutableMap<String?, Any?>) {
-        vars[IS_SELECTING_SKILL_TARGET_AREA] = false
-        vars[IS_SELECTING_SKILL_TARGET_CHAR] = false
-        vars[SELECTED_SKILL_INDEX] = -1
-    }
 
-    private fun onHotbarSkill(index: Int) {
-        val pc = player.characterComponent
-        if (index < pc.skills.size) {
-            val skill = pc.skills[index]
-            if (skill.level == 0) {
-                // skill not learned yet
-                return
-            }
-
-            if (skill.isOnCooldown) {
-                return
-            }
-
-            if (skill.manaCost.value > pc.sp.value) {
-                // no mana
-                return
-            }
-
-            if (skill.data.type === SkillType.PASSIVE) {
-                // skill is passive and is always on
-                return
-            }
-
-            if (skill.data.targetTypes.contains(SkillTargetType.SELF)) {
-
-                // use skill immediately since player is the target
-                val result = pc.useSelfSkill(index)
-            } else if (skill.data.targetTypes.contains(SkillTargetType.AREA)) {
-
-                // let player select the area
-                set(IS_SELECTING_SKILL_TARGET_AREA, true)
-                set(SELECTED_SKILL_INDEX, index)
-            } else {
-
-                // let player select the target character
-                set(IS_SELECTING_SKILL_TARGET_CHAR, true)
-                set(SELECTED_SKILL_INDEX, index)
-            }
-        }
     }
 
     override fun initGame() {
@@ -212,21 +158,11 @@ class ZephyriaApp : GameApplication() {
     }
 
     override fun initPhysics() {
-        onCollisionBegin(SKILL_PROJECTILE, MONSTER) { proj, target ->
-
-            if (proj.getObject<Any>("target") !== target) {
-                return@onCollisionBegin
-            }
-
-            proj.removeFromWorld()
-            player.characterComponent.useTargetSkill(geti(SELECTED_SKILL_INDEX), (target as CharacterEntity))
-        }
-
         onCollisionCollectible(PLAYER, TEXT_TRIGGER_BOX, Consumer {
             spawnTextBox(it.getString("text"), it.x, it.y)
         })
 
-        onCollisionCollectible(PLAYER, DIALOGUE, Consumer {
+        onCollisionCollectible(PLAYER, DIALOGUE_TRIGGER_BOX, Consumer {
             //startDialogue(it.getString("text"))
         })
     }

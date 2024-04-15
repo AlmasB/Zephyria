@@ -21,8 +21,6 @@ import com.almasb.zeph.components.TiledMapLayerOptimizerComponent
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.data.Data.getCharacterData
 import com.almasb.zeph.item.ItemData
-import javafx.geometry.Rectangle2D
-import javafx.scene.image.ImageView
 import java.lang.RuntimeException
 import java.util.function.Predicate
 
@@ -111,7 +109,7 @@ class GameMap(val name: String, private val level: Level) : EntityWorldListener 
         getGameWorld().setLevel(level)
 
         grid = AStarGrid.fromWorld(FXGL.getGameWorld(), MAP_WIDTH, MAP_HEIGHT, TILE_SIZE, TILE_SIZE) { type: Any ->
-            if (type == NAV || type == PORTAL || type == TEXT_TRIGGER_BOX || type == DIALOGUE || type == MEMORY)
+            if (type == NAV || type == PORTAL || type == TEXT_TRIGGER_BOX || type == DIALOGUE_TRIGGER_BOX)
                 return@fromWorld CellState.WALKABLE
 
             CellState.NOT_WALKABLE

@@ -228,10 +228,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
             return
 
         updateRegen(tpf)
-
-        if (!canAttack())
-            atkTick += tpf
-
         updateSkills(tpf)
     }
 
@@ -277,22 +273,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      */
     fun isInWeaponRange(target: CharacterEntity): Boolean =
             char.distance(target.cellX, target.cellY) <= attackRange
-
-    /**
-     * Attack tick that decides if character can attack.
-     */
-    protected var atkTick = 0.0
-        private set
-
-    fun resetAtkTick() {
-        atkTick = 0.0
-    }
-
-    /**
-     * @return if character is ready to perform basic attack based on his ASPD
-     */
-    open fun canAttack() =
-            atkTick >= Config.SLOWEST_ATTACK_INTERVAL - getTotal(ASPD) / 100.0
 
     /**
      * Performs basic attack with equipped weapon on the [target].

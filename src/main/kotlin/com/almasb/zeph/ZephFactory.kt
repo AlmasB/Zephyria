@@ -7,7 +7,6 @@ import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
 import com.almasb.fxgl.dsl.components.LiftComponent
-import com.almasb.fxgl.dsl.components.ProjectileComponent
 import com.almasb.fxgl.entity.Entity
 import com.almasb.fxgl.entity.EntityFactory
 import com.almasb.fxgl.entity.SpawnData
@@ -30,15 +29,12 @@ import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.fxgl.texture.Texture
 import com.almasb.zeph.Config.MAP_HEIGHT
 import com.almasb.zeph.Config.MAP_WIDTH
-import com.almasb.zeph.Config.SKILL_PROJECTILE_SPEED
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
 import com.almasb.zeph.Config.Z_INDEX_DECOR_ABOVE_PLAYER
 import com.almasb.zeph.Config.Z_INDEX_DECOR_BELOW_PLAYER
 import com.almasb.zeph.EntityType.*
-import com.almasb.zeph.Vars.IS_SELECTING_SKILL_TARGET_CHAR
-import com.almasb.zeph.Vars.SELECTED_SKILL_INDEX
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
@@ -184,15 +180,8 @@ class ZephFactory : EntityFactory {
             if (player === entity)
                 return@addOnClickHandler
 
-            // TODO: check for skill range
-            if (getb(IS_SELECTING_SKILL_TARGET_CHAR)) {
-                set(IS_SELECTING_SKILL_TARGET_CHAR, false)
-
-                player.actionComponent.orderSkillCast(geti(SELECTED_SKILL_INDEX), entity)
-            } else {
-                if (entity.isType(MONSTER))
-                    player.actionComponent.orderAttack(entity)
-            }
+            if (entity.isType(MONSTER))
+                player.actionComponent.orderAttack(entity)
         }
 
         animationBuilder()
@@ -293,6 +282,7 @@ class ZephFactory : EntityFactory {
         }
 
         val e = entityBuilder(data)
+                .type(ITEM)
                 .view(itemData.description.textureName)
                 .zIndex(Z_INDEX_DECOR_BELOW_PLAYER)
                 .build()
@@ -301,6 +291,7 @@ class ZephFactory : EntityFactory {
 
         e.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
 
+            // TODO: if close
             val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
 
             player.actionComponent.orderPickUp(e)
@@ -325,15 +316,6 @@ class ZephFactory : EntityFactory {
                 .type(NAV)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
                 .onClick {
-//                    if (selectingSkillTargetArea) {
-//                        useAreaSkill()
-//                        selectingSkillTargetArea = false
-//                        selectedSkillIndex = -1
-//                        return
-//                    }
-
-                    //selected.set(null)
-
                     val targetX = (FXGL.getInput().mouseXWorld / TILE_SIZE).toInt()
                     val targetY = (FXGL.getInput().mouseYWorld / TILE_SIZE).toInt()
 
@@ -439,16 +421,6 @@ class ZephFactory : EntityFactory {
         e.viewComponent.parent.isMouseTransparent = true
 
         return e
-    }
-
-    @Spawns("skillProjectile")
-    fun newSkillProjectile(data: SpawnData): Entity {
-        return entityBuilder(data)
-                .type(SKILL_PROJECTILE)
-                .viewWithBBox(data.get<String>("projectileTextureName"))
-                .collidable()
-                .with(ProjectileComponent(data.get("dir"), SKILL_PROJECTILE_SPEED))
-                .build()
     }
 
     // TODO: check fxgl can load margin-based tiles correctly
@@ -587,7 +559,6 @@ class ZephFactory : EntityFactory {
         stack.alignment = Pos.TOP_RIGHT
 
         val e = entityBuilder(data)
-                .type(TEXT_BOX)
                 .view(stack)
                 .zIndex(Z_INDEX_DECOR_ABOVE_PLAYER)
                 .with(LiftComponent().yAxisDistanceDuration(10.0, Duration.seconds(2.0)))
@@ -603,22 +574,8 @@ class ZephFactory : EntityFactory {
         val text = data.get<String>("text")
 
         return entityBuilder(data)
-                .type(DIALOGUE)
+                .type(DIALOGUE_TRIGGER_BOX)
                 .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
-                .collidable()
-                .build()
-    }
-
-    @Spawns("memory")
-    fun newMemory(data: SpawnData): Entity {
-        val emitter = ParticleEmitters.newFireEmitter()
-        emitter.startColor = Color.ANTIQUEWHITE
-        emitter.endColor = Color.WHEAT
-
-        return entityBuilder(data)
-                .type(MEMORY)
-                .bbox(HitBox(BoundingShape.box(data.get("width"), data.get("height"))))
-                .with(ParticleComponent(emitter))
                 .collidable()
                 .build()
     }

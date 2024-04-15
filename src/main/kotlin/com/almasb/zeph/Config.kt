@@ -2,13 +2,11 @@ package com.almasb.zeph
 
 import com.almasb.fxgl.dsl.FXGL
 import com.almasb.fxgl.dsl.addUINode
-import com.almasb.fxgl.inventory.Inventory
 import com.almasb.fxgl.logging.Logger
-import com.almasb.zeph.item.Item
 import com.almasb.zeph.ui.TooltipView
 
 /**
- * Holds various constants.
+ * Holds all constants and configurations.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -45,7 +43,7 @@ object Config {
     const val MAP_WIDTH = 150
     const val MAP_HEIGHT = 150
 
-    // CHARACTER VALUES
+    // GAMEPLAY / CHARACTER VALUES
 
     /**
      * When regeneration happens, in seconds.
@@ -77,26 +75,15 @@ object Config {
 
     const val EXP_NEEDED_FOR_LEVEL2 = 10
 
-
-
-    // GAMEPLAY
-
     const val STARTING_MONEY = 100
 
     const val MAX_STORAGE_SIZE = 100
     const val MAX_INVENTORY_SIZE = 30
     const val MAX_ESSENCES = 3
     const val MAX_ITEM_REFINE_LEVEL = 5
-
-    const val SKILL_PROJECTILE_SPEED = 1000.0
 }
 
 object Vars {
-    const val IS_SELECTING_SKILL_TARGET_CHAR = "IS_SELECTING_SKILL_TARGET_CHAR"
-    const val IS_SELECTING_SKILL_TARGET_AREA = "IS_SELECTING_SKILL_TARGET_AREA"
-
-    const val SELECTED_SKILL_INDEX = "SELECTED_SKILL_INDEX"
-
     const val GAME_MAP = "GAME_MAP"
 }
 

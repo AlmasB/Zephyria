@@ -14,14 +14,14 @@ import com.almasb.zeph.combat.Experience
 import com.almasb.zeph.data.Data
 import com.almasb.zeph.events.*
 import com.almasb.zeph.item.*
-import com.almasb.zeph.skill.SkillType
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleObjectProperty
 import java.util.*
 
 /**
- *
+ * This component is added to a character (in addition to the [CharacterComponent]) to
+ * mark it as the player entity and provides extra player data and behavior.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -310,8 +310,6 @@ class PlayerComponent : Component() {
 
     fun isFree(place: EquipPlace) = getEquip(place).description.id == place.emptyID
 
-
-
     /**
      * Called when player has been dealt a killing blow.
      */
@@ -321,6 +319,4 @@ class PlayerComponent : Component() {
         player.actionComponent.orderIdle()
         player.setPositionToCell(2, 6)
     }
-
-    // TODO: player version of canAttack that uses aspd of both weapons
 }

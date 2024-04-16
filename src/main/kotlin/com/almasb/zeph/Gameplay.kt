@@ -19,7 +19,7 @@ import com.almasb.zeph.Vars.GAME_MAP
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.EquipPlace
-import com.almasb.zeph.character.components.NPCFollowComponent
+import com.almasb.zeph.character.npc.NPCFollowComponent
 import com.almasb.zeph.character.components.PlayerWorldComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
@@ -253,7 +253,7 @@ object Gameplay : FunctionCallDelegate {
         currentMap.spawnNPC(cellX, cellY, Data.getNPCData(id))
     }
 
-    fun spawnMob(charData: CharacterData, cellX: Int, cellY: Int) {
+    fun spawnChar(charData: CharacterData, cellX: Int, cellY: Int) {
         currentMap.spawnMonster(cellX, cellY, charData)
     }
 

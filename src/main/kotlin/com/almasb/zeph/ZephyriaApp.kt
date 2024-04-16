@@ -15,7 +15,7 @@ import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.Gameplay.currentMap
 import com.almasb.zeph.Gameplay.gotoMap
 import com.almasb.zeph.Gameplay.player
-import com.almasb.zeph.Gameplay.spawnMob
+import com.almasb.zeph.Gameplay.spawnChar
 import com.almasb.zeph.Gameplay.spawnTextBox
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.data.Data
@@ -154,7 +154,7 @@ class ZephyriaApp : GameApplication() {
         //gotoMap("tutorial.tmx", 8, 6)
         //gotoMap("test_map.tmx", 2, 6)
 
-        spawnMob(Data.Monsters.SKELETON_WARRIOR, 10, 7)
+        spawnChar(Data.Monsters.SKELETON_WARRIOR, 10, 7)
 
         getExecutor().startAsyncFX {
             FXGL.getNotificationService().pushNotification("Certain actions may crash the game.")

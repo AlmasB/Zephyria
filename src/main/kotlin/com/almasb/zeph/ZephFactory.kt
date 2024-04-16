@@ -1,8 +1,6 @@
 package com.almasb.zeph
 
 import com.almasb.fxgl.animation.Interpolators
-import com.almasb.fxgl.core.collection.grid.Cell
-import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.core.util.LazyValue
 import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.dsl.components.ExpireCleanComponent
@@ -23,12 +21,9 @@ import com.almasb.fxgl.pathfinding.CellState
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.physics.BoundingShape
 import com.almasb.fxgl.physics.HitBox
-import com.almasb.fxgl.procedural.HeightMapGenerator
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
 import com.almasb.fxgl.texture.Texture
-import com.almasb.zeph.Config.MAP_HEIGHT
-import com.almasb.zeph.Config.MAP_WIDTH
 import com.almasb.zeph.Config.SPRITE_SIZE
 import com.almasb.zeph.Config.TILE_SIZE
 import com.almasb.zeph.Config.Z_INDEX_CELL_SELECTION
@@ -38,16 +33,16 @@ import com.almasb.zeph.EntityType.*
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.character.ai.RandomWanderComponent
 import com.almasb.zeph.character.char
 import com.almasb.zeph.character.components.*
+import com.almasb.zeph.character.npc.NPCChildViewComponent
 import com.almasb.zeph.character.npc.NPCData
+import com.almasb.zeph.character.npc.NPCFollowComponent
 import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.combat.Element
 import com.almasb.zeph.components.CellSelectionComponent
 import com.almasb.zeph.components.PortalComponent
 import com.almasb.zeph.data.Data
-
 import com.almasb.zeph.item.*
 import com.almasb.zeph.skill.Skill
 import com.almasb.zeph.ui.TooltipView
@@ -64,7 +59,6 @@ import javafx.scene.paint.Color
 import javafx.scene.shape.Rectangle
 import javafx.util.Duration
 import java.util.function.Supplier
-import kotlin.math.roundToInt
 
 /**
  * Creates all entities.
@@ -73,122 +67,61 @@ import kotlin.math.roundToInt
  */
 class ZephFactory : EntityFactory {
 
+    @Spawns("monster")
+    fun newMonster(data: SpawnData): Entity {
+        val mob = newCharacter(data) as CharacterEntity
+        with(mob) {
+            type = MONSTER
+
+            addComponent(RandomWanderComponent())
+
+            viewComponent.parent.cursor = ImageCursor(image("ui/cursors/attack.png"), 1.0, 1.0)
+
+            viewComponent.addOnClickHandler {
+                if (isDying)
+                    return@addOnClickHandler
+
+                val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
+
+                player.actionComponent.orderAttack(mob)
+            }
+        }
+
+        return mob
+    }
+
     // TODO: use .tmx object or similar to place NPCs, so they are visible in Tiled
     @Spawns("npc")
     fun newNPC(data: SpawnData): Entity {
-        val cellX = data.get<Int>("cellX")
-        val cellY = data.get<Int>("cellY")
-
         val npcData = data.get<NPCData>("npcData")
 
-        val charData = char {
-            desc {
-                id = npcData.description.id
-                name = npcData.description.name
-                description = npcData.description.description
-                textureName = npcData.description.textureName
-            }
+        data.put("charData", npcData.toCharData())
 
-            charClass = CharacterClass.NOVICE
-
-            attributes {
-                Attribute.values().forEach {
-                    it +1
-                }
-            }
-        }
-
-        data.put("charData", charData)
-
-        // TODO: separate newMonster to newCharacter?
-        val npc = newMonster(data) as CharacterEntity
-
-        npc.setProperty("id", npcData.description.id)
-
-        // TODO: duplicate here as in newMonster
-        data.data.forEach { npc.setProperty(it.key, it.value) }
-
-        npc.type = NPC
-        npc.removeComponent(RandomWanderComponent::class.java)
-
+        val npc = newCharacter(data) as CharacterEntity
         with(npc) {
+            type = NPC
+
+            setProperty("id", npcData.description.id)
+
             addComponent(IDComponent("NPC", npcData.description.id))
             addComponent(NPCFollowComponent())
             addComponent(NPCChildViewComponent(npcData.description.name))
+
+            viewComponent.parent.cursor = ImageCursor(image("ui/chat.png"), 16.0, 16.0)
+
+            viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
+                getNotificationService().pushNotification("Dialogues are not supported yet")
+                // TODO:
+                //Gameplay.player.actionComponent.orderStartDialogue(npc)
+            })
+
+            // add a random delay, so all NPCs have their own cycle
+            runOnce({
+                addComponent(LiftComponent().yAxisDistanceDuration(1.0, Duration.seconds(0.4)))
+            }, Duration.seconds(random(0.01, 1.0)))
         }
 
-        val entity = npc
-
-        entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
-        entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
-
-        entity.getComponent(AStarMoveComponent::class.java).stopMovementAt(cellX, cellY)
-
-        entity.viewComponent.parent.cursor = ImageCursor(image("ui/chat.png"), 16.0, 16.0)
-
-        entity.viewComponent.addEventHandler(MouseEvent.MOUSE_CLICKED, EventHandler {
-            Gameplay.player.actionComponent.orderStartDialogue(npc)
-        })
-
-        runOnce({
-            entity.addComponent(LiftComponent().yAxisDistanceDuration(1.0, Duration.seconds(0.4)))
-        }, Duration.seconds(random(0.01, 1.0)))
-
-        return entity
-    }
-
-    @Spawns("monster")
-    fun newMonster(data: SpawnData): Entity {
-        val charData = data.get<CharacterData>("charData")
-
-        val cellX = data.get<Int>("cellX")
-        val cellY = data.get<Int>("cellY")
-
-        val entity = CharacterEntity()
-
-        data.data.forEach { entity.setProperty(it.key, it.value) }
-
-        entity.type = MONSTER
-        entity.localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
-        entity.boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
-
-        with(entity) {
-            addComponent(CollidableComponent(true))
-            addComponent(StateComponent())
-            addComponent(CharacterEffectComponent())
-            addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
-            addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
-
-            addComponent(AnimationComponent(charData.description.textureName))
-            addComponent(CharacterComponent(charData))
-            addComponent(CharacterActionComponent())
-
-            addComponent(CharacterChildViewComponent())
-            addComponent(RandomWanderComponent())
-        }
-
-        entity.setPositionToCell(cellX, cellY)
-
-        entity.viewComponent.parent.cursor = ImageCursor(image("ui/cursors/attack.png"), 1.0, 1.0)
-
-        // TODO: do not allow click if dying ...
-
-        entity.viewComponent.addOnClickHandler {
-            val player = getGameWorld().getSingleton(PLAYER) as CharacterEntity
-
-            // TODO: handle differently?
-            if (player === entity)
-                return@addOnClickHandler
-
-            if (entity.isType(MONSTER))
-                player.actionComponent.orderAttack(entity)
-        }
-
-        animationBuilder()
-                .fadeIn(entity)
-                .buildAndPlay()
-
-        return entity
+        return npc
     }
 
     @Spawns("player")
@@ -214,56 +147,96 @@ class ZephFactory : EntityFactory {
         data.put("cellY", 0)
         data.put("charData", charData)
 
-        // TODO: separate newMonster to newCharacter?
-        val player = newMonster(data) as CharacterEntity
-        player.type = PLAYER
-        player.removeComponent(RandomWanderComponent::class.java)
-        player.addComponent(PlayerComponent())
-        player.addComponent(PlayerWorldComponent())
-        player.addComponent(IrremovableComponent())
+        val player = newCharacter(data) as CharacterEntity
+        with(player) {
+            type = PLAYER
 
-        player.viewComponent.parent.isMouseTransparent = true
+            addComponent(PlayerComponent())
+            addComponent(PlayerWorldComponent())
+            addComponent(IrremovableComponent())
 
-        // add dev stuff if not on release
-        if (!isReleaseMode()) {
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
-            player.characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
+            viewComponent.parent.isMouseTransparent = true
 
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
-            player.characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
+            val addDevStuff = false
 
-            player.inventory.add(newDagger(Element.NEUTRAL))
-            player.inventory.add(newDagger(Element.FIRE))
-            player.inventory.add(newDagger(Element.EARTH))
-            player.inventory.add(newDagger(Element.AIR))
-            player.inventory.add(newDagger(Element.WATER))
+            if (addDevStuff) {
+                characterComponent.skills += Skill(Data.Skills.Warrior.ROAR)
+                characterComponent.skills += Skill(Data.Skills.Warrior.ARMOR_MASTERY)
+                characterComponent.skills += Skill(Data.Skills.Warrior.MIGHTY_SWING)
+                characterComponent.skills += Skill(Data.Skills.Warrior.WARRIOR_HEART)
 
-            player.inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
-            player.inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
+                characterComponent.skills += Skill(Data.Skills.Gladiator.DOUBLE_EDGE)
+                characterComponent.skills += Skill(Data.Skills.Gladiator.BASH)
+                characterComponent.skills += Skill(Data.Skills.Gladiator.BLOODLUST)
+                characterComponent.skills += Skill(Data.Skills.Gladiator.ENDURANCE)
+                characterComponent.skills += Skill(Data.Skills.Gladiator.SHATTER_ARMOR)
 
-            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
-            player.inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
+                inventory.add(newDagger(Element.NEUTRAL))
+                inventory.add(newDagger(Element.FIRE))
+                inventory.add(newDagger(Element.EARTH))
+                inventory.add(newDagger(Element.AIR))
+                inventory.add(newDagger(Element.WATER))
 
-            repeat(100) {
-                player.inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+                inventory.add(UsableItem(Data.UsableItems.MANA_POTION))
+                inventory.add(UsableItem(Data.UsableItems.HEALING_POTION))
+
+                inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+                inventory.add(UsableItem(Data.UsableItems.TELEPORTATION_STONE))
+                inventory.add(Weapon(Data.Weapons.OneHandedSwords.GUARD_SWORD))
+
+                repeat(100) {
+                    inventory.add(UsableItem(Data.UsableItems.TREASURE_BOX))
+                }
+
+                inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+                inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+                inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
+
+                inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
+
+                inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
             }
-
-            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
-            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
-            player.inventory.add(UsableItem(Data.UsableItems.HEALING_HERBS))
-
-            player.inventory.add(Armor(Data.Armors.Body.TRAINING_ARMOR))
-
-            player.inventory.add(MiscItem(Data.MiscItems.SILVER_INGOT))
         }
 
         return player
+    }
+
+    /**
+     * This is a base creation call for any character (monster, npc, player).
+     */
+    private fun newCharacter(data: SpawnData): Entity {
+        val charData = data.get<CharacterData>("charData")
+
+        val entity = CharacterEntity()
+
+        data.data.forEach { entity.setProperty(it.key, it.value) }
+
+        with(entity) {
+            localAnchor = Point2D(SPRITE_SIZE / 2.0, SPRITE_SIZE - 10.0)
+            boundingBoxComponent.addHitBox(HitBox(BoundingShape.box(SPRITE_SIZE.toDouble(), SPRITE_SIZE.toDouble())))
+
+            addComponent(CollidableComponent(true))
+            addComponent(StateComponent())
+            addComponent(CharacterEffectComponent())
+            addComponent(CellMoveComponent(TILE_SIZE, TILE_SIZE, Config.CHAR_MOVE_SPEED))
+            addComponent(AStarMoveComponent(LazyValue(Supplier { Gameplay.currentMap.grid })))
+
+            addComponent(AnimationComponent(charData.description.textureName))
+            addComponent(CharacterComponent(charData))
+            addComponent(CharacterActionComponent())
+
+            addComponent(CharacterChildViewComponent())
+
+            val cellX = data.get<Int>("cellX")
+            val cellY = data.get<Int>("cellY")
+            setPositionToCell(cellX, cellY)
+        }
+
+        animationBuilder()
+                .fadeIn(entity)
+                .buildAndPlay()
+
+        return entity
     }
 
     @Spawns("item")
@@ -329,56 +302,12 @@ class ZephFactory : EntityFactory {
                 }
                 .build()
 
-        // Dynamic patches on tiles
-
-//        val size = TILE_SIZE / 16
-//
-//        val W = data.get<Double>("width").toInt() / size
-//        val H = data.get<Double>("height").toInt() / size
-//
-//        val buffer = WritableImage(size * W, size * H)
-//
-//        val map = Grid(HeightMapGenerator.HeightData::class.java, W, H, CustomHeightMapGenerator(0, e.x, e.y, W, H))
-//
-//        map.forEach { cell: HeightMapGenerator.HeightData ->
-//
-//            val maxDistance =  (W / 2 + H / 2)
-//            val opacity = (1 - cell.distance(W / 2, H / 2) * 1.0 / maxDistance) * 0.4
-//
-//            // data.get<Color>("color")
-//            var color = if (data.hasKey("color")) Color.rgb(77, 146, 98) else Color.rgb(194, 152, 109)
-//
-//            color = Color.color(color.red, color.green, color.blue, opacity)
-//
-//            val texture = if (cell.height < 0.2) {
-//                // water
-//                ColoredTexture(size, size, Color.TRANSPARENT)
-//            } else if (cell.height < 0.5) {
-//                // grass
-//                ColoredTexture(size, size, color.darker())
-//            } else if (cell.height < 0.7) {
-//                // grass
-//                ColoredTexture(size, size, color)
-//            } else {
-//                // in-land grass / mud?
-//                ColoredTexture(size, size, color.brighter())
-//            }
-//
-//            buffer.pixelWriter.setPixels(cell.x * size, cell.y * size, size, size, texture.image.pixelReader, 0, 0)
-//        }
-//
-//        e.viewComponent.addChild(ImageView(buffer))
-
         // TODO: this is not necessary if we make all layers but 1 UI transparent and use
         // the only layer to handle movement clicks
 
         e.viewComponent.addChild(Rectangle(data.get("width"), data.get("height"), Color.TRANSPARENT))
 
         return e
-    }
-
-    private fun Cell.distance(cellX: Int, cellY: Int): Int {
-        return Math.abs(x - cellX) + Math.abs(y - cellY)
     }
 
     @Spawns("portal")
@@ -469,7 +398,6 @@ class ZephFactory : EntityFactory {
         emitter.setVelocityFunction { i -> Point2D(FXGL.random() * 2.5, -FXGL.random() * FXGL.random(30, 50)) }
         emitter.setExpireFunction { i -> Duration.seconds(FXGL.random(2, 4).toDouble()) }
         emitter.setScaleFunction { i -> Point2D(0.15, 0.10) }
-        //emitter.setSpawnPointFunction { i -> Point2D(FXGL.random(0.0, appWidth - 200.0), 120.0) }
 
         val comp = ParticleComponent(emitter)
 
@@ -507,9 +435,6 @@ class ZephFactory : EntityFactory {
      */
     @Spawns("treasureChest")
     fun newTreasureChest(data: SpawnData): Entity {
-//        val cellX = if (data.hasKey("cellX")) data.get<Int>("cellX") else coordToCell(data.x)
-//        val cellY = if (data.hasKey("cellY")) data.get<Int>("cellY") else coordToCell(data.y)
-
         val cellX = data.get<Int>("cellX")
         val cellY = data.get<Int>("cellY")
 
@@ -524,7 +449,6 @@ class ZephFactory : EntityFactory {
                 .collidable()
                 .with("cell", cell)
                 .onClick {
-
                     if (Gameplay.player.distance(cellX, cellY) < 2) {
                         Gameplay.addMoney(gold)
 
@@ -570,7 +494,7 @@ class ZephFactory : EntityFactory {
     }
 
     @Spawns("dialogue")
-    fun newDialogue(data: SpawnData): Entity {
+    fun newDialogueTriggerBox(data: SpawnData): Entity {
         val text = data.get<String>("text")
 
         return entityBuilder(data)
@@ -588,37 +512,8 @@ private class AnimatedTreeComponent(private val texture: Texture) : Component() 
     }
 }
 
-private class CustomHeightMapGenerator(val seed: Int, val tx: Double, val ty: Double, width: Int, height: Int) : HeightMapGenerator(width, height) {
-
-    private val random = FXGLMath.getRandom(seed.toLong())
-
-    private val multiplier = random.nextInt(19000) + 1
-
-    override fun apply(x: Int, y: Int): HeightData {
-        val nx = tx / (MAP_WIDTH * TILE_SIZE) + x * 1.0 / width - 0.5
-        val ny = ty / (MAP_HEIGHT * TILE_SIZE) + y * 1.0 / height - 0.5
-
-        var noiseValue = (FXGLMath.noise2D(nx, ny)
-                + 0.5 * FXGLMath.noise2D(20 * nx, 20 * ny))
-
-        noiseValue *= noiseValue
-
-        if (noiseValue < 0) {
-            noiseValue = 0.0
-        }
-
-        if (noiseValue > 1) {
-            noiseValue = 1.0
-        }
-
-        return HeightData(x, y, noiseValue)
-    }
-}
-
 private fun newDagger(element: Element): Weapon {
     val weapon = Weapon(Data.Weapons.Daggers.KNIFE)
     weapon.element.set(element)
     return weapon
 }
-
-fun coordToCell(value: Double): Int = (value / Config.TILE_SIZE).roundToInt()

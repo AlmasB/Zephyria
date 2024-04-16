@@ -23,7 +23,16 @@ enum class CombatMove(vararg modifiers: Double) {
 
     private val modifiers: DoubleArray = modifiers
 
+    val uiText: String
+        get() = name.replace('_', ' ')
+                .lowercase()
+                .replaceFirstChar { it.uppercase() }
+
     fun getDamageModifierAgainst(move: CombatMove): Double {
         return this.modifiers[move.ordinal]
+    }
+
+    override fun toString(): String {
+        return uiText
     }
 }

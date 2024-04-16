@@ -1,4 +1,4 @@
-package com.almasb.zeph.character.components
+package com.almasb.zeph.character.npc
 
 import com.almasb.fxgl.dsl.components.view.ChildViewComponent
 import com.almasb.zeph.Config
@@ -10,6 +10,7 @@ import javafx.scene.text.Font
 import javafx.scene.text.Text
 
 /**
+ * Provides extra view to an NPC.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */

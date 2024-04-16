@@ -34,6 +34,8 @@ object Config {
     const val Z_INDEX_DECOR_BELOW_PLAYER = 4000
     const val Z_INDEX_DECOR_ABOVE_PLAYER = 6000
 
+    const val Z_INDEX_CHARACTER = 5000
+
     // TODO: add another decor above / below player to allow multiple layers in Tiled
 
     const val Z_INDEX_DAMAGE_TEXT = 6500

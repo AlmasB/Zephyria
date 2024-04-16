@@ -28,6 +28,7 @@ import com.almasb.zeph.skill.Skill
 import javafx.geometry.Point2D
 
 /**
+ * Contains actions that can be performed by a character.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -35,7 +36,6 @@ class CharacterActionComponent : Component() {
 
     private val log = Logger.get("CharacterActionComponent")
 
-    private var skillCastTarget: CharacterEntity? = null
     private var attackTarget: CharacterEntity? = null
     private var dialogueTarget: CharacterEntity? = null
     private var pickUpTarget: Entity? = null
@@ -49,10 +49,6 @@ class CharacterActionComponent : Component() {
     private val astar: AStarMoveComponent<AStarCell>
         get() = entity.getComponent(AStarMoveComponent::class.java) as AStarMoveComponent<AStarCell>
 
-    private val CASTING: EntityState = object : EntityState() {
-
-    }
-
     private val MOVE: EntityState = object : EntityState() {
 
         override fun onUpdate(tpf: Double) {
@@ -60,7 +56,8 @@ class CharacterActionComponent : Component() {
                 // identify why we came here
 
                 if (attackTarget != null) {
-                    attack(attackTarget!!)
+                    startCombatWith(attackTarget!!)
+                    attackTarget = null
                 } else if (pickUpTarget != null) {
                     pickUp(pickUpTarget!!)
                 } else if (dialogueTarget != null) {
@@ -86,17 +83,6 @@ class CharacterActionComponent : Component() {
                         orderStartDialogue(dialogueTarget!!)
                     }
                 }
-            }
-        }
-    }
-
-    private val ATTACK: EntityState = object : EntityState() {
-        override fun onUpdate(tpf: Double) {
-            if (char.characterComponent.isInWeaponRange(attackTarget!!)) {
-                val dmg = char.characterComponent.attack(attackTarget!!)
-
-            } else {
-                orderAttack(attackTarget!!)
             }
         }
     }
@@ -137,7 +123,7 @@ class CharacterActionComponent : Component() {
         attackTarget = target
 
         if (char.characterComponent.isInWeaponRange(target)) {
-            attack(attackTarget!!)
+            startCombatWith(attackTarget!!)
         } else {
 
             val cell = findNearestWalkableCell(attackTarget!!)
@@ -151,64 +137,13 @@ class CharacterActionComponent : Component() {
                 .grid
                 .getNeighbors(target.cellX, target.cellY)
                 .filter { it.isWalkable }
-                .sortedBy { char.distance(it.x, it.y) }
-                .first()
+                .minBy{ char.distance(it.x, it.y) }
     }
 
-    fun orderSkillCast(skillIndex: Int, target: CharacterEntity) {
-        reset()
-        skillCastTarget = target
+    private fun castSkill(skillIndex: Int, target: CharacterEntity) {
+        val skill: Skill = char.characterComponent.skills[skillIndex]
 
-        // TODO: if char in cast range ...
-        val isInCastRange = true
-
-        if (isInCastRange) {
-            val skill: Skill = char.characterComponent.skills[skillIndex]
-
-            castSkill(skill, target)
-
-        } else {
-            move(target.cellX, target.cellY)
-        }
-    }
-
-    private fun castSkill(skill: Skill, target: CharacterEntity) {
-        state.changeState(CASTING)
-
-        val castCallback = Runnable {
-            if (!state.isIn(CASTING))
-                return@Runnable
-
-            state.changeStateToIdle()
-
-            val projTextureName = skill.data.projectileTextureName
-
-            // if has a projectile, spawn projectile
-            if (!projTextureName.isNotEmpty()) {
-                val direction: Point2D = target.position.subtract(char.position)
-
-                spawn("skillProjectile",
-                        SpawnData(char.position)
-                                .put("projectileTextureName", projTextureName)
-                                .put("target", target)
-                                .put("dir", direction)
-                )
-            } else {
-
-                // cast skill immediately
-                char.characterComponent.useTargetSkill(skill, target)
-            }
-        }
-
-        if (target.cellX > char.cellX) {
-            animationComponent.playCastRight(castCallback)
-        } else if (target.cellX < char.cellX) {
-            animationComponent.playCastLeft(castCallback)
-        } else if (target.cellY < char.cellY) {
-            animationComponent.playCastUp(castCallback)
-        } else {
-            animationComponent.playCastDown(castCallback)
-        }
+        char.characterComponent.useTargetSkill(skill, target)
     }
 
     fun orderPickUp(item: Entity) {
@@ -248,20 +183,8 @@ class CharacterActionComponent : Component() {
         state.changeState(MOVE)
     }
 
-    private fun attack(target: CharacterEntity) {
-        state.changeState(ATTACK)
-
-        // TODO: check char data to see how to attack (thrust, slash, ranged, etc.)
-
-        if (target.cellX > char.cellX) {
-            animationComponent.loopAttackRight()
-        } else if (target.cellX < char.cellX) {
-            animationComponent.loopAttackLeft()
-        } else if (target.cellY < char.cellY) {
-            animationComponent.loopAttackUp()
-        } else {
-            animationComponent.loopAttackDown()
-        }
+    private fun startCombatWith(target: CharacterEntity) {
+        Gameplay.startCombat(char, target)
     }
 
     private fun pickUp(item: Entity) {
@@ -308,7 +231,6 @@ class CharacterActionComponent : Component() {
     }
 
     private fun reset() {
-        skillCastTarget = null
         attackTarget = null
         pickUpTarget = null
         dialogueTarget = null

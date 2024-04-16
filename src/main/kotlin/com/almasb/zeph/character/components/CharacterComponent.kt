@@ -28,6 +28,11 @@ import javafx.collections.FXCollections
 import javafx.geometry.Point2D
 import java.util.concurrent.Callable
 
+/**
+ * Carries all runtime information for a character.
+ *
+ * @author Almas Baimagambetov (almaslvl@gmail.com)
+ */
 open class CharacterComponent(val data: CharacterData) : Component() {
 
     lateinit var char: CharacterEntity
@@ -61,6 +66,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      */
     val attackRange: Int = data.attackRange
 
+    var isDying = false
+        private set
+
     init {
         data.attributes.attrs.forEach { attr, value ->
             setBase(attr, value)
@@ -81,10 +89,6 @@ open class CharacterComponent(val data: CharacterData) : Component() {
     override fun onAdded() {
         char = entity as CharacterEntity
 
-        init()
-    }
-
-    private fun init() {
         bindStats()
 
         hp.maxValueProperty().bind(totalProperty(MAX_HP))
@@ -424,14 +428,9 @@ open class CharacterComponent(val data: CharacterData) : Component() {
         return SkillUseResult.NONE
     }
 
-    fun useAreaSkill(index: Int, target: Point2D): SkillUseResult {
-        // TODO: complete
-        //return skills[index].data.onCast(char, char, skills[index])
-
-        return SkillUseResult.NONE
-    }
-
     private fun kill() {
+        isDying = true
+
         char.components
                 .filter { it !is AnimationComponent && it !is ViewComponent }
                 .forEach {
@@ -453,6 +452,4 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         fire(OnItemUsedEvent(char, item))
     }
-
-
 }

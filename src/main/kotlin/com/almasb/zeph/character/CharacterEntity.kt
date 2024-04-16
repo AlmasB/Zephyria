@@ -10,6 +10,7 @@ import com.almasb.zeph.combat.*
 
 /**
  * This is a convenience class ONLY and DOES NOT have any logic.
+ * All monsters, NPCs and player are all characters.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -59,15 +60,14 @@ class CharacterEntity : Entity() {
     val weaponElement get() = characterComponent.weaponElement
     val armorElement get() = characterComponent.armorElement
 
-//    fun getEquip(place: EquipPlace) = playerComponent.getEquip(place)
-//
-//    fun equipProperty(place: EquipPlace) = playerComponent.equipProperty(place)
-
     val cellX: Int
         get() = getComponent(CellMoveComponent::class.java).cellX
 
     val cellY: Int
         get() = getComponent(CellMoveComponent::class.java).cellY
+
+    val isDying: Boolean
+        get() = characterComponent.isDying
 
     fun distance(cellX: Int, cellY: Int): Int {
         return Math.abs(this.cellX - cellX) + Math.abs(this.cellY - cellY)

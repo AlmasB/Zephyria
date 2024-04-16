@@ -2,7 +2,11 @@ package com.almasb.zeph.character.npc
 
 import com.almasb.zeph.Description
 import com.almasb.zeph.DescriptionBuilder
+import com.almasb.zeph.character.CharacterClass
+import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.DataDSL
+import com.almasb.zeph.character.char
+import com.almasb.zeph.combat.Attribute
 import com.almasb.zeph.emptyDescription
 
 /**
@@ -47,4 +51,26 @@ data class NPCData(
         val description: Description,
         val dialogueName: String,
         val textureNameFull: String
-)
+) {
+
+    fun toCharData(): CharacterData {
+        val npcData = this
+
+        return char {
+            desc {
+                id = npcData.description.id
+                name = npcData.description.name
+                description = npcData.description.description
+                textureName = npcData.description.textureName
+            }
+
+            charClass = CharacterClass.NOVICE
+
+            attributes {
+                Attribute.values().forEach {
+                    it +1
+                }
+            }
+        }
+    }
+}

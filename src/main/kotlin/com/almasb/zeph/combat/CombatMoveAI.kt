@@ -16,3 +16,16 @@ class RandomCombatMoveAI : CombatMoveAI {
         return FXGLMath.random(CombatMove.values()).get()
     }
 }
+
+class CounterLastCombatMoveAI : CombatMoveAI {
+
+    override fun nextMove(previousMoves: List<CombatMove>): CombatMove {
+        if (previousMoves.isEmpty())
+            return FXGLMath.random(CombatMove.values()).get()
+
+        val moveToCounter = previousMoves.last()
+
+        return CombatMove.values()
+                .maxBy { it.getDamageModifierAgainst(moveToCounter) }
+    }
+}

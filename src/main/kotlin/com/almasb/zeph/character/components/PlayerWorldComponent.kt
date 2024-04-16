@@ -4,7 +4,6 @@ import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.inventory.Inventory
 import com.almasb.fxgl.ui.MDIWindow
 import com.almasb.zeph.Config
-import com.almasb.zeph.ui.InventoryView
 import com.almasb.zeph.ui.StorageView
 import javafx.scene.layout.Pane
 

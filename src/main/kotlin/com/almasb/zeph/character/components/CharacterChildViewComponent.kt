@@ -3,7 +3,6 @@ package com.almasb.zeph.character.components
 import com.almasb.fxgl.dsl.components.view.ChildViewComponent
 import com.almasb.fxgl.ui.ProgressBar
 import com.almasb.zeph.Config
-import com.almasb.zeph.EntityType
 import com.almasb.zeph.character.CharacterClass
 import com.almasb.zeph.character.CharacterEntity
 import javafx.beans.property.SimpleStringProperty
@@ -14,6 +13,7 @@ import javafx.scene.text.Font
 import javafx.scene.text.Text
 
 /**
+ * A view component that shows character's HP and SP.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -27,9 +27,7 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         val view = makeView()
         viewRoot.children += view
 
-        //if ((entity as CharacterEntity).data.charClass == CharacterClass.MONSTER) {
-            viewRoot.visibleProperty().bind(entity.viewComponent.parent.hoverProperty())
-        //}
+        viewRoot.visibleProperty().bind(entity.viewComponent.parent.hoverProperty())
     }
 
     private fun makeView(): Node {

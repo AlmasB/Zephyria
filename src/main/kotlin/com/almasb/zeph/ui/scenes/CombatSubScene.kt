@@ -6,9 +6,7 @@ import com.almasb.fxgl.dsl.*
 import com.almasb.fxgl.scene.SubScene
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.character.CharacterEntity
-import com.almasb.zeph.combat.CombatMove
-import com.almasb.zeph.combat.CombatMoveAI
-import com.almasb.zeph.combat.RandomCombatMoveAI
+import com.almasb.zeph.combat.*
 import javafx.collections.FXCollections
 import javafx.geometry.Point2D
 import javafx.scene.Group
@@ -25,7 +23,7 @@ class CombatSubScene : SubScene() {
     private val combatRoot = Group()
 
     private val playerMoves = arrayListOf<CombatMove>()
-    private val combatMoveAI: CombatMoveAI = RandomCombatMoveAI()
+    private val combatMoveAI: CombatMoveAI = CounterLastCombatMoveAI()
 
     init {
         contentRoot.children += combatRoot
@@ -38,7 +36,7 @@ class CombatSubScene : SubScene() {
         view1.translateX = 50.0
         view1.translateY = 50.0
 
-        view2.translateX = 750.0
+        view2.translateX = 690.0
         view2.translateY = 50.0
 
         val bg = Rectangle(1000.0, 600.0, Color.color(0.0, 0.0, 0.0, 0.95))
@@ -77,24 +75,39 @@ class CombatSubScene : SubScene() {
 
                         println("Player dealt: " + result1.value)
 
-                        // TODO: check if dead
-                        // TODO: getTotal(ASPD) / 100.0 to determine how many attacks per turn
+                        if (char2.hp.isZero) {
+                            btnSelect.isDisable = false
+                            FXGL.getSceneService().popSubScene()
 
-                        animationBuilder(this)
-                                .onFinished {
-                                    val result2 = char2.characterComponent.attack(char1, aiDamageMod)
+                        } else {
 
-                                    println("AI dealt: " + result2.value)
 
-                                    btnSelect.isDisable = false
-                                }
-                                .duration(Duration.seconds(0.5))
-                                .interpolator(Interpolators.EXPONENTIAL.EASE_IN())
-                                .repeat(2)
-                                .autoReverse(true)
-                                .translate(view2)
-                                .to(Point2D(view1.translateX, view1.translateY))
-                                .buildAndPlay()
+
+                            // TODO: check if dead
+                            // TODO: getTotal(ASPD) / 100.0 to determine how many attacks per turn
+
+                            animationBuilder(this)
+                                    .onFinished {
+                                        val result2 = char2.characterComponent.attack(char1, aiDamageMod)
+
+                                        println("AI dealt: " + result2.value)
+
+                                        view2.lastMoveText.text = "Last move: $aiMove"
+
+                                        // TODO: update tick for both
+                                        char1.components.forEach { it.onUpdate(3.0) }
+                                        char2.components.forEach { it.onUpdate(3.0) }
+
+                                        btnSelect.isDisable = false
+                                    }
+                                    .duration(Duration.seconds(0.5))
+                                    .interpolator(Interpolators.EXPONENTIAL.EASE_IN())
+                                    .repeat(2)
+                                    .autoReverse(true)
+                                    .translate(view2)
+                                    .to(Point2D(view1.translateX, view1.translateY))
+                                    .buildAndPlay()
+                        }
                     }
                     .duration(Duration.seconds(0.5))
                     .interpolator(Interpolators.EXPONENTIAL.EASE_IN())
@@ -115,28 +128,66 @@ class CombatSubScene : SubScene() {
 
         val choiceBox = getUIFactoryService().newChoiceBox(FXCollections.observableArrayList(CombatMove.values().toList()))
 
+        val lastMoveText = getUIFactoryService().newText("", Color.WHITE, 18.0)
+
         init {
             val text = getUIFactoryService().newText(char.name, Color.WHITE, FontType.GAME, 28.0)
 
+            choiceBox.prefWidth = 250.0
             choiceBox.selectionModel.selectFirst()
 
             val textFlow = getUIFactoryService().newTextFlow()
 
             textFlow.children.addAll(
                 getUIFactoryService().newText("HP: ", Color.WHITE, 14.0),
-                getUIFactoryService().newText("", Color.GREEN, 18.0).also {
+                getUIFactoryService().newText("", Color.GREEN, 22.0).also {
                     it.textProperty().bind(char.hp.valueProperty().asString("%.0f\n"))
                 },
 
                 getUIFactoryService().newText("SP: ", Color.WHITE, 14.0),
-                getUIFactoryService().newText("", Color.BLUE, 18.0).also {
+                getUIFactoryService().newText("", Color.BLUE, 22.0).also {
                     it.textProperty().bind(char.sp.valueProperty().asString("%.0f\n"))
-                }
+                },
+
+                getUIFactoryService().newText("ATK: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.ATK).asString("%d\n"))
+                },
+
+                getUIFactoryService().newText("MATK: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.MATK).asString("%d\n"))
+                },
+
+                getUIFactoryService().newText("DEF: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.DEF).asString("%d\n"))
+                },
+
+                getUIFactoryService().newText("MDEF: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.MDEF).asString("%d\n"))
+                },
+
+                getUIFactoryService().newText("ARM: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.ARM).asString("%d\n"))
+                },
+
+                getUIFactoryService().newText("MARM: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.WHITE, 22.0).also {
+                    it.textProperty().bind(char.characterComponent.totalProperty(Stat.MARM).asString("%d\n"))
+                },
             )
 
             children += text
             children += textFlow
-            children += choiceBox
+
+            if (char.isPlayer) {
+                children += choiceBox
+            } else {
+                children += lastMoveText
+            }
         }
     }
 }

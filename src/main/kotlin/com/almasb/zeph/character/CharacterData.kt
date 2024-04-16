@@ -49,7 +49,7 @@ class CharacterDataBuilder(
 
     fun build(): CharacterData {
         if (description.textureName.isEmpty()) {
-            val fileName = description.name.toLowerCase().replace(" ", "_") + ".png"
+            val fileName = description.name.lowercase().replace(" ", "_") + ".png"
 
             description = description.copy(textureName = "chars/enemies/$fileName")
         }

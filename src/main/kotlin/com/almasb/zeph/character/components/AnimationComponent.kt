@@ -1,18 +1,16 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.dsl.image
-import com.almasb.fxgl.dsl.texture
 import com.almasb.fxgl.entity.component.Component
 import com.almasb.fxgl.pathfinding.CellMoveComponent
 import com.almasb.fxgl.texture.AnimatedTexture
 import com.almasb.fxgl.texture.AnimationChannel
+import com.almasb.zeph.Config
 import com.almasb.zeph.Config.SPRITE_SIZE
-import com.almasb.zeph.character.CharacterEntity
-import javafx.util.Duration
-import java.lang.RuntimeException
+import javafx.util.Duration.seconds
 
 /**
- *
+ * Animates any character in the defined sprite sheet format.
  *
  * @author Almas Baimagambetov (almaslvl@gmail.com)
  */
@@ -50,32 +48,32 @@ class AnimationComponent(textureName: String) : Component() {
     init {
         val image = image(textureName)
 
-        channelIdleDown = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 10, 9 * 10)
-        channelIdleRight = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 11, 9 * 11)
-        channelIdleUp = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 8, 9 * 8)
-        channelIdleLeft = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 9 * 9, 9 * 9)
+        channelIdleDown   = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 9 * 10, 9 * 10)
+        channelIdleRight  = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 9 * 11, 9 * 11)
+        channelIdleUp     = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 9 * 8, 9 * 8)
+        channelIdleLeft   = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 9 * 9, 9 * 9)
 
-        channelWalkDown = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 10, 9 * 10 + 9 - 1)
-        channelWalkRight = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 11, 9 * 11 + 9 - 1)
-        channelWalkUp = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.4), 9 * 8, 9 * 8 + 9 - 1)
-        channelWalkLeft = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.5), 9 * 9, 9 * 9 + 9 - 1)
+        channelWalkDown   = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(0.4), 9 * 10, 9 * 10 + 9 - 1)
+        channelWalkRight  = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(0.5), 9 * 11, 9 * 11 + 9 - 1)
+        channelWalkUp     = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(0.4), 9 * 8, 9 * 8 + 9 - 1)
+        channelWalkLeft   = AnimationChannel(image, 9, SPRITE_SIZE, SPRITE_SIZE, seconds(0.5), 9 * 9, 9 * 9 + 9 - 1)
 
-        channelCastDown = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 2, 7 * 2 + 7 - 1)
-        channelCastRight = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 3, 7 * 3 + 7 - 1)
-        channelCastUp = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 0, 7 * 0 + 7 - 1)
-        channelCastLeft = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.7), 7 * 1, 7 * 1 + 7 - 1)
+        channelCastDown   = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, seconds(0.7), 7 * 2, 7 * 2 + 7 - 1)
+        channelCastRight  = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, seconds(0.7), 7 * 3, 7 * 3 + 7 - 1)
+        channelCastUp     = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, seconds(0.7), 7 * 0, 7 * 0 + 7 - 1)
+        channelCastLeft   = AnimationChannel(image, 7, SPRITE_SIZE, SPRITE_SIZE, seconds(0.7), 7 * 1, 7 * 1 + 7 - 1)
 
-        channelSlashDown = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 14, 6 * 14 + 6 - 1)
-        channelSlashRight = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 15, 6 * 15 + 6 - 1)
-        channelSlashUp = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 12, 6 * 12 + 6 - 1)
-        channelSlashLeft = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(0.6), 6 * 13, 6 * 13 + 6 - 1)
+        channelSlashDown  = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, seconds(0.6), 6 * 14, 6 * 14 + 6 - 1)
+        channelSlashRight = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, seconds(0.6), 6 * 15, 6 * 15 + 6 - 1)
+        channelSlashUp    = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, seconds(0.6), 6 * 12, 6 * 12 + 6 - 1)
+        channelSlashLeft  = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, seconds(0.6), 6 * 13, 6 * 13 + 6 - 1)
 
-        channelShootDown = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 18, 13 * 18 + 13 - 1)
-        channelShootRight = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 19, 13 * 19 + 13 - 1)
-        channelShootUp = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 16, 13 * 16 + 13 - 1)
-        channelShootLeft = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 13 * 17, 13 * 17 + 13 - 1)
+        channelShootDown  = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 13 * 18, 13 * 18 + 13 - 1)
+        channelShootRight = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 13 * 19, 13 * 19 + 13 - 1)
+        channelShootUp    = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 13 * 16, 13 * 16 + 13 - 1)
+        channelShootLeft  = AnimationChannel(image, 13, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 13 * 17, 13 * 17 + 13 - 1)
 
-        channelDeath = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, Duration.seconds(1.2), 6 * 20, 6 * 20 + 6 - 1)
+        channelDeath      = AnimationChannel(image, 6, SPRITE_SIZE, SPRITE_SIZE, seconds(1.2), 6 * 20, 6 * 20 + 6 - 1)
 
         animatedTexture = AnimatedTexture(channelIdleDown)
         animatedTexture.isPickOnBounds = true
@@ -87,7 +85,7 @@ class AnimationComponent(textureName: String) : Component() {
     }
 
     override fun onUpdate(tpf: Double) {
-        entity.zIndex = entity.getComponent(CellMoveComponent::class.java).cellY + 5000
+        entity.zIndex = entity.getComponent(CellMoveComponent::class.java).cellY + Config.Z_INDEX_CHARACTER
     }
 
     fun playDeath(onFinished: Runnable) {

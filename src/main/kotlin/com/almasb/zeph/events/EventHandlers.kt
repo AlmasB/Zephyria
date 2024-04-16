@@ -4,7 +4,7 @@ import com.almasb.fxgl.dsl.*
 import com.almasb.zeph.EntityType.PLAYER
 import com.almasb.zeph.Gameplay
 import com.almasb.zeph.Gameplay.spawnItem
-import com.almasb.zeph.character.ai.RandomWanderComponent
+import com.almasb.zeph.character.components.RandomWanderComponent
 import com.almasb.zeph.combat.runIfChance
 import com.almasb.zeph.item.ArmorType.*
 import com.almasb.zeph.pushMessage
@@ -37,11 +37,6 @@ object EventHandlers {
                     it.damage, it.isCritical, it.target.center,
                     if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
             )
-
-            if (!it.target.isType(PLAYER)) {
-                it.target.actionComponent.orderAttack(it.attacker)
-                it.target.getComponent(RandomWanderComponent::class.java).pause()
-            }
         }
 
         onEvent(Events.ON_MAGICAL_DAMAGE_DEALT) {
@@ -49,11 +44,6 @@ object EventHandlers {
                     it.damage, it.isCritical, it.target.center,
                     if (it.target.isPlayer) Color.LIGHTGRAY.darker() else Color.WHITE
             )
-
-            if (!it.target.isType(PLAYER)) {
-                it.target.actionComponent.orderAttack(it.attacker)
-                it.target.getComponent(RandomWanderComponent::class.java).pause()
-            }
         }
 
         onEvent(Events.ON_BEFORE_SKILL_CAST) {

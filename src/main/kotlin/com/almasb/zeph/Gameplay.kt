@@ -16,6 +16,7 @@ import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.Config.Z_INDEX_DAMAGE_TEXT
 import com.almasb.zeph.Vars.GAME_MAP
+import com.almasb.zeph.character.CharacterData
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.character.EquipPlace
 import com.almasb.zeph.character.components.NPCFollowComponent
@@ -250,6 +251,10 @@ object Gameplay : FunctionCallDelegate {
 
     fun spawnNPC(id: Int, cellX: Int, cellY: Int) {
         currentMap.spawnNPC(cellX, cellY, Data.getNPCData(id))
+    }
+
+    fun spawnMob(charData: CharacterData, cellX: Int, cellY: Int) {
+        currentMap.spawnMonster(cellX, cellY, charData)
     }
 
     fun spawnMob(id: Int, cellX: Int, cellY: Int) {

@@ -4,7 +4,7 @@
   <property name="2500" value="11,9"/>
  </properties>
  <tileset firstgid="1" name="nature" tilewidth="32" tileheight="32" tilecount="180" columns="20">
-  <image source="RPG Nature Tileset.png" width="641" height="288"/>
+  <image source="RPG_Nature_Tileset.png" width="641" height="288"/>
  </tileset>
  <tileset firstgid="181" name="mountain_landscape" tilewidth="32" tileheight="32" tilecount="256" columns="16">
   <image source="mountain_landscape.png" width="512" height="512"/>

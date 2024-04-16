@@ -8,16 +8,6 @@ package com.almasb.zeph.combat
 object GameMath {
 
     /**
-     * Generates a random value between 1 (inclusive) and passed parameter (inclusive).
-     *
-     * @param max max value
-     * @return any random number [1..max]
-     */
-    fun random(max: Int): Int {
-        return (Math.random() * max).toInt() + 1
-    }
-
-    /**
      * "Rolls" a dice and checks it against the chance percentage
      * @param chance the chance against which the roll is checked.
      * 100 will always return true, 1 - will return true approx. once in 100 rolls

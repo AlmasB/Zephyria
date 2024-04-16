@@ -1,5 +1,6 @@
 package com.almasb.zeph.data
 
+import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.zeph.combat.*
 import com.almasb.zeph.combat.Attribute.*
 import com.almasb.zeph.combat.Element.*
@@ -614,7 +615,7 @@ class Scout {
         cooldown = 1.0
 
         onCastScript = { caster, target, skill ->
-            val dmg = caster.getTotal(ATK) + skill.level * 2 * GameMath.random(2)
+            val dmg = caster.getTotal(ATK) + skill.level * 2 * FXGLMath.random(1, 2)
 
             caster.playerComponent?.rewardMoney(dmg)
 

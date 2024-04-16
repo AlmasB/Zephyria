@@ -1,6 +1,7 @@
 package com.almasb.zeph.character.components
 
 import com.almasb.fxgl.core.collection.PropertyMap
+import com.almasb.fxgl.core.math.FXGLMath
 import com.almasb.fxgl.dsl.components.HealthDoubleComponent
 import com.almasb.fxgl.dsl.components.ManaDoubleComponent
 import com.almasb.fxgl.dsl.fire
@@ -280,10 +281,10 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun attack(target: CharacterEntity): DamageResult {
+    fun attack(target: CharacterEntity, extraDamageModifier: Double = 1.0): DamageResult {
         fire(OnAttackEvent(char, target))
 
-        return dealPhysicalDamage(target, getTotal(ATK).toDouble() + 2 * GameMath.random(lvl()), weaponElement.value)
+        return dealPhysicalDamage(target, getTotal(ATK).toDouble() + 2 * FXGLMath.random(1, lvl()), weaponElement.value, extraDamageModifier)
     }
 
     /**
@@ -303,7 +304,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
      *
      * @return damage dealt
      */
-    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element): DamageResult {
+    fun dealPhysicalDamage(target: CharacterEntity, baseDamage: Double, element: Element, extraDamageModifier: Double = 1.0): DamageResult {
         var baseDamage = baseDamage
 
         var crit = false
@@ -317,7 +318,7 @@ open class CharacterComponent(val data: CharacterData) : Component() {
 
         val damageAfterReduction = (100 - target.getTotal(ARM)) * baseDamage / 100.0 - target.getTotal(DEF)
 
-        val totalDamage = Math.max(Math.round(elementalDamageModifier * damageAfterReduction), 0).toInt()
+        val totalDamage = Math.max(Math.round(extraDamageModifier * elementalDamageModifier * damageAfterReduction), 0).toInt()
         target.hp.damage(totalDamage.toDouble())
 
         fire(OnPhysicalDamageDealtEvent(char, target, totalDamage, crit))

@@ -7,7 +7,8 @@ import com.almasb.fxgl.scene.SubScene
 import com.almasb.fxgl.ui.FontType
 import com.almasb.zeph.character.CharacterEntity
 import com.almasb.zeph.combat.CombatMove
-import javafx.beans.property.SimpleStringProperty
+import com.almasb.zeph.combat.CombatMoveAI
+import com.almasb.zeph.combat.RandomCombatMoveAI
 import javafx.collections.FXCollections
 import javafx.geometry.Point2D
 import javafx.scene.Group
@@ -23,6 +24,9 @@ class CombatSubScene : SubScene() {
 
     private val combatRoot = Group()
 
+    private val playerMoves = arrayListOf<CombatMove>()
+    private val combatMoveAI: CombatMoveAI = RandomCombatMoveAI()
+
     init {
         contentRoot.children += combatRoot
     }
@@ -37,45 +41,50 @@ class CombatSubScene : SubScene() {
         view2.translateX = 750.0
         view2.translateY = 50.0
 
-        val closeBtn = getUIFactoryService().newButton("Close")
+        val bg = Rectangle(1000.0, 600.0, Color.color(0.0, 0.0, 0.0, 0.95))
+        bg.arcWidth = 25.0
+        bg.arcHeight = 25.0
+        bg.stroke = Color.AQUAMARINE
+        bg.strokeWidth = 5.0
+
+        val closeBtn = getUIFactoryService().newButton("Dev Close")
         closeBtn.setOnAction {
             FXGL.getSceneService().popSubScene()
         }
 
-        closeBtn.translateX = 400.0
-        closeBtn.translateY = 350.0
+        closeBtn.translateX = 0.0
+        closeBtn.translateY = -100.0
 
-        val bg = Rectangle(1000.0, 600.0, Color.BLACK)
-        bg.arcWidth = 15.0
-        bg.arcHeight = 15.0
-        bg.stroke = Color.AQUAMARINE
-        bg.strokeWidth = 5.0
-
-        val btnSelect = getUIFactoryService().newButton("Select Move")
-        btnSelect.translateX = 100.0
-        btnSelect.translateY = 350.0
+        val btnSelect = getUIFactoryService().newButton("Finish Turn")
+        btnSelect.translateX = bg.width / 2.0 - 200.0 / 2.0
+        btnSelect.translateY = 520.0
         btnSelect.setOnAction {
             btnSelect.isDisable = true
 
             val playerMove = view1.choiceBox.selectionModel.selectedItem
+            val aiMove = combatMoveAI.nextMove(playerMoves)
 
-            val aiMove = FXGLMath.random(CombatMove.values()).get()
+            playerMoves += playerMove
 
-            val playerDamage = playerMove.getDamageModifierAgainst(aiMove)
-            val aiDamage = aiMove.getDamageModifierAgainst(playerMove)
+            val playerDamageMod = playerMove.getDamageModifierAgainst(aiMove)
+            val aiDamageMod = aiMove.getDamageModifierAgainst(playerMove)
 
-            println("$playerMove vs $aiMove: $playerDamage vs $aiDamage")
+            println("$playerMove vs $aiMove: $playerDamageMod vs $aiDamageMod")
 
             animationBuilder(this)
                     .onFinished {
-                        char1.characterComponent.attack(char2)
+                        val result1 = char1.characterComponent.attack(char2, playerDamageMod)
+
+                        println("Player dealt: " + result1.value)
 
                         // TODO: check if dead
                         // TODO: getTotal(ASPD) / 100.0 to determine how many attacks per turn
 
                         animationBuilder(this)
                                 .onFinished {
-                                    char2.characterComponent.attack(char1)
+                                    val result2 = char2.characterComponent.attack(char1, aiDamageMod)
+
+                                    println("AI dealt: " + result2.value)
 
                                     btnSelect.isDisable = false
                                 }
@@ -107,12 +116,26 @@ class CombatSubScene : SubScene() {
         val choiceBox = getUIFactoryService().newChoiceBox(FXCollections.observableArrayList(CombatMove.values().toList()))
 
         init {
-            val text = getUIFactoryService().newText("", Color.WHITE, FontType.GAME, 28.0)
-            text.textProperty().bind(SimpleStringProperty(char.name).concat(char.characterComponent.hp.valueProperty()))
+            val text = getUIFactoryService().newText(char.name, Color.WHITE, FontType.GAME, 28.0)
 
             choiceBox.selectionModel.selectFirst()
 
+            val textFlow = getUIFactoryService().newTextFlow()
+
+            textFlow.children.addAll(
+                getUIFactoryService().newText("HP: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.GREEN, 18.0).also {
+                    it.textProperty().bind(char.hp.valueProperty().asString("%.0f\n"))
+                },
+
+                getUIFactoryService().newText("SP: ", Color.WHITE, 14.0),
+                getUIFactoryService().newText("", Color.BLUE, 18.0).also {
+                    it.textProperty().bind(char.sp.valueProperty().asString("%.0f\n"))
+                }
+            )
+
             children += text
+            children += textFlow
             children += choiceBox
         }
     }

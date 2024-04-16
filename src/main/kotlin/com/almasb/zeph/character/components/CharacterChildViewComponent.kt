@@ -27,9 +27,9 @@ class CharacterChildViewComponent : ChildViewComponent(0.0, 10.0, isTransformApp
         val view = makeView()
         viewRoot.children += view
 
-        if ((entity as CharacterEntity).data.charClass == CharacterClass.MONSTER) {
+        //if ((entity as CharacterEntity).data.charClass == CharacterClass.MONSTER) {
             viewRoot.visibleProperty().bind(entity.viewComponent.parent.hoverProperty())
-        }
+        //}
     }
 
     private fun makeView(): Node {
